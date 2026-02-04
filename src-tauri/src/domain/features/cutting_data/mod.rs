@@ -1,13 +1,13 @@
 // cutting_data/mod.rs
 
-mod input;
-mod solver;
-mod solution;
-mod errors;
+pub mod model;
+pub mod services;
+pub mod input;
+pub mod dto;
+pub mod errors;
 
-// Public API
-pub use input::raw::RawCuttingInput;
-pub use input::valid::ValidCuttingInput;
-pub use solution::CuttingDataSolution;
-pub use solver::solve;
-pub use errors::DomainError;
+pub use model::*;
+pub use services::*;
+pub use input::*;
+pub use dto::*;
+pub use errors::*;

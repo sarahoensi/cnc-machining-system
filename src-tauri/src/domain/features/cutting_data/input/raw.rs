@@ -1,6 +1,6 @@
-// raw_input.rs
+// cutting_data/input/raw.rs
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct RawCuttingInput {
     pub d: Option<f64>,
     pub vc: Option<f64>,
