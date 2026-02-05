@@ -1,6 +1,8 @@
 // cutting_data/input/raw.rs
 
-#[derive(Debug, Clone, Default)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct RawCuttingInput {
     pub d: Option<f64>,
     pub vc: Option<f64>,

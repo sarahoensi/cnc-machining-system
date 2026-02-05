@@ -60,10 +60,9 @@ impl CuttingDataSolver {
     // ---------------- FULL SOLVER ----------------
 
     pub fn solve_full(
-        data: CuttingData,
+        data: &CuttingData,
     ) -> Result<CuttingDataFullSolution, DomainError> {
 
-        // 👇 Nå låner vi bare data
         let partial = Self::solve_partial(&data)?;
 
         Ok(CuttingDataFullSolution {
@@ -86,7 +85,7 @@ impl CuttingDataSolver {
 
     // ---------------- FORMULAS ----------------
 
-    fn spindle_from_vc(
+    pub fn spindle_from_vc(
         vc: CuttingSpeedMMin,
         d: DiameterMm,
     ) -> Result<SpindleSpeedRpm, DomainError> {
@@ -94,7 +93,7 @@ impl CuttingDataSolver {
         SpindleSpeedRpm::new((1000.0 * vc.value()) / (PI * d.value()))
     }
 
-    fn vc_from_spindle(
+    pub fn vc_from_spindle(
         n: SpindleSpeedRpm,
         d: DiameterMm,
     ) -> Result<CuttingSpeedMMin, DomainError> {
@@ -102,7 +101,7 @@ impl CuttingDataSolver {
         CuttingSpeedMMin::new((PI * d.value() * n.value()) / 1000.0)
     }
 
-    fn feed_from_fz(
+    pub fn feed_from_fz(
         fz: FeedPerToothMm,
         z: ToothCount,
         n: SpindleSpeedRpm,
@@ -111,7 +110,7 @@ impl CuttingDataSolver {
         FeedRateMmMin::new(fz.value() * z.value() as f64 * n.value())
     }
 
-    fn fz_from_feed(
+    pub fn fz_from_feed(
         f: FeedRateMmMin,
         z: ToothCount,
         n: SpindleSpeedRpm,
@@ -120,3 +119,5 @@ impl CuttingDataSolver {
         FeedPerToothMm::new(f.value() / (z.value() as f64 * n.value()))
     }
 }
+
+

@@ -3,7 +3,9 @@
 use super::super::errors::DomainError;
 
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+use serde::{Serialize, Deserialize};
+
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct DiameterMm(f64);
 impl DiameterMm {
     pub fn new(value: f64) -> Result<Self, DomainError> {
@@ -12,7 +14,7 @@ impl DiameterMm {
     pub fn value(&self) -> f64 { self.0 }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct CuttingSpeedMMin(f64);
 impl CuttingSpeedMMin {
     pub fn new(value: f64) -> Result<Self, DomainError> {
@@ -21,7 +23,7 @@ impl CuttingSpeedMMin {
     pub fn value(&self) -> f64 { self.0 }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct SpindleSpeedRpm(f64);
 impl SpindleSpeedRpm {
     pub fn new(value: f64) -> Result<Self, DomainError> {
@@ -30,7 +32,7 @@ impl SpindleSpeedRpm {
     pub fn value(&self) -> f64 { self.0 }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct FeedRateMmMin(f64);
 impl FeedRateMmMin {
     pub fn new(value: f64) -> Result<Self, DomainError> {
@@ -39,7 +41,7 @@ impl FeedRateMmMin {
     pub fn value(&self) -> f64 { self.0 }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct FeedPerToothMm(f64);
 impl FeedPerToothMm {
     pub fn new(value: f64) -> Result<Self, DomainError> {
@@ -48,7 +50,7 @@ impl FeedPerToothMm {
     pub fn value(&self) -> f64 { self.0 }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct ToothCount(u32);
 impl ToothCount {
     pub fn new(value: u32) -> Result<Self, DomainError> {

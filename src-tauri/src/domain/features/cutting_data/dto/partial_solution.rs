@@ -2,7 +2,9 @@
 
 use crate::domain::features::cutting_data::model::values::*;
 
-#[derive(Debug, Clone)]
+use serde::{Serialize, Deserialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CuttingDataPartialSolution {
     pub diameter: DiameterMm,
     pub teeth: ToothCount,
@@ -12,3 +14,4 @@ pub struct CuttingDataPartialSolution {
     pub feed_rate: Option<FeedRateMmMin>,
     pub feed_per_tooth: Option<FeedPerToothMm>,
 }
+

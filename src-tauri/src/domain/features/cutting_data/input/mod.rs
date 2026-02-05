@@ -2,3 +2,6 @@
 
 pub mod raw;
 pub mod valid;
+
+#[cfg(test)]
+mod tests;
