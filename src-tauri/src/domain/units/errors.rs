@@ -1,0 +1,1 @@
+// domain/units/error.rs

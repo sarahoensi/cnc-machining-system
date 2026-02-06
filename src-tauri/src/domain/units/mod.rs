@@ -1,8 +1,8 @@
 // domain/units/mod.rs
-mod errors;
+pub mod errors;
 
-mod length;
-mod angle;
-mod motion;
-mod machining;
-mod ratio;
+pub mod length;
+pub mod angle;
+pub mod motion;
+pub mod machining;
+pub mod ratio;
