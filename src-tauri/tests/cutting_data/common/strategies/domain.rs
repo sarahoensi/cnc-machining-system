@@ -15,7 +15,7 @@ pub fn cutting_data_with_speed_and_feed() -> impl Strategy<Value = CuttingData> 
     )
     .prop_map(|(d, z, vc, fz)| CuttingData {
         diameter: d,
-        teeth: z,
+        teeth: Some(z),
         speed: Some(Speed::CuttingSpeed(vc)),
         feed: Some(Feed::FeedPerTooth(fz)),
     })

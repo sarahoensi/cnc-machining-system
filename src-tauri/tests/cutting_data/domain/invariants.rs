@@ -14,7 +14,7 @@ use cnc_machining_system_lib::domain::features::cutting_data::model::values::*;
 fn speed_variant_is_always_valid() {
     let data = CuttingData {
         diameter: DiameterMm::new(12.0).unwrap(),
-        teeth: ToothCount::new(3).unwrap(),
+        teeth: Some(ToothCount::new(3).unwrap()),
         speed: Some(Speed::SpindleSpeed(
             SpindleSpeedRpm::new(8000.0).unwrap(),
         )),
@@ -31,7 +31,7 @@ fn speed_variant_is_always_valid() {
 fn feed_variant_is_always_valid() {
     let data = CuttingData {
         diameter: DiameterMm::new(12.0).unwrap(),
-        teeth: ToothCount::new(3).unwrap(),
+        teeth: Some(ToothCount::new(3).unwrap()),
         speed: None,
         feed: Some(Feed::FeedRate(
             FeedRateMmMin::new(500.0).unwrap(),
@@ -52,12 +52,13 @@ fn feed_variant_is_always_valid() {
 fn domain_contains_only_valid_value_objects() {
     let data = CuttingData {
         diameter: DiameterMm::new(20.0).unwrap(),
-        teeth: ToothCount::new(5).unwrap(),
+        teeth: Some(ToothCount::new(5).unwrap()),
         speed: None,
         feed: None,
     };
 
     assert!(data.diameter.value() > 0.0);
-    assert!(data.teeth.value() > 0);
+    assert!(data.teeth.is_some());
+    assert!(data.teeth.as_ref().unwrap().value() > 0);
 }
 

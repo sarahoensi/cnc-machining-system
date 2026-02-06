@@ -2,38 +2,32 @@
 
 use std::convert::TryFrom;
 
-use crate::domain::features::cutting_data::model::*;
-use crate::domain::features::cutting_data::errors::DomainError;
 use super::raw::RawCuttingInput;
+use crate::domain::features::cutting_data::errors::DomainError;
+use crate::domain::features::cutting_data::model::*;
 
 impl TryFrom<RawCuttingInput> for CuttingData {
     type Error = DomainError;
 
     fn try_from(raw: RawCuttingInput) -> Result<Self, Self::Error> {
-
         let diameter = DiameterMm::new(raw.d.ok_or(DomainError::MissingField("d"))?)?;
-        let teeth = ToothCount::new(raw.z.ok_or(DomainError::MissingField("z"))?)?;
+        let teeth = match raw.z {
+            Some(z) => Some(ToothCount::new(z)?),
+            None => None,
+        };
 
         // -------- SPEED --------
         let speed = match (raw.vc, raw.n) {
-            (Some(vc), None) => {
-                Some(Speed::CuttingSpeed(CuttingSpeedMMin::new(vc)?))
-            }
-            (None, Some(n)) => {
-                Some(Speed::SpindleSpeed(SpindleSpeedRpm::new(n)?))
-            }
+            (Some(vc), None) => Some(Speed::CuttingSpeed(CuttingSpeedMMin::new(vc)?)),
+            (None, Some(n)) => Some(Speed::SpindleSpeed(SpindleSpeedRpm::new(n)?)),
             (None, None) => None,
             _ => return Err(DomainError::InvalidSpeedMode),
         };
 
         // -------- FEED --------
         let feed = match (raw.f, raw.fz) {
-            (Some(f), None) => {
-                Some(Feed::FeedRate(FeedRateMmMin::new(f)?))
-            }
-            (None, Some(fz)) => {
-                Some(Feed::FeedPerTooth(FeedPerToothMm::new(fz)?))
-            }
+            (Some(f), None) => Some(Feed::FeedRate(FeedRateMmMin::new(f)?)),
+            (None, Some(fz)) => Some(Feed::FeedPerTooth(FeedPerToothMm::new(fz)?)),
             (None, None) => None,
             _ => return Err(DomainError::InvalidFeedMode),
         };
@@ -47,7 +41,6 @@ impl TryFrom<RawCuttingInput> for CuttingData {
     }
 }
 
-
 // TESTER
 #[cfg(test)]
 mod tests {
@@ -56,18 +49,17 @@ mod tests {
 
     #[test]
     fn missing_d_returns_error() {
-        let raw = RawCuttingInput { d: None, z: Some(4), vc: Some(200.0), ..Default::default() };
+        let raw = RawCuttingInput {
+            d: None,
+            z: Some(4),
+            vc: Some(200.0),
+            ..Default::default()
+        };
         let err = CuttingData::try_from(raw).unwrap_err();
         assert_eq!(err, DomainError::MissingField("d"));
     }
 
-    #[test]
-    fn missing_z_returns_error() {
-        let raw = RawCuttingInput { d: Some(10.0), z: None, vc: Some(200.0), ..Default::default() };
-        let err = CuttingData::try_from(raw).unwrap_err();
-        assert_eq!(err, DomainError::MissingField("z"));
-    }
-
+    
     #[test]
     fn speed_mode_invalid_if_both_vc_and_n() {
         let raw = RawCuttingInput {
@@ -83,7 +75,13 @@ mod tests {
 
     #[test]
     fn speed_mode_allows_none_none_in_partial() {
-        let raw = RawCuttingInput { d: Some(10.0), z: Some(4), vc: None, n: None, ..Default::default() };
+        let raw = RawCuttingInput {
+            d: Some(10.0),
+            z: Some(4),
+            vc: None,
+            n: None,
+            ..Default::default()
+        };
         let data = CuttingData::try_from(raw).unwrap();
         assert!(data.speed.is_none());
     }
@@ -104,14 +102,26 @@ mod tests {
 
     #[test]
     fn feed_mode_allows_none_none_in_partial() {
-        let raw = RawCuttingInput { d: Some(10.0), z: Some(4), vc: Some(200.0), f: None, fz: None, ..Default::default() };
+        let raw = RawCuttingInput {
+            d: Some(10.0),
+            z: Some(4),
+            vc: Some(200.0),
+            f: None,
+            fz: None,
+            ..Default::default()
+        };
         let data = CuttingData::try_from(raw).unwrap();
         assert!(data.feed.is_none());
     }
 
     #[test]
     fn invalid_values_are_rejected() {
-        let raw = RawCuttingInput { d: Some(0.0), z: Some(4), vc: Some(200.0), ..Default::default() };
+        let raw = RawCuttingInput {
+            d: Some(0.0),
+            z: Some(4),
+            vc: Some(200.0),
+            ..Default::default()
+        };
         let err = CuttingData::try_from(raw).unwrap_err();
         match err {
             DomainError::InvalidValue(_) => {}
@@ -119,5 +129,3 @@ mod tests {
         }
     }
 }
-
-

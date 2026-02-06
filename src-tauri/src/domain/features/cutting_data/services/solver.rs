@@ -32,15 +32,16 @@ impl CuttingDataSolver {
         };
 
         // ---------- FEED ----------
-        let (feed_rate, feed_per_tooth) = match (data.feed, spindle_speed) {
+        // Feed can only be computed if teeth, feed, and spindle speed all exist
+        let (feed_rate, feed_per_tooth) = match (data.feed, spindle_speed, data.teeth) {
 
-            (Some(Feed::FeedRate(f)), Some(n)) => {
-                let fz = Self::fz_from_feed(f, data.teeth, n)?;
+            (Some(Feed::FeedRate(f)), Some(n), Some(z)) => {
+                let fz = Self::fz_from_feed(f, z, n)?;
                 (Some(f), Some(fz))
             }
 
-            (Some(Feed::FeedPerTooth(fz)), Some(n)) => {
-                let f = Self::feed_from_fz(fz, data.teeth, n)?;
+            (Some(Feed::FeedPerTooth(fz)), Some(n), Some(z)) => {
+                let f = Self::feed_from_fz(fz, z, n)?;
                 (Some(f), Some(fz))
             }
 
@@ -64,10 +65,13 @@ impl CuttingDataSolver {
     ) -> Result<CuttingDataFullSolution, DomainError> {
 
         let partial = Self::solve_partial(&data)?;
+        
+        // Full solution requires teeth to exist
+        let teeth = data.teeth.ok_or(DomainError::MissingField("teeth"))?;
 
         Ok(CuttingDataFullSolution {
             diameter: data.diameter,
-            teeth: data.teeth,
+            teeth,
             cutting_speed: partial
                 .cutting_speed
                 .ok_or(DomainError::MissingField("cutting_speed"))?,

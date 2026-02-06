@@ -7,7 +7,7 @@ use serde::{Serialize, Deserialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CuttingDataPartialSolution {
     pub diameter: DiameterMm,
-    pub teeth: ToothCount,
+    pub teeth: Option<ToothCount>,
 
     pub cutting_speed: Option<CuttingSpeedMMin>,
     pub spindle_speed: Option<SpindleSpeedRpm>,

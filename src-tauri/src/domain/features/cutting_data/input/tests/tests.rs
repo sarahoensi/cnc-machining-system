@@ -18,7 +18,7 @@ fn missing_d_returns_missing_field_d() {
 }
 
 #[test]
-fn missing_z_returns_missing_field_z() {
+fn missing_z_allows_none() {
     let raw = RawCuttingInput {
         d: Some(10.0),
         z: None,
@@ -26,8 +26,11 @@ fn missing_z_returns_missing_field_z() {
         ..Default::default()
     };
 
-    let err = CuttingData::try_from(raw).unwrap_err();
-    assert_eq!(err, DomainError::MissingField("z"));
+    let result = CuttingData::try_from(raw);
+    assert!(result.is_ok(), "Expected Ok but got: {:?}", result);
+    
+    let data = result.unwrap();
+    assert!(data.teeth.is_none(), "Expected teeth to be None when z is missing");
 }
 
 #[test]

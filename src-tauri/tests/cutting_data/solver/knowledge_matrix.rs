@@ -17,7 +17,7 @@ fn fz_and_cutting_speed_produces_full_solution() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::CuttingSpeed(
             CuttingSpeedMMin::new(200.0).unwrap()
         )),
@@ -41,7 +41,7 @@ fn fz_and_spindle_speed_produces_full_solution() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(12.0).unwrap(),
-        teeth: ToothCount::new(3).unwrap(),
+        teeth: Some(ToothCount::new(3).unwrap()),
         speed: Some(Speed::SpindleSpeed(
             SpindleSpeedRpm::new(6000.0).unwrap()
         )),
@@ -65,7 +65,7 @@ fn feed_rate_and_spindle_speed_produces_full_solution() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(8.0).unwrap(),
-        teeth: ToothCount::new(2).unwrap(),
+        teeth: Some(ToothCount::new(2).unwrap()),
         speed: Some(Speed::SpindleSpeed(
             SpindleSpeedRpm::new(10000.0).unwrap()
         )),
@@ -89,7 +89,7 @@ fn feed_rate_and_cutting_speed_produces_full_solution() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::CuttingSpeed(
             CuttingSpeedMMin::new(180.0).unwrap()
         )),
@@ -113,7 +113,7 @@ fn spindle_only_produces_cutting_speed() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::SpindleSpeed(
             SpindleSpeedRpm::new(5000.0).unwrap()
         )),
@@ -135,7 +135,7 @@ fn cutting_speed_only_produces_spindle_speed() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(15.0).unwrap(),
-        teeth: ToothCount::new(5).unwrap(),
+        teeth: Some(ToothCount::new(5).unwrap()),
         speed: Some(Speed::CuttingSpeed(
             CuttingSpeedMMin::new(220.0).unwrap()
         )),
@@ -161,7 +161,7 @@ fn feed_per_tooth_only_produces_no_outputs() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: None,
         feed: Some(Feed::FeedPerTooth(
             FeedPerToothMm::new(0.05).unwrap()
@@ -184,7 +184,7 @@ fn feed_rate_only_produces_no_outputs() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: None,
         feed: Some(Feed::FeedRate(
             FeedRateMmMin::new(1000.0).unwrap()
@@ -207,7 +207,7 @@ fn no_speed_and_no_feed_produces_no_outputs() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(12.0).unwrap(),
-        teeth: ToothCount::new(3).unwrap(),
+        teeth: Some(ToothCount::new(3).unwrap()),
         speed: None,
         feed: None,
     };
@@ -231,7 +231,7 @@ fn solver_preserves_input_cutting_speed() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::CuttingSpeed(vc)),
         feed: None,
     };
@@ -250,7 +250,7 @@ fn partial_solution_is_consistent_with_full_solution() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::CuttingSpeed(
             CuttingSpeedMMin::new(210.0).unwrap()
         )),

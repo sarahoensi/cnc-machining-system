@@ -12,7 +12,7 @@ fn partial_solver_with_only_speed_computes_spindle_and_cutting_speed() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::CuttingSpeed(
             CuttingSpeedMMin::new(200.0).unwrap()
         )),
@@ -37,7 +37,7 @@ fn partial_solver_with_only_spindle_computes_cutting_speed() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::SpindleSpeed(
             SpindleSpeedRpm::new(6000.0).unwrap()
         )),
@@ -62,7 +62,7 @@ fn partial_solver_with_only_feed_does_not_compute_feed_rate_without_spindle() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: None,
         feed: Some(Feed::FeedPerTooth(
             FeedPerToothMm::new(0.05).unwrap()
@@ -84,7 +84,7 @@ fn partial_solver_with_only_feed_rate_does_not_compute_fz_without_spindle() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: None,
         feed: Some(Feed::FeedRate(
             FeedRateMmMin::new(1000.0).unwrap()
@@ -106,7 +106,7 @@ fn partial_solver_with_speed_and_feed_computes_everything() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::CuttingSpeed(
             CuttingSpeedMMin::new(200.0).unwrap()
         )),
@@ -132,7 +132,7 @@ fn partial_solver_with_spindle_and_feed_rate_computes_fz_and_cutting_speed() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(8.0).unwrap(),
-        teeth: ToothCount::new(2).unwrap(),
+        teeth: Some(ToothCount::new(2).unwrap()),
         speed: Some(Speed::SpindleSpeed(
             SpindleSpeedRpm::new(10000.0).unwrap()
         )),
@@ -158,7 +158,7 @@ fn partial_solver_with_spindle_and_feed_per_tooth_computes_feed_rate_and_vc() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::SpindleSpeed(
             SpindleSpeedRpm::new(6000.0).unwrap()
         )),
@@ -182,7 +182,7 @@ fn partial_solver_with_cutting_speed_and_feed_rate_computes_spindle_and_fz() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::CuttingSpeed(
             CuttingSpeedMMin::new(200.0).unwrap()
         )),
@@ -208,7 +208,7 @@ fn partial_solver_preserves_input_cutting_speed() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::CuttingSpeed(vc)),
         feed: None,
     };
@@ -227,7 +227,7 @@ fn partial_solver_with_no_speed_and_no_feed_returns_empty_computations() {
 
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: None,
         feed: None,
     };

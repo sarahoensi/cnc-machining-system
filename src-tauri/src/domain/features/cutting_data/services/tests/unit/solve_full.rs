@@ -11,7 +11,7 @@ use crate::domain::features::cutting_data::model::values::*;
 fn solve_full_from_vc_and_fz_computes_all_fields() {
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::CuttingSpeed(CuttingSpeedMMin::new(200.0).unwrap())),
         feed: Some(Feed::FeedPerTooth(FeedPerToothMm::new(0.05).unwrap())),
     };
@@ -28,7 +28,7 @@ fn solve_full_from_vc_and_fz_computes_all_fields() {
 fn solve_full_from_spindle_and_feed_rate_computes_all_fields() {
     let data = CuttingData {
         diameter: DiameterMm::new(8.0).unwrap(),
-        teeth: ToothCount::new(2).unwrap(),
+        teeth: Some(ToothCount::new(2).unwrap()),
         speed: Some(Speed::SpindleSpeed(SpindleSpeedRpm::new(10000.0).unwrap())),
         feed: Some(Feed::FeedRate(FeedRateMmMin::new(800.0).unwrap())),
     };
@@ -48,7 +48,7 @@ fn solve_full_from_spindle_and_feed_rate_computes_all_fields() {
 fn solve_full_errors_when_speed_missing() {
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: None,
         feed: Some(Feed::FeedPerTooth(FeedPerToothMm::new(0.05).unwrap())),
     };
@@ -63,7 +63,7 @@ fn solve_full_errors_when_speed_missing() {
 fn solve_full_errors_when_feed_missing() {
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::CuttingSpeed(CuttingSpeedMMin::new(200.0).unwrap())),
         feed: None,
     };
@@ -78,7 +78,7 @@ fn solve_full_errors_when_feed_present_but_spindle_not_computable() {
     // Og spindle_speed kan ikke regnes uten speed.
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: None,
         feed: Some(Feed::FeedRate(FeedRateMmMin::new(800.0).unwrap())),
     };

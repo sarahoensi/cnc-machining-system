@@ -7,7 +7,7 @@ use super::values::*;
 #[derive(Debug, Clone)]
 pub struct CuttingData {
     pub diameter: DiameterMm,
-    pub teeth: ToothCount,
+    pub teeth: Option<ToothCount>,
     pub speed: Option<Speed>,
     pub feed: Option<Feed>,
 }

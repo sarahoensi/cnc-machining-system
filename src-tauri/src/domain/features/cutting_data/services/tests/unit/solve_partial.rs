@@ -9,7 +9,7 @@ use crate::domain::features::cutting_data::model::values::*;
 fn solve_partial_only_speed() {
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::CuttingSpeed(CuttingSpeedMMin::new(200.0).unwrap())),
         feed: None,
     };
@@ -25,7 +25,7 @@ fn solve_partial_only_speed() {
 fn solve_partial_only_feed_does_not_compute_without_spindle() {
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: None,
         feed: Some(Feed::FeedPerTooth(FeedPerToothMm::new(0.05).unwrap())),
     };
@@ -39,7 +39,7 @@ fn solve_partial_only_feed_does_not_compute_without_spindle() {
 fn solve_partial_speed_plus_fz_computes_everything() {
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: Some(Speed::CuttingSpeed(CuttingSpeedMMin::new(200.0).unwrap())),
         feed: Some(Feed::FeedPerTooth(FeedPerToothMm::new(0.05).unwrap())),
     };
@@ -61,7 +61,7 @@ fn solve_partial_speed_plus_fz_computes_everything() {
 fn solve_partial_speed_plus_feed_rate_computes_fz() {
     let data = CuttingData {
         diameter: DiameterMm::new(8.0).unwrap(),
-        teeth: ToothCount::new(2).unwrap(),
+        teeth: Some(ToothCount::new(2).unwrap()),
         speed: Some(Speed::SpindleSpeed(SpindleSpeedRpm::new(10000.0).unwrap())),
         feed: Some(Feed::FeedRate(FeedRateMmMin::new(800.0).unwrap())),
     };
@@ -83,7 +83,7 @@ fn solve_partial_speed_plus_feed_rate_computes_fz() {
 fn solve_partial_no_speed_no_feed_returns_none_for_computed_fields() {
     let data = CuttingData {
         diameter: DiameterMm::new(10.0).unwrap(),
-        teeth: ToothCount::new(4).unwrap(),
+        teeth: Some(ToothCount::new(4).unwrap()),
         speed: None,
         feed: None,
     };
