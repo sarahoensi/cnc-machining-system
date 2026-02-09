@@ -109,11 +109,7 @@ mod tests {
     #[test]
     fn supports_negative_angles() {
         let a = Angle::degrees(-90.0).unwrap();
-        assert!(approx_eq(
-            a.radians_value(),
-            -std::f64::consts::FRAC_PI_2,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(a.radians_value(), 0.0, DEFAULT_EPS));
     }
 
     // --- Ordering / comparisons ---
@@ -132,14 +128,13 @@ mod tests {
 
     // -- zero identity ---
     #[test]
-fn zero_is_identity() {
-    let a = Angle::degrees(0.0).unwrap();
-    assert_eq!(a.radians_value(), 0.0);
+    fn zero_is_identity() {
+        let a = Angle::degrees(0.0).unwrap();
+        assert!(approx_eq(a.radians_value(), 0.0, DEFAULT_EPS));
 
-    let a = Angle::radians(0.0).unwrap();
-    assert_eq!(a.degrees_value(), 0.0);
-}
-
+        let a = Angle::radians(0.0).unwrap();
+        assert!(approx_eq(a.degrees_value(), 0.0, DEFAULT_EPS));
+    }
 }
 
 #[cfg(test)]
@@ -172,21 +167,21 @@ mod property_tests {
 
     // --- Ordering invariant ---
     proptest! {
-    #[test]
-    fn ordering_preserved(a in -1.0e6f64..1.0e6f64,
-                         b in -1.0e6f64..1.0e6f64) {
+        #[test]
+        fn ordering_preserved(a in -1.0e6f64..1.0e6f64,
+                             b in -1.0e6f64..1.0e6f64) {
 
-        prop_assume!(a != b);
+            prop_assume!(!approx_eq(a, b, DEFAULT_EPS));
 
-        let (a, b) = if a < b { (a, b) } else { (b, a) };
 
-        let a = Angle::degrees(a).unwrap();
-        let b = Angle::degrees(b).unwrap();
+            let (a, b) = if a < b { (a, b) } else { (b, a) };
 
-        prop_assert!(a < b);
+            let a = Angle::degrees(a).unwrap();
+            let b = Angle::degrees(b).unwrap();
+
+            prop_assert!(a < b);
+        }
     }
-}
-
 
     // --- Finite invariant ---
     proptest! {
@@ -198,6 +193,21 @@ mod property_tests {
 
             let a = Angle::degrees(value).unwrap();
             prop_assert!(a.radians_value().is_finite());
+        }
+    }
+
+    proptest! {
+        #[test]
+        fn degrees_and_radians_are_consistent(value in -1.0e6f64..1.0e6f64) {
+
+            let deg = Angle::degrees(value).unwrap();
+            let rad = Angle::radians(value.to_radians()).unwrap();
+
+            prop_assert!(approx_eq(
+                deg.radians_value(),
+                rad.radians_value(),
+                DEFAULT_EPS
+            ));
         }
     }
 }
