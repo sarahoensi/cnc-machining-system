@@ -18,16 +18,12 @@ impl RightTriangleSolver {
         a: Length,
         b: Length,
     ) -> Result<RightTriangle, GeometryError> {
-        let a_mm = a.mm_value();
-        let b_mm = b.mm_value();
 
-        let c_val = (a_mm.powi(2) + b_mm.powi(2)).sqrt();
-        let c = Length::mm_positive(c_val).map_err(|_| GeometryError::InvalidTriangle)?;
+        if !is_positive_finite(a) || !is_positive_finite(b) {
+            return Err(GeometryError::InvalidTriangle);
+        }
 
-        let alpha = clamp_unit(a_mm / c_val).asin();
-        let beta = clamp_unit(b_mm / c_val).asin();
-
-        Self::build(a, b, c, alpha, beta)
+        Ok(RightTriangle::new(a, b))
     }
 
     // ---------------------------------------------------------
@@ -37,17 +33,33 @@ impl RightTriangleSolver {
         a: Length,
         c: Length,
     ) -> Result<RightTriangle, GeometryError> {
+
         let a_mm = a.mm_value();
         let c_mm = c.mm_value();
 
-        if a_mm >= c_mm - EPS {
+        if !is_positive_finite(a) || !is_positive_finite(c) {
+            return Err(GeometryError::InvalidTriangle);
+        }
+
+        if a_mm >= c_mm {
             return Err(GeometryError::ImpossibleTriangle);
         }
 
-        let b_val = (c_mm.powi(2) - a_mm.powi(2)).sqrt();
-        let b = Length::mm_positive(b_val).map_err(|_| GeometryError::InvalidTriangle)?;
+        let mut b_sq = c_mm.powi(2) - a_mm.powi(2);
 
-        Self::from_legs(a, b)
+        // Numerisk toleranse
+        if b_sq < 0.0 && b_sq > -EPS {
+            b_sq = 0.0;
+        }
+
+        if b_sq < 0.0 {
+            return Err(GeometryError::ImpossibleTriangle);
+        }
+
+        let b = Length::mm_positive(b_sq.sqrt())
+            .map_err(|_| GeometryError::InvalidTriangle)?;
+
+        Ok(RightTriangle::new(a, b))
     }
 
     // ---------------------------------------------------------
@@ -57,17 +69,32 @@ impl RightTriangleSolver {
         b: Length,
         c: Length,
     ) -> Result<RightTriangle, GeometryError> {
+
         let b_mm = b.mm_value();
         let c_mm = c.mm_value();
 
-        if b_mm >= c_mm - EPS {
+        if !is_positive_finite(b) || !is_positive_finite(c) {
+            return Err(GeometryError::InvalidTriangle);
+        }
+
+        if b_mm >= c_mm {
             return Err(GeometryError::ImpossibleTriangle);
         }
 
-        let a_val = (c_mm.powi(2) - b_mm.powi(2)).sqrt();
-        let a = Length::mm_positive(a_val).map_err(|_| GeometryError::InvalidTriangle)?;
+        let mut a_sq = c_mm.powi(2) - b_mm.powi(2);
 
-        Self::from_legs(a, b)
+        if a_sq < 0.0 && a_sq > -EPS {
+            a_sq = 0.0;
+        }
+
+        if a_sq < 0.0 {
+            return Err(GeometryError::ImpossibleTriangle);
+        }
+
+        let a = Length::mm_positive(a_sq.sqrt())
+            .map_err(|_| GeometryError::InvalidTriangle)?;
+
+        Ok(RightTriangle::new(a, b))
     }
 
     // ---------------------------------------------------------
@@ -77,34 +104,42 @@ impl RightTriangleSolver {
         c: Length,
         alpha: Angle,
     ) -> Result<RightTriangle, GeometryError> {
+
         validate_acute(alpha)?;
 
         let c_mm = c.mm_value();
-        let alpha_rad = alpha.radians_value();
+        let rad = alpha.radians_value();
 
-        let a_val = c_mm * alpha_rad.sin();
-        let b_val = c_mm * alpha_rad.cos();
+        let a = Length::mm_positive(c_mm * rad.sin())
+            .map_err(|_| GeometryError::InvalidTriangle)?;
 
-        let a = Length::mm_positive(a_val).map_err(|_| GeometryError::InvalidTriangle)?;
-        let b = Length::mm_positive(b_val).map_err(|_| GeometryError::InvalidTriangle)?;
+        let b = Length::mm_positive(c_mm * rad.cos())
+            .map_err(|_| GeometryError::InvalidTriangle)?;
 
-        Self::from_legs(a, b)
+        Ok(RightTriangle::new(a, b))
     }
 
     // ---------------------------------------------------------
-    // a + alpha (leg + angle opposite that leg)
+    // a + alpha (leg opposite alpha)
     // ---------------------------------------------------------
     pub fn from_leg_and_opposite_angle(
         a: Length,
         alpha: Angle,
     ) -> Result<RightTriangle, GeometryError> {
+
         validate_acute(alpha)?;
 
         let a_mm = a.mm_value();
-        let alpha_rad = alpha.radians_value();
+        let rad = alpha.radians_value();
 
-        let c_val = a_mm / alpha_rad.sin();
-        let c = Length::mm_positive(c_val).map_err(|_| GeometryError::InvalidTriangle)?;
+        let s = rad.sin();
+
+        if s.abs() < EPS {
+            return Err(GeometryError::InvalidTriangle);
+        }
+
+        let c = Length::mm_positive(a_mm / s)
+            .map_err(|_| GeometryError::InvalidTriangle)?;
 
         Self::from_leg_and_hypotenuse(a, c)
     }
@@ -116,31 +151,16 @@ impl RightTriangleSolver {
         b: Length,
         alpha: Angle,
     ) -> Result<RightTriangle, GeometryError> {
+
         validate_acute(alpha)?;
 
         let b_mm = b.mm_value();
-        let alpha_rad = alpha.radians_value();
+        let rad = alpha.radians_value();
 
-        let a_val = b_mm * alpha_rad.tan();
-        let a = Length::mm_positive(a_val).map_err(|_| GeometryError::InvalidTriangle)?;
+        let a = Length::mm_positive(b_mm * rad.tan())
+            .map_err(|_| GeometryError::InvalidTriangle)?;
 
-        Self::from_legs(a, b)
-    }
-
-    // ---------------------------------------------------------
-    // INTERNAL builder (guarantees invariants)
-    // ---------------------------------------------------------
-    fn build(
-        a: Length,
-        b: Length,
-        c: Length,
-        alpha_rad: f64,
-        beta_rad: f64,
-    ) -> Result<RightTriangle, GeometryError> {
-        let alpha = Angle::radians(alpha_rad).map_err(|_| GeometryError::InvalidTriangle)?;
-        let beta = Angle::radians(beta_rad).map_err(|_| GeometryError::InvalidTriangle)?;
-
-        Ok(RightTriangle::new(a, b, c, alpha, beta))
+        Ok(RightTriangle::new(a, b))
     }
 }
 
@@ -156,6 +176,25 @@ fn validate_acute(angle: Angle) -> Result<(), GeometryError> {
     Ok(())
 }
 
-fn clamp_unit(v: f64) -> f64 {
-    v.clamp(-1.0, 1.0)
+fn is_positive_finite(length: Length) -> bool {
+    let v = length.mm_value();
+    v.is_finite() && v > 0.0
+}
+
+// ----------- TESTS --------
+
+#[cfg(test)]
+mod internal_tests {
+    use super::*;
+
+    #[test]
+    fn validate_acute_rejects_invalid() {
+        assert!(validate_acute(Angle::degrees(0.0).unwrap()).is_err());
+        assert!(validate_acute(Angle::degrees(90.0).unwrap()).is_err());
+    }
+
+    #[test]
+    fn positive_finite_check() {
+        assert!(is_positive_finite(Length::mm_positive(3.0).unwrap()));
+    }
 }
