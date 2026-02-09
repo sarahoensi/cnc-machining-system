@@ -3,5 +3,5 @@
 mod model;
 pub mod planning;
 
-use model::*;
+pub use model::*;
 pub use planning::*;
