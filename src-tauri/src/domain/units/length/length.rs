@@ -80,3 +80,158 @@ impl std::ops::Div<f64> for Length {
         Length(self.0 / rhs)
     }
 }
+
+
+// ------------------- TESTS -------------------
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::domain::test_utils::approx::{approx_eq, DEFAULT_EPS};
+
+    // --- Validation ---
+
+    #[test]
+    fn rejects_nan() {
+        assert!(Length::mm(f64::NAN).is_err());
+        assert!(Length::mm_non_negative(f64::NAN).is_err());
+        assert!(Length::mm_positive(f64::NAN).is_err());
+    }
+
+    #[test]
+    fn rejects_infinity() {
+        assert!(Length::mm(f64::INFINITY).is_err());
+        assert!(Length::mm(f64::NEG_INFINITY).is_err());
+    }
+
+    #[test]
+    fn non_negative_rules() {
+        assert!(Length::mm_non_negative(0.0).is_ok());
+        assert!(Length::mm_non_negative(-1.0).is_err());
+    }
+
+    #[test]
+    fn positive_rules() {
+        assert!(Length::mm_positive(0.0).is_err());
+        assert!(Length::mm_positive(1.0).is_ok());
+    }
+
+    // --- Conversion ---
+
+    #[test]
+    fn inches_round_trip() {
+        let original = 12.345;
+
+        let l = Length::inches(original).unwrap();
+        let result = l.inches_value();
+
+        assert!(approx_eq(original, result, DEFAULT_EPS));
+    }
+
+    #[test]
+    fn mm_value_round_trip() {
+        let l = Length::mm(42.0).unwrap();
+        assert!(approx_eq(l.mm_value(), 42.0, DEFAULT_EPS));
+    }
+
+    // --- Arithmetic ---
+
+    #[test]
+    fn add_sub_identity() {
+        let a = Length::mm(10.0).unwrap();
+        let b = Length::mm(5.0).unwrap();
+
+        let result = (a + b) - b;
+
+        assert!(approx_eq(a.mm_value(), result.mm_value(), DEFAULT_EPS));
+    }
+
+    #[test]
+    fn mul_div_identity() {
+        let a = Length::mm(7.5).unwrap();
+
+        let result = (a * 3.0) / 3.0;
+
+        assert!(approx_eq(a.mm_value(), result.mm_value(), DEFAULT_EPS));
+    }
+
+    #[test]
+    fn ordering_preserved() {
+        let a = Length::mm(5.0).unwrap();
+        let b = Length::mm(10.0).unwrap();
+
+        assert!(a < b);
+        assert!(a + a < b + a);
+    }
+}
+
+#[cfg(test)]
+mod property_tests {
+    use super::*;
+    use crate::domain::test_utils::approx::{approx_eq, DEFAULT_EPS};
+    use proptest::prelude::*;
+
+    // --- inches round trip ---
+    proptest! {
+        #[test]
+        fn inches_round_trip_property(value in -1.0e6f64..1.0e6f64) {
+            let l = Length::inches(value).unwrap();
+            let result = l.inches_value();
+
+            prop_assert!(approx_eq(value, result, DEFAULT_EPS));
+        }
+    }
+
+    // --- add/sub invariant ---
+    proptest! {
+        #[test]
+        fn add_sub_identity(a in -1.0e6f64..1.0e6f64,
+                            b in -1.0e6f64..1.0e6f64) {
+
+            let a = Length::mm(a).unwrap();
+            let b = Length::mm(b).unwrap();
+
+            let result = (a + b) - b;
+
+            prop_assert!(approx_eq(
+                a.mm_value(),
+                result.mm_value(),
+                DEFAULT_EPS
+            ));
+        }
+    }
+
+    // --- mul/div invariant ---
+    proptest! {
+        #[test]
+        fn mul_div_identity(a in -1.0e6f64..1.0e6f64,
+                            k in -1.0e3f64..1.0e3f64) {
+
+            prop_assume!(!approx_eq(k, 0.0, DEFAULT_EPS));
+
+            let a = Length::mm(a).unwrap();
+            let result = (a * k) / k;
+
+            prop_assert!(approx_eq(
+                a.mm_value(),
+                result.mm_value(),
+                DEFAULT_EPS
+            ));
+        }
+    }
+
+    // --- arithmetic finite ---
+    proptest! {
+        #[test]
+        fn arithmetic_stays_finite(a in -1.0e6f64..1.0e6f64,
+                                   b in -1.0e6f64..1.0e6f64) {
+
+            let a = Length::mm(a).unwrap();
+            let b = Length::mm(b).unwrap();
+
+            let r = a + b;
+
+            prop_assert!(r.mm_value().is_finite());
+        }
+    }
+}
