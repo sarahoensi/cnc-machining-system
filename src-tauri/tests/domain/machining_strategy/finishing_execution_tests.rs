@@ -14,9 +14,6 @@ fn d(v: f64) -> Diameter {
     Diameter::mm(v).unwrap()
 }
 
-fn l(v: f64) -> Length {
-    Length::mm_positive(v).unwrap()
-}
 
 fn outer_plan(start: f64, target: f64, cuts: u32) -> FinishingPlan {
     FinishingPlanner::generate_plan(FinishingRequest {
