@@ -32,6 +32,8 @@ impl Diameter {
     }
 }
 
+// ------------------------ TESTS ------------------------
+
 #[cfg(test)]
 mod tests {
     use super::*;
