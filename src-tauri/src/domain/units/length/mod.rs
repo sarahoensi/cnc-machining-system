@@ -1,4 +1,4 @@
-// domain/length/mod.rs
+// domain/units/length/mod.rs
 
 mod length;
 mod diameter;

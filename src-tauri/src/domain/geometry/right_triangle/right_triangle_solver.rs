@@ -3,8 +3,8 @@
 use crate::domain::geometry::geometry_error::GeometryError;
 use crate::domain::geometry::right_triangle::RightTriangle;
 
-use crate::domain::units::angle::Angle;
-use crate::domain::units::length::Length;
+use crate::domain::units::Angle;
+use crate::domain::units::Length;
 
 const EPS: f64 = 1e-12;
 

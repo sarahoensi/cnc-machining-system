@@ -5,4 +5,6 @@ pub mod tool;
 pub mod cutting_input;
 pub mod cutting_result;
 
-pub mod calculators;
+mod calculators;
+
+pub use calculators::*;

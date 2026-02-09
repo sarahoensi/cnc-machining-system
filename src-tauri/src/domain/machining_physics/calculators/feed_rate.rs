@@ -1,8 +1,8 @@
 // domain/machining_physics/calculators/feed_rate.rs
 
 use crate::domain::units::errors::UnitError;
-use crate::domain::units::machining::ChipLoad;
-use crate::domain::units::motion::{FeedRate, Rpm};
+use crate::domain::units::ChipLoad;
+use crate::domain::units::{FeedRate, Rpm};
 
 use crate::domain::machining_physics::tool::ToothCount;
 
@@ -22,8 +22,8 @@ impl FeedRateCalculator {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::units::machining::ChipLoad;
-    use crate::domain::units::motion::Rpm;
+    use crate::domain::units::ChipLoad;
+    use crate::domain::units::Rpm;
 
     #[test]
     fn feed_is_chipload_times_rpm_times_teeth() {

@@ -1,7 +1,7 @@
 // domain/geometry/right_triangle/right_triangle.rs
 
-use crate::domain::units::angle::Angle;
-use crate::domain::units::length::Length;
+use crate::domain::units::Angle;
+use crate::domain::units::Length;
 
 const TRIG_CLAMP_EPS: f64 = 1e-15;
 
@@ -116,7 +116,7 @@ fn clamp_unit(v: f64) -> f64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::test_utils::approx::{approx_eq, DEFAULT_EPS};
+    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
 
     fn sample_triangle() -> RightTriangle {
         RightTriangle::new(

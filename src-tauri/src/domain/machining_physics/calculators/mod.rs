@@ -1,5 +1,9 @@
 // domain/machining_physics/calculators/mod.rs
 
-pub mod spindle_speed;
-pub mod feed_rate;
-pub mod chip_load;
+mod spindle_speed;
+mod feed_rate;
+mod chip_load;
+
+pub use spindle_speed::*;
+pub use feed_rate::*;
+pub use chip_load::*;

@@ -37,7 +37,7 @@ impl Angle {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::test_utils::approx::{approx_eq, DEFAULT_EPS};
+    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
 
     // --- Validation tests ---
 
@@ -147,7 +147,7 @@ fn supports_negative_angles() {
 #[cfg(test)]
 mod property_tests {
     use super::*;
-    use crate::domain::test_utils::approx::{approx_eq, DEFAULT_EPS};
+    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
     use proptest::prelude::*;
 
     // --- Round trip: degrees -> radians -> degrees ---

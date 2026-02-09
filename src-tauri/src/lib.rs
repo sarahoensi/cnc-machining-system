@@ -3,6 +3,7 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
 pub mod domain;
+pub mod test_utils;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -12,3 +13,4 @@ pub fn run() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+

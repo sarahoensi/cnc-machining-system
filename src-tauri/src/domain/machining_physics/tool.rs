@@ -1,7 +1,7 @@
 // domain/machining_physics/tools.rs
 
 use crate::domain::units::errors::UnitError;
-use crate::domain::units::length::Diameter;
+use crate::domain::units::Diameter;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct ToothCount(u32);

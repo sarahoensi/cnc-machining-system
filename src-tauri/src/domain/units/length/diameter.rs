@@ -37,7 +37,7 @@ impl Diameter {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::test_utils::approx::{approx_eq, DEFAULT_EPS};
+    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
 
     // --- Validation ---
 
@@ -111,7 +111,7 @@ fn accepts_min_positive_value() {
 #[cfg(test)]
 mod property_tests {
     use super::*;
-    use crate::domain::test_utils::approx::{approx_eq, DEFAULT_EPS};
+    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
     use proptest::prelude::*;
 
     // --- radius invariant ---

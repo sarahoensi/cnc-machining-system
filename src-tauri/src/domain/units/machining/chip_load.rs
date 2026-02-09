@@ -27,7 +27,7 @@ impl ChipLoad {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::test_utils::approx::{approx_eq, DEFAULT_EPS};
+    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
 
     // --- Validation ---
 
@@ -79,7 +79,7 @@ mod tests {
 #[cfg(test)]
 mod property_tests {
     use super::*;
-    use crate::domain::test_utils::approx::{approx_eq, DEFAULT_EPS};
+    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
     use proptest::prelude::*;
 
     // --- round trip ---

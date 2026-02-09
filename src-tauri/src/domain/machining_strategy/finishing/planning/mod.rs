@@ -1,4 +1,4 @@
-// domain/machining_strategy/finishing/model/mod.rs
+// domain/machining_strategy/finishing/planning/mod.rs
 
 pub mod finishing_planner;
 pub mod finishing_request;

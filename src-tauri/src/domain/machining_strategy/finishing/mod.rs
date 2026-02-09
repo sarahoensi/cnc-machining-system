@@ -1,7 +1,7 @@
 // domain/machining_strategy/finishing/mod.rs
 
-pub mod model;
+mod model;
 pub mod planning;
 
-pub use model::*;
+use model::*;
 pub use planning::*;

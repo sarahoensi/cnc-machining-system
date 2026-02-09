@@ -3,9 +3,9 @@
 use std::f64::consts::PI;
 
 use crate::domain::units::errors::UnitError;
-use crate::domain::units::length::Diameter;
-use crate::domain::units::machining::CuttingSpeed;
-use crate::domain::units::motion::Rpm;
+use crate::domain::units::Diameter;
+use crate::domain::units::CuttingSpeed;
+use crate::domain::units::Rpm;
 
 pub struct SpindleSpeedCalculator;
 
@@ -36,7 +36,7 @@ impl SpindleSpeedCalculator {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::units::length::Diameter;
+    use crate::domain::units::Diameter;
 
     #[test]
     fn roundtrip_rpm_vc() {

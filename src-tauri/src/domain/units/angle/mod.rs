@@ -1,4 +1,4 @@
-// domain/units/mod.rs
+// domain/units/angle/mod.rs
 
 mod angle;
 

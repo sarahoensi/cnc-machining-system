@@ -2,7 +2,7 @@
 
 use std::f64::consts::PI;
 
-use crate::domain::units::length::{Diameter, Radius, Length};
+use crate::domain::units::{Diameter, Radius, Length};
 
 /// Represents a mathematically valid circle.
 ///
@@ -56,13 +56,13 @@ impl Circle {
     }
 
     /// Arc length = r * θ
-    pub fn arc_length(&self, angle: crate::domain::units::angle::Angle) -> Length {
+    pub fn arc_length(&self, angle: crate::domain::units::Angle) -> Length {
         let value = self.radius.mm_value() * angle.radians_value();
         Length::mm(value).unwrap()
     }
 
     /// Sector area = (θ / 2π) * circle area
-    pub fn sector_area(&self, angle: crate::domain::units::angle::Angle) -> f64 {
+    pub fn sector_area(&self, angle: crate::domain::units::Angle) -> f64 {
         let fraction = angle.radians_value() / (2.0 * PI);
         self.area() * fraction
     }
@@ -72,8 +72,8 @@ impl Circle {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::test_utils::approx::{approx_eq, DEFAULT_EPS};
-    use crate::domain::units::angle::Angle;
+    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
+    use crate::domain::units::Angle;
 
     #[test]
     fn constructors_are_consistent() {
@@ -148,7 +148,7 @@ mod tests {
 #[cfg(test)]
 mod property_tests {
     use super::*;
-    use crate::domain::test_utils::approx::{approx_eq, DEFAULT_EPS};
+    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
     use proptest::prelude::*;
 
     proptest! {
@@ -157,7 +157,7 @@ mod property_tests {
             let c = Circle::from_radius(Radius::mm(radius).unwrap());
 
             let full = c.arc_length(
-                crate::domain::units::angle::Angle::radians(2.0 * PI).unwrap()
+                crate::domain::units::Angle::radians(2.0 * PI).unwrap()
             );
 
             prop_assert!(approx_eq(
@@ -174,7 +174,7 @@ mod property_tests {
             let c = Circle::from_radius(Radius::mm(radius).unwrap());
 
             let full = c.sector_area(
-                crate::domain::units::angle::Angle::radians(2.0 * PI).unwrap()
+                crate::domain::units::Angle::radians(2.0 * PI).unwrap()
             );
 
             prop_assert!(approx_eq(

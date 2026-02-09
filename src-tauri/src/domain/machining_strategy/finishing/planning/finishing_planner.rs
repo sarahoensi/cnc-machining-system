@@ -1,7 +1,7 @@
 // domain/machining_strategy/finishing/finishing_planner.rs
 
 use crate::domain::machining_strategy::strategy_error::StrategyError;
-use crate::domain::units::length::Length;
+use crate::domain::units::Length;
 
 use crate::domain::machining_strategy::finishing::{
     FinishingMode,

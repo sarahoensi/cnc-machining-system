@@ -1,8 +1,8 @@
 // domain/machining_physics/calculators/chip_load.rs
 
 use crate::domain::units::errors::UnitError;
-use crate::domain::units::machining::ChipLoad;
-use crate::domain::units::motion::{FeedRate, Rpm};
+use crate::domain::units::ChipLoad;
+use crate::domain::units::{FeedRate, Rpm};
 
 use crate::domain::machining_physics::tool::ToothCount;
 

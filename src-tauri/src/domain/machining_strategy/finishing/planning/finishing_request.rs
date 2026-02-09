@@ -1,6 +1,6 @@
 // domain/machining_strategy/finishing/finishing_request.rs
 
-use crate::domain::units::length::{Diameter, Length};
+use crate::domain::units::{Diameter, Length};
 
 
 use crate::domain::machining_strategy::finishing::{
