@@ -1,6 +1,6 @@
 // domain/machining_physics/mod.rs
 
-pub mod physics_error;
+//pub mod physics_error;
 
 mod calculators;
 mod cutting_input;
