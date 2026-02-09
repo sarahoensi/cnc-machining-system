@@ -3,12 +3,13 @@
 use crate::domain::machining_strategy::strategy_error::StrategyError;
 use crate::domain::units::length::Length;
 
-use super::{
+use crate::domain::machining_strategy::finishing::{
     FinishingMode,
     FinishingPlan,
     FinishingRequest,
-    FinishingPlanning, // IMPORTANT: comes from finishing_request.rs
+    FinishingPlanning,
 };
+
 
 /// Domain service responsible for generating a valid FinishingPlan.
 ///

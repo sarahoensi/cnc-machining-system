@@ -2,7 +2,12 @@
 
 use crate::domain::units::length::{Diameter, Length};
 
-use super::FinishingMode;
+
+use crate::domain::machining_strategy::finishing::{
+    FinishingMode,
+    
+};
+
 
 /// Defines how finishing plan should be generated.
 #[derive(Debug, Copy, Clone)]
