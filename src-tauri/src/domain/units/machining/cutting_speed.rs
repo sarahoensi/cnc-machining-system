@@ -39,11 +39,11 @@ impl CuttingSpeed {
     }
 }
 
+// -------------- TESTS ---------------
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::units::length::Diameter;
-    use crate::domain::units::motion::Rpm;
+    use crate::domain::test_utils::approx::{approx_eq, DEFAULT_EPS};
 
     #[test]
     fn rejects_non_positive() {
@@ -52,12 +52,87 @@ mod tests {
     }
 
     #[test]
-    fn computes_from_rpm_roundtrip() {
+    fn rejects_nan_and_infinity() {
+        assert!(CuttingSpeed::meters_per_min(f64::NAN).is_err());
+        assert!(CuttingSpeed::meters_per_min(f64::INFINITY).is_err());
+    }
+
+    #[test]
+    fn rpm_roundtrip() {
         let d = Diameter::mm(10.0).unwrap();
         let rpm = Rpm::new(1000.0).unwrap();
-        let speed = CuttingSpeed::from_rpm(d, rpm).unwrap();
 
+        let speed = CuttingSpeed::from_rpm(d, rpm).unwrap();
         let rpm2 = speed.to_rpm(d).unwrap();
-        assert!((rpm2.value() - 1000.0).abs() < 1e-6);
+
+        assert!(approx_eq(
+            rpm2.value(),
+            rpm.value(),
+            DEFAULT_EPS
+        ));
+    }
+
+    #[test]
+    fn increases_with_rpm() {
+        let d = Diameter::mm(10.0).unwrap();
+
+        let low = CuttingSpeed::from_rpm(d, Rpm::new(500.0).unwrap()).unwrap();
+        let high = CuttingSpeed::from_rpm(d, Rpm::new(1000.0).unwrap()).unwrap();
+
+        assert!(low < high);
+    }
+
+    #[test]
+    fn increases_with_diameter() {
+        let rpm = Rpm::new(1000.0).unwrap();
+
+        let small = CuttingSpeed::from_rpm(Diameter::mm(5.0).unwrap(), rpm).unwrap();
+        let large = CuttingSpeed::from_rpm(Diameter::mm(10.0).unwrap(), rpm).unwrap();
+
+        assert!(small < large);
     }
 }
+
+#[cfg(test)]
+mod property_tests {
+    use super::*;
+    use crate::domain::test_utils::approx::{approx_eq, DEFAULT_EPS};
+    use proptest::prelude::*;
+
+    proptest! {
+        #[test]
+        fn rpm_roundtrip_property(
+            diameter in 1e-6f64..1e4f64,
+            rpm in 1e-6f64..1e6f64
+        ) {
+
+            let d = Diameter::mm(diameter).unwrap();
+            let rpm = Rpm::new(rpm).unwrap();
+
+            let speed = CuttingSpeed::from_rpm(d, rpm).unwrap();
+            let rpm2 = speed.to_rpm(d).unwrap();
+
+            prop_assert!(approx_eq(
+                rpm.value(),
+                rpm2.value(),
+                DEFAULT_EPS
+            ));
+        }
+    }
+
+    proptest! {
+        #[test]
+        fn speed_is_finite(
+            diameter in 1e-6f64..1e4f64,
+            rpm in 1e-6f64..1e6f64
+        ) {
+            let d = Diameter::mm(diameter).unwrap();
+            let rpm = Rpm::new(rpm).unwrap();
+
+            let speed = CuttingSpeed::from_rpm(d, rpm).unwrap();
+
+            prop_assert!(speed.meters_per_min_value().is_finite());
+        }
+    }
+}
+
