@@ -107,10 +107,15 @@ mod tests {
     // --- Negative values ---
 
     #[test]
-    fn supports_negative_angles() {
-        let a = Angle::degrees(-90.0).unwrap();
-        assert!(approx_eq(a.radians_value(), 0.0, DEFAULT_EPS));
-    }
+fn supports_negative_angles() {
+    let a = Angle::degrees(-90.0).unwrap();
+    assert!(approx_eq(
+        a.radians_value(),
+        -std::f64::consts::FRAC_PI_2,
+        DEFAULT_EPS
+    ));
+}
+
 
     // --- Ordering / comparisons ---
 
