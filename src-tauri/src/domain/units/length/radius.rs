@@ -1,7 +1,7 @@
 // domain/units/length/radius.rs
 
 use crate::domain::units::errors::UnitError;
-use crate::domain::units::length::{Diameter, Length};
+use crate::domain::units::{Diameter, Length};
 
 /// Radius stored internally as millimeters (mm).
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]

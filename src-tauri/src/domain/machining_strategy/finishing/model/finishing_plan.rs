@@ -1,6 +1,6 @@
 // domain/machining_strategy/finishing/finishing_plan.rs
 
-use crate::domain::units::{Diameter, Length};
+use crate::domain::{Diameter, Length};
 
 use super::FinishingMode;
 

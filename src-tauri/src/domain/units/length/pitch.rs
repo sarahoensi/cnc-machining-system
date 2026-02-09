@@ -1,7 +1,7 @@
 // domain/units/length/pitch.rs
 
 use crate::domain::units::errors::UnitError;
-use crate::domain::units::length::Length;
+use crate::domain::units::Length;
 
 /// Pitch stored internally as millimeters per revolution (mm/rev).
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]

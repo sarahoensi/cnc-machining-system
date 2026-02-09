@@ -1,4 +1,6 @@
 // domain/machining_strategy/mod.rs
 
-pub mod finishing;
+mod finishing;
 pub mod strategy_error;
+
+pub use finishing::*;

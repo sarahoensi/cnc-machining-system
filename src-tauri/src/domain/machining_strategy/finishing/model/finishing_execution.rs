@@ -1,7 +1,7 @@
 // domain/machining_strategy/finishing_execution.rs
 
 use crate::domain::machining_strategy::strategy_error::StrategyError;
-use crate::domain::units::{Diameter, Length};
+use crate::domain::{Diameter, Length};
 
 use super::{FinishingPlan, FinishingStep};
 

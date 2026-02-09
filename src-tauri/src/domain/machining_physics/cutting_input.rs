@@ -1,7 +1,6 @@
 // domain/machining_physics/cutting_input.rs
 
-use crate::domain::units::{ChipLoad, CuttingSpeed};
-use crate::domain::units::{FeedRate, Rpm};
+use crate::domain::{ChipLoad, CuttingSpeed, FeedRate, Rpm};
 
 /// Input for typical milling calculations.
 /// Note: you often know two of these and calculate the third (rpm/feed/chipload).

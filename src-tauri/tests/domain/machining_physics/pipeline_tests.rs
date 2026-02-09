@@ -1,6 +1,5 @@
 // tests/domain/machining_physics/pipeline_tests.rs
 
-use cnc_machining_system_lib::domain::tool::{Tool, ToothCount};
 use cnc_machining_system_lib::domain::*;
 use cnc_machining_system_lib::test_utils::approx::{approx_eq, DEFAULT_EPS};
 

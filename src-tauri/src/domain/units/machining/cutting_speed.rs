@@ -3,8 +3,7 @@
 use std::f64::consts::PI;
 
 use crate::domain::units::errors::UnitError;
-use crate::domain::units::length::Diameter;
-use crate::domain::units::motion::Rpm;
+use crate::domain::units::{Diameter, Rpm};
 
 /// Surface cutting speed stored as meters per minute (m/min).
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]

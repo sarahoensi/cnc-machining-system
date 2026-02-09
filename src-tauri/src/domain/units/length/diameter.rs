@@ -1,7 +1,7 @@
 // domain/units/length/diameter.rs
 
 use crate::domain::units::errors::UnitError;
-use crate::domain::units::length::{Length, Radius};
+use crate::domain::units::{Length, Radius};
 
 /// Diameter stored internally as millimeters (mm).
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]

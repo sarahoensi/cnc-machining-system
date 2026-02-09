@@ -1,6 +1,6 @@
 // domain/machining_strategy/finishing/finishing_step.rs
 
-use crate::domain::units::{Diameter, Length};
+use crate::domain::{Diameter, Length};
 
 /// One step in the finishing execution table.
 #[derive(Debug, Copy, Clone)]

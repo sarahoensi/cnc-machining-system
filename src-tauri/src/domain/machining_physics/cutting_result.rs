@@ -1,7 +1,6 @@
 // domain/machining_physics/cutting_result.rs
 
-use crate::domain::units::{ChipLoad, CuttingSpeed};
-use crate::domain::units::{FeedRate, Rpm};
+use crate::domain::{ChipLoad, CuttingSpeed, FeedRate, Rpm};
 
 #[derive(Debug, Copy, Clone)]
 pub struct CuttingResult {

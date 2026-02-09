@@ -2,8 +2,8 @@
 
 use std::f64::consts::PI;
 
-use crate::domain::units::Angle;
-use crate::domain::units::{Diameter, Pitch, Length};
+use crate::domain::{Angle, Diameter, Length};
+use crate::domain::units::Pitch;
 
 /// Represents a cylindrical helix.
 ///

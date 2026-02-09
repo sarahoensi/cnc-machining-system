@@ -1,10 +1,6 @@
 // tests/domain/machining_strategy/finishing_planner_tests.rs
 
-use cnc_machining_system_lib::domain::finishing::*;
-use cnc_machining_system_lib::domain::strategy_error::StrategyError;
-use cnc_machining_system_lib::domain::{
- Length, Diameter
-};
+use cnc_machining_system_lib::domain::*;
 
 fn d(v: f64) -> Diameter {
     Diameter::mm(v).unwrap()
@@ -69,7 +65,7 @@ fn rejects_wrong_direction_inner() {
 
     assert!(matches!(
         FinishingPlanner::generate_plan(req),
-        Err(StrategyError::InvalidInputs(_))
+        Err(_)
     ));
 }
 

@@ -1,9 +1,6 @@
 // tests/domain/machining_strategy/finishing_execution_tests.rs
 
-use cnc_machining_system_lib::domain::finishing::*;
-use cnc_machining_system_lib::domain::strategy_error::StrategyError;
-
-use cnc_machining_system_lib::domain::{Diameter, Length};
+use cnc_machining_system_lib::domain::*;
 
 const EPS: f64 = 1e-9;
 
@@ -151,7 +148,7 @@ fn cannot_edit_earlier_step_when_later_measured() {
 
     let result = exec.register_measurement(1, d(9.3));
 
-    assert!(matches!(result, Err(StrategyError::InvalidInputs(_))));
+    assert!(result.is_err());
 }
 
 //

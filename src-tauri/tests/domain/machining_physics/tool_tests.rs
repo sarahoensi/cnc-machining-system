@@ -1,6 +1,6 @@
 // tests/domain/machining_physics/tool_tests.rs
 
-use cnc_machining_system_lib::domain::{tool::{Tool, ToothCount}, *};
+use cnc_machining_system_lib::domain::*;
 
 #[test]
 fn tooth_count_valid() {
