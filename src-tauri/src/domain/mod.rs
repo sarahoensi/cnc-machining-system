@@ -15,8 +15,10 @@ pub use units::{
     CuttingSpeed,
     FeedRate,
     Rpm,
-    ChipLoad,
+    ChipLoad
 };
+
+pub use units::UnitError;
 
 // --------------------------------
 // Geometry
@@ -26,6 +28,7 @@ pub use geometry::{
     Helix,
     RightTriangle,
     RightTriangleSolver,
+    GeometryError,
 };
 
 // --------------------------------

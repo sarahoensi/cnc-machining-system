@@ -8,3 +8,4 @@ mod spindle_speed_tests;
 mod tool_tests;
 mod cross_calculator_tests;
 mod property_strategies;
+mod feed_rate_property_test;

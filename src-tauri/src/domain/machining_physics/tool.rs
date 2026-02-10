@@ -1,6 +1,6 @@
 // domain/machining_physics/tools.rs
 
-use crate::domain::units::errors::UnitError;
+use crate::domain::UnitError;
 use crate::domain::Diameter;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]

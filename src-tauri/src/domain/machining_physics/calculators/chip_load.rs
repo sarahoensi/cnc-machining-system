@@ -1,6 +1,6 @@
 // domain/machining_physics/calculators/chip_load.rs
 
-use crate::domain::units::errors::UnitError;
+use crate::domain::UnitError;
 use crate::domain::{ChipLoad, FeedRate, Rpm, ToothCount};
 
 pub struct ChipLoadCalculator;

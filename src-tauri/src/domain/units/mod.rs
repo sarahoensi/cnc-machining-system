@@ -1,5 +1,5 @@
 // domain/units/mod.rs
-pub mod errors;
+mod errors;
 
 mod length;
 mod angle;
@@ -12,3 +12,4 @@ pub use angle::*;
 pub use motion::*;
 pub use machining::*;
 //pub use ratio::*;
+pub use errors::UnitError;

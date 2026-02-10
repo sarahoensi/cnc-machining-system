@@ -49,3 +49,4 @@ fn scaling_rpm_scales_feed() {
         DEFAULT_EPS
     ));
 }
+

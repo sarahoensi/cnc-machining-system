@@ -1,4 +1,6 @@
 // tests/domain/machining_physics/property_strategies.rs
+#![allow(dead_code)]
+
 
 use cnc_machining_system_lib::domain::*;
 use proptest::prelude::*;

@@ -2,7 +2,7 @@
 
 use std::f64::consts::PI;
 
-use crate::domain::units::errors::UnitError;
+use crate::domain::UnitError;
 use crate::domain::{CuttingSpeed, Diameter, Rpm};
 
 pub struct SpindleSpeedCalculator;
