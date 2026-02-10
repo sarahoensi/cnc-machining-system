@@ -3,6 +3,7 @@
  mod helix;
  mod shared;
  mod cutting_data;
+ pub mod finishing;
 
 pub use shared::ApplicationError;
 

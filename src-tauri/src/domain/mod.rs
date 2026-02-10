@@ -58,4 +58,5 @@ pub use machining_strategy::{
     FinishingMode,
     FinishingRequest,
     FinishingPlanning,
+    StrategyError,
 };

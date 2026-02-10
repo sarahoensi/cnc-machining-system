@@ -2,11 +2,13 @@
 
 use crate::domain::GeometryError;
 use crate::domain::UnitError;
+use crate::domain::StrategyError;
 
 #[derive(Debug)]
 pub enum ApplicationError {
     Geometry(GeometryError),
     Unit(UnitError),
+    Strategy(StrategyError),
 }
 
 impl std::fmt::Display for ApplicationError {
@@ -14,6 +16,7 @@ impl std::fmt::Display for ApplicationError {
         match self {
             ApplicationError::Geometry(e) => write!(f, "{e}"),
             ApplicationError::Unit(e) => write!(f, "{e}"),
+            ApplicationError::Strategy(e) => write!(f, "{e}"),
         }
     }
 }
@@ -29,5 +32,11 @@ impl From<GeometryError> for ApplicationError {
 impl From<UnitError> for ApplicationError {
     fn from(err: UnitError) -> Self {
         ApplicationError::Unit(err)
+    }
+}
+
+impl From<StrategyError> for ApplicationError {
+    fn from(err: StrategyError) -> Self {
+        ApplicationError::Strategy(err)
     }
 }
