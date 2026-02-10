@@ -15,7 +15,8 @@ pub use units::{
     CuttingSpeed,
     FeedRate,
     Rpm,
-    ChipLoad
+    ChipLoad,
+    Pitch
 };
 
 pub use units::UnitError;
