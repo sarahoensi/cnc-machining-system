@@ -12,5 +12,4 @@ mod command;
 pub use command::{
     generate_finishing_plan,
     register_finishing_measurement,
-    clear_finishing_measurement,
 };

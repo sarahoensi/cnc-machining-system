@@ -154,24 +154,7 @@ fn cannot_edit_earlier_step_when_later_measured() {
     assert!(result.is_err());
 }
 
-//
-// ======================================================
-// Clear measurement behaviour
-// ======================================================
-//
 
-#[test]
-fn clear_measurement_restores_uniform_steps() {
-    let mut exec = exec(outer_plan(10.0, 8.0, 3));
-
-    exec.register_measurement(1, d(9.5)).unwrap();
-
-    exec.clear_measurement(1).unwrap();
-
-    let step = exec.steps()[1].planned_delta().mm_value();
-
-    assert!(approx(step, exec.plan().expected_step().mm_value()));
-}
 
 //
 // ======================================================
