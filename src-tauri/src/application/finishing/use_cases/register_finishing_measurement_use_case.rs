@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::application::finishing::finishing_execution_output::FinishingExecutionOutput;
 use crate::application::shared::AppResult;
 
-use crate::application::finishing::finishing_output_mapper::to_output;
+use crate::application::finishing::mapping::finishing_execution_mapper::to_execution_output;
 
 use crate::domain::{
     Diameter,
@@ -42,6 +42,6 @@ impl RegisterFinishingMeasurementUseCase {
 
         self.repo.save(execution.clone())?;
 
-        Ok(to_output(&execution))
+        Ok(to_execution_output(&execution))
     }
 }

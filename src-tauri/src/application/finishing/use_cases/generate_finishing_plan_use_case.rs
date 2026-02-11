@@ -3,7 +3,8 @@ use crate::application::finishing::finishing_execution_output::FinishingExecutio
 use crate::application::finishing::generate_finishing_plan_input::GenerateFinishingPlanInput;
 use crate::application::shared::AppResult;
 
-use crate::application::finishing::finishing_output_mapper::to_output;
+use crate::application::finishing::mapping::finishing_execution_mapper::to_execution_output;
+
 
 use crate::domain::{
     Diameter,
@@ -46,7 +47,7 @@ impl GenerateFinishingPlanUseCase {
 
         self.repo.save(execution.clone())?;
 
-        Ok(to_output(&execution))
+        Ok(to_execution_output(&execution))
     }
 
 
