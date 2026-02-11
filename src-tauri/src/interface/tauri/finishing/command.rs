@@ -1,14 +1,23 @@
 // interface/tauri/finishing/command.rs
-
 use tauri::command;
 
-use crate::application::finishing::{
-    GenerateFinishingPlanUseCase,
-    RegisterFinishingMeasurementUseCase,
-    ClearFinishingMeasurementUseCase,
-};
+use std::sync::{Arc, OnceLock};
+use uuid::Uuid;
 
 use crate::application::ApplicationError;
+
+use crate::application::finishing::use_cases::{
+    generate_finishing_plan_use_case::GenerateFinishingPlanUseCase,
+    register_finishing_measurement_use_case::RegisterFinishingMeasurementUseCase,
+    clear_finishing_measurement_use_case::ClearFinishingMeasurementUseCase,
+};
+
+use crate::domain::{
+    FinishingExecutionId,
+    FinishingExecutionRepository,
+};
+
+use crate::infrastructure::finishing::InMemoryFinishingExecutionRepository;
 
 use super::request::{
     GenerateFinishingPlanRequest,
@@ -20,6 +29,19 @@ use super::response::FinishingExecutionResponse;
 
 
 // ----------------------------------------------------
+// Global repository
+// ----------------------------------------------------
+
+static REPO: OnceLock<Arc<dyn FinishingExecutionRepository>> = OnceLock::new();
+
+fn repo() -> Arc<dyn FinishingExecutionRepository> {
+    REPO
+        .get_or_init(|| Arc::new(InMemoryFinishingExecutionRepository::new()))
+        .clone()
+}
+
+
+// ----------------------------------------------------
 // Commands
 // ----------------------------------------------------
 
@@ -28,7 +50,7 @@ pub fn generate_finishing_plan(
     request: GenerateFinishingPlanRequest,
 ) -> Result<FinishingExecutionResponse, String> {
 
-    let uc = GenerateFinishingPlanUseCase;
+    let uc = GenerateFinishingPlanUseCase::new(repo());
 
     let result = uc
         .execute(request.into())
@@ -40,14 +62,18 @@ pub fn generate_finishing_plan(
 
 #[command]
 pub fn register_finishing_measurement(
-    mut execution: crate::domain::FinishingExecution,
     request: RegisterFinishingMeasurementRequest,
 ) -> Result<FinishingExecutionResponse, String> {
 
-    let uc = RegisterFinishingMeasurementUseCase;
+    let uc = RegisterFinishingMeasurementUseCase::new(repo());
+
+    let id = FinishingExecutionId::from_uuid(
+        Uuid::parse_str(&request.execution_id)
+            .map_err(|_| "Invalid execution_id")?
+    );
 
     let result = uc
-        .execute(&mut execution, request.step_number, request.measurement_mm)
+        .execute(id, request.step_number, request.measurement_mm)
         .map_err(map_error)?;
 
     Ok(result.into())
@@ -56,14 +82,18 @@ pub fn register_finishing_measurement(
 
 #[command]
 pub fn clear_finishing_measurement(
-    mut execution: crate::domain::FinishingExecution,
     request: ClearFinishingMeasurementRequest,
 ) -> Result<FinishingExecutionResponse, String> {
 
-    let uc = ClearFinishingMeasurementUseCase;
+    let uc = ClearFinishingMeasurementUseCase::new(repo());
+
+    let id = FinishingExecutionId::from_uuid(
+        Uuid::parse_str(&request.execution_id)
+            .map_err(|_| "Invalid execution_id")?
+    );
 
     let result = uc
-        .execute(&mut execution, request.step_number)
+        .execute(id, request.step_number)
         .map_err(map_error)?;
 
     Ok(result.into())

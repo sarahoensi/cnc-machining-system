@@ -14,6 +14,11 @@ fn d(v: f64) -> Diameter {
     Diameter::mm(v).unwrap()
 }
 
+fn exec(plan: FinishingPlan) -> FinishingExecution {
+    FinishingExecution::new(FinishingExecutionId::new(), plan).unwrap()
+}
+
+
 
 fn outer_plan(start: f64, target: f64, cuts: u32) -> FinishingPlan {
     FinishingPlanner::generate_plan(FinishingRequest {
@@ -81,13 +86,14 @@ fn assert_execution_invariants(exec: &FinishingExecution) {
 
 #[test]
 fn builds_correct_number_of_steps() {
-    let exec = FinishingExecution::new(outer_plan(10.0, 8.0, 2)).unwrap();
+    let exec = exec(outer_plan(10.0, 8.0, 2));
+
     assert_eq!(exec.steps().len(), 2);
 }
 
 #[test]
 fn builds_steps_reaching_target() {
-    let exec = FinishingExecution::new(outer_plan(10.0, 8.0, 2)).unwrap();
+    let exec = exec(outer_plan(10.0, 8.0, 2));
     assert_execution_invariants(&exec);
 }
 
@@ -99,7 +105,7 @@ fn builds_steps_reaching_target() {
 
 #[test]
 fn register_measurement_stores_value() {
-    let mut exec = FinishingExecution::new(outer_plan(10.0, 8.0, 2)).unwrap();
+    let mut exec = exec(outer_plan(10.0, 8.0, 2));
 
     exec.register_measurement(1, d(9.3)).unwrap();
 
@@ -114,7 +120,7 @@ fn register_measurement_stores_value() {
 
 #[test]
 fn measurement_recalculates_remaining_steps() {
-    let mut exec = FinishingExecution::new(outer_plan(10.0, 8.0, 2)).unwrap();
+    let mut exec = exec(outer_plan(10.0, 8.0, 2));
 
     exec.register_measurement(1, d(9.5)).unwrap();
 
@@ -124,7 +130,7 @@ fn measurement_recalculates_remaining_steps() {
 
 #[test]
 fn recalculation_redistributes_remaining_delta() {
-    let mut exec = FinishingExecution::new(outer_plan(10.0, 8.0, 4)).unwrap();
+    let mut exec = exec(outer_plan(10.0, 8.0, 4));
 
     exec.register_measurement(1, d(9.7)).unwrap();
 
@@ -139,7 +145,7 @@ fn recalculation_redistributes_remaining_delta() {
 
 #[test]
 fn cannot_edit_earlier_step_when_later_measured() {
-    let mut exec = FinishingExecution::new(outer_plan(10.0, 8.0, 3)).unwrap();
+    let mut exec = exec(outer_plan(10.0, 8.0, 3));
 
     exec.register_measurement(2, d(8.7)).unwrap();
 
@@ -156,7 +162,7 @@ fn cannot_edit_earlier_step_when_later_measured() {
 
 #[test]
 fn clear_measurement_restores_uniform_steps() {
-    let mut exec = FinishingExecution::new(outer_plan(10.0, 8.0, 3)).unwrap();
+    let mut exec = exec(outer_plan(10.0, 8.0, 3));
 
     exec.register_measurement(1, d(9.5)).unwrap();
 
@@ -175,13 +181,13 @@ fn clear_measurement_restores_uniform_steps() {
 
 #[test]
 fn outer_mode_decreases_diameter() {
-    let exec = FinishingExecution::new(outer_plan(10.0, 8.0, 3)).unwrap();
+    let exec = exec(outer_plan(10.0, 8.0, 3));
     assert_execution_invariants(&exec);
 }
 
 #[test]
 fn inner_mode_increases_diameter() {
-    let exec = FinishingExecution::new(inner_plan(8.0, 10.0, 3)).unwrap();
+    let exec = exec(inner_plan(8.0, 10.0, 3));
     assert_execution_invariants(&exec);
 }
 
@@ -193,7 +199,7 @@ fn inner_mode_increases_diameter() {
 
 #[test]
 fn rejects_measurement_past_target_outer() {
-    let mut exec = FinishingExecution::new(outer_plan(10.0, 8.0, 2)).unwrap();
+    let mut exec = exec(outer_plan(10.0, 8.0, 2));
 
     let r = exec.register_measurement(1, d(7.0));
     assert!(r.is_err());
@@ -201,7 +207,7 @@ fn rejects_measurement_past_target_outer() {
 
 #[test]
 fn rejects_measurement_past_target_inner() {
-    let mut exec = FinishingExecution::new(inner_plan(8.0, 10.0, 2)).unwrap();
+    let mut exec = exec(inner_plan(8.0, 10.0, 2));
 
     let r = exec.register_measurement(1, d(11.0));
     assert!(r.is_err());
@@ -215,14 +221,14 @@ fn rejects_measurement_past_target_inner() {
 
 #[test]
 fn rejects_step_zero() {
-    let mut exec = FinishingExecution::new(outer_plan(10.0, 8.0, 2)).unwrap();
+    let mut exec = exec(outer_plan(10.0, 8.0, 2));
 
     assert!(exec.register_measurement(0, d(9.0)).is_err());
 }
 
 #[test]
 fn rejects_step_out_of_range() {
-    let mut exec = FinishingExecution::new(outer_plan(10.0, 8.0, 2)).unwrap();
+    let mut exec = exec(outer_plan(10.0, 8.0, 2));
 
     assert!(exec.register_measurement(5, d(9.0)).is_err());
 }

@@ -6,6 +6,7 @@ pub mod application;
 pub mod domain;
 pub mod interface;
 pub mod test_utils;
+pub mod infrastructure;
 
 use crate::interface::tauri::{solve_cutting_data, solve_helix, solve_right_triangle};
 

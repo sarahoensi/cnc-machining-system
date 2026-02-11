@@ -23,12 +23,14 @@ pub enum GenerateFinishingPlanRequest {
 
 #[derive(Deserialize)]
 pub struct RegisterFinishingMeasurementRequest {
+    pub execution_id: String,
     pub step_number: u32,
     pub measurement_mm: f64,
 }
 
 #[derive(Deserialize)]
 pub struct ClearFinishingMeasurementRequest {
+    pub execution_id: String,
     pub step_number: u32,
 }
 
