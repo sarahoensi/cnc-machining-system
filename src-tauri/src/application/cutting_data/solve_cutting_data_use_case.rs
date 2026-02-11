@@ -25,69 +25,86 @@ use crate::domain::{
 pub struct SolveCuttingDataUseCase;
 
 impl SolveCuttingDataUseCase {
+
     pub fn execute(
         input: SolveCuttingDataInput,
     ) -> AppResult<SolveCuttingDataOutput> {
 
-        let (vc, rpm, chip, feed) = match input {
+        // --- Convert input to value objects if present ---
+        let mut vc = input
+            .cutting_speed_m_per_min
+            .map(CuttingSpeed::meters_per_min)
+            .transpose()?;
 
-            SolveCuttingDataInput::FromCuttingSpeed {
-                cutting_speed_m_per_min,
-                diameter_mm,
-                chip_load_mm_per_tooth,
-                teeth,
-            } => {
-                let diameter = Diameter::mm(diameter_mm)?;
-                let vc = CuttingSpeed::meters_per_min(cutting_speed_m_per_min)?;
-                let chip = ChipLoad::mm_per_tooth(chip_load_mm_per_tooth)?;
-                let teeth = ToothCount::new(teeth)?;
+        let mut rpm = input
+            .rpm
+            .map(Rpm::new)
+            .transpose()?;
 
-                let rpm = SpindleSpeedCalculator::rpm_from_cutting_speed(vc, diameter)?;
-                let feed = FeedRateCalculator::feed_rate_from_chip_load(chip, rpm, teeth)?;
+        let mut chip = input
+            .chip_load_mm_per_tooth
+            .map(ChipLoad::mm_per_tooth)
+            .transpose()?;
 
-                (vc, rpm, chip, feed)
+        let mut feed = input
+            .feed_rate_mm_per_min
+            .map(FeedRate::mm_per_min)
+            .transpose()?;
+
+        let diameter = input
+            .diameter_mm
+            .map(Diameter::mm)
+            .transpose()?;
+
+        let teeth = input
+            .teeth
+            .map(ToothCount::new)
+            .transpose()?;
+
+        // --- Forward chaining loop ---
+        let mut changed = true;
+
+        while changed {
+            changed = false;
+
+            // VC + Diameter → RPM
+            if rpm.is_none() {
+                if let (Some(vc_val), Some(d)) = (vc, diameter) {
+                    rpm = Some(SpindleSpeedCalculator::rpm_from_cutting_speed(vc_val, d)?);
+                    changed = true;
+                }
             }
 
-            SolveCuttingDataInput::FromRpm {
-                rpm,
-                chip_load_mm_per_tooth,
-                teeth,
-                diameter_mm,
-            } => {
-                let rpm = Rpm::new(rpm)?;
-                let chip = ChipLoad::mm_per_tooth(chip_load_mm_per_tooth)?;
-                let teeth = ToothCount::new(teeth)?;
-                let diameter = Diameter::mm(diameter_mm)?;
-
-                let vc = SpindleSpeedCalculator::cutting_speed_from_rpm(rpm, diameter)?;
-                let feed = FeedRateCalculator::feed_rate_from_chip_load(chip, rpm, teeth)?;
-
-                (vc, rpm, chip, feed)
+            // RPM + Diameter → VC
+            if vc.is_none() {
+                if let (Some(rpm_val), Some(d)) = (rpm, diameter) {
+                    vc = Some(SpindleSpeedCalculator::cutting_speed_from_rpm(rpm_val, d)?);
+                    changed = true;
+                }
             }
 
-            SolveCuttingDataInput::FromFeedRate {
-                feed_rate_mm_per_min,
-                rpm,
-                teeth,
-                diameter_mm,
-            } => {
-                let feed = FeedRate::mm_per_min(feed_rate_mm_per_min)?;
-                let rpm = Rpm::new(rpm)?;
-                let teeth = ToothCount::new(teeth)?;
-                let diameter = Diameter::mm(diameter_mm)?;
-
-                let chip = ChipLoadCalculator::chip_load_from_feed_rate(feed, rpm, teeth)?;
-                let vc = SpindleSpeedCalculator::cutting_speed_from_rpm(rpm, diameter)?;
-
-                (vc, rpm, chip, feed)
+            // Chip + RPM + Teeth → Feed
+            if feed.is_none() {
+                if let (Some(chip_val), Some(rpm_val), Some(t)) = (chip, rpm, teeth) {
+                    feed = Some(FeedRateCalculator::feed_rate_from_chip_load(chip_val, rpm_val, t)?);
+                    changed = true;
+                }
             }
-        };
+
+            // Feed + RPM + Teeth → Chip
+            if chip.is_none() {
+                if let (Some(feed_val), Some(rpm_val), Some(t)) = (feed, rpm, teeth) {
+                    chip = Some(ChipLoadCalculator::chip_load_from_feed_rate(feed_val, rpm_val, t)?);
+                    changed = true;
+                }
+            }
+        }
 
         Ok(SolveCuttingDataOutput {
-            cutting_speed_m_per_min: vc.meters_per_min_value(),
-            rpm: rpm.value(),
-            chip_load_mm_per_tooth: chip.mm_per_tooth_value(),
-            feed_rate_mm_per_min: feed.mm_per_min_value(),
+            cutting_speed_m_per_min: vc.map(|v| v.meters_per_min_value()),
+            rpm: rpm.map(|r| r.value()),
+            chip_load_mm_per_tooth: chip.map(|c| c.mm_per_tooth_value()),
+            feed_rate_mm_per_min: feed.map(|f| f.mm_per_min_value()),
         })
     }
 }
