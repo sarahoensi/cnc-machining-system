@@ -69,37 +69,7 @@ impl FinishingExecution {
         Ok(())
     }
 
-    /// Remove a measurement and rebuild everything after that step using the plan's original expected step.
-    /// (Optional helper if you support "reset this row" in UI later.)
-    ///
-    /// Workflow rule:
-    /// - You cannot clear a measurement on an earlier step if there exists a later measurement.
-    pub fn clear_measurement(&mut self, step_number: u32) -> Result<(), StrategyError> {
-        let idx = to_index(step_number, self.steps.len())?;
-
-        // Lock earlier steps if we already have later measurements
-        self.ensure_step_is_editable(idx)?;
-
-        // Clear this step’s measurement
-        self.steps[idx].clear_measurement();
-
-        // Determine new base start:
-        // - if previous step has a measurement, use it
-        // - else use its planned_end
-        // - else use plan start (for idx == 0)
-        let base = if idx == 0 {
-            self.plan.start()
-        } else {
-            self.steps[idx - 1]
-                .measurement()
-                .unwrap_or(self.steps[idx - 1].planned_end())
-        };
-
-        // Rebuild remaining steps using the ORIGINAL expected_step (uniform)
-        self.recalculate_uniform_from(idx, base)?;
-
-        Ok(())
-    }
+    
 
     // ---------------------------------------------------------------------
     // Workflow / locking
@@ -211,38 +181,7 @@ impl FinishingExecution {
         Ok(())
     }
 
-    fn recalculate_uniform_from(
-        &mut self,
-        start_index: usize,
-        base: Diameter,
-    ) -> Result<(), StrategyError> {
-        // Rebuild remaining steps using the ORIGINAL expected_step, not adaptive
-        if start_index >= self.steps.len() {
-            return Ok(());
-        }
-
-        let dir = self.plan.direction_sign();
-        let step = self.plan.expected_step();
-        let mut start_d = base;
-
-        for i in start_index..self.steps.len() {
-            let step_no = (i + 1) as u32;
-
-            let end_val = start_d.mm_value() + dir * step.mm_value();
-            let end_d = Diameter::mm(end_val)
-                .map_err(|_| StrategyError::ImpossiblePlan("computed diameter invalid"))?;
-
-            let mut s = FinishingStep::new(step_no, start_d, step, end_d);
-
-            // Reset measurement for rebuilt steps (typical "reset remainder" behavior)
-            s.clear_measurement();
-
-            self.steps[i] = s;
-            start_d = end_d;
-        }
-
-        Ok(())
-    }
+    
 }
 
 // -------------------------------------------------------------------------

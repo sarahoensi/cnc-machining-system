@@ -29,12 +29,6 @@ pub struct RegisterFinishingMeasurementRequest {
 }
 
 #[derive(Deserialize)]
-pub struct ClearFinishingMeasurementRequest {
-    pub execution_id: String,
-    pub step_number: u32,
-}
-
-#[derive(Deserialize)]
 pub enum FinishingMode {
     Inner,
     Outer,

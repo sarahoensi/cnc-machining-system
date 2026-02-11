@@ -9,7 +9,6 @@ use crate::application::ApplicationError;
 use crate::application::finishing::use_cases::{
     generate_finishing_plan_use_case::GenerateFinishingPlanUseCase,
     register_finishing_measurement_use_case::RegisterFinishingMeasurementUseCase,
-    clear_finishing_measurement_use_case::ClearFinishingMeasurementUseCase,
 };
 
 use crate::domain::{
@@ -22,8 +21,7 @@ use crate::infrastructure::finishing::InMemoryFinishingExecutionRepository;
 use super::request::{
     GenerateFinishingPlanRequest,
     RegisterFinishingMeasurementRequest,
-    ClearFinishingMeasurementRequest,
-};
+    };
 
 use super::response::FinishingExecutionResponse;
 
@@ -79,25 +77,6 @@ pub fn register_finishing_measurement(
     Ok(result.into())
 }
 
-
-#[command]
-pub fn clear_finishing_measurement(
-    request: ClearFinishingMeasurementRequest,
-) -> Result<FinishingExecutionResponse, String> {
-
-    let uc = ClearFinishingMeasurementUseCase::new(repo());
-
-    let id = FinishingExecutionId::from_uuid(
-        Uuid::parse_str(&request.execution_id)
-            .map_err(|_| "Invalid execution_id")?
-    );
-
-    let result = uc
-        .execute(id, request.step_number)
-        .map_err(map_error)?;
-
-    Ok(result.into())
-}
 
 
 // ----------------------------------------------------
