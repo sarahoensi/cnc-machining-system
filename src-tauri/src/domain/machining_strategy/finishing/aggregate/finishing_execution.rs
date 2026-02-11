@@ -1,9 +1,8 @@
 // domain/machining_strategy/finishing_execution.rs
 
 use crate::domain::machining_strategy::strategy_error::StrategyError;
-use crate::domain::{Diameter, Length};
+use crate::domain::{Diameter, Length, FinishingPlan, FinishingStep};
 
-use super::{FinishingPlan, FinishingStep};
 
 const EPS: f64 = 1e-12;
 const END_TOL: f64 = 1e-9;
