@@ -5,7 +5,7 @@
 use crate::application::shared::AppResult;
 
 use crate::application::finishing::dto::FinishingExecutionOutput;
-use crate::application::finishing::generate_finishing_plan_use_case::GenerateFinishingPlanUseCase;
+use crate::application::finishing::finishing_output_mapper::to_output;
 
 use crate::domain::FinishingExecution;
 
@@ -21,6 +21,6 @@ impl ClearFinishingMeasurementUseCase {
 
         execution.clear_measurement(step_number)?;
 
-        Ok(GenerateFinishingPlanUseCase::to_output(execution))
+        Ok(to_output(execution))
     }
 }

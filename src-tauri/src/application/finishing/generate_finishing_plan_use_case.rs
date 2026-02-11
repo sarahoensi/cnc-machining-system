@@ -5,8 +5,10 @@ use crate::application::shared::AppResult;
 use crate::application::finishing::dto::{
     GenerateFinishingPlanInput,
     FinishingExecutionOutput,
-    FinishingStepOutput,
 };
+
+use crate::application::finishing::finishing_output_mapper::to_output;
+
 
 use crate::domain::{
     Diameter,
@@ -18,11 +20,17 @@ use crate::domain::{
 };
 
 use crate::domain::FinishingExecutionId;
+use crate::domain::FinishingExecutionRepository;
 
+pub struct GenerateFinishingPlanUseCase<R: FinishingExecutionRepository> {
+    repo: R,
+}
 
-pub struct GenerateFinishingPlanUseCase;
+impl<R: FinishingExecutionRepository> GenerateFinishingPlanUseCase<R> {
 
-impl GenerateFinishingPlanUseCase {
+    pub fn new(repo: R) -> Self {
+        Self { repo }
+    }
 
     pub fn execute(
         &self,
@@ -32,10 +40,11 @@ impl GenerateFinishingPlanUseCase {
         let request = Self::to_request(input)?;
         let plan = FinishingPlanner::generate_plan(request)?;
         let id = FinishingExecutionId::new();
-let execution = FinishingExecution::new(id, plan)?;
+        let execution = FinishingExecution::new(id, plan)?;
 
+        self.repo.save(execution.clone())?;
 
-        Ok(Self::to_output(&execution))
+        Ok(to_output(&execution))
     }
 
     // ---------------------------------------------------------
@@ -80,29 +89,6 @@ let execution = FinishingExecution::new(id, plan)?;
                 })
             }
         }
-    }
-
-    // ---------------------------------------------------------
-    // Mapping: Domain Execution → DTO Output
-    // ---------------------------------------------------------
-
-    pub(crate) fn to_output(
-        exec: &FinishingExecution,
-    ) -> FinishingExecutionOutput {
-
-        let steps = exec
-            .steps()
-            .iter()
-            .map(|s| FinishingStepOutput {
-                index: s.index(),
-                start_mm: s.start().mm_value(),
-                planned_delta_mm: s.planned_delta().mm_value(),
-                planned_end_mm: s.planned_end().mm_value(),
-                measurement_mm: s.measurement().map(|m| m.mm_value()),
-            })
-            .collect();
-
-        FinishingExecutionOutput { steps }
     }
 }
 

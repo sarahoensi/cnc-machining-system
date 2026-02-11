@@ -3,29 +3,44 @@
 use crate::application::shared::AppResult;
 
 use crate::application::finishing::dto::FinishingExecutionOutput;
-use crate::application::finishing::generate_finishing_plan_use_case::GenerateFinishingPlanUseCase;
+use crate::application::finishing::finishing_output_mapper::to_output;
 
 use crate::domain::{
     Diameter,
-    FinishingExecution,
+    FinishingExecutionId,
 };
 
-pub struct RegisterFinishingMeasurementUseCase;
+use crate::domain::FinishingExecutionRepository;
 
-impl RegisterFinishingMeasurementUseCase {
+pub struct RegisterFinishingMeasurementUseCase<R: FinishingExecutionRepository> {
+    repo: R,
+}
+
+
+impl<R: FinishingExecutionRepository> RegisterFinishingMeasurementUseCase<R> {
+
+    pub fn new(repo: R) -> Self {
+        Self { repo }
+    }
+
 
     pub fn execute(
-        &self,
-        execution: &mut FinishingExecution,
-        step_number: u32,
-        measurement_mm: f64,
-    ) -> AppResult<FinishingExecutionOutput> {
+    &self,
+    id: FinishingExecutionId,
+    step_number: u32,
+    measurement_mm: f64,
+) -> AppResult<FinishingExecutionOutput> {
 
-        execution.register_measurement(
-            step_number,
-            Diameter::mm(measurement_mm)?,
-        )?;
+    let mut execution = self.repo.get(id)?;
 
-        Ok(GenerateFinishingPlanUseCase::to_output(execution))
-    }
+    execution.register_measurement(
+        step_number,
+        Diameter::mm(measurement_mm)?,
+    )?;
+
+    self.repo.save(execution.clone())?;
+
+    Ok(to_output(&execution))
+}
+
 }
