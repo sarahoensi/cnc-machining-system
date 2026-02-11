@@ -1,14 +1,9 @@
 // application/finishing/generate_finishing_plan_use_case.rs
-
+use crate::application::finishing::finishing_execution_output::FinishingExecutionOutput;
+use crate::application::finishing::generate_finishing_plan_input::GenerateFinishingPlanInput;
 use crate::application::shared::AppResult;
 
-use crate::application::finishing::dto::{
-    GenerateFinishingPlanInput,
-    FinishingExecutionOutput,
-};
-
 use crate::application::finishing::finishing_output_mapper::to_output;
-
 
 use crate::domain::{
     Diameter,
@@ -17,20 +12,24 @@ use crate::domain::{
     FinishingPlanner,
     FinishingPlanning,
     FinishingRequest,
+    FinishingExecutionId,
+    FinishingExecutionRepository,
 };
 
-use crate::domain::FinishingExecutionId;
-use crate::domain::FinishingExecutionRepository;
+use std::sync::Arc;
 
-pub struct GenerateFinishingPlanUseCase<R: FinishingExecutionRepository> {
-    repo: R,
+
+pub struct GenerateFinishingPlanUseCase {
+    repo: Arc<dyn FinishingExecutionRepository>,
 }
 
-impl<R: FinishingExecutionRepository> GenerateFinishingPlanUseCase<R> {
 
-    pub fn new(repo: R) -> Self {
+impl GenerateFinishingPlanUseCase {
+
+    pub fn new(repo: Arc<dyn FinishingExecutionRepository>) -> Self {
         Self { repo }
     }
+
 
     pub fn execute(
         &self,
@@ -38,8 +37,11 @@ impl<R: FinishingExecutionRepository> GenerateFinishingPlanUseCase<R> {
     ) -> AppResult<FinishingExecutionOutput> {
 
         let request = Self::to_request(input)?;
+
         let plan = FinishingPlanner::generate_plan(request)?;
+
         let id = FinishingExecutionId::new();
+
         let execution = FinishingExecution::new(id, plan)?;
 
         self.repo.save(execution.clone())?;
@@ -47,9 +49,6 @@ impl<R: FinishingExecutionRepository> GenerateFinishingPlanUseCase<R> {
         Ok(to_output(&execution))
     }
 
-    // ---------------------------------------------------------
-    // Mapping: DTO → Domain Request
-    // ---------------------------------------------------------
 
     fn to_request(
         input: GenerateFinishingPlanInput,
@@ -63,7 +62,6 @@ impl<R: FinishingExecutionRepository> GenerateFinishingPlanUseCase<R> {
                 target_diameter_mm,
                 cuts,
             } => {
-
                 Ok(FinishingRequest {
                     mode,
                     start_diameter: Diameter::mm(start_diameter_mm)?,
@@ -78,7 +76,6 @@ impl<R: FinishingExecutionRepository> GenerateFinishingPlanUseCase<R> {
                 target_diameter_mm,
                 radial_engagement_mm,
             } => {
-
                 Ok(FinishingRequest {
                     mode,
                     start_diameter: Diameter::mm(start_diameter_mm)?,
@@ -91,4 +88,3 @@ impl<R: FinishingExecutionRepository> GenerateFinishingPlanUseCase<R> {
         }
     }
 }
-

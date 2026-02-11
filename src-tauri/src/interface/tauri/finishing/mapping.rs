@@ -1,11 +1,8 @@
 // interface/tauri/finishing/mapping.rs
 
-use crate::application::finishing::{
-    GenerateFinishingPlanInput,
-    FinishingExecutionOutput,
-    FinishingStepOutput,
-};
-
+use crate::application::finishing::finishing_execution_output::FinishingExecutionOutput;
+use crate::application::finishing::finishing_step_output::FinishingStepOutput;
+use crate::application::finishing::generate_finishing_plan_input::GenerateFinishingPlanInput;
 use crate::domain::FinishingMode as AppFinishingMode;
 
 use super::request::{
@@ -77,10 +74,12 @@ impl From<GenerateFinishingPlanRequest> for GenerateFinishingPlanInput {
 impl From<FinishingExecutionOutput> for FinishingExecutionResponse {
     fn from(out: FinishingExecutionOutput) -> Self {
         Self {
+            execution_id: out.execution_id,
             steps: out.steps.into_iter().map(Into::into).collect(),
         }
     }
 }
+
 
 impl From<FinishingStepOutput> for FinishingStepResponse {
     fn from(s: FinishingStepOutput) -> Self {

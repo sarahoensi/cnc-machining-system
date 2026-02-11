@@ -4,8 +4,10 @@ use serde::Serialize;
 
 #[derive(Serialize)]
 pub struct FinishingExecutionResponse {
+    pub execution_id: String,
     pub steps: Vec<FinishingStepResponse>,
 }
+
 
 #[derive(Serialize)]
 pub struct FinishingStepResponse {

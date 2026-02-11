@@ -4,7 +4,7 @@ use crate::domain::machining_strategy::strategy_error::StrategyError;
 
 use super::{FinishingExecution, FinishingExecutionId};
 
-pub trait FinishingExecutionRepository {
+pub trait FinishingExecutionRepository: Send + Sync {
 
     fn get(
         &self,

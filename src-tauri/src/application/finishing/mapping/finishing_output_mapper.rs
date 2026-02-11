@@ -1,9 +1,6 @@
-use crate::application::finishing::dto::{
-    FinishingExecutionOutput,
-    FinishingStepOutput,
-};
+// application/finishing/mapping/finishing_output_mapper.rs
 
-use crate::domain::FinishingExecution;
+use crate::{application::finishing::{finishing_execution_output::FinishingExecutionOutput, finishing_step_output::FinishingStepOutput}, domain::FinishingExecution};
 
 pub fn to_output(exec: &FinishingExecution) -> FinishingExecutionOutput {
 
@@ -19,5 +16,8 @@ pub fn to_output(exec: &FinishingExecution) -> FinishingExecutionOutput {
         })
         .collect();
 
-    FinishingExecutionOutput { steps }
+    FinishingExecutionOutput {
+        execution_id: exec.id().value().to_string(),
+        steps,
+    }
 }

@@ -60,4 +60,5 @@ pub use machining_strategy::{
     FinishingPlanning,
     StrategyError,
     FinishingExecutionId,
-    FinishingExecutionRepository,   };
+    FinishingExecutionRepository,
+   };
