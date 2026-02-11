@@ -17,6 +17,9 @@ use crate::domain::{
     FinishingRequest,
 };
 
+use crate::domain::FinishingExecutionId;
+
+
 pub struct GenerateFinishingPlanUseCase;
 
 impl GenerateFinishingPlanUseCase {
@@ -28,7 +31,9 @@ impl GenerateFinishingPlanUseCase {
 
         let request = Self::to_request(input)?;
         let plan = FinishingPlanner::generate_plan(request)?;
-        let execution = FinishingExecution::new(plan)?;
+        let id = FinishingExecutionId::new();
+let execution = FinishingExecution::new(id, plan)?;
+
 
         Ok(Self::to_output(&execution))
     }

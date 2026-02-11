@@ -7,15 +7,24 @@ use super::{FinishingPlan, FinishingStep};
 
 const EPS: f64 = 1e-12;
 const END_TOL: f64 = 1e-9;
+use super::FinishingExecutionId;
+
 
 #[derive(Debug, Clone)]
+
 pub struct FinishingExecution {
+    id: FinishingExecutionId,
     plan: FinishingPlan,
     steps: Vec<FinishingStep>,
 }
 
+
 impl FinishingExecution {
-    pub fn new(plan: FinishingPlan) -> Result<Self, StrategyError> {
+    pub fn new(
+    id: FinishingExecutionId,
+    plan: FinishingPlan,
+) -> Result<Self, StrategyError>
+ {
         let steps = build_steps_from_start(
             plan.start(),
             plan.target(),
@@ -24,9 +33,12 @@ impl FinishingExecution {
             plan.direction_sign(),
         )?;
 
-        Ok(Self { plan, steps })
+        Ok(Self { id,plan, steps })
     }
 
+    pub fn id(&self) -> FinishingExecutionId {
+    self.id
+}
     pub fn plan(&self) -> FinishingPlan { self.plan }
     pub fn steps(&self) -> &[FinishingStep] { &self.steps }
 
