@@ -16,44 +16,13 @@ use super::{
 
 impl From<SolveCuttingDataRequest> for SolveCuttingDataInput {
     fn from(req: SolveCuttingDataRequest) -> Self {
-
-        match req {
-
-            SolveCuttingDataRequest::FromCuttingSpeed {
-                cutting_speed_m_per_min,
-                diameter_mm,
-                chip_load_mm_per_tooth,
-                teeth,
-            } => SolveCuttingDataInput::FromCuttingSpeed {
-                cutting_speed_m_per_min,
-                diameter_mm,
-                chip_load_mm_per_tooth,
-                teeth,
-            },
-
-            SolveCuttingDataRequest::FromRpm {
-                rpm,
-                chip_load_mm_per_tooth,
-                teeth,
-                diameter_mm,
-            } => SolveCuttingDataInput::FromRpm {
-                rpm,
-                chip_load_mm_per_tooth,
-                teeth,
-                diameter_mm,
-            },
-
-            SolveCuttingDataRequest::FromFeedRate {
-                feed_rate_mm_per_min,
-                rpm,
-                teeth,
-                diameter_mm,
-            } => SolveCuttingDataInput::FromFeedRate {
-                feed_rate_mm_per_min,
-                rpm,
-                teeth,
-                diameter_mm,
-            },
+        SolveCuttingDataInput {
+            cutting_speed_m_per_min: req.cutting_speed_m_per_min,
+            rpm: req.rpm,
+            chip_load_mm_per_tooth: req.chip_load_mm_per_tooth,
+            feed_rate_mm_per_min: req.feed_rate_mm_per_min,
+            teeth: req.teeth,
+            diameter_mm: req.diameter_mm,
         }
     }
 }
@@ -64,7 +33,6 @@ impl From<SolveCuttingDataRequest> for SolveCuttingDataInput {
 
 impl From<SolveCuttingDataOutput> for SolveCuttingDataResponse {
     fn from(out: SolveCuttingDataOutput) -> Self {
-
         Self {
             cutting_speed_m_per_min: out.cutting_speed_m_per_min,
             rpm: out.rpm,
