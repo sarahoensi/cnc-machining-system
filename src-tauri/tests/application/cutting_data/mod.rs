@@ -1,5 +1,7 @@
 // tests/application/cutting_data/mod.rs
 
-mod error_tests;
-mod usecase_tests;
-mod mapping_tests;
+mod from_cutting_speed;
+mod from_feed_rate;
+mod from_rpm;
+mod pipeline_consistency;
+mod validation;
