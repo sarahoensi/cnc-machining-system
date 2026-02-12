@@ -11,7 +11,7 @@ use super::{
     SolveRightTriangleResponse,
 };
 
-#[derive(Serialize)]
+#[derive(Debug, Serialize)]
 pub struct TauriError {
     message: String,
 }

@@ -1,13 +1,6 @@
 // interface/tauri/mod.rs
 
-mod cutting_data;
-mod finishing;
-mod helix;
-mod right_triangle;
-
-pub use cutting_data::solve_cutting_data;
-pub use finishing::{
-     generate_finishing_plan, register_finishing_measurement,
-};
-pub use helix::solve_helix;
-pub use right_triangle::solve_right_triangle;
+pub mod cutting_data;
+pub mod finishing;
+pub mod helix;
+pub mod right_triangle;
