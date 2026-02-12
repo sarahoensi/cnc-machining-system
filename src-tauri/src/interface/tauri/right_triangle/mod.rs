@@ -2,10 +2,10 @@
 
 // interface/tauri/right_triangle/mod.rs
 
-pub mod command;
-pub mod request;
-pub mod response;
-pub mod mapping;
+mod command;
+mod request;
+mod response;
+mod mapping;
 
 pub use command::solve_right_triangle;
 pub use request::SolveRightTriangleRequest;

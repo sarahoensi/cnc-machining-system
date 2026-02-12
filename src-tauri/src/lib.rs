@@ -8,7 +8,7 @@ pub mod interface;
 pub mod test_utils;
 pub mod infrastructure;
 
-use crate::interface::tauri::{solve_cutting_data, solve_helix, solve_right_triangle};
+use crate::interface::{solve_cutting_data, solve_helix, solve_right_triangle};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
