@@ -63,10 +63,8 @@ fn rejects_wrong_direction_inner() {
         planning: FinishingPlanning::ByCuts(2),
     };
 
-    assert!(matches!(
-        FinishingPlanner::generate_plan(req),
-        Err(_)
-    ));
+    assert!(FinishingPlanner::generate_plan(req).is_err());
+
 }
 
 //

@@ -202,22 +202,18 @@ fn near_ninety_angle_still_valid() {
 
 #[test]
 fn rejects_invalid_lengths() {
-    assert!(matches!(
-        RightTriangleSolver::from_legs(len_any(0.0), len(4.0)),
-        Err(_)
-    ));
+    assert!(RightTriangleSolver::from_legs(len_any(0.0), len(4.0)).is_err());
 
-    assert!(matches!(
-        RightTriangleSolver::from_legs(len_any(-3.0), len(4.0)),
-        Err(_)
+
+    assert!(
+        (RightTriangleSolver::from_legs(len_any(-3.0), len(4.0)).is_err()
     ));
 }
 
 #[test]
 fn rejects_impossible_geometry() {
-    assert!(matches!(
-        RightTriangleSolver::from_leg_and_hypotenuse(len(5.0), len(3.0)),
-        Err(_)
+    assert!(
+       ( RightTriangleSolver::from_leg_and_hypotenuse(len(5.0), len(3.0)).is_err()
     ));
 }
 

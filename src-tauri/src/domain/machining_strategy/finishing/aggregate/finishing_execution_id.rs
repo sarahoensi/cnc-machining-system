@@ -19,3 +19,9 @@ impl FinishingExecutionId {
         self.0
     }
 }
+
+impl Default for FinishingExecutionId {
+    fn default() -> Self {
+        Self::new()
+    }
+}

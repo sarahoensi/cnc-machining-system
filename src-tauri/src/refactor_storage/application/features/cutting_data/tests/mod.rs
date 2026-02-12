@@ -1,2 +1,0 @@
-mod partial;
-mod full;

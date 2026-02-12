@@ -22,6 +22,13 @@ impl InMemoryFinishingExecutionRepository {
     }
 }
 
+impl Default for InMemoryFinishingExecutionRepository {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+
 impl FinishingExecutionRepository for InMemoryFinishingExecutionRepository {
 
     fn get(

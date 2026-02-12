@@ -1,4 +1,5 @@
 // domain/units/length/mod.rs
+#![allow(clippy::module_inception)]
 
 mod length;
 mod diameter;
