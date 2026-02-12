@@ -1,4 +1,7 @@
 
+use cnc_machining_system_lib::application::{SolveRightTriangleInput, SolveRightTriangleUseCase};
+
+
 #[test]
 fn solves_triangle_from_leg_and_hypotenuse() {
 

@@ -1,3 +1,7 @@
+
+use cnc_machining_system_lib::application::{SolveRightTriangleInput, SolveRightTriangleUseCase};
+
+
 #[test]
 fn fails_when_leg_is_zero() {
 

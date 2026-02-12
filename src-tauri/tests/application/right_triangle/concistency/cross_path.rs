@@ -1,3 +1,5 @@
+use cnc_machining_system_lib::application::{SolveRightTriangleInput, SolveRightTriangleUseCase};
+
 #[test]
 fn different_inputs_produce_same_triangle() {
 

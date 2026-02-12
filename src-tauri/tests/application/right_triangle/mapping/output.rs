@@ -1,3 +1,7 @@
+
+use cnc_machining_system_lib::application::{SolveRightTriangleInput, SolveRightTriangleUseCase};
+
+
 #[test]
 fn output_contains_consistent_triangle_geometry() {
 
