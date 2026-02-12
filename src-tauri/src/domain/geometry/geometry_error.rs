@@ -1,14 +1,55 @@
 // domain/geometry/geometry_errors.rs
+//! Geometry errors for validated domain primitives.
+//!
+//! This module defines `GeometryError`, the canonical set of validation and
+//! constraint failures returned by geometry constructors and solvers. Errors map
+//! to physical and mathematical validation concerns encountered during machining
+//! calculations, such as invalid triangle dimensions, non-finite values, and
+//! out-of-range parameters.
+//!
+//! These errors are intended to be handled by callers to provide actionable
+//! feedback when inputs violate domain invariants.
 
 use std::fmt;
 
+/// Errors that can occur when constructing or solving geometry values.
+///
+/// This enum enumerates high-level validation failures produced by geometry
+/// types (triangles, helices, circles) when inputs violate domain invariants.
+/// Callers should match on variants to interpret failures in machining contexts.
 #[derive(Debug, Clone, PartialEq)]
 pub enum GeometryError {
+    /// Input values do not satisfy basic triangle requirements.
+    ///
+    /// Examples: non-positive side lengths or degenerate side combinations.
     InvalidTriangle,
+
+    /// Triangle parameters violate the triangle inequality and cannot form a triangle.
+    ///
+    /// Invariant: for a valid triangle, each side must be less than the sum of the others.
     ImpossibleTriangle,
+
+    /// An operation would require division by zero.
+    ///
+    /// Indicates an invalid configuration where a denominator evaluates to zero
+    /// in geometric formulas used by machining calculations.
     DivisionByZero,
+
+    /// Helix parameters are not consistent with a valid helix.
+    ///
+    /// Examples: non-finite pitch or an invalid pitch-to-radius relationship for the
+    /// expected physical model.
     InvalidHelix,
+
+    /// A numeric value was not finite (NaN or infinite).
+    ///
+    /// Invariant: geometry inputs and intermediate results are expected to be finite.
     NotFinite,
+
+    /// A value lies outside the acceptable physical or mathematical range.
+    ///
+    /// Use for domain limits such as angle ranges, realistic machining dimensions,
+    /// or other constrained parameters.
     OutOfRange,
 }
 

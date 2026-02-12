@@ -6,8 +6,10 @@ use crate::domain::{Angle, Diameter, Length, Radius};
 
 /// Represents a mathematically valid circle.
 ///
-/// Invariants:
-/// - radius > 0
+/// Circle values are expressed via a validated `Radius` to ensure unit and
+/// numerical correctness in machining calculations.
+///
+/// Invariants: radius is positive and finite.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Circle {
     radius: Radius,
@@ -18,10 +20,17 @@ impl Circle {
     // Constructors
     // ---------------------------------------------------------
 
+    /// Construct a `Circle` from a validated `Radius`.
+    ///
+    /// The `Radius` type enforces positivity and finiteness; callers should
+    /// construct `Radius` via its domain-safe constructors.
     pub fn from_radius(radius: Radius) -> Self {
         Self { radius }
     }
 
+    /// Construct a `Circle` from a validated `Diameter`.
+    ///
+    /// Invariant: the provided `Diameter` is positive and finite.
     pub fn from_diameter(diameter: Diameter) -> Self {
         Self {
             radius: diameter.radius(),
@@ -32,10 +41,12 @@ impl Circle {
     // Accessors
     // ---------------------------------------------------------
 
+    /// Returns the validated `Radius` of the circle.
     pub fn radius(&self) -> Radius {
         self.radius
     }
 
+    /// Returns the corresponding `Diameter` for the circle.
     pub fn diameter(&self) -> Diameter {
         self.radius.diameter()
     }
@@ -44,24 +55,32 @@ impl Circle {
     // Derived geometric properties
     // ---------------------------------------------------------
 
-    /// Circumference = 2πr
+    /// Circumference of the circle (2πr) as a domain `Length`.
+    ///
+    /// Units: millimetres. The returned `Length` is finite and positive.
     pub fn circumference(&self) -> Length {
         let value = 2.0 * PI * self.radius.mm_value();
         Length::mm(value).unwrap()
     }
 
-    /// Area = πr²
+    /// Area of the circle (πr²) in square millimetres.
     pub fn area(&self) -> f64 {
         PI * self.radius.mm_value().powi(2)
     }
 
-    /// Arc length = r * θ
+    /// Arc length for a given `Angle` (r * θ) as a domain `Length`.
+    ///
+    /// Units: millimetres. The `Angle` must be finite; callers should use
+    /// `Angle` domain constructors which validate values.
     pub fn arc_length(&self, angle: Angle) -> Length {
         let value = self.radius.mm_value() * angle.radians_value();
         Length::mm(value).unwrap()
     }
 
-    /// Sector area = (θ / 2π) * circle area
+    /// Sector area for a given `Angle` as a fraction of the full circle area.
+    ///
+    /// Units: square millimetres. Computation preserves unit correctness via
+    /// `Angle` and `Radius` domain types.
     pub fn sector_area(&self, angle: Angle) -> f64 {
         let fraction = angle.radians_value() / (2.0 * PI);
         self.area() * fraction

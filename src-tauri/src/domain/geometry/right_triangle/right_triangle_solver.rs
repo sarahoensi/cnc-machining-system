@@ -5,12 +5,21 @@ use crate::domain::{Angle, Length, RightTriangle};
 
 const EPS: f64 = 1e-12;
 
+/// Provides validated construction routines for `RightTriangle`.
+///
+/// `RightTriangleSolver` offers multiple factory methods that accept different
+/// pairs of inputs (legs, hypotenuse, angles) and return either a validated
+/// `RightTriangle` or a `GeometryError` describing why construction failed.
 pub struct RightTriangleSolver;
 
 impl RightTriangleSolver {
     // ---------------------------------------------------------
     // a + b (two legs)
     // ---------------------------------------------------------
+    /// Construct a `RightTriangle` from two leg lengths `a` and `b`.
+    ///
+    /// Returns `Err(GeometryError::InvalidTriangle)` if either length is not
+    /// positive and finite.
     pub fn from_legs(
         a: Length,
         b: Length,
@@ -26,6 +35,11 @@ impl RightTriangleSolver {
     // ---------------------------------------------------------
     // a + c (leg + hypotenuse)
     // ---------------------------------------------------------
+    /// Construct a `RightTriangle` from leg `a` and hypotenuse `c`.
+    ///
+    /// Returns `Err(GeometryError::ImpossibleTriangle)` if `a >= c` or the
+    /// Pythagorean relation cannot be satisfied within tolerance. Returns
+    /// `Err(GeometryError::InvalidTriangle)` for non-finite or non-positive inputs.
     pub fn from_leg_and_hypotenuse(
         a: Length,
         c: Length,
@@ -44,7 +58,7 @@ impl RightTriangleSolver {
 
         let mut b_sq = c_mm.powi(2) - a_mm.powi(2);
 
-        // Numerisk toleranse
+        // Numerical tolerance: allow tiny negative values to be clamped to zero.
         if b_sq < 0.0 && b_sq > -EPS {
             b_sq = 0.0;
         }
@@ -62,6 +76,9 @@ impl RightTriangleSolver {
     // ---------------------------------------------------------
     // b + c (other leg + hypotenuse)
     // ---------------------------------------------------------
+    /// Construct a `RightTriangle` from leg `b` and hypotenuse `c`.
+    ///
+    /// See `from_leg_and_hypotenuse` for error semantics and invariants.
     pub fn from_other_leg_and_hypotenuse(
         b: Length,
         c: Length,
@@ -97,6 +114,10 @@ impl RightTriangleSolver {
     // ---------------------------------------------------------
     // c + alpha (hypotenuse + acute angle)
     // ---------------------------------------------------------
+    /// Construct a `RightTriangle` from hypotenuse `c` and acute angle `alpha`.
+    ///
+    /// `alpha` must be strictly between 0° and 90°; returns
+    /// `Err(GeometryError::InvalidTriangle)` for invalid or non-finite inputs.
     pub fn from_hypotenuse_and_angle(
         c: Length,
         alpha: Angle,
@@ -119,6 +140,10 @@ impl RightTriangleSolver {
     // ---------------------------------------------------------
     // a + alpha (leg opposite alpha)
     // ---------------------------------------------------------
+    /// Construct a `RightTriangle` from leg `a` and its opposite acute angle `alpha`.
+    ///
+    /// Returns `Err(GeometryError::InvalidTriangle)` when `alpha` is not acute or
+    /// when division by a near-zero sine would occur.
     pub fn from_leg_and_opposite_angle(
         a: Length,
         alpha: Angle,
@@ -144,6 +169,10 @@ impl RightTriangleSolver {
     // ---------------------------------------------------------
     // b + alpha (leg adjacent to alpha)
     // ---------------------------------------------------------
+    /// Construct a `RightTriangle` from adjacent leg `b` and acute angle `alpha`.
+    ///
+    /// Uses tangent to derive the opposite leg; returns `InvalidTriangle` on
+    /// non-finite inputs or invalid constructions.
     pub fn from_adjacent_leg_and_angle(
         b: Length,
         alpha: Angle,
