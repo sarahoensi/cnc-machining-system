@@ -7,5 +7,5 @@ pub use tauri::{
     SolveRightTriangleResponse,
 };
 
-pub use tauri::solve_helix;
-pub use tauri::solve_cutting_data;
+pub use tauri::{solve_helix, SolveHelixRequest, SolveHelixResponse};
+pub use tauri::{solve_cutting_data, SolveCuttingDataRequest, SolveCuttingDataResponse};
