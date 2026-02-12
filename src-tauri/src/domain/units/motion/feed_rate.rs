@@ -2,11 +2,19 @@
 
 use crate::domain::units::errors::UnitError;
 
-/// Feed rate stored as mm/min.
+/// Represents linear feed rate.
+///
+/// Stored internally as millimeters per minute (mm/min).
+/// Values must be finite and strictly positive.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct FeedRate(f64);
 
 impl FeedRate {
+    /// Creates a [`FeedRate`] from millimeters per minute.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite or is less than or equal to zero.
     pub fn mm_per_min(value: f64) -> Result<Self, UnitError> {
         if !value.is_finite() {
             return Err(UnitError::NotFinite("FeedRate"));
@@ -17,6 +25,7 @@ impl FeedRate {
         Ok(Self(value))
     }
 
+    /// Returns the feed rate value in millimeters per minute.
     pub fn mm_per_min_value(self) -> f64 {
         self.0
     }
