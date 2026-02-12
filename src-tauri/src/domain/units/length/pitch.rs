@@ -3,11 +3,19 @@
 use crate::domain::units::errors::UnitError;
 use crate::domain::units::Length;
 
-/// Pitch stored internally as millimeters per revolution (mm/rev).
+/// Represents a linear pitch measurement.
+///
+/// Stored internally as millimeters per revolution (mm/rev).
+/// Values must be finite and strictly positive.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Pitch(f64);
 
 impl Pitch {
+    /// Creates a [`Pitch`] from millimeters per revolution.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite or is less than or equal to zero.
     pub fn mm_per_rev(value: f64) -> Result<Self, UnitError> {
         if !value.is_finite() {
             return Err(UnitError::NotFinite("Pitch"));
@@ -18,10 +26,12 @@ impl Pitch {
         Ok(Self(value))
     }
 
+    /// Returns the pitch value in millimeters per revolution.
     pub fn mm_per_rev_value(self) -> f64 {
         self.0
     }
 
+    /// Converts the pitch to a [`Length`] representing linear travel per revolution.
     pub fn as_length_per_rev(self) -> Length {
         Length::mm(self.0).expect("Pitch is always valid length")
     }
@@ -63,11 +73,7 @@ mod tests {
     fn mm_per_rev_round_trip() {
         let p = Pitch::mm_per_rev(2.5).unwrap();
 
-        assert!(approx_eq(
-            p.mm_per_rev_value(),
-            2.5,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(p.mm_per_rev_value(), 2.5, DEFAULT_EPS));
     }
 
     // --- Conversion ---
@@ -77,11 +83,7 @@ mod tests {
         let p = Pitch::mm_per_rev(3.0).unwrap();
         let l = p.as_length_per_rev();
 
-        assert!(approx_eq(
-            l.mm_value(),
-            3.0,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(l.mm_value(), 3.0, DEFAULT_EPS));
     }
 
     // --- Ordering ---

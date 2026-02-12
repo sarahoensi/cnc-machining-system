@@ -2,11 +2,20 @@
 
 use crate::domain::units::errors::UnitError;
 
-/// Linear length stored internally as millimeters (mm).
+/// Represents a linear length measurement.
+///
+/// Stored internally in millimeters (mm). Values must be finite.
+/// Signed values are allowed, but helper constructors enforce
+/// non-negative or strictly positive constraints when required.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Length(f64);
 
 impl Length {
+    /// Creates a [`Length`] from millimeters.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite.
     pub fn mm(value: f64) -> Result<Self, UnitError> {
         if !value.is_finite() {
             return Err(UnitError::NotFinite("Length"));
@@ -14,6 +23,11 @@ impl Length {
         Ok(Self(value))
     }
 
+    /// Creates a [`Length`] that must be zero or positive.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite or is negative.
     pub fn mm_non_negative(value: f64) -> Result<Self, UnitError> {
         if !value.is_finite() {
             return Err(UnitError::NotFinite("Length"));
@@ -24,6 +38,11 @@ impl Length {
         Ok(Self(value))
     }
 
+    /// Creates a [`Length`] that must be strictly positive.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite or is less than or equal to zero.
     pub fn mm_positive(value: f64) -> Result<Self, UnitError> {
         if !value.is_finite() {
             return Err(UnitError::NotFinite("Length"));
@@ -34,19 +53,23 @@ impl Length {
         Ok(Self(value))
     }
 
-    /// Raw value in millimeters.
+    /// Returns the length value in millimeters.
     pub fn mm_value(self) -> f64 {
         self.0
     }
 
-    /// Convenience conversion: inches -> mm.
+    /// Creates a [`Length`] from inches.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite.
     pub fn inches(value: f64) -> Result<Self, UnitError> {
         if !value.is_finite() {
             return Err(UnitError::NotFinite("Length"));
         }
         Ok(Self(value * 25.4))
     }
-
+    /// Returns the length value in inches.
     pub fn inches_value(self) -> f64 {
         self.0 / 25.4
     }
@@ -80,7 +103,6 @@ impl std::ops::Div<f64> for Length {
         Length(self.0 / rhs)
     }
 }
-
 
 // ------------------- TESTS -------------------
 
