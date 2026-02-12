@@ -2,11 +2,19 @@
 
 use crate::domain::units::errors::UnitError;
 
-/// Chip load stored as millimeters per tooth (mm/tooth).
+/// Represents chip load per cutting tooth.
+///
+/// Stored internally as millimeters per tooth (mm/tooth).
+/// Values must be finite and strictly positive.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct ChipLoad(f64);
 
 impl ChipLoad {
+    /// Creates a [`ChipLoad`] from millimeters per tooth.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite or is less than or equal to zero.
     pub fn mm_per_tooth(value: f64) -> Result<Self, UnitError> {
         if !value.is_finite() {
             return Err(UnitError::NotFinite("ChipLoad"));
@@ -17,7 +25,8 @@ impl ChipLoad {
         Ok(Self(value))
     }
 
-    pub fn mm_per_tooth_value(self) -> f64 {
+    /// Returns the chip load value in millimeters per tooth.
+    pub  fn mm_per_tooth_value(self) -> f64 {
         self.0
     }
 }
