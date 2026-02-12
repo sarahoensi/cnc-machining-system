@@ -11,6 +11,7 @@ use crate::domain::{
     Angle,
     Diameter,
     Helix,
+    HelixAngle,
 };
 
 use crate::domain::Pitch;
@@ -80,8 +81,9 @@ impl SolveHelixUseCase {
                 )?;
 
                 let angle = Angle::degrees(angle_deg)?;
+                let helix_angle = HelixAngle::new(angle)?;
 
-                let pitch = self.pitch_from_angle(effective, angle)?;
+                let pitch = self.pitch_from_angle(effective, helix_angle)?;
 
                 Ok(Helix::new(effective, pitch))
             }
@@ -115,7 +117,7 @@ impl SolveHelixUseCase {
     fn pitch_from_angle(
         &self,
         diameter: Diameter,
-        angle: Angle,
+        angle: HelixAngle,
     ) -> AppResult<Pitch> {
 
         let circumference = PI * diameter.mm_value();

@@ -27,6 +27,7 @@ pub use units::UnitError;
 pub use geometry::{
     Circle,
     Helix,
+    HelixAngle,
     RightTriangle,
     RightTriangleSolver,
     GeometryError,

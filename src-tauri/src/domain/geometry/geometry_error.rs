@@ -8,6 +8,8 @@ pub enum GeometryError {
     ImpossibleTriangle,
     DivisionByZero,
     InvalidHelix,
+    NotFinite,
+    OutOfRange,
 }
 
 impl fmt::Display for GeometryError {
@@ -17,6 +19,8 @@ impl fmt::Display for GeometryError {
             GeometryError::ImpossibleTriangle => write!(f, "Triangle cannot exist"),
             GeometryError::DivisionByZero => write!(f, "Division by zero"),
             GeometryError::InvalidHelix => write!(f, "Invalid helix parameters"),
+            GeometryError::NotFinite => write!(f, "Value is not finite"),
+            GeometryError::OutOfRange => write!(f, "Value is out of valid range"),
         }
     }
 }
@@ -49,6 +53,15 @@ mod tests {
         assert_eq!(
             GeometryError::InvalidHelix.to_string(),
             "Invalid helix parameters"
+        );
+
+        assert_eq!(
+            GeometryError::NotFinite.to_string(),
+            "Value is not finite"
+        );
+        assert_eq!(
+            GeometryError::OutOfRange.to_string(),
+            "Value is out of valid range"
         );
     }
 
