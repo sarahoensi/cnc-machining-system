@@ -5,6 +5,26 @@ use std::f64::consts::PI;
 use crate::domain::UnitError;
 use crate::domain::{CuttingSpeed, Diameter, Rpm};
 
+
+/// Provides conversions between spindle speed (RPM) and cutting speed.
+///
+/// # Machining Formulas
+///
+/// Cutting speed is defined as:
+///
+/// ```text
+/// Vc = π * D * n / 1000
+/// ```
+///
+/// Where:
+///
+/// - `Vc` = cutting speed (m/min)
+/// - `D` = tool diameter (mm)
+/// - `n` = spindle speed (RPM)
+///
+/// The factor `1000` converts millimeters to meters.
+///
+/// This service is stateless and purely computational.
 pub struct SpindleSpeedCalculator;
 
 impl SpindleSpeedCalculator {
