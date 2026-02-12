@@ -1,11 +1,33 @@
 // interface/mod.rs
+
 pub mod tauri;
 
-pub use tauri::{
+// ---------- Right triangle ----------
+pub use tauri::right_triangle::{
     solve_right_triangle,
     SolveRightTriangleRequest,
     SolveRightTriangleResponse,
 };
 
-pub use tauri::{solve_helix, SolveHelixRequest, SolveHelixResponse};
-pub use tauri::{solve_cutting_data, SolveCuttingDataRequest, SolveCuttingDataResponse};
+// ---------- Helix ----------
+pub use tauri::helix::{
+    solve_helix,
+    SolveHelixRequest,
+    SolveHelixResponse,
+};
+
+// ---------- Cutting data ----------
+pub use tauri::cutting_data::{
+    solve_cutting_data,
+    SolveCuttingDataRequest,
+    SolveCuttingDataResponse,
+};
+
+// ---------- Finishing ----------
+pub use tauri::finishing::{
+    generate_finishing_plan,
+    register_finishing_measurement,
+    GenerateFinishingPlanRequest,
+    RegisterFinishingMeasurementRequest,
+    FinishingExecutionResponse,
+};
