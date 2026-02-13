@@ -3,11 +3,18 @@
 use crate::domain::units::errors::UnitError;
 use crate::domain::units::{Length, Radius};
 
-/// Diameter stored internally as millimeters (mm).
+/// Represents a diameter measurement.
+///
+/// Stored internally in millimeters (mm). Values must be finite and strictly positive.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Diameter(f64);
 
 impl Diameter {
+    /// Creates a [`Diameter`] from millimeters.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite or is less than or equal to zero.
     pub fn mm(value: f64) -> Result<Self, UnitError> {
         if !value.is_finite() {
             return Err(UnitError::NotFinite("Diameter"));
@@ -18,15 +25,18 @@ impl Diameter {
         Ok(Self(value))
     }
 
+    /// Returns the diameter value in millimeters.
     pub fn mm_value(self) -> f64 {
         self.0
     }
 
+    /// Converts the diameter to a [`Length`] with the same millimeter value.
     pub fn as_length(self) -> Length {
         // safe because diameter is always finite and > 0
         Length::mm(self.0).expect("Diameter is always valid length")
     }
 
+    /// Computes the corresponding [`Radius`] (half the diameter).
     pub fn radius(self) -> Radius {
         Radius::mm(self.0 / 2.0).expect("Diameter is > 0 so radius is > 0")
     }

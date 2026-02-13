@@ -1,14 +1,38 @@
 // domain/machining_strategy/finishing_execution.rs
 
 use crate::domain::machining_strategy::strategy_error::StrategyError;
-use crate::domain::{Diameter, Length, FinishingPlan, FinishingStep};
-
+use crate::domain::{Diameter, FinishingPlan, FinishingStep, Length};
 
 const EPS: f64 = 1e-12;
 const END_TOL: f64 = 1e-9;
 use super::FinishingExecutionId;
 
-
+/// Represents a running finishing operation.
+///
+/// A `FinishingExecution` combines:
+///
+/// - A static [`FinishingPlan`] describing intended machining
+/// - A dynamic list of [`FinishingStep`] representing runtime progress
+///
+/// # Responsibilities
+///
+/// This aggregate:
+///
+/// - Tracks operator measurements
+/// - Recalculates remaining steps when measurements deviate from plan
+/// - Enforces workflow rules and machining direction constraints
+///
+/// # Workflow Rules
+///
+/// - Steps are executed sequentially
+/// - Measurements lock earlier steps once later steps are recorded
+/// - Remaining steps are recalculated after each measurement
+///
+/// # Domain Guarantees
+///
+/// - Planned steps always reach the target diameter
+/// - Measurements cannot pass target in wrong direction
+/// - Step numbering is always 1-based externally
 #[derive(Debug, Clone)]
 
 pub struct FinishingExecution {
@@ -17,13 +41,11 @@ pub struct FinishingExecution {
     steps: Vec<FinishingStep>,
 }
 
-
 impl FinishingExecution {
-    pub fn new(
-    id: FinishingExecutionId,
-    plan: FinishingPlan,
-) -> Result<Self, StrategyError>
- {
+    /// Creates a new finishing execution from a static plan.
+    ///
+    /// Generates the initial list of machining steps.
+    pub fn new(id: FinishingExecutionId, plan: FinishingPlan) -> Result<Self, StrategyError> {
         let steps = build_steps_from_start(
             plan.start(),
             plan.target(),
@@ -32,21 +54,37 @@ impl FinishingExecution {
             plan.direction_sign(),
         )?;
 
-        Ok(Self { id,plan, steps })
+        Ok(Self { id, plan, steps })
     }
 
+    /// Unique identifier of this execution instance.
     pub fn id(&self) -> FinishingExecutionId {
-    self.id
-}
-    pub fn plan(&self) -> FinishingPlan { self.plan }
-    pub fn steps(&self) -> &[FinishingStep] { &self.steps }
+        self.id
+    }
+    /// Static plan associated with this execution.
+    pub fn plan(&self) -> FinishingPlan {
+        self.plan
+    }
 
-    /// Register (or update) a measurement for a given 1-based step number.
-    /// This will recalculate all remaining steps after this one.
+    /// All finishing steps, including planned and measured data.
+    pub fn steps(&self) -> &[FinishingStep] {
+        &self.steps
+    }
+
+    /// Registers or updates a measurement for a given step.
     ///
-    /// Workflow rule:
-    /// - If a later step already has a measurement, earlier steps are locked.
-    ///   (You may still edit the *last measured* step.)
+    /// # Behavior
+    ///
+    /// - Step numbers are 1-based
+    /// - Stores operator measurement
+    /// - Recalculates all remaining steps using the measurement as new start
+    ///
+    /// # Workflow Locking
+    ///
+    /// If a later step already has a measurement:
+    ///
+    /// - Earlier steps cannot be edited
+    /// - The last measured step may still be modified
     pub fn register_measurement(
         &mut self,
         step_number: u32,
@@ -69,21 +107,18 @@ impl FinishingExecution {
         Ok(())
     }
 
-    
-
     // ---------------------------------------------------------------------
     // Workflow / locking
     // ---------------------------------------------------------------------
 
-    /// Returns the last step index (0-based) that has a measurement, if any.
+    /// Returns index of last step with a registered measurement.
     fn last_measured_index(&self) -> Option<usize> {
-        self.steps
-            .iter()
-            .rposition(|s| s.measurement().is_some())
+        self.steps.iter().rposition(|s| s.measurement().is_some())
     }
 
-    /// Enforces: if there is a later measured step, earlier steps cannot be modified.
-    /// Editing the last measured step itself is allowed.
+    /// Ensures workflow editing rules are respected.
+    ///
+    /// Earlier steps become locked once a later step has a measurement.
     fn ensure_step_is_editable(&self, idx: usize) -> Result<(), StrategyError> {
         if let Some(last_idx) = self.last_measured_index() {
             if idx < last_idx {
@@ -99,6 +134,7 @@ impl FinishingExecution {
     // Internal validation & recalculation logic
     // ---------------------------------------------------------------------
 
+    /// Validates measurement does not overshoot target diameter.
     fn validate_measurement_against_target(&self, measured: Diameter) -> Result<(), StrategyError> {
         let target = self.plan.target().mm_value();
         let m = measured.mm_value();
@@ -119,6 +155,10 @@ impl FinishingExecution {
         Ok(())
     }
 
+    /// Recalculates all steps following a measurement.
+    ///
+    /// Remaining steps are redistributed evenly to ensure
+    /// final planned diameter reaches the target.
     fn recalculate_from(
         &mut self,
         start_index: usize,
@@ -180,8 +220,6 @@ impl FinishingExecution {
 
         Ok(())
     }
-
-    
 }
 
 // -------------------------------------------------------------------------

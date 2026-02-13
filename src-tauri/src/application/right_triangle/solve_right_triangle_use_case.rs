@@ -1,3 +1,8 @@
+//! Use case for right-triangle geometry orchestration.
+//!
+//! This module coordinates application input variants with domain triangle
+//! solver services for machining geometry workflows.
+
 // application/right_triangle/solve_right_triangle_use_case.rs
 
 use crate::application::right_triangle::dto::{
@@ -18,6 +23,29 @@ pub struct SolveRightTriangleUseCase;
 
 impl SolveRightTriangleUseCase {
 
+    /// Solves a right triangle from a supported known-value combination.
+    ///
+    /// Purpose:
+    /// - Routes input variants to the appropriate domain solving path.
+    /// - Returns a normalized triangle DTO for external layers.
+    ///
+    /// Required inputs:
+    /// - A [`SolveRightTriangleInput`] variant with valid lengths (`mm`) and,
+    ///   when applicable, angle (`deg`).
+    ///
+    /// Output meaning:
+    /// - [`SolveRightTriangleOutput`] containing all sides and acute angles.
+    ///
+    /// Domain invariants enforced:
+    /// - Positive-length and angle constraints are validated by domain value
+    ///   objects.
+    /// - Right-triangle consistency rules are enforced by the domain solver.
+    ///
+    /// Side effects:
+    /// - None. This use case is computation-only and does not persist state.
+    ///
+    /// Error scenarios:
+    /// - Invalid or non-physical geometry combinations rejected by domain APIs.
     pub fn execute(
         &self,
         input: SolveRightTriangleInput,

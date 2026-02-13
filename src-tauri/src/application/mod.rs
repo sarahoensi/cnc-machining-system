@@ -1,3 +1,13 @@
+//! Application layer entry point for machining workflows.
+//!
+//! This module exposes orchestration use cases used by external interfaces
+//! (such as UI commands) and keeps domain rules inside the domain layer.
+//! It wires geometry solving, helix solving, cutting-data completion, and
+//! finishing lifecycle workflows into a consistent application API.
+//!
+//! Domain behavior is delegated to domain services and aggregates; this layer
+//! is responsible for input/output shaping and use-case coordination.
+
 // application/mod.rs
  mod right_triangle;
  mod helix;

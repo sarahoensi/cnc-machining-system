@@ -1,3 +1,8 @@
+//! Use case for solving and completing cutting data.
+//!
+//! The workflow coordinates domain calculators to infer missing machining
+//! parameters from a partial input set while preserving domain validation.
+
 // application/cutting_data/solve_cutting_data_use_case.rs
 
 use crate::application::shared::AppResult;
@@ -26,6 +31,31 @@ pub struct SolveCuttingDataUseCase;
 
 impl SolveCuttingDataUseCase {
 
+    /// Completes a cutting-data set from the provided partial input.
+    ///
+    /// Purpose:
+    /// - Orchestrates spindle speed, cutting speed, feed rate, and chip-load
+    ///   relationships used in milling setup workflows.
+    ///
+    /// Required inputs:
+    /// - A valid subset of fields in [`SolveCuttingDataInput`].
+    /// - `diameter_mm` is needed for speed conversions.
+    /// - `teeth` is needed for feed/chip-load conversions.
+    ///
+    /// Output guarantees:
+    /// - Returns validated and derived values in [`SolveCuttingDataOutput`].
+    /// - Leaves unresolved fields as `None` when data is insufficient.
+    ///
+    /// Domain invariants enforced:
+    /// - Unit/domain value objects validate positivity and allowed ranges.
+    /// - Formula consistency is delegated to domain calculator services.
+    ///
+    /// Side effects:
+    /// - None. This use case is pure orchestration with no persistence.
+    ///
+    /// Error scenarios:
+    /// - Returns an application error when any provided value is invalid.
+    /// - Returns an application error when a requested domain calculation fails.
     pub fn execute(
         input: SolveCuttingDataInput,
     ) -> AppResult<SolveCuttingDataOutput> {

@@ -1,3 +1,8 @@
+//! Mapping between Tauri cutting-data DTOs and application DTOs.
+//!
+//! This module translates request/response types across the interface boundary
+//! while preserving field semantics and units.
+
 // interface/tauri/cutting_data/mapping.rs
 
 use crate::application::{

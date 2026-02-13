@@ -1,3 +1,8 @@
+//! Mapping between helix Tauri DTOs and application DTOs.
+//!
+//! This module translates frontend representation types into application input
+//! and converts application output into frontend response DTOs.
+
 // interface/tauri/helix/mapping.rs
 
 use crate::application::{

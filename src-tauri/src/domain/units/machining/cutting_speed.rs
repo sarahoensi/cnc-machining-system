@@ -5,11 +5,19 @@ use std::f64::consts::PI;
 use crate::domain::units::errors::UnitError;
 use crate::domain::units::{Diameter, Rpm};
 
-/// Surface cutting speed stored as meters per minute (m/min).
+/// Represents surface cutting speed.
+///
+/// Stored internally as meters per minute (m/min).
+/// Values must be finite and strictly positive.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct CuttingSpeed(f64);
 
 impl CuttingSpeed {
+    /// Creates a [`CuttingSpeed`] from meters per minute.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite or is less than or equal to zero.
     pub fn meters_per_min(value: f64) -> Result<Self, UnitError> {
         if !value.is_finite() {
             return Err(UnitError::NotFinite("CuttingSpeed"));
@@ -20,18 +28,36 @@ impl CuttingSpeed {
         Ok(Self(value))
     }
 
+    /// Returns the cutting speed value in meters per minute.
     pub fn meters_per_min_value(self) -> f64 {
         self.0
     }
 
-    /// Vc = π * D * n / 1000
-    /// D in mm, n in RPM => Vc in m/min
+    /// Computes cutting speed from spindle speed and tool diameter.
+    ///
+    /// Formula:
+    ///
+    /// Vc = π × D × n / 1000
+    ///
+    /// where:
+    /// - D = diameter in millimeters
+    /// - n = spindle speed in RPM
+    /// - Vc = cutting speed in meters per minute
     pub fn from_rpm(diameter: Diameter, rpm: Rpm) -> Result<Self, UnitError> {
         let speed = PI * diameter.mm_value() * rpm.value() / 1000.0;
         Self::meters_per_min(speed)
     }
 
-    /// n = (Vc * 1000) / (π * D)
+    /// Computes spindle speed from cutting speed and tool diameter.
+    ///
+    /// Formula:
+    ///
+    /// n = (Vc × 1000) / (π × D)
+    ///
+    /// where:
+    /// - Vc = cutting speed in meters per minute
+    /// - D = diameter in millimeters
+    /// - n = spindle speed in RPM
     pub fn to_rpm(self, diameter: Diameter) -> Result<Rpm, UnitError> {
         let rpm = (self.0 * 1000.0) / (PI * diameter.mm_value());
         Rpm::new(rpm)

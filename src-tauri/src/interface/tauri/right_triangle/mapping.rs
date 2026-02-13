@@ -1,3 +1,8 @@
+//! Mapping between right-triangle Tauri DTOs and application DTOs.
+//!
+//! This module provides boundary translation from frontend request variants
+//! into application input and from application output into UI responses.
+
 // interfaces/tauri/right_triangle/mapping.rs
 
 use crate::application::{

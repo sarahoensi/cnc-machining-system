@@ -1,3 +1,8 @@
+//! Mapping between finishing Tauri DTOs and application DTOs.
+//!
+//! This module performs boundary translation for request and response models
+//! without changing workflow meaning.
+
 // interface/tauri/finishing/mapping.rs
 
 use crate::application::finishing::finishing_execution_output::FinishingExecutionOutput;

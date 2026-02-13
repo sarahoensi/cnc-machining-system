@@ -1,4 +1,10 @@
 // domain/geometry/helix/mod.rs
+//! Helix geometry primitives used in machining calculations.
+//!
+//! This module provides the validated `Helix` primitive and `HelixAngle` helper
+//! for modelling cylindrical helices (diameter, pitch). The types express
+//! quantities in domain units and expose derived measures like helix angle,
+//! circumference, and axial travel for machining use.
 #![allow(clippy::module_inception)]
 
 mod helix;

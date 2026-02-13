@@ -2,13 +2,20 @@
 
 use crate::domain::units::errors::UnitError;
 
-/// Percentage stored internally as 0.0..=1.0 fraction.
+/// Represents a percentage value.
+///
+/// Stored internally as a fraction in the range `0.0..=1.0`.
+/// All values must be finite and within range.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Percentage(f64);
 
 impl Percentage {
-    /// 0..=100
-    pub fn from_percent(value: f64) -> Result<Self, UnitError> {
+    /// Creates a [`Percentage`] from percent (`0..=100`).
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite or is outside `0..=100`.
+    pub  fn from_percent(value: f64) -> Result<Self, UnitError> {
         if !value.is_finite() {
             return Err(UnitError::NotFinite("Percentage"));
         }
@@ -23,7 +30,11 @@ impl Percentage {
         Ok(Self(value / 100.0))
     }
 
-    /// 0..=1
+    /// Creates a [`Percentage`] from fraction (`0.0..=1.0`).
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite or is outside `0.0..=1.0`.
     pub fn from_fraction(value: f64) -> Result<Self, UnitError> {
         if !value.is_finite() {
             return Err(UnitError::NotFinite("Percentage"));
@@ -39,10 +50,12 @@ impl Percentage {
         Ok(Self(value))
     }
 
+    /// Returns the percentage as a fraction (`0.0..=1.0`).
     pub fn fraction_value(self) -> f64 {
         self.0
     }
 
+    /// Returns the percentage as percent (`0..=100`).
     pub fn percent_value(self) -> f64 {
         self.0 * 100.0
     }

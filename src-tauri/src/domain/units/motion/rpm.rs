@@ -2,11 +2,18 @@
 
 use crate::domain::units::errors::UnitError;
 
-/// Revolutions per minute (RPM).
+/// Represents rotational speed in revolutions per minute (RPM).
+///
+/// Values must be finite and strictly positive.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Rpm(f64);
 
 impl Rpm {
+    /// Creates a new [`Rpm`] value.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite or is less than or equal to zero.
     pub fn new(value: f64) -> Result<Self, UnitError> {
         if !value.is_finite() {
             return Err(UnitError::NotFinite("Rpm"));
@@ -17,6 +24,7 @@ impl Rpm {
         Ok(Self(value))
     }
 
+    /// Returns the RPM value.
     pub fn value(self) -> f64 {
         self.0
     }

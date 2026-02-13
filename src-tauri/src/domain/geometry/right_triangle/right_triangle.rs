@@ -5,7 +5,12 @@ use crate::domain::{Angle, Length};
 const TRIG_CLAMP_EPS: f64 = 1e-15;
 
 /// Represents a mathematically valid right triangle.
-/// Canonical representation: two legs (a, b).
+///
+/// Canonical representation: two legs (`a`, `b`). All derived measures are
+/// computed from these legs to maintain a single source of truth.
+///
+/// Invariants: leg lengths are positive and finite; hypotenuse is computed
+/// from the Pythagorean relation and is positive.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct RightTriangle {
     a: Length,
@@ -24,15 +29,19 @@ impl RightTriangle {
     // Accessors
     // ---------------------------------------------------------
 
+    /// Returns the first leg length `a`.
     pub fn a(&self) -> Length {
         self.a
     }
 
+    /// Returns the second leg length `b`.
     pub fn b(&self) -> Length {
         self.b
     }
 
-    /// Hypotenuse
+    /// Hypotenuse `c` computed as sqrt(a² + b²).
+    ///
+    /// Returns a validated positive `Length` representing the hypotenuse.
     pub fn c(&self) -> Length {
         let a = self.a.mm_value();
         let b = self.b.mm_value();
@@ -41,16 +50,20 @@ impl RightTriangle {
         Length::mm_positive(c).unwrap()
     }
 
+    /// Acute angle `alpha` opposite leg `a`.
+    ///
+    /// Returns an `Angle` in radians constructed using validated trig input.
     pub fn alpha(&self) -> Angle {
         let ratio = clamp_unit(self.a.mm_value() / self.c().mm_value());
         Angle::radians(ratio.asin()).unwrap()
     }
 
+    /// Complementary acute angle `beta` adjacent to leg `a`.
     pub fn beta(&self) -> Angle {
         Angle::degrees(90.0 - self.alpha().degrees_value()).unwrap()
     }
 
-    /// Always 90°
+    /// Right angle `gamma` (always 90°).
     pub fn gamma(&self) -> Angle {
         Angle::degrees(90.0).unwrap()
     }
@@ -59,10 +72,12 @@ impl RightTriangle {
     // Derived geometric properties
     // ---------------------------------------------------------
 
+    /// Area of the right triangle (1/2 * a * b) in square millimetres.
     pub fn area(&self) -> f64 {
         self.a.mm_value() * self.b.mm_value() / 2.0
     }
 
+    /// Perimeter as a domain `Length` (a + b + c).
     pub fn perimeter(&self) -> Length {
         Length::mm(
             self.a.mm_value()
@@ -72,30 +87,37 @@ impl RightTriangle {
         .unwrap()
     }
 
-    /// Height from right angle to hypotenuse
+    /// Height from the right angle to the hypotenuse.
+    ///
+    /// Returns a positive `Length` representing the altitude to the hypotenuse.
     pub fn altitude_to_hypotenuse(&self) -> Length {
         let h = (2.0 * self.area()) / self.c().mm_value();
         Length::mm_positive(h).unwrap()
     }
 
+    /// Projection length of leg `a` onto the hypotenuse `c`.
     pub fn projection_a_on_c(&self) -> Length {
         let val = self.a.mm_value().powi(2) / self.c().mm_value();
         Length::mm_positive(val).unwrap()
     }
 
+    /// Projection length of leg `b` onto the hypotenuse `c`.
     pub fn projection_b_on_c(&self) -> Length {
         let val = self.b.mm_value().powi(2) / self.c().mm_value();
         Length::mm_positive(val).unwrap()
     }
 
+    /// Sine of the acute angle `alpha` (a / c).
     pub fn sin_alpha(&self) -> f64 {
         self.a.mm_value() / self.c().mm_value()
     }
 
+    /// Cosine of the acute angle `alpha` (b / c).
     pub fn cos_alpha(&self) -> f64 {
         self.b.mm_value() / self.c().mm_value()
     }
 
+    /// Tangent of the acute angle `alpha` (a / b).
     pub fn tan_alpha(&self) -> f64 {
         self.a.mm_value() / self.b.mm_value()
     }

@@ -3,9 +3,21 @@
 use crate::domain::UnitError;
 use crate::domain::{ChipLoad, FeedRate, Rpm, ToothCount};
 
+/// Computes linear feed rate from chip load, spindle speed, and flute count.
 pub struct FeedRateCalculator;
 
 impl FeedRateCalculator {
+    /// Derives feed rate needed to maintain target chip thickness per tooth.
+    ///
+    /// Uses `F = fz * n * z`, where:
+    /// - `F` is feed rate in mm/min,
+    /// - `fz` is chip load in mm/tooth,
+    /// - `n` is spindle speed in RPM,
+    /// - `z` is tooth count.
+    ///
+    /// # Errors
+    ///
+    /// Returns `UnitError` if the computed feed rate violates `FeedRate` unit invariants.
     pub fn feed_rate_from_chip_load(
         chip_load: ChipLoad,
         rpm: Rpm,

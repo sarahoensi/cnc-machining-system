@@ -2,11 +2,16 @@
 
 use crate::domain::units::errors::UnitError;
 
-/// Angle stored internally as radians.
+/// Represents a mathematical angle.
+///
+/// Stored internally in radians. Values must be finite.
+/// Negative angles are allowed. The value is not normalized.
+
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Angle(f64);
 
 impl Angle {
+    /// Ensures the provided value is finite.
     fn validate_finite(value: f64) -> Result<f64, UnitError> {
         if value.is_finite() {
             Ok(value)
@@ -15,18 +20,34 @@ impl Angle {
         }
     }
 
+    /// Creates an [`Angle`] from radians.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite.
     pub fn radians(value: f64) -> Result<Self, UnitError> {
         Ok(Self(Self::validate_finite(value)?))
     }
 
+    /// Creates an [`Angle`] from degrees.
+    ///
+    /// The value is converted to radians internally.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the value is not finite.
     pub fn degrees(value: f64) -> Result<Self, UnitError> {
         Ok(Self(Self::validate_finite(value)?.to_radians()))
     }
 
+    /// Returns the angle value in radians.
+    ///
+    /// This is the internal canonical representation.
     pub fn radians_value(self) -> f64 {
         self.0
     }
 
+    /// Returns the angle value in degrees.
     pub fn degrees_value(self) -> f64 {
         self.0.to_degrees()
     }
