@@ -2,8 +2,10 @@
 
 use std::f64::consts::PI;
 
-use crate::domain::geometry::GeometryError;
-use crate::domain::Angle;
+use crate::domain::{
+    units::{Angle},
+    GeometryError,
+};
 
 /// Represents a validated helix angle for geometric machining calculations.
 #[derive(Debug, Copy, Clone, PartialEq)]

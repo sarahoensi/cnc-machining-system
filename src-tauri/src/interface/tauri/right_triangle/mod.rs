@@ -12,6 +12,6 @@ mod request;
 mod response;
 mod mapping;
 
-pub use command::solve_right_triangle;
-pub use request::SolveRightTriangleRequest;
-pub use response::SolveRightTriangleResponse;
+pub use command::*;
+pub use request::*;
+pub use response::*;

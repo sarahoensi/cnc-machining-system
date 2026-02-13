@@ -1,7 +1,11 @@
 // domain/machining_strategy/finishing/finishing_planner.rs
 
-use crate::domain::machining_strategy::strategy_error::StrategyError;
-use crate::domain::{FinishingMode, FinishingPlan, FinishingPlanning, FinishingRequest, Length};
+
+use crate::domain::{
+    units::{Length},
+    {FinishingMode, FinishingPlan, FinishingPlanning, FinishingRequest},
+    machining_strategy::strategy_error::StrategyError,
+};
 
 /// Domain service responsible for generating a valid [`FinishingPlan`].
 ///

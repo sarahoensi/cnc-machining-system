@@ -1,6 +1,6 @@
 // validation.rs
 
-use cnc_machining_system_lib::interface::{
+use cnc_machining_system_lib::interface::helix::{
     solve_helix,
     SolveHelixRequest,
 };

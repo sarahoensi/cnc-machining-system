@@ -1,5 +1,5 @@
 // tests/interface/tauri/right_triangle/error_path.rs
-use cnc_machining_system_lib::interface::{
+use cnc_machining_system_lib::interface::right_triangle::{
     solve_right_triangle,
 };
 

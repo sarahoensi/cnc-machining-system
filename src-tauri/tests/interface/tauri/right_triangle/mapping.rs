@@ -1,7 +1,7 @@
 // tests/interface/tauri/right_triangle/mapping.rs
 
-use cnc_machining_system_lib::interface::SolveRightTriangleResponse;
-use cnc_machining_system_lib::interface::tauri::right_triangle::SolveRightTriangleRequest;
+use cnc_machining_system_lib::interface::right_triangle::{SolveRightTriangleResponse, SolveRightTriangleRequest};
+
 use cnc_machining_system_lib::application::{SolveRightTriangleInput, SolveRightTriangleOutput};
 
 #[test]

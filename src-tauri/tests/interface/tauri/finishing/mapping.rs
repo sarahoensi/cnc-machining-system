@@ -1,6 +1,6 @@
 // mapping.rs
 
-use cnc_machining_system_lib::interface::{GenerateFinishingPlanRequest, generate_finishing_plan, tauri::finishing::FinishingMode};
+use cnc_machining_system_lib::interface::finishing::{GenerateFinishingPlanRequest, generate_finishing_plan, FinishingMode};
 
 #[test]
 fn generated_response_contains_expected_fields() {

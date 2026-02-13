@@ -1,6 +1,6 @@
 // domain/machining_strategy/finishing/finishing_step.rs
 
-use crate::domain::{Diameter, Length};
+use crate::domain::units::{Diameter, Length};
 
 /// Represents a single machining pass within a finishing execution.
 ///

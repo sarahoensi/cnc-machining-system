@@ -1,7 +1,7 @@
 // tests/integration/tauri/finishing/generate.rs
 
-use cnc_machining_system_lib::interface::{
-    GenerateFinishingPlanRequest, generate_finishing_plan, tauri::finishing::FinishingMode
+use cnc_machining_system_lib::interface::finishing::{
+    GenerateFinishingPlanRequest, generate_finishing_plan, FinishingMode
 
 };
 

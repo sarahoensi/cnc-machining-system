@@ -1,25 +1,11 @@
 // domain/mod.rs
-mod units;
+pub mod units;
+
 mod geometry;
 mod machining_physics;
 mod machining_strategy;
 
-// --------------------------------
-// Units
-// --------------------------------
-pub use units::{
-    Length,
-    Diameter,
-    Radius,
-    Angle,
-    CuttingSpeed,
-    FeedRate,
-    Rpm,
-    ChipLoad,
-    Pitch
-};
 
-pub use units::UnitError;
 
 // --------------------------------
 // Geometry

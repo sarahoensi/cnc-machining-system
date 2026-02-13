@@ -1,8 +1,11 @@
 // domain/machining_strategy/finishing/finishing_plan.rs
 
-use crate::domain::{Diameter, Length};
+use crate::domain::{
+    units::{Diameter, Length},
+    FinishingMode,
+};
 
-use super::FinishingMode;
+
 
 /// Represents a static finishing plan.
 ///

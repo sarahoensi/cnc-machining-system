@@ -1,7 +1,9 @@
 // domain/geometry/right_triangle/right_triangle_solver.rs
 
-use crate::domain::geometry::geometry_error::GeometryError;
-use crate::domain::{Angle, Length, RightTriangle};
+use crate::domain::{
+    units::{Angle, Length},
+    GeometryError, RightTriangle,
+};
 
 const EPS: f64 = 1e-12;
 
@@ -20,11 +22,7 @@ impl RightTriangleSolver {
     ///
     /// Returns `Err(GeometryError::InvalidTriangle)` if either length is not
     /// positive and finite.
-    pub fn from_legs(
-        a: Length,
-        b: Length,
-    ) -> Result<RightTriangle, GeometryError> {
-
+    pub fn from_legs(a: Length, b: Length) -> Result<RightTriangle, GeometryError> {
         if !is_positive_finite(a) || !is_positive_finite(b) {
             return Err(GeometryError::InvalidTriangle);
         }
@@ -40,11 +38,7 @@ impl RightTriangleSolver {
     /// Returns `Err(GeometryError::ImpossibleTriangle)` if `a >= c` or the
     /// Pythagorean relation cannot be satisfied within tolerance. Returns
     /// `Err(GeometryError::InvalidTriangle)` for non-finite or non-positive inputs.
-    pub fn from_leg_and_hypotenuse(
-        a: Length,
-        c: Length,
-    ) -> Result<RightTriangle, GeometryError> {
-
+    pub fn from_leg_and_hypotenuse(a: Length, c: Length) -> Result<RightTriangle, GeometryError> {
         let a_mm = a.mm_value();
         let c_mm = c.mm_value();
 
@@ -67,8 +61,7 @@ impl RightTriangleSolver {
             return Err(GeometryError::ImpossibleTriangle);
         }
 
-        let b = Length::mm_positive(b_sq.sqrt())
-            .map_err(|_| GeometryError::InvalidTriangle)?;
+        let b = Length::mm_positive(b_sq.sqrt()).map_err(|_| GeometryError::InvalidTriangle)?;
 
         Ok(RightTriangle::new(a, b))
     }
@@ -83,7 +76,6 @@ impl RightTriangleSolver {
         b: Length,
         c: Length,
     ) -> Result<RightTriangle, GeometryError> {
-
         let b_mm = b.mm_value();
         let c_mm = c.mm_value();
 
@@ -105,8 +97,7 @@ impl RightTriangleSolver {
             return Err(GeometryError::ImpossibleTriangle);
         }
 
-        let a = Length::mm_positive(a_sq.sqrt())
-            .map_err(|_| GeometryError::InvalidTriangle)?;
+        let a = Length::mm_positive(a_sq.sqrt()).map_err(|_| GeometryError::InvalidTriangle)?;
 
         Ok(RightTriangle::new(a, b))
     }
@@ -122,17 +113,16 @@ impl RightTriangleSolver {
         c: Length,
         alpha: Angle,
     ) -> Result<RightTriangle, GeometryError> {
-
         validate_acute(alpha)?;
 
         let c_mm = c.mm_value();
         let rad = alpha.radians_value();
 
-        let a = Length::mm_positive(c_mm * rad.sin())
-            .map_err(|_| GeometryError::InvalidTriangle)?;
+        let a =
+            Length::mm_positive(c_mm * rad.sin()).map_err(|_| GeometryError::InvalidTriangle)?;
 
-        let b = Length::mm_positive(c_mm * rad.cos())
-            .map_err(|_| GeometryError::InvalidTriangle)?;
+        let b =
+            Length::mm_positive(c_mm * rad.cos()).map_err(|_| GeometryError::InvalidTriangle)?;
 
         Ok(RightTriangle::new(a, b))
     }
@@ -148,7 +138,6 @@ impl RightTriangleSolver {
         a: Length,
         alpha: Angle,
     ) -> Result<RightTriangle, GeometryError> {
-
         validate_acute(alpha)?;
 
         let a_mm = a.mm_value();
@@ -160,8 +149,7 @@ impl RightTriangleSolver {
             return Err(GeometryError::InvalidTriangle);
         }
 
-        let c = Length::mm_positive(a_mm / s)
-            .map_err(|_| GeometryError::InvalidTriangle)?;
+        let c = Length::mm_positive(a_mm / s).map_err(|_| GeometryError::InvalidTriangle)?;
 
         Self::from_leg_and_hypotenuse(a, c)
     }
@@ -177,14 +165,13 @@ impl RightTriangleSolver {
         b: Length,
         alpha: Angle,
     ) -> Result<RightTriangle, GeometryError> {
-
         validate_acute(alpha)?;
 
         let b_mm = b.mm_value();
         let rad = alpha.radians_value();
 
-        let a = Length::mm_positive(b_mm * rad.tan())
-            .map_err(|_| GeometryError::InvalidTriangle)?;
+        let a =
+            Length::mm_positive(b_mm * rad.tan()).map_err(|_| GeometryError::InvalidTriangle)?;
 
         Ok(RightTriangle::new(a, b))
     }

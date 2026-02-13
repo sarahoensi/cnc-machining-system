@@ -10,6 +10,6 @@ mod request;
 mod response;
 mod mapping;
 
-pub use command::solve_helix;
-pub use request::{SolveHelixRequest, HelixMode};
-pub use response::SolveHelixResponse;
+pub use command::*;
+pub use request::*;
+pub use response::*;

@@ -1,7 +1,9 @@
 // domain/machining_physics/calculators/chip_load.rs
 
-use crate::domain::UnitError;
-use crate::domain::{ChipLoad, FeedRate, Rpm, ToothCount};
+use crate::domain::{
+    units::{ChipLoad, FeedRate, Rpm, UnitError},
+    ToothCount,
+};
 
 /// Computes chip load from feed, spindle speed, and tooth count.
 pub struct ChipLoadCalculator;

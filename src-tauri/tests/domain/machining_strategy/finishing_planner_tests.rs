@@ -1,6 +1,6 @@
 // tests/domain/machining_strategy/finishing_planner_tests.rs
 
-use cnc_machining_system_lib::domain::*;
+use cnc_machining_system_lib::domain::{units::*,*};
 
 fn d(v: f64) -> Diameter {
     Diameter::mm(v).unwrap()

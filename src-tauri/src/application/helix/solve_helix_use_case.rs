@@ -13,13 +13,10 @@ use crate::application::helix::dto::{
 use crate::application::shared::AppResult;
 
 use crate::domain::{
-    Angle,
-    Diameter,
-    Helix,
-    HelixAngle,
+    units::{Angle, Diameter,  Pitch},
+    Helix, HelixAngle,
 };
 
-use crate::domain::Pitch;
 
 use std::f64::consts::PI;
 

@@ -1,6 +1,6 @@
 // domain/machining_physics/cutting_input.rs
 
-use crate::domain::{ChipLoad, CuttingSpeed, FeedRate, Rpm};
+use crate::domain::units::{ChipLoad, CuttingSpeed, FeedRate, Rpm};
 
 /// Represents partially known machining parameters.
 ///

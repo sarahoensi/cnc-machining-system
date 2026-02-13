@@ -13,8 +13,7 @@ use crate::application::finishing::mapping::finishing_execution_mapper::to_execu
 
 
 use crate::domain::{
-    Diameter,
-    Length,
+    units::{Diameter, Length},
     FinishingExecution,
     FinishingPlanner,
     FinishingPlanning,

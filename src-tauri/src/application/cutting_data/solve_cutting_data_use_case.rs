@@ -13,19 +13,14 @@ use crate::application::cutting_data::dto::{
 };
 
 use crate::domain::{
-    ChipLoad,
-    CuttingSpeed,
-    Diameter,
-    FeedRate,
-    Rpm,
+    units::{ChipLoad, CuttingSpeed, Diameter, FeedRate, Rpm},
     ToothCount,
-};
-
-use crate::domain::{
     ChipLoadCalculator,
     FeedRateCalculator,
     SpindleSpeedCalculator,
 };
+
+
 
 pub struct SolveCuttingDataUseCase;
 

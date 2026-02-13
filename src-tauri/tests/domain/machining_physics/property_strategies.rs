@@ -2,7 +2,7 @@
 #![allow(dead_code)]
 
 
-use cnc_machining_system_lib::domain::*;
+use cnc_machining_system_lib::domain::{units::*,*};
 use proptest::prelude::*;
 
 /// Positive finite f64 helper

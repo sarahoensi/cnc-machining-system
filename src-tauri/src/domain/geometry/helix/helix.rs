@@ -3,8 +3,7 @@
 
 use std::f64::consts::PI;
 
-use crate::domain::{Angle, Diameter, Length};
-use crate::domain::units::Pitch;
+use crate::domain::units::{Angle, Diameter, Length, Pitch};
 
 /// Represents a cylindrical helix used in machining geometry.
 ///
