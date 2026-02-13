@@ -28,13 +28,14 @@ use crate::domain::{CuttingSpeed, Diameter, Rpm};
 pub struct SpindleSpeedCalculator;
 
 impl SpindleSpeedCalculator {
-    /// Computes spindle speed from cutting speed and tool diameter.
+
+    /// Calculates spindle speed from cutting speed and tool diameter.
     ///
-    /// Uses `n = (Vc * 1000) / (π * D)` where `Vc` is in m/min and `D` in mm.
+    /// Formula:
     ///
-    /// # Errors
-    ///
-    /// Returns `UnitError` if the computed RPM violates `Rpm` domain invariants.
+    /// ```text
+    /// n = (Vc * 1000) / (π * D)
+    /// ```
     pub fn rpm_from_cutting_speed(
         cutting_speed: CuttingSpeed,
         diameter: Diameter,
@@ -46,13 +47,13 @@ impl SpindleSpeedCalculator {
         Rpm::new(rpm)
     }
 
-    /// Computes cutting speed from spindle speed and tool diameter.
+    /// Calculates cutting speed from spindle speed and tool diameter.
     ///
-    /// Uses `Vc = (π * D * n) / 1000` where `D` is in mm and `n` in RPM.
+    /// Formula:
     ///
-    /// # Errors
-    ///
-    /// Returns `UnitError` if the computed cutting speed violates `CuttingSpeed` invariants.
+    /// ```text
+    /// Vc = π * D * n / 1000
+    /// ```
     pub fn cutting_speed_from_rpm(
         rpm: Rpm,
         diameter: Diameter,
