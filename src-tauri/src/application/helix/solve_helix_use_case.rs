@@ -1,3 +1,8 @@
+//! Use case for helix parameter orchestration in machining workflows.
+//!
+//! This module coordinates application inputs with domain helix construction,
+//! supporting pitch-driven and angle-driven solution paths.
+
 // application/helix/solve_helix_use_case.rs
 use crate::application::helix::dto::{
     SolveHelixInput,
@@ -22,6 +27,30 @@ pub struct SolveHelixUseCase;
 
 impl SolveHelixUseCase {
 
+    /// Solves helix parameters for an inner or outer machining path.
+    ///
+    /// Purpose:
+    /// - Orchestrates effective-diameter setup and helix construction from the
+    ///   selected input mode.
+    ///
+    /// Required inputs:
+    /// - A valid [`SolveHelixInput`] variant with diameters in millimeters and
+    ///   either pitch (`mm/rev`) or angle (`deg`).
+    ///
+    /// Output meaning:
+    /// - Returns normalized helix values in [`SolveHelixOutput`] for use by UI
+    ///   or API layers.
+    ///
+    /// Domain invariants enforced:
+    /// - Diameter, angle, and pitch constraints are validated by domain value
+    ///   objects and helix model construction.
+    ///
+    /// Side effects:
+    /// - None. This use case does not perform persistence.
+    ///
+    /// Error scenarios:
+    /// - Invalid numeric/unit inputs rejected by domain constructors.
+    /// - Domain helix construction failures for unsupported value combinations.
     pub fn execute(
         &self,
         input: SolveHelixInput,

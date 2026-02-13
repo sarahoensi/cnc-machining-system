@@ -1,3 +1,8 @@
+//! Application error boundary for use-case execution.
+//!
+//! This module wraps domain and unit validation failures into a single error
+//! type consumable by UI/API layers.
+
 // src/application/shared/error.rs
 
 use crate::domain::GeometryError;
@@ -5,9 +10,20 @@ use crate::domain::UnitError;
 use crate::domain::StrategyError;
 
 #[derive(Debug)]
+/// Error type returned by application use cases.
+///
+/// Error origin:
+/// - Variants wrap domain-level validation and strategy errors.
+///
+/// Exposure:
+/// - Safe to expose at application boundaries after appropriate presentation
+///   formatting by external layers.
 pub enum ApplicationError {
+    /// Geometry/domain-consistency failure originating from domain services.
     Geometry(GeometryError),
+    /// Unit/value-object validation failure originating from domain constructors.
     Unit(UnitError),
+    /// Domain strategy or planning-rule failure.
     Strategy(StrategyError),
 }
 

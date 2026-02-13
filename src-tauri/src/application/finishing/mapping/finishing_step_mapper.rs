@@ -1,3 +1,5 @@
+//! Mapper from domain finishing steps to application step DTOs.
+
 // application/finishing/mapping/finishing_step_mapper.rs
 
 use crate::{
@@ -5,6 +7,10 @@ use crate::{
     domain::FinishingStep,
 };
 
+/// Translates a domain [`FinishingStep`] into [`FinishingStepOutput`].
+///
+/// Transformation guarantee:
+/// - Preserves step order/identity and exposes domain values in millimeters.
 pub fn to_step_output(step: &FinishingStep) -> FinishingStepOutput {
     FinishingStepOutput {
         index: step.index(),

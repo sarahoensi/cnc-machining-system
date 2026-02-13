@@ -1,3 +1,5 @@
+//! Mapper from domain finishing executions to application execution DTOs.
+
 // application/finishing/mapping/finishing_execution_mapper.rs
 
 use crate::{
@@ -8,6 +10,11 @@ use crate::{
     domain::FinishingExecution,
 };
 
+/// Translates a domain [`FinishingExecution`] aggregate into
+/// [`FinishingExecutionOutput`].
+///
+/// Transformation guarantee:
+/// - Carries the execution identifier and mapped steps without mutating state.
 pub fn to_execution_output(exec: &FinishingExecution) -> FinishingExecutionOutput {
     let steps = exec.steps().iter().map(to_step_output).collect();
 
