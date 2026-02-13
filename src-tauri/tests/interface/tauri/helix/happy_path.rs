@@ -1,7 +1,7 @@
 // happy_path.rs
 
-use cnc_machining_system_lib::interface::{
-    SolveHelixRequest, solve_helix, tauri::helix::HelixMode
+use cnc_machining_system_lib::interface::helix::{
+    SolveHelixRequest, solve_helix, HelixMode
 };
 
 

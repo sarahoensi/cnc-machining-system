@@ -1,7 +1,7 @@
 // tests/integration/tauri/finishing/validation.rs
 
-use cnc_machining_system_lib::interface::{
-    GenerateFinishingPlanRequest, RegisterFinishingMeasurementRequest, generate_finishing_plan, register_finishing_measurement, tauri::finishing::FinishingMode
+use cnc_machining_system_lib::interface::finishing::{
+    GenerateFinishingPlanRequest, RegisterFinishingMeasurementRequest, generate_finishing_plan, register_finishing_measurement, FinishingMode
 };
 
 #[test]

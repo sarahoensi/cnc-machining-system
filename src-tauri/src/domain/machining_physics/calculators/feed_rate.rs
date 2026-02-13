@@ -1,7 +1,9 @@
 // domain/machining_physics/calculators/feed_rate.rs
 
-use crate::domain::UnitError;
-use crate::domain::{ChipLoad, FeedRate, Rpm, ToothCount};
+use crate::domain::{
+    units::{ChipLoad, FeedRate, Rpm, UnitError},
+    ToothCount,
+};
 
 /// Computes linear feed rate from chip load, spindle speed, and flute count.
 pub struct FeedRateCalculator;
@@ -31,7 +33,7 @@ impl FeedRateCalculator {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::{ChipLoad, Rpm};
+    use crate::domain::units::{ChipLoad, Rpm};
 
     #[test]
     fn feed_is_chipload_times_rpm_times_teeth() {

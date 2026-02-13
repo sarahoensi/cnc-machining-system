@@ -1,7 +1,8 @@
 // tests/domain/geometry/right_triangle_solver_tests.rs
 
 use cnc_machining_system_lib::domain::{
-    Angle, Length, RightTriangle, RightTriangleSolver,
+    units::{Angle, Length},
+     RightTriangle, RightTriangleSolver,
 };
 use cnc_machining_system_lib::test_utils::approx::{approx_eq, DEFAULT_EPS};
 

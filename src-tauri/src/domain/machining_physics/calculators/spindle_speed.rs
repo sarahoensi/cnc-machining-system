@@ -2,8 +2,9 @@
 
 use std::f64::consts::PI;
 
-use crate::domain::UnitError;
-use crate::domain::{CuttingSpeed, Diameter, Rpm};
+use crate::domain::{
+    units::{Diameter, CuttingSpeed, Rpm, UnitError},
+};
 
 
 /// Provides conversions between spindle speed (RPM) and cutting speed.
@@ -69,7 +70,7 @@ impl SpindleSpeedCalculator {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::Diameter;
+    use crate::domain::units::Diameter;
 
     #[test]
     fn roundtrip_rpm_vc() {

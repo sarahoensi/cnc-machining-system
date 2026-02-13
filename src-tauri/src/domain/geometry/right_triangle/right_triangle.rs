@@ -1,6 +1,6 @@
 // domain/geometry/right_triangle/right_triangle.rs
 
-use crate::domain::{Angle, Length};
+use crate::domain::units::{Angle, Length};
 
 const TRIG_CLAMP_EPS: f64 = 1e-15;
 

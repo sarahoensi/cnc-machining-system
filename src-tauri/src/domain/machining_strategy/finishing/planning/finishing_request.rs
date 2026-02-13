@@ -1,6 +1,10 @@
 // domain/machining_strategy/finishing/finishing_request.rs
 
-use crate::domain::{Diameter, FinishingMode, Length};
+use crate::domain::{
+    units::{Diameter, Length},
+    FinishingMode,
+};
+
 
 
 /// Specifies how a finishing plan should be generated.

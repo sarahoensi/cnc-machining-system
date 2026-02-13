@@ -1,6 +1,6 @@
 // tests/domain/machining_strategy/finishing_execution_tests.rs
 
-use cnc_machining_system_lib::domain::*;
+use cnc_machining_system_lib::domain::{units::*,*};
 
 const EPS: f64 = 1e-9;
 

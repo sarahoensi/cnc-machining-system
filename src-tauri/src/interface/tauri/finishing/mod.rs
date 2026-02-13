@@ -13,20 +13,9 @@ mod response;
 mod mapping;
 mod command;
 
-// ---------- Commands ----------
-pub use command::{
-    generate_finishing_plan,
-    register_finishing_measurement,
-};
+// Public command surface
+pub use command::*;
 
-// ---------- DTO ----------
-pub use request::{
-    GenerateFinishingPlanRequest,
-    RegisterFinishingMeasurementRequest,
-    FinishingMode,
-};
-
-pub use response::{
-    FinishingExecutionResponse,
-    FinishingStepResponse,
-};
+// Public DTO surface
+pub use request::*;
+pub use response::*;

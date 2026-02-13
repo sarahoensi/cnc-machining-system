@@ -1,6 +1,6 @@
 // tests/integration/tauri/finishing/workflow.rs
 
-use cnc_machining_system_lib::interface::{
+use cnc_machining_system_lib::interface::finishing::{
     generate_finishing_plan,
     register_finishing_measurement,
     GenerateFinishingPlanRequest,

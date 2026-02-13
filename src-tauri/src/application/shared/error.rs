@@ -6,7 +6,7 @@
 // src/application/shared/error.rs
 
 use crate::domain::GeometryError;
-use crate::domain::UnitError;
+use crate::domain::units::UnitError;
 use crate::domain::StrategyError;
 
 #[derive(Debug)]

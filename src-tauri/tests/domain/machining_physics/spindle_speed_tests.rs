@@ -1,6 +1,6 @@
 // tests/domain/machining_physics/spindle_speed_tests.rs
 
-use cnc_machining_system_lib::domain::*;
+use cnc_machining_system_lib::domain::{units::*,*};
 use cnc_machining_system_lib::test_utils::approx::{approx_eq, DEFAULT_EPS};
 
 fn dia(v: f64) -> Diameter {

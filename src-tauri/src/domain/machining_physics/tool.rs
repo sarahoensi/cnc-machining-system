@@ -1,7 +1,9 @@
 // domain/machining_physics/tools.rs
 
-use crate::domain::UnitError;
-use crate::domain::Diameter;
+use crate::domain::{
+    units::{Diameter, UnitError},
+};
+
 
 /// Number of cutting edges (teeth) on a tool.
 ///

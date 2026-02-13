@@ -13,8 +13,7 @@ use crate::application::right_triangle::dto::{
 use crate::application::shared::AppResult;
 
 use crate::domain::{
-    Angle,
-    Length,
+    units::{Angle, Length},
     RightTriangle,
     RightTriangleSolver,
 };

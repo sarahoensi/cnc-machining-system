@@ -14,7 +14,7 @@ use crate::application::shared::AppResult;
 use crate::application::finishing::mapping::finishing_execution_mapper::to_execution_output;
 
 use crate::domain::{
-    Diameter,
+    units::Diameter,
     FinishingExecutionId,
     FinishingExecutionRepository,
 };

@@ -9,9 +9,15 @@ pub mod interface;
 pub mod test_utils;
 
 use crate::interface::{
-    generate_finishing_plan, register_finishing_measurement, solve_cutting_data, solve_helix,
-    solve_right_triangle,
+    cutting_data::solve_cutting_data,
+    helix::solve_helix,
+    right_triangle::solve_right_triangle,
+    finishing::{
+        generate_finishing_plan,
+        register_finishing_measurement,
+    },
 };
+
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
