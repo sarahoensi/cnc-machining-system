@@ -1,0 +1,21 @@
+/* Default light theme */
+:root[data-theme="light"] {
+  --color-bg: #ffffff;
+  --color-surface: #f6f8fa;
+  --color-border: #e2e8f0;
+  --color-text: #1e293b;
+  --color-primary: #2563eb;
+  --color-accent: #14b8a6;
+  --color-error: #dc2626;
+}
+
+/* Dark theme */
+:root[data-theme="dark"] {
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-border: #334155;
+  --color-text: #f1f5f9;
+  --color-primary: #3b82f6;
+  --color-accent: #2dd4bf;
+  --color-error: #f87171;
+}

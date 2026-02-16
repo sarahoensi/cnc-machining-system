@@ -6,7 +6,6 @@ use crate::domain::{
 };
 
 
-
 /// Represents a static finishing plan.
 ///
 /// Defines the start and target diameters, number of cuts,
