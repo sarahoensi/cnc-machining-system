@@ -1,4 +1,4 @@
-import { useTheme } from "../app/providers/ThemeProvider";
+import { useTheme } from "@app/providers/ThemeProvider";
 //import "./Topbar.css";
 
 type Props = {

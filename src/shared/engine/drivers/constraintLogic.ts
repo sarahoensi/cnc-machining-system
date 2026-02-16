@@ -1,7 +1,7 @@
 // shared/core/drivers/constraintLogic.ts
 
-import type { FieldState } from "../../types/fields";
-import { emptyField } from "../../types/fields";
+import type { FieldState } from "@shared/types/fields";
+import { emptyField } from "@shared/types/fields";
 
 /**
  * Resolves which constraint set is active based on user-filled fields.

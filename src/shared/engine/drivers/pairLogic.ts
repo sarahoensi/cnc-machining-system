@@ -1,6 +1,6 @@
 // shared/core/drivers/pairLogic.ts
 
-import type { FieldState } from "../../types/fields";
+import type { FieldState } from "@shared/types/fields";
 
 /**
  * Resolves locked keys for independent driver pairs

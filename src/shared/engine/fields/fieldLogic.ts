@@ -1,7 +1,7 @@
 // shared/utils/fieldLogic.ts
 
-import type { FieldState } from "../../types/fields";
-import { emptyField, machineField, userField } from "../../types/fields";
+import type { FieldState } from "@shared/types/fields";
+import { emptyField, machineField, userField } from "@shared/types/fields";
 
 /**
  * Machine values may overwrite anything except real user input.
