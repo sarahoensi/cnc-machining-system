@@ -8,19 +8,42 @@ export type FieldSource =
 export type FieldState = {
   value: string;
   source: FieldSource;
+  locked: boolean;
+  invalid: boolean;
 };
 
-export const emptyField = (): FieldState => ({
+/* ---------------------------------- */
+/* Base factories                     */
+/* ---------------------------------- */
+
+export const emptyField = (
+  overrides?: Partial<FieldState>
+): FieldState => ({
   value: "",
   source: "empty",
+  locked: false,
+  invalid: false,
+  ...overrides,
 });
 
-export const userField = (value: string): FieldState => ({
+export const userField = (
+  value: string,
+  overrides?: Partial<FieldState>
+): FieldState => ({
   value,
   source: value === "" ? "empty" : "user",
+  locked: false,
+  invalid: false,
+  ...overrides,
 });
 
-export const machineField = (value: string): FieldState => ({
+export const machineField = (
+  value: string,
+  overrides?: Partial<FieldState>
+): FieldState => ({
   value,
   source: "machine",
+  locked: false,
+  invalid: false,
+  ...overrides,
 });

@@ -1,66 +1,68 @@
 // shared/core/pairLogic.test.ts
 
 import { describe, it, expect } from "vitest";
-import { resolvePairLocks } from "./pairLogic";
-import { emptyField, userField, machineField } from "../../types/fields";
+import { applyPairLogic } from "./pairLogic";
+import { emptyField, userField } from "@shared/types/fields";
 
-type Fields = {
-  Vc: any;
-  n: any;
-  F: any;
-  fz: any;
-};
+type Keys = "x" | "y";
 
-const pairs = [
-  ["Vc", "n"],
-  ["F", "fz"],
-] as const;
+const pairs: readonly (readonly [Keys, Keys])[] = [
+  ["x", "y"],
+];
 
-function createEmpty(): Fields {
+function createInitial() {
   return {
-    Vc: emptyField(),
-    n: emptyField(),
-    F: emptyField(),
-    fz: emptyField(),
+    x: emptyField(),
+    y: emptyField(),
   };
 }
 
 describe("pairLogic", () => {
 
-  it("locks sibling when one side is user", () => {
-    const fields = {
-      ...createEmpty(),
-      Vc: userField("120"),
-    };
+  it("single user driver locks the other", () => {
+    const fields = createInitial();
+    fields.x = userField("5");
 
-    const locked = resolvePairLocks(fields, pairs);
+    const result = applyPairLogic(
+      fields,
+      pairs,
+      "x",
+      "editing"
+    );
 
-    expect(locked).toContain("n");
+    expect(result.y.locked).toBe(true);
+    expect(result.y.value).toBe("");
   });
 
-  it("does not lock sibling if sibling is machine", () => {
-    const fields = {
-      ...createEmpty(),
-      Vc: userField("120"),
-      n: machineField("1000"),
-    };
+  it("conflict → editedKey wins", () => {
+    const fields = createInitial();
+    fields.x = userField("5");
+    fields.y = userField("10");
 
-    const locked = resolvePairLocks(fields, pairs);
+    const result = applyPairLogic(
+      fields,
+      pairs,
+      "y",
+      "editing"
+    );
 
-    expect(locked).not.toContain("n");
+    expect(result.y.source).toBe("user");
+    expect(result.x.source).toBe("empty");
+    expect(result.x.locked).toBe(true);
   });
 
-  it("handles multiple independent pairs", () => {
-    const fields = {
-      ...createEmpty(),
-      Vc: userField("120"),
-      F: userField("300"),
-    };
+  it("does nothing in solved mode", () => {
+    const fields = createInitial();
+    fields.x = userField("5");
 
-    const locked = resolvePairLocks(fields, pairs);
+    const result = applyPairLogic(
+      fields,
+      pairs,
+      "x",
+      "solved"
+    );
 
-    expect(locked).toContain("n");
-    expect(locked).toContain("fz");
+    expect(result.y.locked).toBe(false);
   });
 
 });

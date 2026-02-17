@@ -1,6 +1,12 @@
+// ui/components/NumberField/NumberField.tsx
+
 import "./NumberField.css";
+import React from "react";
 import type { FieldState } from "@shared/types/fields";
-import { handleNumericKeyDown } from "@shared/ui/behaviour/numericInputGuard";
+import {
+  normalizeDecimalInput,
+  safeParseDecimal,
+} from "@shared/engine";
 
 type Props = {
   label: string;
@@ -22,6 +28,15 @@ type Props = {
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
 };
 
+// Tillater:
+// ""
+// "-"
+// "1"
+// "1."
+// "1,"
+// "-1.23"
+const INPUT_REGEX = /^-?\d*([.,]\d*)?$/;
+
 export function NumberField({
   label,
   field,
@@ -37,24 +52,49 @@ export function NumberField({
   onFocus,
   onBlur,
 }: Props) {
-
-  const readOnly = locked;
-
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    onChange({
-      ...field,
-      value: e.target.value,
-    });
+    const raw = e.target.value;
+
+    // Tillat tom streng
+    if (raw === "") {
+      onChange({ ...field, value: "" });
+      return;
+    }
+
+    // Tillat midlertidig gyldig input
+    if (INPUT_REGEX.test(raw)) {
+      onChange({ ...field, value: raw });
+    }
+  }
+
+  function handleBlurInternal(
+    e: React.FocusEvent<HTMLInputElement>
+  ) {
+    const raw = field.value;
+
+    if (!raw.trim()) {
+      onBlur?.(e);
+      return;
+    }
+
+    const normalized = normalizeDecimalInput(raw);
+    const parsed = safeParseDecimal(normalized);
+
+    if (parsed !== null) {
+      // skriv tilbake normalisert verdi
+      onChange({
+        ...field,
+        value: parsed.toString(),
+      });
+    }
+
+    onBlur?.(e);
   }
 
   return (
     <div className="field number-field">
       <label className="nf-label">
-        {tooltip ? (
-          <span title={tooltip}>{label}</span>
-        ) : (
-          label
-        )}
+        {tooltip ? <span title={tooltip}>{label}</span> : label}
       </label>
 
       <div className="nf-input-wrapper">
@@ -62,20 +102,15 @@ export function NumberField({
           ref={inputRef}
           type="text"
           inputMode="decimal"
+          pattern="-?[0-9]*[.,]?[0-9]*"
           autoFocus={autoFocus}
           value={field.value}
           disabled={disabled}
-          readOnly={readOnly}
-
+          readOnly={locked}
           onChange={handleChange}
           onFocus={onFocus}
-          onBlur={onBlur}
-
-          onKeyDown={(e) => {
-            handleNumericKeyDown(e); // blokkerer ulovlige tegn
-            onKeyDown?.(e);          // Enter-navigation osv.
-          }}
-
+          onBlur={handleBlurInternal}
+          onKeyDown={onKeyDown}
           className={[
             "nf-input",
             `source-${field.source}`,

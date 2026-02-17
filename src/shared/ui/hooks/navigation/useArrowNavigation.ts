@@ -1,3 +1,5 @@
+// shared/ui/hooks/navigation/useArrowNavigation.ts
+
 import { useCallback } from "react";
 
 /**
