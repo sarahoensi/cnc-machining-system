@@ -1,40 +1,36 @@
-// ui/components/NumberField/NumberField.tsx
+// NumberField.tsx
 
-import "./NumberField.css";
-import React from "react";
+import React, { useId } from "react";
+import clsx from "clsx";
+import { Field } from "../Field/Field";
 import type { FieldState } from "@shared/types/fields";
 import {
   normalizeDecimalInput,
   safeParseDecimal,
 } from "@shared/engine";
+import "./NumberField.css";
 
 type Props = {
   label: string;
   field: FieldState;
-  onChange: (next: FieldState) => void;
-
+  onChange: (value: string) => void;
   unit?: string;
   tooltip?: string;
   error?: string;
 
+  /** External hard disable */
   disabled?: boolean;
-  locked?: boolean;
+
+  /** UI-level readonly (execution mode etc.) */
+  readonly?: boolean;
 
   autoFocus?: boolean;
   inputRef?: React.Ref<HTMLInputElement>;
-
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
 };
 
-// Tillater:
-// ""
-// "-"
-// "1"
-// "1."
-// "1,"
-// "-1.23"
 const INPUT_REGEX = /^-?\d*([.,]\d*)?$/;
 
 export function NumberField({
@@ -45,31 +41,54 @@ export function NumberField({
   tooltip,
   error,
   disabled = false,
-  locked = false,
+  readonly = false,
   autoFocus,
   inputRef,
   onKeyDown,
   onFocus,
   onBlur,
 }: Props) {
+  const id = useId();
+
+  /**
+   * Domain-level disabled:
+   * - constraint lock
+   * - explicit disabled prop
+   * MUST render empty
+   */
+  const isDisabled = disabled || field.locked;
+
+  /**
+   * UI-level readonly:
+   * - execution mode
+   * - solved display mode
+   * Should show value but not allow editing
+   */
+  const isReadOnly = readonly && !isDisabled;
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (isDisabled || isReadOnly) return;
+
     const raw = e.target.value;
 
-    // Tillat tom streng
     if (raw === "") {
-      onChange({ ...field, value: "" });
+      onChange("");
       return;
     }
 
-    // Tillat midlertidig gyldig input
     if (INPUT_REGEX.test(raw)) {
-      onChange({ ...field, value: raw });
+      onChange(raw);
     }
   }
 
   function handleBlurInternal(
     e: React.FocusEvent<HTMLInputElement>
   ) {
+    if (isDisabled || isReadOnly) {
+      onBlur?.(e);
+      return;
+    }
+
     const raw = field.value;
 
     if (!raw.trim()) {
@@ -81,49 +100,49 @@ export function NumberField({
     const parsed = safeParseDecimal(normalized);
 
     if (parsed !== null) {
-      // skriv tilbake normalisert verdi
-      onChange({
-        ...field,
-        value: parsed.toString(),
-      });
+      onChange(parsed.toString());
     }
 
     onBlur?.(e);
   }
 
   return (
-    <div className="field number-field">
-      <label className="nf-label">
-        {tooltip ? <span title={tooltip}>{label}</span> : label}
-      </label>
-
+    <Field
+      label={label}
+      tooltip={tooltip}
+      error={error}
+      htmlFor={id}
+    >
       <div className="nf-input-wrapper">
         <input
+          id={id}
           ref={inputRef}
           type="text"
           inputMode="decimal"
           pattern="-?[0-9]*[.,]?[0-9]*"
           autoFocus={autoFocus}
-          value={field.value}
-          disabled={disabled}
-          readOnly={locked}
+          value={isDisabled ? "" : field.value}
+          disabled={isDisabled}
+          readOnly={isReadOnly}
+          tabIndex={isReadOnly ? -1 : undefined}
           onChange={handleChange}
           onFocus={onFocus}
           onBlur={handleBlurInternal}
           onKeyDown={onKeyDown}
-          className={[
+          className={clsx(
             "nf-input",
             `source-${field.source}`,
-            locked ? "locked" : "",
-            disabled ? "disabled" : "",
-            error ? "has-error" : "",
-          ].join(" ")}
+            isDisabled && "disabled",
+            isReadOnly && "readonly"
+          )}
         />
 
-        {unit && <span className="nf-unit">{unit}</span>}
+        {unit && (
+          <span className="nf-unit">
+            {unit}
+          </span>
+        )}
       </div>
-
-      {error && <div className="nf-error">{error}</div>}
-    </div>
+    </Field>
   );
 }

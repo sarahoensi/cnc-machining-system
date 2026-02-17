@@ -2,7 +2,7 @@
 
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import { PlaceholderPage } from "@ui/PlaceholderPage";
+import { PlaceholderPage } from "@features/PlaceholderPage";
 
 
 export function AppRoutes() {

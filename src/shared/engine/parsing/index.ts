@@ -1,1 +1,1 @@
-export * from "./decimalParcer";
+export * from "./decimalParser";

@@ -1,31 +1,15 @@
-// shared/ui/hooks/useFormFocus.ts
-
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import type { FieldState } from "../../../types/fields";
 
-/**
- * Generic form focus manager.
- *
- * - Registers input refs
- * - Focuses specific fields programmatically
- * - Skips locked fields
- * - Optionally auto-focuses first available field on mount
- */
 export function useFormFocus<K extends string>(options: {
   keys: readonly K[];
-  fields: Record<K, FieldState>;
-  lockedKeys?: readonly K[];
   autoFocusOnMount?: boolean;
 }) {
-  const { keys, lockedKeys = [], autoFocusOnMount } = options;
+  const { keys, autoFocusOnMount } = options;
 
   const refs = useRef<Partial<Record<K, HTMLInputElement>>>({});
   const lastFocused = useRef<K | undefined>(undefined);
   const didAutoFocus = useRef(false);
 
-  /**
-   * Register input ref for a field key.
-   */
   const register = useCallback(
     (key: K) => (el: HTMLInputElement | null) => {
       if (el) {
@@ -35,40 +19,33 @@ export function useFormFocus<K extends string>(options: {
     []
   );
 
-  /**
-   * Focus a specific field if it is not locked.
-   */
-  const focus = useCallback(
-    (key?: K) => {
-      if (!key) return;
-      if (lockedKeys.includes(key)) return;
+  const focus = useCallback((key?: K) => {
+    if (!key) return;
 
-      const el = refs.current[key];
-      if (!el) return;
+    const el = refs.current[key];
+    if (!el || el.disabled) return;
 
-      el.focus();
-      lastFocused.current = key;
-    },
-    [lockedKeys]
-  );
+    el.focus();
+    lastFocused.current = key;
+  }, []);
 
-  /**
-   * First focusable (non-locked) field in defined order.
-   */
   const firstFocusable = useMemo(() => {
-    return keys.find((k) => !lockedKeys.includes(k));
-  }, [keys, lockedKeys]);
+    for (const key of keys) {
+      const el = refs.current[key];
+      if (el && !el.disabled) return key;
+    }
+    return undefined;
+  }, [keys]);
 
-  /**
-   * Optional auto-focus on mount.
-   */
   useEffect(() => {
     if (!autoFocusOnMount) return;
     if (didAutoFocus.current) return;
-    if (!firstFocusable) return;
+
+    const key = firstFocusable;
+    if (!key) return;
 
     didAutoFocus.current = true;
-    focus(firstFocusable);
+    focus(key);
   }, [autoFocusOnMount, firstFocusable, focus]);
 
   return {
