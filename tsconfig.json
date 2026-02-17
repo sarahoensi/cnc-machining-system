@@ -11,8 +11,8 @@
       "@shared": ["src/shared"],
       "@styles/*": ["src/styles/*"],
       "@styles": ["src/styles"],
-      "@layout/*": ["src/layout/*"],
-      "@layout": ["src/layout"],
+      "@layout/*": ["src/app/shell/*"],
+      "@layout": ["src/app/shell"],
       "@features/*": ["src/features/*"],
       "@features": ["src/features"]
     },
