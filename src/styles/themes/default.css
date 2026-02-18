@@ -1,0 +1,48 @@
+/* styles/themes/default.css */
+
+:root,
+[data-theme="default"] {
+  /* Surfaces */
+  --color-surface: #f8fafc;
+  --color-surface-2: #ffffff;
+  --color-surface-elevated: #ffffff;
+  --color-surface-hover: #f1f5f9;
+  --color-surface-muted: #eef2f6;
+
+  /* Text */
+  --color-text: #0f172a;
+  --color-text-strong: #020617;
+  --color-text-muted: #475569;
+  --color-text-placeholder: #94a3b8;
+  --color-text-inverse: #ffffff;
+
+  /* Borders */
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  --color-border-muted: #edf2f7;
+
+  /* Brand / accents */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-soft: rgba(37, 99, 235, 0.16);
+  --color-on-primary: #ffffff;
+
+  /* Focus ring */
+  --color-focus: rgba(37, 99, 235, 0.35);
+
+  /* Status */
+  --color-danger: #dc2626;
+  --color-on-danger: #ffffff;
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+  --color-info: #0ea5e9;
+
+  /* Inputs special cases (optional but you had these semantic hooks) */
+  --color-user: rgba(37, 99, 235, 0.12);
+  --color-machine: rgba(15, 23, 42, 0.06);
+  --color-disabled: rgba(15, 23, 42, 0.06);
+  --color-locked: rgba(245, 158, 11, 0.14);
+
+  /* Overlay */
+  --color-backdrop: rgba(2, 6, 23, 0.5);
+}

@@ -1,0 +1,6 @@
+/* styles/themes/index.css */
+
+@import "./default.css";
+@import "./forest.css";
+@import "./pink.css";
+@import "./dark.css";
