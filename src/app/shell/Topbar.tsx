@@ -1,25 +1,40 @@
-import type { ReactNode } from "react";
+// src/app/layout/Topbar.tsx
 
-type Props = {
-  title?: string;
-  rightSlot?: ReactNode;
-};
+import { useState } from "react";
+import { SettingsMenu } from "../settings/SettingsMenu";
+import "./Topbar.css";
 
-export function Topbar({
-  title = "CNC System",
-  rightSlot,
-}: Props) {
+interface Props {
+  toggleSidebar: () => void;
+}
+
+export function Topbar({ toggleSidebar }: Props) {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
   return (
-    <header className="topbar">
+    <div className="topbar">
       <div className="topbar-left">
-        <h1 className="topbar-title">
-          {title}
-        </h1>
+        <button className="hamburger" onClick={toggleSidebar}>
+          ☰
+        </button>
+      </div>
+
+      <div className="topbar-center">
+        <h1 className="topbar-title">My App</h1>
       </div>
 
       <div className="topbar-right">
-        {rightSlot}
+        <button
+          className="settings-button"
+          onClick={() => setIsSettingsOpen(prev => !prev)}
+        >
+          ⚙
+        </button>
+
+        {isSettingsOpen && (
+          <SettingsMenu onClose={() => setIsSettingsOpen(false)} />
+        )}
       </div>
-    </header>
+    </div>
   );
 }

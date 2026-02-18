@@ -1,3 +1,5 @@
+// src/app/settings/SettingsMenu.tsx
+
 import {
   useEffect,
   useRef,
@@ -6,12 +8,8 @@ import {
 } from "react";
 import "./SettingsMenu.css";
 
-import { ThemeSettings } from "./theme/ThemeSettings";
-import { DecimalSettings } from "./decimals/DecimalSettings";
-
-/* ============================================================
-   Menu Configuration (type-safe)
-============================================================ */
+import { ThemeSettings } from "./panels/ThemeSettings";
+import { DecimalSettings } from "./panels/DecimalSettings";
 
 type SettingsItem = {
   key: string;
@@ -20,62 +18,35 @@ type SettingsItem = {
 };
 
 const SETTINGS_MENU: readonly SettingsItem[] = [
-  {
-    key: "theme",
-    label: "🎨 Tema",
-    component: ThemeSettings,
-  },
-  {
-    key: "decimals",
-    label: "🔢 Desimaler",
-    component: DecimalSettings,
-  },
+  { key: "theme", label: "🎨 Tema", component: ThemeSettings },
+  { key: "decimals", label: "🔢 Desimaler", component: DecimalSettings },
 ] as const;
-
-/* ============================================================
-   Props
-============================================================ */
 
 type Props = {
   onClose: () => void;
 };
 
-/* ============================================================
-   Component
-============================================================ */
-
 export function SettingsMenu({ onClose }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [activeKey, setActiveKey] =
-    useState<string | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
+  const [activeKey, setActiveKey] = useState<string | null>(null);
 
   /* --------------------------------------------
-     Close on click outside
+     Close on click outside (FIXED)
   -------------------------------------------- */
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (!containerRef.current) return;
+    function handlePointerDown(e: MouseEvent) {
+      if (!ref.current) return;
 
-      if (
-        !containerRef.current.contains(
-          e.target as Node
-        )
-      ) {
+      if (!ref.current.contains(e.target as Node)) {
         onClose();
       }
     }
 
-    document.addEventListener(
-      "mousedown",
-      handleClickOutside
-    );
+    // IMPORTANT: use mousedown instead of click
+    document.addEventListener("mousedown", handlePointerDown);
 
-    return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutside
-      );
-    };
+    return () =>
+      document.removeEventListener("mousedown", handlePointerDown);
   }, [onClose]);
 
   /* --------------------------------------------
@@ -88,24 +59,14 @@ export function SettingsMenu({ onClose }: Props) {
       }
     }
 
-    document.addEventListener(
-      "keydown",
-      handleEscape
-    );
+    document.addEventListener("keydown", handleEscape);
 
-    return () => {
-      document.removeEventListener(
-        "keydown",
-        handleEscape
-      );
-    };
+    return () =>
+      document.removeEventListener("keydown", handleEscape);
   }, [onClose]);
 
-  /* --------------------------------------------
-     Active item
-  -------------------------------------------- */
   const activeItem = SETTINGS_MENU.find(
-    (item) => item.key === activeKey
+    item => item.key === activeKey
   );
 
   /* --------------------------------------------
@@ -113,34 +74,28 @@ export function SettingsMenu({ onClose }: Props) {
   -------------------------------------------- */
 
   return (
-    <div
-      ref={containerRef}
-      className="settings-menu"
-      onMouseLeave={() => setActiveKey(null)}
-    >
-      {/* Left column */}
-      <div className="settings-menu__list">
-        {SETTINGS_MENU.map((item) => (
-          <button
+  <div ref={ref} className="settings-menu">
+    <div className="menu-content">
+      <div className="menu-column">
+        {SETTINGS_MENU.map(item => (
+          <div
             key={item.key}
-            type="button"
-            className="settings-menu__item"
-            onMouseEnter={() =>
-              setActiveKey(item.key)
-            }
+            className="menu-item"
+            onMouseEnter={() => setActiveKey(item.key)}
           >
-            <span>{item.label}</span>
+            {item.label}
             <span className="chevron">›</span>
-          </button>
+          </div>
         ))}
       </div>
 
-      {/* Flyout panel */}
       {activeItem && (
-        <div className="settings-menu__flyout">
+        <div className="submenu-flyout">
           <activeItem.component />
         </div>
       )}
     </div>
-  );
+  </div>
+);
+
 }

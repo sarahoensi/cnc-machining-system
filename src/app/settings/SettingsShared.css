@@ -1,0 +1,57 @@
+/* app/settings/SettingShared.css*/
+
+/* Panel */
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Tittel */
+.settings-title {
+  margin: 0;
+  padding: 0 var(--space-6);
+
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  color: var(--text-secondary);
+}
+
+/* Vertikal liste */
+.settings-button-group {
+  display: flex;
+  flex-direction: column;
+  
+}
+
+/* Sidebar-style buttons */
+.settings-button {
+  padding: var(--space-3) var(--space-6);
+
+  background: none;
+  border: none;
+
+  text-align: left;
+  font-size: var(--font-size-sm);
+
+  color: var(--sidebar-item-text);
+  cursor: pointer;
+
+  transition: background var(--motion-fast),
+              color var(--motion-fast);
+}
+
+/* Hover = lik sidebar */
+.settings-button:hover {
+  background: var(--sidebar-item-bg-hover);
+}
+
+/* Active = lik sidebar */
+.settings-button.active {
+  background: var(--sidebar-item-bg-active);
+  color: var(--sidebar-item-text-active);
+  font-weight: var(--font-weight-semibold);
+}

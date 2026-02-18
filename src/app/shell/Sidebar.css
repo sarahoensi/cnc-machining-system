@@ -1,0 +1,30 @@
+/* src/app/layout/Sidebar.css */
+
+.sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5) 0;
+}
+
+.sidebar-link {
+  padding: var(--space-3) var(--space-6);
+  color: var(--sidebar-item-text);
+  text-decoration: none;
+  transition: background var(--motion-fast);
+}
+
+.sidebar-link:hover {
+  background: var(--sidebar-item-bg-hover);
+}
+
+.sidebar-link.active {
+  background: var(--sidebar-item-bg-active);
+  color: var(--sidebar-item-text-active);
+  font-weight: var(--font-weight-semibold);
+}

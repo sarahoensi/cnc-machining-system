@@ -1,0 +1,10 @@
+:root {
+  --size-topbar-height: 60px;
+  --size-sidebar-width: 160px;
+
+  --size-input-height: 40px;
+
+  --size-icon-sm: 14px;
+  --size-icon-md: 18px;
+  --size-icon-lg: 24px;
+}

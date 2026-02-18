@@ -1,0 +1,37 @@
+[data-theme="forest"] {
+  --color-surface: #f0fdf4;
+  --color-surface-2: #ffffff;
+  --color-surface-elevated: #ffffff;
+  --color-surface-hover: #dcfce7;
+  --color-surface-muted: #d1fae5;
+
+  --color-text: #064e3b;
+  --color-text-strong: #043a2c;
+  --color-text-muted: #065f46;
+  --color-text-placeholder: #10b981;
+  --color-text-inverse: #ffffff;
+
+  --color-border: #bbf7d0;
+  --color-border-strong: #86efac;
+  --color-border-muted: #e7fff0;
+
+  --color-primary: #16a34a;
+  --color-primary-hover: #15803d;
+  --color-primary-soft: rgba(22, 163, 74, 0.18);
+  --color-on-primary: #ffffff;
+
+  --color-focus: rgba(22, 163, 74, 0.35);
+
+  --color-danger: #dc2626;
+  --color-on-danger: #ffffff;
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+  --color-info: #0ea5e9;
+
+  --color-user: rgba(22, 163, 74, 0.12);
+  --color-machine: rgba(6, 78, 59, 0.06);
+  --color-disabled: rgba(6, 78, 59, 0.06);
+  --color-locked: rgba(245, 158, 11, 0.14);
+
+  --color-backdrop: rgba(2, 6, 23, 0.5);
+}

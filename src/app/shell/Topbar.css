@@ -1,0 +1,45 @@
+/* src/app/layout/Topbar.css */
+
+.topbar {
+  position: relative;                /* IMPORTANT */
+  z-index: var(--z-sticky);
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+
+  height: var(--size-topbar-height);
+  padding: 0 var(--space-4);
+
+  background: var(--topbar-bg);
+  border-bottom: 1px solid var(--topbar-border);
+  color: var(--topbar-text);
+}
+
+.topbar-left {
+  justify-self: start;
+}
+
+.topbar-center {
+  justify-self: center;
+}
+
+.topbar-right {
+  justify-self: end;
+  position: relative; /* anchor for settings menu */
+}
+
+.topbar-title {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.hamburger,
+.settings-button {
+  font-size: var(--size-icon-md);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--topbar-text);
+}

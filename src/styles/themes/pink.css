@@ -1,0 +1,39 @@
+/* styles/themes/pink.css */
+
+[data-theme="pink"] {
+  --color-surface: #fff1f6;
+  --color-surface-2: #ffffff;
+  --color-surface-elevated: #ffffff;
+  --color-surface-hover: #ffe4ef;
+  --color-surface-muted: #ffe0ed;
+
+  --color-text: #831843;
+  --color-text-strong: #6d1237;
+  --color-text-muted: #9d174d;
+  --color-text-placeholder: #c02674;
+  --color-text-inverse: #ffffff;
+
+  --color-border: #fbcfe8;
+  --color-border-strong: #f9a8d4;
+  --color-border-muted: #fde7f3;
+
+  --color-primary: #ec4899;
+  --color-primary-hover: #db2777;
+  --color-primary-soft: rgba(236, 72, 153, 0.18);
+  --color-on-primary: #ffffff;
+
+  --color-focus: rgba(236, 72, 153, 0.35);
+
+  --color-danger: #e11d48;
+  --color-on-danger: #ffffff;
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+  --color-info: #0ea5e9;
+
+  --color-user: rgba(236, 72, 153, 0.12);
+  --color-machine: rgba(131, 24, 67, 0.06);
+  --color-disabled: rgba(131, 24, 67, 0.06);
+  --color-locked: rgba(245, 158, 11, 0.14);
+
+  --color-backdrop: rgba(2, 6, 23, 0.5);
+}

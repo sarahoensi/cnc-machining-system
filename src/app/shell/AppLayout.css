@@ -1,0 +1,53 @@
+/* src/app/layout/AppLayout.css */
+
+.app-layout {
+  display: grid;
+  grid-template-rows: var(--size-topbar-height) 1fr;
+
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* =========================
+   MAIN AREA
+========================= */
+
+.app-main {
+  display: grid;
+  grid-template-columns: auto 1fr;
+
+  min-height: 0;
+  position: relative;
+  z-index: var(--z-base);
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar-shell {
+  width: var(--sidebar-width, var(--size-sidebar-width));
+  overflow: hidden;
+  transition: width var(--motion-slow);
+
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+}
+
+.sidebar-closed {
+  --sidebar-width: 0px;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.app-content {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+
+  padding: var(--space-6);
+  background: var(--surface-page);
+}

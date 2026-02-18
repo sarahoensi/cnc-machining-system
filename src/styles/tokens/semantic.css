@@ -1,0 +1,132 @@
+/* styles/tokens/semantic.css
+=====================================================
+SEMANTIC TOKENS
+These tokens describe UI meaning.
+They MUST NOT contain hardcoded values.
+They map to primitive tokens defined elsewhere.
+=====================================================
+*/
+
+:root {
+  /* =========================
+     SURFACES
+  ========================= */
+  --surface-page: var(--color-surface);
+  --surface-panel: var(--color-surface-2);
+  --surface-elevated: var(--color-surface-elevated);
+  --surface-hover: var(--color-surface-hover);
+  --surface-muted: var(--color-surface-muted);
+
+  /* =========================
+     TEXT
+  ========================= */
+  --text-primary: var(--color-text);
+  --text-muted: var(--color-text-muted);
+  --text-placeholder: var(--color-text-placeholder);
+  --text-inverse: var(--color-text-inverse);
+  --text-strong: var(--color-text-strong);
+
+  /* =========================
+     BORDERS
+  ========================= */
+  --border-default: var(--color-border);
+  --border-strong: var(--color-border-strong);
+  --border-focus: var(--color-primary);
+  --border-muted: var(--color-border-muted);
+
+  /* =========================
+     INPUTS
+  ========================= */
+  --input-bg: var(--surface-panel);
+
+  --input-bg-user: var(--color-user);
+  --input-bg-machine: var(--color-machine);
+  --input-bg-disabled: var(--color-disabled);
+  --input-bg-locked: var(--color-locked);
+  --input-bg-empty: var(--color-surface);
+
+  --input-border: var(--border-default);
+  --input-border-focus: var(--border-focus);
+  --input-border-error: var(--color-danger);
+
+  --input-text: var(--text-primary);
+  --input-text-disabled: var(--text-muted);
+
+  /* =========================
+     BUTTONS
+  ========================= */
+  --button-primary-bg: var(--color-primary);
+  --button-primary-bg-hover: var(--color-primary-hover);
+  --button-primary-text: var(--color-on-primary);
+
+  --button-secondary-bg: var(--surface-panel);
+  --button-secondary-text: var(--text-primary);
+
+  --button-danger-bg: var(--color-danger);
+  --button-danger-text: var(--color-on-danger);
+
+  --button-icon-hover-bg: var(--surface-hover);
+  --button-focus-ring: var(--color-focus);
+
+  /* =========================
+     SIDEBAR
+  ========================= */
+  --sidebar-bg: var(--surface-panel);
+  --sidebar-border: var(--border-default);
+
+  --sidebar-item-bg: var(--surface-panel);
+  --sidebar-item-bg-hover: var(--surface-hover);
+  --sidebar-item-bg-active: var(--color-primary-soft);
+
+  --sidebar-item-text: var(--text-primary);
+  --sidebar-item-text-active: var(--text-primary);
+
+  /* =========================
+     TOPBAR
+  ========================= */
+  --topbar-bg: var(--surface-panel);
+  --topbar-border: var(--border-default);
+  --topbar-text: var(--text-primary);
+
+  /* =========================
+     TABLE / EXECUTION
+  ========================= */
+  --table-bg: var(--surface-panel);
+  --table-header-bg: var(--surface-muted);
+  --table-row-hover: var(--surface-hover);
+  --table-row-active: var(--surface-elevated);
+  --table-border: var(--border-default);
+
+  /* =========================
+     FEEDBACK / STATUS
+  ========================= */
+  --feedback-error: var(--color-danger);
+  --feedback-success: var(--color-success);
+  --feedback-warning: var(--color-warning);
+  --feedback-info: var(--color-info);
+
+  --border-error: var(--feedback-error);
+  --border-success: var(--feedback-success);
+  --border-warning: var(--feedback-warning);
+
+  /* =========================
+     OVERLAY / MODAL
+  ========================= */
+  --overlay-backdrop: var(--color-backdrop);
+  --overlay-surface: var(--surface-elevated);
+
+  /* =========================
+     DIAGRAM
+  ========================= */
+  --diagram-material-fill: var(--color-surface-2);
+  --diagram-part-stroke: var(--color-primary);
+  --diagram-part-stroke-muted: var(--color-border);
+
+  --diagram-active-stroke: var(--color-danger);
+  --diagram-active-fill: var(--color-primary-soft);
+
+  --diagram-disabled-opacity: var(--opacity-disabled);
+
+  --diagram-tool-fill: var(--color-surface-muted);
+  --diagram-tool-stroke: var(--color-border-strong);
+}
