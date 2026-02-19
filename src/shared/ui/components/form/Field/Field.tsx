@@ -1,7 +1,7 @@
 // shares/ui/components/Field/Fields.tsx
 
 import { ReactNode } from "react";
-import { LabelWithTooltip } from "../LabelWithToolTip/LabelWithTooltip";
+import { LabelWithTooltip } from "../../primitives/LabelWithToolTip/LabelWithTooltip";
 import clsx from "clsx";
 import "./Field.css";
 

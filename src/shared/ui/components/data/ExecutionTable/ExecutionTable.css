@@ -1,3 +1,5 @@
+/* shared/ui/components/data/ExecutionTable/ExecutionTable.css  */
+
 /* =====================================================
    TABLE BASE
 ===================================================== */
@@ -11,7 +13,6 @@
   color: var(--text-primary);
 }
 
-
 /* =====================================================
    HEAD
 ===================================================== */
@@ -20,31 +21,23 @@
   background: var(--table-header-bg);
 }
 
-
 /* =====================================================
    BODY
 ===================================================== */
 
 .execution-table-body tr {
   border-bottom: var(--border-width-thin) solid var(--table-border);
-
   transition: background var(--duration-fast) var(--easing-standard);
 }
-
-/* Hover */
 
 .execution-table-body tr:hover {
   background: var(--table-row-hover);
 }
 
-/* Active / Selected */
-
 .execution-table-body tr.active,
-.execution-table-body tr.selected,
-.execution-row.selected {
+.execution-table-body tr.selected {
   background: var(--table-row-active);
 }
-
 
 /* =====================================================
    CELLS
@@ -56,6 +49,17 @@
   vertical-align: middle;
 }
 
+.execution-cell.align-left {
+  text-align: left;
+}
+
+.execution-cell.align-center {
+  text-align: center;
+}
+
+.execution-cell.align-right {
+  text-align: right;
+}
 
 /* =====================================================
    FOOTER
@@ -63,25 +67,17 @@
 
 .execution-table-foot td {
   padding: var(--space-3) var(--space-4);
-
   border-top: var(--border-width-thin) solid var(--table-border);
   background: var(--table-header-bg);
 }
 
-
 /* =====================================================
-   NUMBER FIELD IN TABLE
+   NUMBER INPUT INSIDE TABLE
+   (Overstyr primitive)
 ===================================================== */
 
-.execution-table .number-field.table {
-  width: 100%;
-}
-
-.execution-table td {
-  vertical-align: middle;
-}
-
-.execution-table td .number-field--table {
-  height: 100%;
-  align-items: center;
+.execution-table .ni-input {
+  height: var(--table-control-height);
+  font-size: var(--table-text-size);
+  padding: 0 var(--space-2);
 }

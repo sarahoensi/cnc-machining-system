@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import clsx from "clsx";
-import { LabelWithTooltip } from "../../form/LabelWithToolTip/LabelWithTooltip";
+import { LabelWithTooltip } from "../../primitives/LabelWithToolTip/LabelWithTooltip";
 import "./TableHeaderCell.css";
 
 type Props = {

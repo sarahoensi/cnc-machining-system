@@ -1,4 +1,4 @@
-// shared/ui/components/form/LabelWithToolTip/LabelWithTooltip.tsx
+// shared/ui/components/primitives/LabelWithToolTip/LabelWithTooltip.tsx
 
 import TooltipIcon from "../../../../../assets/tooltip-icon.svg";
 import clsx from "clsx";
