@@ -1,8 +1,9 @@
 // src/app/layout/Topbar.tsx
 
-import { useState } from "react";
 import { SettingsMenu } from "../settings/SettingsMenu";
 import "./Topbar.css";
+import { useRef, useState } from "react";
+
 
 interface Props {
   toggleSidebar: () => void;
@@ -10,6 +11,8 @@ interface Props {
 
 export function Topbar({ toggleSidebar }: Props) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
 
   return (
     <div className="topbar">
@@ -25,6 +28,7 @@ export function Topbar({ toggleSidebar }: Props) {
 
       <div className="topbar-right">
         <button
+          ref={buttonRef}
           className="settings-button"
           onClick={() => setIsSettingsOpen(prev => !prev)}
         >
@@ -32,7 +36,8 @@ export function Topbar({ toggleSidebar }: Props) {
         </button>
 
         {isSettingsOpen && (
-          <SettingsMenu onClose={() => setIsSettingsOpen(false)} />
+          <SettingsMenu onClose={() => setIsSettingsOpen(false)} 
+          triggerRef={buttonRef}/>
         )}
       </div>
     </div>
