@@ -1,4 +1,4 @@
-// ExecutionRow.tsx
+// shared/ui/components/data/ExecutionTable/ExecutionRow.tsx
 
 import { ReactNode } from "react";
 

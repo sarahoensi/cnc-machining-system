@@ -1,0 +1,153 @@
+/* shared/ui/components/form/NumberField/NumberField.css */
+
+
+/* =====================================================
+   NUMBER FIELD
+===================================================== */
+
+.number-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+
+/* =====================================================
+   INPUT WRAPPER
+===================================================== */
+
+.nf-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+
+/* =====================================================
+   INPUT BASE
+===================================================== */
+
+.nf-input {
+  width: 100%;
+  height: var(--control-height-md);
+
+  padding: 0 var(--control-padding-x-md);
+  padding-right: var(--space-8);
+
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+
+  border-radius: var(--control-radius);
+  border: var(--border-width-thin) solid var(--control-border);
+
+  background: var(--control-bg);
+  color: var(--control-text);
+
+  outline: none;
+
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    color var(--duration-fast) var(--easing-standard);
+}
+
+
+/* =====================================================
+   SOURCE STATES
+===================================================== */
+
+.nf-input.source-user {
+  background: var(--control-bg);
+}
+
+.nf-input.source-machine {
+  background: transparent;
+  color: var(--text-strong);
+  cursor: pointer;
+  border: none;
+}
+
+
+/* =====================================================
+   INTERACTION STATES
+===================================================== */
+
+.nf-input:hover:not(:disabled):not(.locked) {
+  background: var(--control-bg-hover);
+}
+
+.nf-input:focus-visible {
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  border-color: var(--control-border-focus);
+}
+
+/* Disabled */
+
+.nf-input:disabled {
+  background: var(--control-bg-disabled);
+  color: var(--control-text-disabled);
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
+
+/* Locked */
+
+.nf-input.locked {
+  pointer-events: none;
+  cursor: pointer;
+}
+
+
+/* =====================================================
+   UNIT
+===================================================== */
+
+.nf-unit {
+  position: absolute;
+  right: var(--space-3);
+
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+
+/* =====================================================
+   ERROR MESSAGE
+===================================================== */
+
+.nf-error {
+  font-size: var(--text-caption-size);
+  font-weight: var(--text-caption-weight);
+  color: var(--feedback-error);
+}
+
+
+/* =====================================================
+   TABLE VARIANT
+===================================================== */
+
+.number-field.table {
+  gap: 0;
+}
+
+.number-field.table .field-label {
+  display: none;
+}
+
+.number-field.table .field-control {
+  margin: 0;
+}
+
+.number-field.table .nf-input {
+  height: var(--table-control-height);
+  padding: 0 var(--space-2);
+  font-size: var(--table-text-size);
+}
+.number-field--table {
+  display: flex;
+  align-items: center;   /* <-- dette er nøkkelen */
+}

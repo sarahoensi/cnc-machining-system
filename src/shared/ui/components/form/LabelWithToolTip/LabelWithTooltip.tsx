@@ -1,4 +1,6 @@
-import TooltipIcon from "@assets/tooltip-icon.svg";
+// shared/ui/components/form/LabelWithToolTip/LabelWithTooltip.tsx
+
+import TooltipIcon from "../../../../../assets/tooltip-icon.svg";
 import clsx from "clsx";
 import "./LabelWithTooltip.css";
 
@@ -19,7 +21,7 @@ export function LabelWithTooltip({
 
       {tooltip && (
         <span
-          className="nf-tooltip-icon"
+          className="tooltip-icon"
           aria-hidden="true"
           title={tooltip}
         >

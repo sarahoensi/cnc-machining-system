@@ -2,7 +2,8 @@
 
 import React, { forwardRef } from "react";
 import "./Button.css";
-import SettingsIcon from "@assets/icons/settings.svg";
+//import SettingsIcon from "@assets/settings-icon.svg";
+import SettingsIcon from "../../../../../assets/settings-icon.svg";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "secondary" | "danger" | "icon";
@@ -77,6 +78,7 @@ export const UpdateButton = forwardRef<
   );
 });
 
+
 export const SettingsButton = forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement>
@@ -87,6 +89,7 @@ export const SettingsButton = forwardRef<
     </Button>
   );
 });
+
 
 export const OkButton = forwardRef<
   HTMLButtonElement,

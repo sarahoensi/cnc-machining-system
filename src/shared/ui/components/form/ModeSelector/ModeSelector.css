@@ -1,0 +1,45 @@
+/* shared/ui/components/form/ModeSelector/ModeSelector.css */
+
+
+/* =====================================================
+   RADIO GROUP
+===================================================== */
+
+.radio-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  gap: var(--layout-section-gap);
+  margin-top: var(--space-2);
+}
+
+/* Disabled / readonly */
+
+.radio-group.disabled,
+.radio-group.readonly {
+  opacity: var(--opacity-disabled);
+}
+
+
+/* =====================================================
+   OPTION
+===================================================== */
+
+.radio-option {
+  display: inline-flex;
+  align-items: center;
+
+  gap: var(--space-2);
+
+  font-size: var(--form-text-size);
+  font-weight: var(--text-body-weight);
+
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.radio-option input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+}

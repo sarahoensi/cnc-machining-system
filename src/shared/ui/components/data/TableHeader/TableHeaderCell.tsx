@@ -1,3 +1,5 @@
+//shared/ui/components/data/TableHeader/TableHeaderCell.tsx
+
 import { ReactNode } from "react";
 import clsx from "clsx";
 import { LabelWithTooltip } from "../../form/LabelWithToolTip/LabelWithTooltip";
@@ -13,7 +15,7 @@ type Props = {
 export function TableHeaderCell({
   label,
   tooltip,
-  align = "left",
+  align = "right",
   children,
 }: Props) {
   return (

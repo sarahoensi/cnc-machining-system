@@ -1,132 +1,187 @@
-/* styles/tokens/semantic.css
-=====================================================
-SEMANTIC TOKENS
-These tokens describe UI meaning.
-They MUST NOT contain hardcoded values.
-They map to primitive tokens defined elsewhere.
-=====================================================
-*/
+/* styles/tokens/semantic.css */ 
 
 :root {
-  /* =========================
-     SURFACES
-  ========================= */
+
+/* =====================================================
+   SURFACES
+===================================================== */
+
   --surface-page: var(--color-surface);
   --surface-panel: var(--color-surface-2);
   --surface-elevated: var(--color-surface-elevated);
-  --surface-hover: var(--color-surface-hover);
   --surface-muted: var(--color-surface-muted);
+  --surface-hover: var(--color-surface-hover);
 
-  /* =========================
-     TEXT
-  ========================= */
+
+/* =====================================================
+   TEXT
+===================================================== */
+
   --text-primary: var(--color-text);
+  --text-secondary: var(--color-text-muted);
   --text-muted: var(--color-text-muted);
   --text-placeholder: var(--color-text-placeholder);
   --text-inverse: var(--color-text-inverse);
   --text-strong: var(--color-text-strong);
 
-  /* =========================
-     BORDERS
-  ========================= */
+
+/* =====================================================
+   TYPOGRAPHY (GLOBAL ROLES)
+===================================================== */
+
+  --text-body-size: var(--font-size-md);
+  --text-body-weight: var(--font-weight-regular);
+  --text-body-line-height: var(--line-height-normal);
+
+  --text-label-size: var(--font-size-sm);
+  --text-label-weight: var(--font-weight-medium);
+
+  --text-caption-size: var(--font-size-xs);
+  --text-caption-weight: var(--font-weight-regular);
+
+  --heading-size: var(--font-size-lg);
+  --heading-weight: var(--font-weight-semibold);
+  --heading-line-height: var(--line-height-tight);
+
+
+/* =====================================================
+   LAYOUT ROLES
+===================================================== */
+
+  --layout-padding: var(--space-4);
+  --layout-section-gap: var(--space-6);
+
+  --topbar-height: var(--size-topbar-height);
+  --sidebar-width: var(--size-sidebar-width);
+
+
+/* =====================================================
+   CONTROL SIZING
+===================================================== */
+
+  --control-height-sm: var(--size-control-sm);
+  --control-height-md: var(--size-control-md);
+  --control-height-lg: var(--size-control-lg);
+
+  --control-padding-x-sm: var(--space-3);
+  --control-padding-x-md: var(--space-4);
+  --control-padding-x-lg: var(--space-6);
+
+  --control-radius: var(--radius-md);
+
+
+/* =====================================================
+   BORDER ROLES
+===================================================== */
+
   --border-default: var(--color-border);
   --border-strong: var(--color-border-strong);
-  --border-focus: var(--color-primary);
   --border-muted: var(--color-border-muted);
+  --border-focus: var(--color-focus);
 
-  /* =========================
-     INPUTS
-  ========================= */
-  --input-bg: var(--surface-panel);
 
-  --input-bg-user: var(--color-user);
-  --input-bg-machine: var(--color-machine);
-  --input-bg-disabled: var(--color-disabled);
-  --input-bg-locked: var(--color-locked);
-  --input-bg-empty: var(--color-surface);
+/* =====================================================
+   CONTROL COLORS & STATES
+===================================================== */
 
-  --input-border: var(--border-default);
-  --input-border-focus: var(--border-focus);
-  --input-border-error: var(--color-danger);
+  --control-bg: var(--surface-panel);
+  --control-bg-hover: var(--surface-hover);
+  --control-bg-disabled: var(--surface-muted);
 
-  --input-text: var(--text-primary);
-  --input-text-disabled: var(--text-muted);
+  --control-border: var(--border-default);
+  --control-border-strong: var(--border-strong);
+  --control-border-focus: var(--border-focus);
+  --control-border-error: var(--feedback-error);
 
-  /* =========================
-     BUTTONS
-  ========================= */
-  --button-primary-bg: var(--color-primary);
-  --button-primary-bg-hover: var(--color-primary-hover);
-  --button-primary-text: var(--color-on-primary);
+  --control-text: var(--text-primary);
+  --control-text-disabled: var(--text-muted);
+
+
+/* =====================================================
+   BRAND
+===================================================== */
+
+  --brand-primary: var(--color-primary);
+  --brand-primary-hover: var(--color-primary-hover);
+  --brand-primary-soft: var(--color-primary-soft);
+  --brand-on-primary: var(--color-on-primary);
+
+
+/* =====================================================
+   FEEDBACK / STATUS
+===================================================== */
+
+  --feedback-error: var(--color-danger);
+  --feedback-success: var(--color-success);
+  --feedback-warning: var(--color-warning);
+  --feedback-info: var(--color-info);
+
+
+/* =====================================================
+   BUTTON ROLES
+===================================================== */
+
+  --button-primary-bg: var(--brand-primary);
+  --button-primary-bg-hover: var(--brand-primary-hover);
+  --button-primary-text: var(--brand-on-primary);
 
   --button-secondary-bg: var(--surface-panel);
   --button-secondary-text: var(--text-primary);
 
-  --button-danger-bg: var(--color-danger);
-  --button-danger-text: var(--color-on-danger);
+  --button-danger-bg: var(--feedback-error);
+  --button-danger-text: var(--text-inverse);
 
   --button-icon-hover-bg: var(--surface-hover);
-  --button-focus-ring: var(--color-focus);
 
-  /* =========================
-     SIDEBAR
-  ========================= */
-  --sidebar-bg: var(--surface-panel);
-  --sidebar-border: var(--border-default);
 
-  --sidebar-item-bg: var(--surface-panel);
-  --sidebar-item-bg-hover: var(--surface-hover);
-  --sidebar-item-bg-active: var(--color-primary-soft);
+/* =====================================================
+   TABLE ROLES
+===================================================== */
 
-  --sidebar-item-text: var(--text-primary);
-  --sidebar-item-text-active: var(--text-primary);
-
-  /* =========================
-     TOPBAR
-  ========================= */
-  --topbar-bg: var(--surface-panel);
-  --topbar-border: var(--border-default);
-  --topbar-text: var(--text-primary);
-
-  /* =========================
-     TABLE / EXECUTION
-  ========================= */
   --table-bg: var(--surface-panel);
   --table-header-bg: var(--surface-muted);
   --table-row-hover: var(--surface-hover);
   --table-row-active: var(--surface-elevated);
   --table-border: var(--border-default);
 
-  /* =========================
-     FEEDBACK / STATUS
-  ========================= */
-  --feedback-error: var(--color-danger);
-  --feedback-success: var(--color-success);
-  --feedback-warning: var(--color-warning);
-  --feedback-info: var(--color-info);
+  /* =====================================================
+   TABLE CONTROL SIZING
+===================================================== */
 
-  --border-error: var(--feedback-error);
-  --border-success: var(--feedback-success);
-  --border-warning: var(--feedback-warning);
+--table-control-height: 32px;
 
-  /* =========================
-     OVERLAY / MODAL
-  ========================= */
+
+
+/* =====================================================
+   OVERLAY / MODAL
+===================================================== */
+
   --overlay-backdrop: var(--color-backdrop);
   --overlay-surface: var(--surface-elevated);
 
-  /* =========================
-     DIAGRAM
-  ========================= */
-  --diagram-material-fill: var(--color-surface-2);
-  --diagram-part-stroke: var(--color-primary);
-  --diagram-part-stroke-muted: var(--color-border);
 
-  --diagram-active-stroke: var(--color-danger);
-  --diagram-active-fill: var(--color-primary-soft);
+/* =====================================================
+   FOCUS
+===================================================== */
 
-  --diagram-disabled-opacity: var(--opacity-disabled);
+  --focus-ring-color: var(--color-focus);
 
-  --diagram-tool-fill: var(--color-surface-muted);
-  --diagram-tool-stroke: var(--color-border-strong);
+
+/* =====================================================
+   CONTEXT: FORM
+===================================================== */
+
+  --form-text-size: var(--font-size-md);
+  --form-label-size: var(--font-size-sm);
+  --form-caption-size: var(--font-size-xs);
+
+
+/* =====================================================
+   CONTEXT: TABLE
+===================================================== */
+
+  --table-text-size: var(--font-size-sm);
+  --table-header-size: var(--font-size-sm);
+  --table-caption-size: var(--font-size-xs);
+
 }
