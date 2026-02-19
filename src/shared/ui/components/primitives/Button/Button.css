@@ -1,0 +1,137 @@
+/* shares/ui/components/primitives/Button/Button.css  */
+
+/* =====================================================
+   BASE BUTTON
+===================================================== */
+
+.app-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+
+  font-family: inherit;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+
+  border-radius: var(--radius-md);
+  border: var(--border-width-sm) solid transparent;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition:
+    background var(--motion-fast),
+    border-color var(--motion-fast),
+    color var(--motion-fast),
+    box-shadow var(--motion-fast),
+    transform var(--motion-fast);
+
+  white-space: nowrap;
+}
+
+/* =====================================================
+   SIZES
+===================================================== */
+
+.app-button.small {
+  height: var(--size-control-sm);
+  padding: 0 var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+.app-button.medium {
+  height: var(--size-control-md);
+  padding: 0 var(--space-4);
+}
+
+.app-button.large {
+  height: var(--size-control-lg);
+  padding: 0 var(--space-6);
+  font-size: var(--font-size-lg);
+}
+
+.app-button.icon {
+  height: var(--size-control-icon);
+  width: var(--size-control-icon);
+  padding: 0;
+}
+
+/* =====================================================
+   VARIANTS
+===================================================== */
+
+/* ---------- PRIMARY ---------- */
+
+.app-button.primary {
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+}
+
+.app-button.primary:hover:not(:disabled) {
+  background: var(--button-primary-bg-hover);
+}
+
+.app-button.primary:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* ---------- SECONDARY ---------- */
+
+.app-button.secondary {
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  border-color: var(--border-default);
+}
+
+.app-button.secondary:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+
+/* ---------- DANGER ---------- */
+
+.app-button.danger {
+  background: var(--button-danger-bg);
+  color: var(--button-danger-text);
+}
+
+.app-button.danger:hover:not(:disabled) {
+  opacity: var(--opacity-muted);
+}
+
+/* ---------- ICON ---------- */
+
+.app-button.icon {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+}
+
+.app-button.icon:hover:not(:disabled) {
+  background: var(--button-icon-hover-bg);
+}
+
+/* =====================================================
+   STATES
+===================================================== */
+
+.app-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--button-focus-ring);
+}
+
+.app-button:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* =====================================================
+   ICON IMAGE
+===================================================== */
+
+.icon-img {
+  width: var(--size-icon-md);
+  height: var(--size-icon-md);
+  pointer-events: none;
+}

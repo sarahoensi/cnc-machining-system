@@ -7,6 +7,7 @@
 @import "./base/base.css";
 
 /* 3. Primitives */
+@import "./tokens/primitives/border.css";
 @import "./tokens/primitives/colors.css";
 @import "./tokens/primitives/elevation.css";
 @import "./tokens/primitives/motion.css";
