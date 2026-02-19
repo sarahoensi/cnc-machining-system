@@ -2,7 +2,7 @@
 
 import React, { forwardRef } from "react";
 import "./Button.css";
-import SettingsIcon from "../../../assets/icons/settings.svg";
+import SettingsIcon from "@assets/icons/settings.svg";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "secondary" | "danger" | "icon";

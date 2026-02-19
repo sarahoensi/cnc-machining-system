@@ -6,7 +6,7 @@ import {
   useState,
   type ComponentType,
 } from "react";
-import "./SettingsMenu.css";
+import "./settings.css";
 
 import { ThemeSettings } from "./panels/ThemeSettings";
 import { DecimalSettings } from "./panels/DecimalSettings";
@@ -24,9 +24,10 @@ const SETTINGS_MENU: readonly SettingsItem[] = [
 
 type Props = {
   onClose: () => void;
+  triggerRef?: React.RefObject<HTMLElement | null>;
 };
 
-export function SettingsMenu({ onClose }: Props) {
+export function SettingsMenu({ onClose, triggerRef }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [activeKey, setActiveKey] = useState<string | null>(null);
 
@@ -35,12 +36,17 @@ export function SettingsMenu({ onClose }: Props) {
   -------------------------------------------- */
   useEffect(() => {
     function handlePointerDown(e: MouseEvent) {
-      if (!ref.current) return;
+  const target = e.target as Node;
 
-      if (!ref.current.contains(e.target as Node)) {
-        onClose();
-      }
-    }
+  if (!ref.current) return;
+
+  const clickedInsideMenu = ref.current.contains(target);
+  const clickedTrigger = triggerRef?.current?.contains(target);
+
+  if (!clickedInsideMenu && !clickedTrigger) {
+    onClose();
+  }
+}
 
     // IMPORTANT: use mousedown instead of click
     document.addEventListener("mousedown", handlePointerDown);

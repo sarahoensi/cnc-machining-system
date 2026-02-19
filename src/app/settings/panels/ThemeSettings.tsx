@@ -1,7 +1,7 @@
 // app/settings/theme/ThemeSettings.tsx
 
 import { useTheme } from "@app/providers/ThemeProvider";
-import "../SettingsShared.css";
+import "../settings.css";
 
 
 export function ThemeSettings() {

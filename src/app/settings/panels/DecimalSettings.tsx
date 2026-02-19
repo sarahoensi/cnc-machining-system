@@ -1,7 +1,7 @@
 // app/settings/decimals/DecimalSetting.tsx
 
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
-import "../SettingsShared.css";
+import "../settings.css";
 
 
 export function DecimalSettings() {
