@@ -9,22 +9,29 @@
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  padding: var(--space-5) 0;
+  padding: var(--layout-section-gap) 0;
 }
 
 .sidebar-link {
   padding: var(--space-3) var(--space-6);
-  color: var(--sidebar-item-text);
+
+  color: var(--text-secondary);
   text-decoration: none;
-  transition: background var(--motion-fast);
+
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+
+  transition: background var(--duration-fast) var(--easing-standard),
+              color var(--duration-fast) var(--easing-standard);
 }
 
 .sidebar-link:hover {
-  background: var(--sidebar-item-bg-hover);
+  background: var(--surface-hover);
+  color: var(--text-primary);
 }
 
 .sidebar-link.active {
-  background: var(--sidebar-item-bg-active);
-  color: var(--sidebar-item-text-active);
+  background: var(--brand-primary-soft);
+  color: var(--text-primary);
   font-weight: var(--font-weight-semibold);
 }

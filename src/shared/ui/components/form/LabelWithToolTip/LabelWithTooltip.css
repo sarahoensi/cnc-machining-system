@@ -1,4 +1,5 @@
-/* shared/ui/components/form/LabelWithTooltip/LabelWithTooltip.css  */
+/* shared/ui/components/form/LabelWithTooltip/LabelWithTooltip.css */
+
 
 /* =====================================================
    LABEL WITH TOOLTIP
@@ -8,16 +9,19 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-}
 
-.label-text {
   font-size: inherit;
   font-weight: inherit;
+  line-height: inherit;
   color: inherit;
 }
 
-/* Tooltip icon */
-.nf-tooltip-icon {
+
+/* =====================================================
+   TOOLTIP ICON
+===================================================== */
+
+.tooltip-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -26,10 +30,12 @@
   height: var(--size-icon-sm);
 
   opacity: var(--opacity-muted);
+  color: var(--text-muted);
+
   cursor: help;
 }
 
-.nf-tooltip-icon img {
-  width: var(--size-icon-sm);
-  height: var(--size-icon-sm);
+.tooltip-icon img {
+  width: 100%;
+  height: 100%;
 }

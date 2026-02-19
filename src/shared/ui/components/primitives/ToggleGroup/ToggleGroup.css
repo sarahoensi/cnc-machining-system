@@ -4,54 +4,69 @@
 
 .toggle-group {
   display: inline-flex;
-  border-radius: var(--radius-md);
-  border: var(--border-width-xs) solid var(--border-default);
+
+  border-radius: var(--control-radius);
+  border: var(--border-width-thin) solid var(--border-default);
+
   overflow: hidden;
 }
 
 /* Disabled */
+
 .toggle-group.disabled {
   opacity: var(--opacity-disabled);
 }
+
 
 /* =====================================================
    BUTTON
 ===================================================== */
 
 .toggle-button {
-  padding: 0 var(--space-4);
-  height: var(--size-control-md);
+  padding: 0 var(--control-padding-x-md);
+  height: var(--control-height-md);
 
-  background: var(--surface-panel);
-  color: var(--text-primary);
+  background: var(--control-bg);
+  color: var(--control-text);
 
   border: none;
-  border-right: var(--border-width-xs) solid var(--border-default);
+  border-right: var(--border-width-thin) solid var(--border-default);
 
-  font-size: var(--text-body-size);
+  font-size: var(--form-text-size);
   font-weight: var(--text-body-weight);
 
   cursor: pointer;
-  transition: background var(--motion-fast), color var(--motion-fast);
+
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    color var(--duration-fast) var(--easing-standard);
 }
 
 /* Remove border on last */
+
 .toggle-button:last-child {
   border-right: none;
 }
 
+
 /* Hover */
+
 .toggle-button:hover:not(:disabled) {
-  background: var(--surface-hover);
+  background: var(--control-bg-hover);
 }
+
 
 /* Active */
+
 .toggle-button.active {
-  background: var(--button-primary-bg);
-  color: var(--button-primary-text);
+  background: var(--brand-primary);
+  color: var(--brand-on-primary);
 }
 
+
 /* Disabled button */
+
 .toggle-button:disabled {
   cursor: not-allowed;
+  opacity: var(--opacity-disabled);
 }

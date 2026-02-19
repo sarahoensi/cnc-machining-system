@@ -77,22 +77,23 @@ export function PlaceholderPage({ title }: Props) {
 
         <NumberField
           label="User source (editable)"
+          tooltip="Dette kan redigeres manuelt"
           field={userField}
           onChange={setUserValue}
           unit="mm"
         />
 
         <NumberField
-          label="Machine source (readonly)"
+          label="Machine source"
           field={{
             value: "456",
             source: "machine",
             locked: false,
             invalid: false,
           }}
-          onChange={() => {}}
+          onChange={() => { }}
           unit="mm"
-          readonly
+
         />
 
         <NumberField
@@ -103,7 +104,7 @@ export function PlaceholderPage({ title }: Props) {
             locked: true,
             invalid: false,
           }}
-          onChange={() => {}}
+          onChange={() => { }}
           unit="mm"
           disabled
         />
@@ -116,7 +117,7 @@ export function PlaceholderPage({ title }: Props) {
             locked: false,
             invalid: false,
           }}
-          onChange={() => {}}
+          onChange={() => { }}
           unit="mm"
         />
 
@@ -128,7 +129,7 @@ export function PlaceholderPage({ title }: Props) {
             locked: false,
             invalid: true,
           }}
-          onChange={() => {}}
+          onChange={() => { }}
           unit="mm"
           error="Ugyldig verdi"
         />
@@ -196,21 +197,21 @@ export function PlaceholderPage({ title }: Props) {
             <TableHeaderCell key="start" label="Start Ø" align="right" />,
 
             <TableHeaderCell key="delta">
-  <div className="header-select-wrapper">
-    <select
-      className="header-select"
-      value={deltaMode}
-      onChange={(e) =>
-        setDeltaMode(e.target.value as "dd" | "dz")
-      }
-    >
-      <option value="dd">ΔD</option>
-      <option value="dz">ΔZ</option>
-    </select>
-    <span className="header-select-caret" />
-  </div>
-</TableHeaderCell>
-,
+              <div className="header-select-wrapper">
+                <select
+                  className="header-select"
+                  value={deltaMode}
+                  onChange={(e) =>
+                    setDeltaMode(e.target.value as "dd" | "dz")
+                  }
+                >
+                  <option value="dd">ΔD</option>
+                  <option value="dz">ΔZ</option>
+                </select>
+                <span className="header-select-caret" />
+              </div>
+            </TableHeaderCell>
+            ,
 
             <TableHeaderCell key="new" label="Ny måling" align="center" />,
           ]}
@@ -221,6 +222,7 @@ export function PlaceholderPage({ title }: Props) {
             <td style={{ textAlign: "right" }}>0.444</td>
             <td>
               <NumberField
+                variant="table"
                 label=""
                 field={{
                   value: "2.444",
@@ -228,7 +230,7 @@ export function PlaceholderPage({ title }: Props) {
                   locked: false,
                   invalid: false,
                 }}
-                onChange={() => {}}
+                onChange={() => { }}
               />
             </td>
           </ExecutionRow>
@@ -246,7 +248,7 @@ export function PlaceholderPage({ title }: Props) {
                   locked: false,
                   invalid: false,
                 }}
-                onChange={() => {}}
+                onChange={() => { }}
               />
             </td>
           </ExecutionRow>

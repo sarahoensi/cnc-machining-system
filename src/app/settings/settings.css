@@ -1,4 +1,4 @@
-/* app/settings/settings.css
+/* app/settings/settings.css */
 
 /* ======================================================
    SETTINGS MENU CONTAINER
@@ -6,14 +6,14 @@
 
 .settings-menu {
   position: absolute;
-  top: calc(100% + 4px);  
+  top: calc(100% + var(--space-1));
   right: 0;
 
   min-width: var(--size-settings-width);
   padding: var(--space-1);
 
   background: var(--surface-panel);
-  border: 1px solid var(--border-default);
+  border: var(--border-width-thin) solid var(--border-default);
   border-radius: var(--radius-md);
 
   box-shadow: var(--shadow-lg);
@@ -26,12 +26,13 @@
   position: relative;
 }
 
+
 /* ======================================================
    MENU COLUMN
 ====================================================== */
 
 .menu-column {
-  min-width: 180px;
+  min-width: 180px; /* OK å la stå hvis kun brukt her */
   display: flex;
   flex-direction: column;
 }
@@ -39,31 +40,45 @@
 .menu-item {
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-sm);
+
   display: flex;
   justify-content: space-between;
+
   cursor: pointer;
+
   color: var(--text-primary);
+
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+
+  transition: background var(--duration-fast) var(--easing-standard),
+              color var(--duration-fast) var(--easing-standard);
 }
 
 .menu-item:hover {
   background: var(--surface-hover);
 }
 
+
+/* ======================================================
+   SUBMENU FLYOUT
+====================================================== */
+
 .submenu-flyout {
   position: absolute;
   top: 0;
-  right: calc(100% + 2px);
+  right: calc(100% + var(--space-1));
 
   min-width: var(--size-settings-width);
-
   padding: var(--space-3) 0;
 
   background: var(--surface-panel);
-  border: 1px solid var(--border-default);
+  border: var(--border-width-thin) solid var(--border-default);
   border-radius: var(--radius-md);
 
   box-shadow: var(--shadow-md);
 }
+
 
 /* ======================================================
    SETTINGS PANELS
@@ -79,7 +94,7 @@
   margin: 0;
   padding: 0 var(--space-6);
 
-  font-size: var(--font-size-xs);
+  font-size: var(--text-caption-size);
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -92,6 +107,11 @@
   flex-direction: column;
 }
 
+
+/* ======================================================
+   SETTINGS BUTTON
+====================================================== */
+
 .settings-button {
   padding: var(--space-3) var(--space-6);
 
@@ -99,21 +119,23 @@
   border: none;
 
   text-align: left;
-  font-size: var(--font-size-sm);
 
-  color: var(--sidebar-item-text);
+  font-size: var(--text-label-size);
+  font-weight: var(--text-label-weight);
+
+  color: var(--text-primary);
   cursor: pointer;
 
-  transition: background var(--motion-fast),
-              color var(--motion-fast);
+  transition: background var(--duration-fast) var(--easing-standard),
+              color var(--duration-fast) var(--easing-standard);
 }
 
 .settings-button:hover {
-  background: var(--sidebar-item-bg-hover);
+  background: var(--surface-hover);
 }
 
 .settings-button.active {
-  background: var(--sidebar-item-bg-active);
-  color: var(--sidebar-item-text-active);
+  background: var(--brand-primary-soft);
+  color: var(--text-primary);
   font-weight: var(--font-weight-semibold);
 }

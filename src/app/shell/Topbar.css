@@ -1,19 +1,20 @@
 /* src/app/layout/Topbar.css */
 
 .topbar {
-  position: relative;                /* IMPORTANT */
+  position: relative;
   z-index: var(--z-sticky);
 
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
 
-  height: var(--size-topbar-height);
-  padding: 0 var(--space-4);
+  height: var(--topbar-height);
+  padding: 0 var(--layout-padding);
 
-  background: var(--topbar-bg);
-  border-bottom: 1px solid var(--topbar-border);
-  color: var(--topbar-text);
+  background: var(--surface-panel);
+  border-bottom: var(--border-width-thin) solid var(--border-default);
+
+  color: var(--text-primary);
 }
 
 .topbar-left {
@@ -26,20 +27,33 @@
 
 .topbar-right {
   justify-self: end;
-  position: relative; /* anchor for settings menu */
+  position: relative;
 }
 
 .topbar-title {
   margin: 0;
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+
+  font-size: var(--heading-size);
+  font-weight: var(--heading-weight);
+  line-height: var(--heading-line-height);
+
+  color: var(--text-primary);
 }
 
 .hamburger,
 .settings-button {
   font-size: var(--size-icon-md);
+
   background: none;
   border: none;
+
   cursor: pointer;
-  color: var(--topbar-text);
+  color: var(--text-primary);
+
+  transition: color var(--duration-fast) var(--easing-standard);
+}
+
+.hamburger:hover,
+.settings-button:hover {
+  color: var(--brand-primary);
 }

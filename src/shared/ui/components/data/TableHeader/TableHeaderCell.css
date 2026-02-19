@@ -5,12 +5,12 @@
 .table-header-cell {
   padding: var(--space-3) var(--space-4);
 
-  font-size: var(--text-label-size);
+  font-size: var(--table-header-size);
   font-weight: var(--text-label-weight);
   color: var(--text-primary);
 
   background: var(--table-header-bg);
-  border-bottom: var(--border-width-xs) solid var(--table-border);
+  border-bottom: var(--border-width-thin) solid var(--table-border);
 
   text-align: left;
   vertical-align: middle;
@@ -24,25 +24,38 @@
   text-align: right;
 }
 
+
+/* =====================================================
+   HEADER CONTENT
+===================================================== */
+
 .header-content {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
 }
 
-/* Wrapper */
+
+/* =====================================================
+   SELECT WRAPPER
+===================================================== */
+
 .header-select-wrapper {
   position: relative;
   display: inline-flex;
   align-items: center;
 }
 
-/* Select */
+
+/* =====================================================
+   SELECT
+===================================================== */
+
 .header-select {
   background: transparent;
   border: none;
 
-  font-size: var(--text-label-size);
+  font-size: var(--table-header-size);
   font-weight: var(--text-label-weight);
   color: var(--text-primary);
 
@@ -53,16 +66,21 @@
   cursor: pointer;
 }
 
-/* Custom caret */
+
+/* =====================================================
+   CUSTOM CARET
+===================================================== */
+
 .header-select-caret {
   position: absolute;
   right: 0;
+
   width: 0;
   height: 0;
 
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 5px solid var(--text-muted);
+  border-left: var(--space-1) solid transparent;
+  border-right: var(--space-1) solid transparent;
+  border-top: calc(var(--space-1) + 1px) solid var(--text-muted);
 
   pointer-events: none;
 }

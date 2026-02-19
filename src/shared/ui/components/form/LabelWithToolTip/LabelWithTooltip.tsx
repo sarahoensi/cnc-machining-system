@@ -21,7 +21,7 @@ export function LabelWithTooltip({
 
       {tooltip && (
         <span
-          className="nf-tooltip-icon"
+          className="tooltip-icon"
           aria-hidden="true"
           title={tooltip}
         >
