@@ -1,3 +1,5 @@
+/* styles/tokens/primitives/elevation.css */
+
 :root {
   --shadow-sidebar: 2px 0 10px rgba(0,0,0,0.2);
   --shadow-elevated: 0 4px 12px rgba(0,0,0,0.1);
