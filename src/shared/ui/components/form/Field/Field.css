@@ -1,0 +1,49 @@
+/* shared/ui/components/form/Field/Field.css  */
+
+/* =====================================================
+   FIELD
+===================================================== */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Reset fieldset */
+.field {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* =====================================================
+   LABEL
+===================================================== */
+
+.field-label {
+  font-size: var(--text-label-size);
+  font-weight: var(--text-label-weight);
+  color: var(--text-primary);
+}
+
+/* =====================================================
+   CONTROL
+===================================================== */
+
+.field-control {
+  display: flex;
+  flex-direction: column;
+}
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.field-error {
+  font-size: var(--text-caption-size);
+  font-weight: var(--text-caption-weight);
+  color: var(--feedback-error);
+}
+
+

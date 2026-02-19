@@ -1,0 +1,35 @@
+/* shared/ui/components/form/LabelWithTooltip/LabelWithTooltip.css  */
+
+/* =====================================================
+   LABEL WITH TOOLTIP
+===================================================== */
+
+.label-with-tooltip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.label-text {
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+/* Tooltip icon */
+.nf-tooltip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+
+  opacity: var(--opacity-muted);
+  cursor: help;
+}
+
+.nf-tooltip-icon img {
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+}

@@ -48,6 +48,6 @@
   min-height: 0;
   overflow: auto;
 
-  padding: var(--space-6);
+  padding: var(--space-3);
   background: var(--surface-page);
 }

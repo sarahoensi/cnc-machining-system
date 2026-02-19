@@ -1,4 +1,4 @@
-// NumberField.tsx
+// shared/ui/components/form/NumberField/NumberField.tsx
 
 import React, { useId } from "react";
 import clsx from "clsx";

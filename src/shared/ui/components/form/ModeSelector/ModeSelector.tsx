@@ -1,4 +1,4 @@
-// ModeSelector.tsx
+// shared/ui/components/ModeSelector/ModeSelector.tsx
 
 import clsx from "clsx";
 import { Field } from "../Field/Field";

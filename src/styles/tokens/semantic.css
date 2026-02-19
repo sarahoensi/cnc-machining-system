@@ -11,6 +11,7 @@ They map to primitive tokens defined elsewhere.
   /* =========================
      SURFACES
   ========================= */
+
   --surface-page: var(--color-surface);
   --surface-panel: var(--color-surface-2);
   --surface-elevated: var(--color-surface-elevated);
@@ -18,8 +19,9 @@ They map to primitive tokens defined elsewhere.
   --surface-muted: var(--color-surface-muted);
 
   /* =========================
-     TEXT
+     TEXT COLORS
   ========================= */
+
   --text-primary: var(--color-text);
   --text-muted: var(--color-text-muted);
   --text-placeholder: var(--color-text-placeholder);
@@ -27,27 +29,49 @@ They map to primitive tokens defined elsewhere.
   --text-strong: var(--color-text-strong);
 
   /* =========================
+     TYPOGRAPHY ROLES
+  ========================= */
+
+  --text-label-size: var(--font-size-sm);
+  --text-label-weight: var(--font-weight-medium);
+
+  --text-body-size: var(--font-size-md);
+  --text-body-weight: var(--font-weight-regular);
+
+  --text-caption-size: var(--font-size-xs);
+  --text-caption-weight: var(--font-weight-regular);
+
+  /* =========================
      BORDERS
   ========================= */
+
   --border-default: var(--color-border);
   --border-strong: var(--color-border-strong);
-  --border-focus: var(--color-primary);
   --border-muted: var(--color-border-muted);
+
+  --border-focus: var(--color-primary);
+
+  /* =========================
+     FOCUS
+  ========================= */
+
+  --focus-ring-color: var(--color-focus);
 
   /* =========================
      INPUTS
   ========================= */
+
   --input-bg: var(--surface-panel);
 
   --input-bg-user: var(--color-user);
   --input-bg-machine: var(--color-machine);
   --input-bg-disabled: var(--color-disabled);
   --input-bg-locked: var(--color-locked);
-  --input-bg-empty: var(--color-surface);
+  --input-bg-empty: var(--surface-page);
 
-  --input-border: var(--border-default);
+  --input-border: var(--border-width-md);
   --input-border-focus: var(--border-focus);
-  --input-border-error: var(--color-danger);
+  --input-border-error: var(--feedback-error);
 
   --input-text: var(--text-primary);
   --input-text-disabled: var(--text-muted);
@@ -55,6 +79,7 @@ They map to primitive tokens defined elsewhere.
   /* =========================
      BUTTONS
   ========================= */
+
   --button-primary-bg: var(--color-primary);
   --button-primary-bg-hover: var(--color-primary-hover);
   --button-primary-text: var(--color-on-primary);
@@ -62,15 +87,17 @@ They map to primitive tokens defined elsewhere.
   --button-secondary-bg: var(--surface-panel);
   --button-secondary-text: var(--text-primary);
 
-  --button-danger-bg: var(--color-danger);
+  --button-danger-bg: var(--feedback-error);
   --button-danger-text: var(--color-on-danger);
 
   --button-icon-hover-bg: var(--surface-hover);
-  --button-focus-ring: var(--color-focus);
+
+  --button-focus-ring: var(--focus-ring-color);
 
   /* =========================
      SIDEBAR
   ========================= */
+
   --sidebar-bg: var(--surface-panel);
   --sidebar-border: var(--border-default);
 
@@ -84,6 +111,7 @@ They map to primitive tokens defined elsewhere.
   /* =========================
      TOPBAR
   ========================= */
+
   --topbar-bg: var(--surface-panel);
   --topbar-border: var(--border-default);
   --topbar-text: var(--text-primary);
@@ -91,6 +119,7 @@ They map to primitive tokens defined elsewhere.
   /* =========================
      TABLE / EXECUTION
   ========================= */
+
   --table-bg: var(--surface-panel);
   --table-header-bg: var(--surface-muted);
   --table-row-hover: var(--surface-hover);
@@ -100,6 +129,7 @@ They map to primitive tokens defined elsewhere.
   /* =========================
      FEEDBACK / STATUS
   ========================= */
+
   --feedback-error: var(--color-danger);
   --feedback-success: var(--color-success);
   --feedback-warning: var(--color-warning);
@@ -112,21 +142,23 @@ They map to primitive tokens defined elsewhere.
   /* =========================
      OVERLAY / MODAL
   ========================= */
+
   --overlay-backdrop: var(--color-backdrop);
   --overlay-surface: var(--surface-elevated);
 
   /* =========================
      DIAGRAM
   ========================= */
-  --diagram-material-fill: var(--color-surface-2);
-  --diagram-part-stroke: var(--color-primary);
-  --diagram-part-stroke-muted: var(--color-border);
 
-  --diagram-active-stroke: var(--color-danger);
+  --diagram-material-fill: var(--surface-panel);
+  --diagram-part-stroke: var(--color-primary);
+  --diagram-part-stroke-muted: var(--border-default);
+
+  --diagram-active-stroke: var(--feedback-error);
   --diagram-active-fill: var(--color-primary-soft);
 
   --diagram-disabled-opacity: var(--opacity-disabled);
 
-  --diagram-tool-fill: var(--color-surface-muted);
-  --diagram-tool-stroke: var(--color-border-strong);
+  --diagram-tool-fill: var(--surface-muted);
+  --diagram-tool-stroke: var(--border-strong);
 }

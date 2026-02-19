@@ -1,0 +1,130 @@
+/* shared/ui/components/form/NumberField/Numberfield.css  */
+
+/* =====================================================
+   NUMBER FIELD
+===================================================== */
+
+.number-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+/* =====================================================
+   LABEL
+===================================================== */
+
+.nf-label {
+    font-size: var(--text-label-size);
+    font-weight: var(--text-label-weight);
+    color: var(--text-primary);
+}
+
+/* =====================================================
+   INPUT WRAPPER
+===================================================== */
+
+.nf-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+
+}
+
+/* =====================================================
+   INPUT BASE
+===================================================== */
+
+.nf-input {
+    width: 100%;
+    height: var(--size-control-md);
+
+    padding: 0 var(--space-3);
+    padding-right: var(--space-8);
+
+    font-size: var(--text-body-size);
+    font-weight: var(--text-body-weight);
+
+    border-radius: var(--radius-md);
+    border: var(--input-border) solid var(--color-border);
+
+
+    background: var(--input-bg);
+    color: var(--input-text);
+
+    outline: none;
+
+    transition:
+        background var(--motion-fast),
+        border-color var(--motion-fast),
+        box-shadow var(--motion-fast),
+        color var(--motion-fast);
+}
+
+/* =====================================================
+   SOURCE STATES
+===================================================== */
+
+.nf-input.source-user {
+    background: var(--input-bg-user);
+}
+
+.nf-input.source-machine {
+    background: transparent;
+    color: var(--text-strong);
+    cursor: pointer;
+    border: none;
+}
+
+/* =====================================================
+   INTERACTION STATES
+===================================================== */
+
+.nf-input:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+}
+
+/* Disabled */
+.nf-input.disabled,
+.nf-input:disabled {
+    background: var(--input-bg-disabled);
+    color: var(--input-text-disabled);
+    cursor: not-allowed;
+    opacity: var(--opacity-disabled);
+}
+
+/* Locked */
+.nf-input.locked {
+    background: var(--input-bg-locked);
+    pointer-events: none;
+    cursor: pointer;
+}
+
+
+
+/* =====================================================
+   UNIT
+===================================================== */
+
+.nf-unit {
+    position: absolute;
+    right: var(--space-3);
+
+    font-size: var(--text-body-size);
+    font-weight: var(--text-body-weight);
+
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+/* =====================================================
+   ERROR MESSAGE
+===================================================== */
+
+.nf-error {
+    font-size: var(--text-caption-size);
+    font-weight: var(--text-caption-weight);
+    color: var(--feedback-error);
+}
