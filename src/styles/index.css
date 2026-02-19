@@ -4,7 +4,6 @@
 @import "./base/reset.css";*/
 
 /* 2. Base */
-@import "./base/base.css";
 
 /* 3. Primitives */
 @import "./tokens/primitives/border.css";

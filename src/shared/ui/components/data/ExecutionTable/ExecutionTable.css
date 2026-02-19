@@ -1,0 +1,65 @@
+/* =====================================================
+   TABLE BASE
+===================================================== */
+
+.execution-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--table-bg);
+}
+
+/* =====================================================
+   HEAD
+===================================================== */
+
+.execution-table-head {
+  background: var(--table-header-bg);
+}
+
+/* =====================================================
+   BODY
+===================================================== */
+
+.execution-table-body tr {
+  border-bottom: var(--border-width-xs) solid var(--table-border);
+  transition: background var(--motion-fast);
+}
+
+.execution-table-body tr:hover {
+  background: var(--table-row-hover);
+}
+
+/* Active row */
+.execution-table-body tr.active {
+  background: var(--table-row-active);
+}
+
+/* =====================================================
+   CELLS
+===================================================== */
+
+.execution-table td {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  color: var(--text-primary);
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.execution-table-foot td {
+  padding: var(--space-3) var(--space-4);
+  border-top: var(--border-width-xs) solid var(--table-border);
+  background: var(--surface-muted);
+}
+
+.execution-table th,
+.execution-table td {
+  padding: var(--space-2) var(--space-3);
+  vertical-align: middle;
+}
+.execution-table .number-field.table {
+  width: 100%;
+}

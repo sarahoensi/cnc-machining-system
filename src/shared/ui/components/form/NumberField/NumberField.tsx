@@ -18,6 +18,9 @@ type Props = {
   tooltip?: string;
   error?: string;
 
+  /** Layout variant */
+  variant?: "form" | "table";
+
   /** External hard disable */
   disabled?: boolean;
 
@@ -40,6 +43,7 @@ export function NumberField({
   unit,
   tooltip,
   error,
+  variant = "form",
   disabled = false,
   readonly = false,
   autoFocus,
@@ -108,40 +112,47 @@ export function NumberField({
 
   return (
     <Field
-      label={label}
-      tooltip={tooltip}
+      label={variant === "table" ? "" : label}
+      tooltip={variant === "table" ? undefined : tooltip}
       error={error}
       htmlFor={id}
     >
-      <div className="nf-input-wrapper">
-        <input
-          id={id}
-          ref={inputRef}
-          type="text"
-          inputMode="decimal"
-          pattern="-?[0-9]*[.,]?[0-9]*"
-          autoFocus={autoFocus}
-          value={isDisabled ? "" : field.value}
-          disabled={isDisabled}
-          readOnly={isReadOnly}
-          tabIndex={isReadOnly ? -1 : undefined}
-          onChange={handleChange}
-          onFocus={onFocus}
-          onBlur={handleBlurInternal}
-          onKeyDown={onKeyDown}
-          className={clsx(
-            "nf-input",
-            `source-${field.source}`,
-            isDisabled && "disabled",
-            isReadOnly && "readonly"
-          )}
-        />
-
-        {unit && (
-          <span className="nf-unit">
-            {unit}
-          </span>
+      <div
+        className={clsx(
+          "number-field",
+          variant === "table" && "table"
         )}
+      >
+        <div className="nf-input-wrapper">
+          <input
+            id={id}
+            ref={inputRef}
+            type="text"
+            inputMode="decimal"
+            pattern="-?[0-9]*[.,]?[0-9]*"
+            autoFocus={autoFocus}
+            value={isDisabled ? "" : field.value}
+            disabled={isDisabled}
+            readOnly={isReadOnly}
+            tabIndex={isReadOnly ? -1 : undefined}
+            onChange={handleChange}
+            onFocus={onFocus}
+            onBlur={handleBlurInternal}
+            onKeyDown={onKeyDown}
+            className={clsx(
+              "nf-input",
+              `source-${field.source}`,
+              isDisabled && "disabled",
+              isReadOnly && "readonly"
+            )}
+          />
+
+          {unit && (
+            <span className="nf-unit">
+              {unit}
+            </span>
+          )}
+        </div>
       </div>
     </Field>
   );

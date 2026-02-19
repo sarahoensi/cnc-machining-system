@@ -1,3 +1,5 @@
+// shared/ui/components/data/ExecutionTable/ExecutionTable.tsx
+
 import { ReactNode } from "react";
 import clsx from "clsx";
 import "./ExecutionTable.css";
@@ -20,9 +22,9 @@ export function ExecutionTable({
             className={clsx("execution-table", className)}
         >
             <thead className="execution-table-head">
-                <tr>
+                
                    <tr>{headers}</tr>
-                </tr>
+                
             </thead>
 
             <tbody className="execution-table-body">

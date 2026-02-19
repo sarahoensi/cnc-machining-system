@@ -1,3 +1,5 @@
+// shared/ui/components/primitives/ToggleGroup/ToggleGroup.tsx
+
 import clsx from "clsx";
 import "./ToggleGroup.css";
 

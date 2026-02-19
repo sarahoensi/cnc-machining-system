@@ -128,3 +128,29 @@
     font-weight: var(--text-caption-weight);
     color: var(--feedback-error);
 }
+
+/* =====================================================
+   TABLE VARIANT (for ExecutionTable)
+===================================================== */
+
+.number-field.table {
+  gap: 0;
+}
+
+.number-field.table .field-label {
+  display: none;
+}
+
+.number-field.table .field-control {
+  margin: 0;
+}
+
+/* =====================================================
+   TABLE VARIANT – COMPACT HEIGHT
+===================================================== */
+
+.number-field.table .nf-input {
+  height: 32px;               /* kompakt, matcher rad */
+  padding: 0 var(--space-2);  /* litt strammere */
+  font-size: var(--text-body-size);
+}

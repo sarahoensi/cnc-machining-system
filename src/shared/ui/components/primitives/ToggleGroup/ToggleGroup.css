@@ -1,0 +1,57 @@
+/* =====================================================
+   TOGGLE GROUP
+===================================================== */
+
+.toggle-group {
+  display: inline-flex;
+  border-radius: var(--radius-md);
+  border: var(--border-width-xs) solid var(--border-default);
+  overflow: hidden;
+}
+
+/* Disabled */
+.toggle-group.disabled {
+  opacity: var(--opacity-disabled);
+}
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+.toggle-button {
+  padding: 0 var(--space-4);
+  height: var(--size-control-md);
+
+  background: var(--surface-panel);
+  color: var(--text-primary);
+
+  border: none;
+  border-right: var(--border-width-xs) solid var(--border-default);
+
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+
+  cursor: pointer;
+  transition: background var(--motion-fast), color var(--motion-fast);
+}
+
+/* Remove border on last */
+.toggle-button:last-child {
+  border-right: none;
+}
+
+/* Hover */
+.toggle-button:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+
+/* Active */
+.toggle-button.active {
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+}
+
+/* Disabled button */
+.toggle-button:disabled {
+  cursor: not-allowed;
+}
