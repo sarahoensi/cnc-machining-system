@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { NumberField } from "@shared/ui/components/form/NumberField/NumberField";
 import { ModeSelector } from "@shared/ui/components/form/ModeSelector/ModeSelector";
 import { FieldState } from "@shared/types/fields";
 import {
@@ -10,6 +9,8 @@ import {
 import { ExecutionTable } from "@shared/ui/components/data/ExecutionTable/ExecutionTable";
 import { ExecutionRow } from "@shared/ui/components/data/ExecutionTable/ExecutionRow";
 import { TableHeaderCell } from "@shared/ui/components/data/TableHeader/TableHeaderCell";
+import { FormNumberField } from "@shared/ui/components/form/FormNumberField/FormNumberField";
+import { NumberInput } from "@shared/ui/components/primitives/NumberInput/NumberInput";
 
 type Props = {
   title: string;
@@ -75,7 +76,7 @@ export function PlaceholderPage({ title }: Props) {
           NumberField – Source States
         </h2>
 
-        <NumberField
+        <FormNumberField
           label="User source (editable)"
           tooltip="Dette kan redigeres manuelt"
           field={userField}
@@ -83,7 +84,7 @@ export function PlaceholderPage({ title }: Props) {
           unit="mm"
         />
 
-        <NumberField
+        <FormNumberField
           label="Machine source"
           field={{
             value: "456",
@@ -96,7 +97,7 @@ export function PlaceholderPage({ title }: Props) {
 
         />
 
-        <NumberField
+        <FormNumberField
           label="Locked"
           field={{
             value: "789",
@@ -109,7 +110,7 @@ export function PlaceholderPage({ title }: Props) {
           disabled
         />
 
-        <NumberField
+        <FormNumberField
           label="Empty source"
           field={{
             value: "",
@@ -121,7 +122,7 @@ export function PlaceholderPage({ title }: Props) {
           unit="mm"
         />
 
-        <NumberField
+        <FormNumberField
           label="Error state"
           field={{
             value: "999",
@@ -221,9 +222,7 @@ export function PlaceholderPage({ title }: Props) {
             <td style={{ textAlign: "right" }}>2.000</td>
             <td style={{ textAlign: "right" }}>0.444</td>
             <td>
-              <NumberField
-                variant="table"
-                label=""
+              <NumberInput
                 field={{
                   value: "2.444",
                   source: "user",
@@ -240,8 +239,7 @@ export function PlaceholderPage({ title }: Props) {
             <td style={{ textAlign: "right" }}>—</td>
             <td style={{ textAlign: "right" }}>—</td>
             <td>
-              <NumberField
-                label=""
+              <NumberInput
                 field={{
                   value: "",
                   source: "empty",

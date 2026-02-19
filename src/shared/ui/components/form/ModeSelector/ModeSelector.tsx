@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { Field } from "../Field/Field";
-import { LabelWithTooltip } from "../LabelWithToolTip/LabelWithTooltip";
+import { LabelWithTooltip } from "../../primitives/LabelWithToolTip/LabelWithTooltip";
 import "./ModeSelector.css";
 
 export type RadioOption<T extends string = string> = {

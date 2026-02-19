@@ -1,4 +1,4 @@
-// ExecutionCell.tsx
+// shared/ui/components/data/ExecutionTable/ExecutionTable.tsx
 
 import { ReactNode } from "react";
 import clsx from "clsx";
