@@ -1,6 +1,6 @@
 // features/right_triangle/triangleFieldConfig.ts
 
-import type { TriangleKey } from "./triangleForm";
+import type { TriangleKey } from "../domain/triangleForm";
 import { triangleTooltips } from "./triangleTooltips";
 
 export type TriangleFieldConfig = {

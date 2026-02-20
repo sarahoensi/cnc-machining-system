@@ -1,96 +1,139 @@
-// shared/ui/hooks/form/useFieldNavigation.ts
+// shared/ui/hooks/form/useFormNavigation.ts
 
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
-/**
- * Coordinates focus movement between fields (Enter, Shift+Enter, etc.).
- *
- * Pure interaction logic.
- *
- * - No domain knowledge
- * - No validation logic
- * - No driver awareness
- *
- * Works with a fixed ordered list of field keys.
- */
-export function useFieldNavigation<K extends string>(keys: readonly K[]) {
+export function useFormNavigation<K extends string>(options: {
+  keys: readonly K[];
+  autoFocusOnMount?: boolean;
+  onSubmit?: () => void; // 🔥 brukes når siste felt
+}) {
+  const { keys, autoFocusOnMount = false, onSubmit } = options;
+
   const refs = useRef<Partial<Record<K, HTMLInputElement>>>({});
+  const lastFocused = useRef<K | undefined>(undefined);
+  const didAutoFocus = useRef(false);
 
-  /**
-   * Register input ref by key.
-   */
+  /* =========================
+     Register
+  ========================= */
+
   const register = useCallback(
     (key: K) => (el: HTMLInputElement | null) => {
-      if (el) {
-        refs.current[key] = el;
-      }
+      if (el) refs.current[key] = el;
     },
     []
   );
 
-  /**
-   * Focus field by key.
-   */
+  /* =========================
+     Focus helpers
+  ========================= */
+
   const focus = useCallback((key?: K) => {
     if (!key) return;
-    refs.current[key]?.focus();
+
+    const el = refs.current[key];
+    if (!el || el.disabled) return;
+
+    el.focus();
+    lastFocused.current = key;
   }, []);
 
-  /**
-   * Focus next field in order.
-   */
-  const focusNext = useCallback(
-    (current: K) => {
+  const findNext = useCallback(
+    (current: K, direction: 1 | -1) => {
       const index = keys.indexOf(current);
-      if (index === -1) return;
+      if (index === -1) return undefined;
 
-      const next = keys[index + 1];
-      if (next) focus(next);
+      let i = index + direction;
+
+      while (i >= 0 && i < keys.length) {
+        const key = keys[i];
+        const el = refs.current[key];
+        if (el && !el.disabled) return key;
+        i += direction;
+      }
+
+      return undefined;
     },
-    [keys, focus]
+    [keys]
   );
 
-  /**
-   * Focus previous field in order.
-   */
-  const focusPrev = useCallback(
-    (current: K) => {
-      const index = keys.indexOf(current);
-      if (index === -1) return;
-
-      const prev = keys[index - 1];
-      if (prev) focus(prev);
+  const isLastFocusable = useCallback(
+    (key: K) => {
+      const next = findNext(key, 1);
+      return !next;
     },
-    [keys, focus]
+    [findNext]
   );
 
-  /**
-   * Key handler to attach to inputs.
-   * Handles:
-   * - Enter → next
-   * - Shift+Enter → previous
-   */
+  /* =========================
+     Keyboard navigation
+  ========================= */
+
   const handleKeyDown = useCallback(
     (key: K) =>
       (e: React.KeyboardEvent<HTMLInputElement>) => {
+
+        // ENTER
         if (e.key === "Enter") {
           e.preventDefault();
 
           if (e.shiftKey) {
-            focusPrev(key);
-          } else {
-            focusNext(key);
+            const prev = findNext(key, -1);
+            focus(prev);
+            return;
           }
+
+          if (isLastFocusable(key)) {
+            onSubmit?.(); // 🔥 Enter = Calculate
+            return;
+          }
+
+          const next = findNext(key, 1);
+          focus(next);
+          return;
+        }
+
+        // Arrow Down
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          const next = findNext(key, 1);
+          focus(next);
+          return;
+        }
+
+        // Arrow Up
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          const prev = findNext(key, -1);
+          focus(prev);
+          return;
         }
       },
-    [focusNext, focusPrev]
+    [findNext, focus, isLastFocusable, onSubmit]
   );
+
+  /* =========================
+     Auto focus on mount
+  ========================= */
+
+  useEffect(() => {
+    if (!autoFocusOnMount) return;
+    if (didAutoFocus.current) return;
+
+    for (const key of keys) {
+      const el = refs.current[key];
+      if (el && !el.disabled) {
+        didAutoFocus.current = true;
+        focus(key);
+        break;
+      }
+    }
+  }, [autoFocusOnMount, keys, focus]);
 
   return {
     register,
     focus,
-    focusNext,
-    focusPrev,
     handleKeyDown,
+    restoreLast: () => focus(lastFocused.current),
   };
 }

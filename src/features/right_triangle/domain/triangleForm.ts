@@ -8,8 +8,7 @@ export type TriangleKey =
   | "b"
   | "c"
   | "alpha"
-  | "beta"
-  | "gamma";
+  | "beta";
 
 export type TriangleExtras = {
   // hvis du trenger noe senere (f.eks type triangle)
@@ -27,7 +26,6 @@ export function createInitialTriangleForm(): FormState<
       c: emptyField(),
       alpha: emptyField(),
       beta: emptyField(),
-      gamma: emptyField(),
     },
     extras: {},
   };

@@ -6,6 +6,7 @@ import {
   safeParseDecimal,
 } from "@shared/engine";
 import "./NumberInput.css";
+import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 
 type Props = {
   id?: string; // ← NY
@@ -89,6 +90,14 @@ export function NumberInput({
     onBlur?.(e);
   }
 
+  const { decimals } = useDisplaySettings();
+
+const displayValue =
+  field.source === "machine" &&
+  field.machineValue !== undefined
+    ? field.machineValue.toFixed(decimals)
+    : field.value;
+
   return (
     <div className={clsx("number-input", className)}>
       <div className="ni-input-wrapper">
@@ -99,7 +108,7 @@ export function NumberInput({
           inputMode="decimal"
           pattern="-?[0-9]*[.,]?[0-9]*"
           autoFocus={autoFocus}
-          value={isDisabled ? "" : field.value}
+          value={isDisabled ? "" : displayValue}
           disabled={isDisabled}
           readOnly={isReadOnly}
           tabIndex={isReadOnly ? -1 : undefined}

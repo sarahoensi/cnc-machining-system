@@ -10,6 +10,8 @@ export type FieldState = {
   source: FieldSource;
   locked: boolean;
   invalid: boolean;
+
+  machineValue?: number;
 };
 
 /* ---------------------------------- */
