@@ -175,6 +175,43 @@ impl RightTriangleSolver {
 
         Ok(RightTriangle::new(a, b))
     }
+
+    // ---------------------------------------------------------
+    // Beta wrappers
+    // ---------------------------------------------------------
+
+    /// Construct from leg `a` and angle beta.
+    pub fn from_leg_a_and_beta(a: Length, beta: Angle) -> Result<RightTriangle, GeometryError> {
+        validate_acute(beta)?;
+
+        let alpha = Angle::degrees(90.0 - beta.degrees_value())
+            .map_err(|_| GeometryError::InvalidTriangle)?;
+
+        Self::from_leg_and_opposite_angle(a, alpha)
+    }
+
+    /// Construct from leg `b` and angle beta.
+    pub fn from_leg_b_and_beta(b: Length, beta: Angle) -> Result<RightTriangle, GeometryError> {
+        validate_acute(beta)?;
+
+        let alpha = Angle::degrees(90.0 - beta.degrees_value())
+            .map_err(|_| GeometryError::InvalidTriangle)?;
+
+        Self::from_adjacent_leg_and_angle(b, alpha)
+    }
+
+    /// Construct from hypotenuse and beta.
+    pub fn from_hypotenuse_and_beta(
+        c: Length,
+        beta: Angle,
+    ) -> Result<RightTriangle, GeometryError> {
+        validate_acute(beta)?;
+
+        let alpha = Angle::degrees(90.0 - beta.degrees_value())
+            .map_err(|_| GeometryError::InvalidTriangle)?;
+
+        Self::from_hypotenuse_and_angle(c, alpha)
+    }
 }
 
 // ---------------------------------------------------------

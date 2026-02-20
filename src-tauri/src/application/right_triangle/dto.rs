@@ -3,8 +3,6 @@
 //! These types define application-facing input variants and normalized output
 //! for geometry use cases in machining setup.
 
-// application/right_triangle/dto.rs
-
 use crate::domain::RightTriangle;
 
 /// Input DTO for right-triangle solving.
@@ -20,6 +18,11 @@ use crate::domain::RightTriangle;
 /// - Lengths in millimeters (`mm`).
 /// - Angles in degrees (`deg`).
 pub enum SolveRightTriangleInput {
+
+    // ---------------------------------------------------------
+    // SIDE + SIDE
+    // ---------------------------------------------------------
+
     /// Solve from both legs.
     Legs {
         /// First leg (`mm`).
@@ -27,26 +30,73 @@ pub enum SolveRightTriangleInput {
         /// Second leg (`mm`).
         b_mm: f64,
     },
-    /// Solve from one leg and hypotenuse.
-    LegAndHypotenuse {
-        /// Known leg (`mm`).
+
+    /// Solve from leg `a` and hypotenuse.
+    LegAAndHypotenuse {
+        /// Known leg `a` (`mm`).
         a_mm: f64,
         /// Hypotenuse (`mm`).
         c_mm: f64,
     },
-    /// Solve from the other leg and hypotenuse.
-    OtherLegAndHypotenuse {
-        /// Known other leg (`mm`).
+
+    /// Solve from leg `b` and hypotenuse.
+    LegBAndHypotenuse {
+        /// Known leg `b` (`mm`).
         b_mm: f64,
         /// Hypotenuse (`mm`).
         c_mm: f64,
     },
-    /// Solve from hypotenuse and one acute angle.
-    HypotenuseAndAngle {
+
+    // ---------------------------------------------------------
+    // SIDE + ANGLE
+    // ---------------------------------------------------------
+
+    /// Solve from leg `a` and angle alpha.
+    LegAAndAlpha {
+        /// Known leg `a` (`mm`).
+        a_mm: f64,
+        /// Angle alpha (`deg`).
+        alpha_deg: f64,
+    },
+
+    /// Solve from leg `a` and angle beta.
+    LegAAndBeta {
+        /// Known leg `a` (`mm`).
+        a_mm: f64,
+        /// Angle beta (`deg`).
+        beta_deg: f64,
+    },
+
+    /// Solve from leg `b` and angle alpha.
+    LegBAndAlpha {
+        /// Known leg `b` (`mm`).
+        b_mm: f64,
+        /// Angle alpha (`deg`).
+        alpha_deg: f64,
+    },
+
+    /// Solve from leg `b` and angle beta.
+    LegBAndBeta {
+        /// Known leg `b` (`mm`).
+        b_mm: f64,
+        /// Angle beta (`deg`).
+        beta_deg: f64,
+    },
+
+    /// Solve from hypotenuse and angle alpha.
+    HypotenuseAndAlpha {
         /// Hypotenuse (`mm`).
         c_mm: f64,
-        /// Acute angle alpha (`deg`).
+        /// Angle alpha (`deg`).
         alpha_deg: f64,
+    },
+
+    /// Solve from hypotenuse and angle beta.
+    HypotenuseAndBeta {
+        /// Hypotenuse (`mm`).
+        c_mm: f64,
+        /// Angle beta (`deg`).
+        beta_deg: f64,
     },
 }
 
