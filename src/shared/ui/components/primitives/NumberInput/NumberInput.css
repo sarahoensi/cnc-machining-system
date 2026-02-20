@@ -66,9 +66,6 @@
    INTERACTION STATES
 ===================================================== */
 
-.ni-input:hover:not(:disabled):not(.readonly) {
-  background: var(--control-bg-hover);
-}
 
 .ni-input:focus-visible {
   box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
