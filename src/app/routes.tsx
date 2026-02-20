@@ -3,6 +3,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import { PlaceholderPage } from "@app/PlaceholderPage";
+import { TrianglePage } from "@features/right_triangle/TrianglePage";
 
 
 export function AppRoutes() {
@@ -12,7 +13,7 @@ export function AppRoutes() {
       <Route path="/" element={<Navigate to="/triangle" replace />} />
 
       {/* Geometry */}
-      <Route path="/triangle" element={<PlaceholderPage title="Right Triangle" />} />
+      <Route path="/triangle" element={<TrianglePage />} />
       <Route path="/helix" element={<PlaceholderPage title="Helix" />} />
 
       {/* Machining physics */}
