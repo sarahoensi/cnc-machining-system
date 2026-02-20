@@ -13,6 +13,8 @@ pub use geometry::{
     Circle,
     Helix,
     HelixAngle,
+    HelixMode,
+    EffectiveDiameter,
     RightTriangle,
     RightTriangleSolver,
     GeometryError,

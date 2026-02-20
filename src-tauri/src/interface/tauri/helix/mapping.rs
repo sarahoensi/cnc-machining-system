@@ -8,7 +8,6 @@
 use crate::application::{
     SolveHelixInput,
     SolveHelixOutput,
-    HelixMode as AppHelixMode,
 };
 
 use super::{
@@ -17,15 +16,17 @@ use super::{
     HelixMode as UiHelixMode,
 };
 
+use crate::domain::HelixMode;
+
 // ---------------------------------------------------------
 // Request → Application Input
 // ---------------------------------------------------------
 
-impl From<UiHelixMode> for AppHelixMode {
+impl From<UiHelixMode> for HelixMode {
     fn from(mode: UiHelixMode) -> Self {
         match mode {
-            UiHelixMode::Inner => AppHelixMode::Inner,
-            UiHelixMode::Outer => AppHelixMode::Outer,
+            UiHelixMode::Inner => HelixMode::Inner,
+            UiHelixMode::Outer => HelixMode::Outer,
         }
     }
 }
@@ -68,10 +69,8 @@ impl From<SolveHelixRequest> for SolveHelixInput {
 impl From<SolveHelixOutput> for SolveHelixResponse {
     fn from(out: SolveHelixOutput) -> Self {
         Self {
-            effective_diameter_mm: out.effective_diameter_mm,
             pitch_mm_per_rev: out.pitch_mm_per_rev,
             angle_deg: out.angle_deg,
-            circumference_mm: out.circumference_mm,
         }
     }
 }

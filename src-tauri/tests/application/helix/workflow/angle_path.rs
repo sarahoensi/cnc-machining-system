@@ -1,5 +1,6 @@
 
-use cnc_machining_system_lib::application::{HelixMode, SolveHelixInput, SolveHelixUseCase};
+use cnc_machining_system_lib::application::{SolveHelixInput, SolveHelixUseCase};
+use cnc_machining_system_lib::domain::HelixMode;
 
 
 #[test]

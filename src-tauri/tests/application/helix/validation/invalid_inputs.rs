@@ -1,4 +1,5 @@
-use cnc_machining_system_lib::application::{HelixMode, SolveHelixInput, SolveHelixUseCase};
+use cnc_machining_system_lib::application::{SolveHelixInput, SolveHelixUseCase};
+use cnc_machining_system_lib::domain::HelixMode;
 
 #[test]
 fn fails_when_diameter_is_invalid() {

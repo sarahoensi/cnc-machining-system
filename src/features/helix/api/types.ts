@@ -1,4 +1,4 @@
-// features/helix/types/dto.ts
+// features/helix/api/types.ts
 
 export type HelixMode = "Inner" | "Outer";
 
@@ -19,8 +19,6 @@ export type SolveHelixRequest =
     };
 
 export type SolveHelixResponse = {
-  effective_diameter_mm: number;
   pitch_mm_per_rev: number;
   angle_deg: number;
-  circumference_mm: number;
 };
