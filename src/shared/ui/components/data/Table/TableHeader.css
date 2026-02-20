@@ -1,0 +1,24 @@
+/*   */
+
+/* Optional header-specific helpers */
+
+/* Example: select inside header */
+
+.table-header-select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.table-header-select {
+  background: transparent;
+  border: none;
+
+  font-size: var(--table-header-size);
+  font-weight: var(--text-label-weight);
+  color: var(--text-primary);
+
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+}
