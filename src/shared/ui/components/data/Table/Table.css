@@ -1,0 +1,106 @@
+/*   */
+
+/* =====================================================
+   TABLE BASE
+===================================================== */
+
+.ui-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  background: var(--table-bg);
+  font-size: var(--table-text-size);
+  color: var(--text-primary);
+}
+
+/* =====================================================
+   HEAD
+===================================================== */
+
+.ui-table-head {
+  background: var(--table-header-bg);
+}
+
+/* =====================================================
+   BODY
+===================================================== */
+
+.ui-table-body tr {
+  border-bottom: var(--border-width-thin) solid var(--table-border);
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+
+/* Active / Selected */
+
+.ui-table-row.active,
+.ui-table-row.selected {
+  background: var(--table-row-active);
+}
+
+/* =====================================================
+   CELLS
+===================================================== */
+
+.ui-table th,
+.ui-table td {
+  padding: var(--space-3) var(--space-4);
+  vertical-align: middle;
+}
+
+/* Alignment */
+
+.ui-table-cell.align-left,
+.ui-table-header-cell.align-left {
+  text-align: left;
+}
+
+.ui-table-cell.align-center,
+.ui-table-header-cell.align-center {
+  text-align: center;
+}
+
+.ui-table-cell.align-right,
+.ui-table-header-cell.align-right {
+  text-align: right;
+}
+
+/* =====================================================
+   HEADER CELL
+===================================================== */
+
+.ui-table-header-cell {
+  font-size: var(--table-header-size);
+  font-weight: var(--text-label-weight);
+  color: var(--text-primary);
+
+  background: var(--table-header-bg);
+  border-bottom: var(--border-width-thin) solid var(--table-border);
+}
+
+/* Header content wrapper */
+
+.ui-table-header-content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.ui-table-foot td {
+  padding: var(--space-3) var(--space-4);
+  border-top: var(--border-width-thin) solid var(--table-border);
+  background: var(--table-header-bg);
+}
+
+/* =====================================================
+   INPUTS INSIDE TABLE (Optional override)
+===================================================== */
+
+.ui-table .ni-input {
+  height: var(--table-control-height);
+  font-size: var(--table-text-size);
+  padding: 0 var(--space-2);
+}

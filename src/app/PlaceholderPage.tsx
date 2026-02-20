@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ModeSelector } from "@shared/ui/components/form/ModeSelector/ModeSelector";
-import { FieldState } from "@shared/types/fields";
+import type { FieldState } from "@shared/types/fields";
 import {
   CalculateButton,
   ResetButton,
@@ -11,6 +11,9 @@ import { ExecutionRow } from "@shared/ui/components/data/ExecutionTable/Executio
 import { TableHeaderCell } from "@shared/ui/components/data/TableHeader/TableHeaderCell";
 import { FormNumberField } from "@shared/ui/components/form/FormNumberField/FormNumberField";
 import { NumberInput } from "@shared/ui/components/primitives/NumberInput/NumberInput";
+
+import { Table, TableHeaderSelect } from "@shared/ui/components/data/Table";
+import { TableHeader } from "@shared/ui/components/data/Table";
 
 type Props = {
   title: string;
@@ -31,7 +34,7 @@ export function PlaceholderPage({ title }: Props) {
   };
 
   /* =================================================
-     MODE SELECTOR STATE
+     MODE SELECTOR (BEHOLDT)
   ================================================= */
 
   const [mode, setMode] = useState<"a" | "b">("a");
@@ -40,7 +43,37 @@ export function PlaceholderPage({ title }: Props) {
      EXECUTION TABLE STATE
   ================================================= */
 
-  const [deltaMode, setDeltaMode] = useState<"dd" | "dz">("dz");
+  const [deltaMode, setDeltaMode] =
+    useState<"dd" | "dz">("dz");
+
+  /* =================================================
+     TABLE DESIGN SYSTEM DEMO STATE
+  ================================================= */
+
+  const [tableMode, setTableMode] =
+    useState<"deltaD" | "ae">("deltaD");
+
+  const [values, setValues] =
+    useState<Record<number, FieldState>>({
+      1: {
+        value: "2.444",
+        source: "user",
+        locked: false,
+        invalid: false,
+      },
+      2: {
+        value: "",
+        source: "empty",
+        locked: false,
+        invalid: false,
+      },
+      3: {
+        value: "",
+        source: "empty",
+        locked: false,
+        invalid: false,
+      },
+    });
 
   return (
     <div
@@ -62,7 +95,7 @@ export function PlaceholderPage({ title }: Props) {
       </h1>
 
       {/* ================================================= */}
-      {/* NUMBER FIELD                                     */}
+      {/* NUMBER FIELDS                                    */}
       {/* ================================================= */}
 
       <section
@@ -94,7 +127,6 @@ export function PlaceholderPage({ title }: Props) {
           }}
           onChange={() => { }}
           unit="mm"
-
         />
 
         <FormNumberField
@@ -137,7 +169,7 @@ export function PlaceholderPage({ title }: Props) {
       </section>
 
       {/* ================================================= */}
-      {/* MODE SELECTOR                                    */}
+      {/* MODE SELECTOR (BEHOLDT)                          */}
       {/* ================================================= */}
 
       <section
@@ -176,18 +208,11 @@ export function PlaceholderPage({ title }: Props) {
         />
       </section>
 
-      {/* ================================================= */}
-      {/* EXECUTION TABLE                                  */}
+       {/* ================================================= */}
+      {/* EXECUTION TABLE (GAMMEL)                         */}
       {/* ================================================= */}
 
-      <section
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "var(--space-6)",
-          marginTop: "var(--space-8)",
-        }}
-      >
+      <section style={{ marginTop: "var(--space-8)" }}>
         <h2 style={{ fontSize: "var(--font-size-lg)" }}>
           ExecutionTable
         </h2>
@@ -196,7 +221,6 @@ export function PlaceholderPage({ title }: Props) {
           headers={[
             <TableHeaderCell key="step" label="Steg" />,
             <TableHeaderCell key="start" label="Start Ø" align="right" />,
-
             <TableHeaderCell key="delta">
               <div className="header-select-wrapper">
                 <select
@@ -211,42 +235,25 @@ export function PlaceholderPage({ title }: Props) {
                 </select>
                 <span className="header-select-caret" />
               </div>
-            </TableHeaderCell>
-            ,
-
+            </TableHeaderCell>,
             <TableHeaderCell key="new" label="Ny måling" align="center" />,
           ]}
         >
           <ExecutionRow>
             <td>1</td>
             <td style={{ textAlign: "right" }}>2.000</td>
-            <td style={{ textAlign: "right" }}>0.444</td>
-            <td>
-              <NumberInput
-                field={{
-                  value: "2.444",
-                  source: "user",
-                  locked: false,
-                  invalid: false,
-                }}
-                onChange={() => { }}
-              />
+            <td style={{ textAlign: "right" }}>
+              {deltaMode === "dd" ? "0.444" : "0.222"}
             </td>
-          </ExecutionRow>
-
-          <ExecutionRow>
-            <td>2</td>
-            <td style={{ textAlign: "right" }}>—</td>
-            <td style={{ textAlign: "right" }}>—</td>
             <td>
               <NumberInput
-                field={{
-                  value: "",
-                  source: "empty",
-                  locked: false,
-                  invalid: false,
-                }}
-                onChange={() => { }}
+                field={values[1]}
+                onChange={(val) =>
+                  setValues((prev) => ({
+                    ...prev,
+                    1: { ...prev[1], value: val },
+                  }))
+                }
               />
             </td>
           </ExecutionRow>
@@ -254,28 +261,84 @@ export function PlaceholderPage({ title }: Props) {
       </section>
 
       {/* ================================================= */}
+      {/* NEW TABLE DESIGN SYSTEM                          */}
+      {/* ================================================= */}
+
+      <section style={{ marginTop: "var(--space-8)" }}>
+        <h2 style={{ fontSize: "var(--font-size-lg)" }}>
+          Table Styling Preview
+        </h2>
+
+        <Table.Root>
+          <Table.Head>
+            <Table.Row>
+              <TableHeader label="Steg" />
+              <TableHeader label="Start Ø" align="right" />
+
+              <TableHeaderSelect
+                value={deltaMode}
+                onChange={setDeltaMode}
+                options={[
+                  { value: "dd", label: "ΔD" },
+                  { value: "dz", label: "ΔZ" },
+                ]}
+                align="center"
+              />
+
+              <TableHeader label="Ny måling" align="right" />
+              <Table.HeaderCell />
+            </Table.Row>
+          </Table.Head>
+
+          <Table.Body>
+            {[1, 2, 3].map((step) => (
+              <Table.Row key={step}>
+                <Table.Cell>{step}</Table.Cell>
+
+                <Table.Cell align="right">
+                  {step === 1 ? "2.000" : "—"}
+                </Table.Cell>
+
+                <Table.Cell align="center">
+                  {deltaMode === "dd" ? "0.444" : "0.222"}
+                </Table.Cell>
+
+                <Table.Cell align="right">
+                  <NumberInput
+                    field={values[step]}
+                    onChange={(val) =>
+                      setValues((prev) => ({
+                        ...prev,
+                        [step]: {
+                          ...prev[step],
+                          value: val,
+                        },
+                      }))
+                    }
+                    unit="mm"
+                    readonly={false}
+                  />
+                </Table.Cell>
+
+                <Table.Cell align="center">
+                  <button>Handling</button>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table.Root>
+      </section>
+
+      {/* ================================================= */}
       {/* BUTTONS                                          */}
       {/* ================================================= */}
 
-      <section
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "var(--space-6)",
-          marginTop: "var(--space-8)",
-        }}
-      >
+      <section style={{ marginTop: "var(--space-8)" }}>
         <h2 style={{ fontSize: "var(--font-size-lg)" }}>
           Buttons
         </h2>
 
-        <div
-          style={{
-            display: "flex",
-            gap: "var(--space-3)",
-            flexWrap: "wrap",
-          }}
-        >
+        <div style={{ display: "flex", gap: "var(--space-3)" }}>
           <CalculateButton />
           <ResetButton />
           <SettingsButton />

@@ -1,0 +1,43 @@
+/*   */
+
+/* Wrapper */
+
+.ths-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Select */
+
+.ths-select {
+  background: transparent;
+  border: none;
+
+  font-size: var(--table-header-size);
+  font-weight: var(--text-label-weight);
+  color: var(--text-primary);
+
+  padding-right: var(--space-4);
+
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Caret */
+
+.ths-caret {
+  position: absolute;
+  right: 0;
+
+  width: 0;
+  height: 0;
+
+  border-left: var(--space-1) solid transparent;
+  border-right: var(--space-1) solid transparent;
+  border-top: calc(var(--space-1) + 1px)
+    solid var(--text-muted);
+
+  pointer-events: none;
+}
