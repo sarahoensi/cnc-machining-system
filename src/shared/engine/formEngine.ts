@@ -88,6 +88,32 @@ export function handleUserEdit<
 }
 
 /* ============================================================
+   HandleModeChange
+============================================================ */
+
+export function handleModeChange<
+  K extends string,
+  E extends { mode: unknown }
+>(
+  form: FormState<K, E>,
+  newExtras: E
+): FormState<K, E> {
+
+  const modeChanged =
+    form.extras.mode !== newExtras.mode;
+
+  if (!modeChanged) {
+    return form;
+  }
+
+  return {
+    status: "editing",
+    fields: clearMachineFields(form.fields),
+    extras: newExtras,
+  };
+}
+
+/* ============================================================
    ASYNC CALCULATE
 ============================================================ */
 

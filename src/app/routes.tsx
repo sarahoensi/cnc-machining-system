@@ -4,6 +4,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import { PlaceholderPage } from "@app/PlaceholderPage";
 import { TrianglePage } from "@features/right_triangle/TrianglePage";
+import { HelixPage } from "@features/helix/ui/HelixPage";
 
 
 export function AppRoutes() {
@@ -14,7 +15,7 @@ export function AppRoutes() {
 
       {/* Geometry */}
       <Route path="/triangle" element={<TrianglePage />} />
-      <Route path="/helix" element={<PlaceholderPage title="Helix" />} />
+      <Route path="/helix" element={<HelixPage />} />
 
       {/* Machining physics */}
       <Route path="/cutting" element={<PlaceholderPage title="Cutting Data" />} />

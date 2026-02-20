@@ -13,12 +13,8 @@ use serde::Serialize;
 /// - Serialized as a JSON object with stable field names.
 #[derive(Serialize)]
 pub struct SolveHelixResponse {
-    /// Effective diameter in millimeters (`mm`).
-    pub effective_diameter_mm: f64,
     /// Helix pitch in millimeters per revolution (`mm/rev`).
     pub pitch_mm_per_rev: f64,
     /// Helix angle in degrees (`deg`).
     pub angle_deg: f64,
-    /// Circumference in millimeters (`mm`) at effective diameter.
-    pub circumference_mm: f64,
 }
