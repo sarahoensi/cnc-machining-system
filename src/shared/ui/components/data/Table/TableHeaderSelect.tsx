@@ -1,6 +1,5 @@
 // shared/ui/components/data/Table/TableHeaderSelext.tsx
 
-import clsx from "clsx";
 import { ReactNode } from "react";
 import { Table } from "./Table";
 import "./TableHeaderSelect.css";

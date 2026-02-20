@@ -67,3 +67,30 @@ body {
   padding: var(--layout-padding);
   background: var(--surface-page);
 }
+
+/* =========================
+   SPLIT LAYOUT (MAIN CONTENT)
+========================= */
+
+.app-content.split {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  gap: var(--space-6);
+  min-height: 0;
+}
+
+.app-left {
+  min-width: 0;
+  min-height: 0;
+}
+
+.app-right {
+  min-width: 0;
+  min-height: 0;
+}
+
+@media (max-width: 900px) {
+  .app-content.split {
+    grid-template-columns: 1fr;
+  }
+}
