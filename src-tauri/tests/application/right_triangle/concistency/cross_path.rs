@@ -1,4 +1,9 @@
-use cnc_machining_system_lib::application::{SolveRightTriangleInput, SolveRightTriangleUseCase};
+use cnc_machining_system_lib::application::{
+    SolveRightTriangleInput,
+    SolveRightTriangleUseCase,
+};
+
+const EPS: f64 = 1e-9;
 
 #[test]
 fn different_inputs_produce_same_triangle() {
@@ -13,11 +18,18 @@ fn different_inputs_produce_same_triangle() {
     ).unwrap();
 
     let from_leg_hyp = use_case.execute(
-        SolveRightTriangleInput::LegAndHypotenuse {
+        SolveRightTriangleInput::LegAAndHypotenuse {
             a_mm: 3.0,
             c_mm: 5.0,
         }
     ).unwrap();
 
-    assert!((from_legs.b_mm - from_leg_hyp.b_mm).abs() < 1e-9);
+    // Sammenlign alle sider
+    assert!((from_legs.a_mm - from_leg_hyp.a_mm).abs() < EPS);
+    assert!((from_legs.b_mm - from_leg_hyp.b_mm).abs() < EPS);
+    assert!((from_legs.c_mm - from_leg_hyp.c_mm).abs() < EPS);
+
+    // Sammenlign vinkler
+    assert!((from_legs.alpha_deg - from_leg_hyp.alpha_deg).abs() < EPS);
+    assert!((from_legs.beta_deg - from_leg_hyp.beta_deg).abs() < EPS);
 }

@@ -1,9 +1,7 @@
 //! Mapping between right-triangle Tauri DTOs and application DTOs.
 //!
-//! This module provides boundary translation from frontend request variants
-//! into application input and from application output into UI responses.
-
-// interfaces/tauri/right_triangle/mapping.rs
+//! Translates frontend request variants into application input and
+//! application output into UI responses.
 
 use crate::application::{
     SolveRightTriangleInput,
@@ -23,23 +21,48 @@ impl From<SolveRightTriangleRequest> for SolveRightTriangleInput {
     fn from(req: SolveRightTriangleRequest) -> Self {
         match req {
 
+            // -------------------------
+            // SIDE + SIDE
+            // -------------------------
+
             SolveRightTriangleRequest::Legs { a_mm, b_mm } => {
                 SolveRightTriangleInput::Legs { a_mm, b_mm }
             }
 
-            SolveRightTriangleRequest::LegAndHypotenuse { a_mm, c_mm } => {
-                SolveRightTriangleInput::LegAndHypotenuse { a_mm, c_mm }
+            SolveRightTriangleRequest::LegAAndHypotenuse { a_mm, c_mm } => {
+                SolveRightTriangleInput::LegAAndHypotenuse { a_mm, c_mm }
             }
 
-            SolveRightTriangleRequest::OtherLegAndHypotenuse { b_mm, c_mm } => {
-                SolveRightTriangleInput::OtherLegAndHypotenuse { b_mm, c_mm }
+            SolveRightTriangleRequest::LegBAndHypotenuse { b_mm, c_mm } => {
+                SolveRightTriangleInput::LegBAndHypotenuse { b_mm, c_mm }
             }
 
-            SolveRightTriangleRequest::HypotenuseAndAngle { c_mm, alpha_deg } => {
-                SolveRightTriangleInput::HypotenuseAndAngle {
-                    c_mm,
-                    alpha_deg,
-                }
+            // -------------------------
+            // SIDE + ANGLE
+            // -------------------------
+
+            SolveRightTriangleRequest::LegAAndAlpha { a_mm, alpha_deg } => {
+                SolveRightTriangleInput::LegAAndAlpha { a_mm, alpha_deg }
+            }
+
+            SolveRightTriangleRequest::LegAAndBeta { a_mm, beta_deg } => {
+                SolveRightTriangleInput::LegAAndBeta { a_mm, beta_deg }
+            }
+
+            SolveRightTriangleRequest::LegBAndAlpha { b_mm, alpha_deg } => {
+                SolveRightTriangleInput::LegBAndAlpha { b_mm, alpha_deg }
+            }
+
+            SolveRightTriangleRequest::LegBAndBeta { b_mm, beta_deg } => {
+                SolveRightTriangleInput::LegBAndBeta { b_mm, beta_deg }
+            }
+
+            SolveRightTriangleRequest::HypotenuseAndAlpha { c_mm, alpha_deg } => {
+                SolveRightTriangleInput::HypotenuseAndAlpha { c_mm, alpha_deg }
+            }
+
+            SolveRightTriangleRequest::HypotenuseAndBeta { c_mm, beta_deg } => {
+                SolveRightTriangleInput::HypotenuseAndBeta { c_mm, beta_deg }
             }
         }
     }
