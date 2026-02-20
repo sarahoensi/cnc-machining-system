@@ -1,42 +1,19 @@
 // shared/engine/formEngine.ts
 
-/**
- * FormEngine
- *
- * Pure state transition layer for form lifecycle.
- *
- * Responsibilities:
- * - User editing orchestration
- * - Calculation lifecycle
- * - Execution lifecycle
- *
- * Does NOT:
- * - Perform validation
- * - Perform parsing
- * - Perform domain solving
- * - Manage UI state
- */
-
-
 import type { FormState } from "@shared/types/forms";
 import type { FieldState } from "@shared/types/fields";
-import {
-  emptyField,
-  userField,
-  machineField,
-} from "@shared/types/fields";
-
+import { emptyField, userField } from "@shared/types/fields";
 import { applyDriverEngine } from "./drivers";
 
 /* ============================================================
-   Utility: Unlock all fields
-   Used after successful calculation when entering solved mode
+   Unlock all fields
 ============================================================ */
 
 export function unlockAll<K extends string>(
   fields: Record<K, FieldState>
 ): Record<K, FieldState> {
-  const next: Record<K, FieldState> = {} as Record<K, FieldState>;
+
+  const next = {} as Record<K, FieldState>;
 
   for (const key in fields) {
     next[key] = {
@@ -50,30 +27,27 @@ export function unlockAll<K extends string>(
 }
 
 /* ============================================================
-   Utility: Clear all machine-computed values
-   Used when:
-   - User edits after solved mode
-   - Before new calculation
+   Clear machine fields
 ============================================================ */
 
 export function clearMachineFields<K extends string>(
   fields: Record<K, FieldState>
 ): Record<K, FieldState> {
-  const next: Record<K, FieldState> = {} as Record<K, FieldState>;
+
+  const next = {} as Record<K, FieldState>;
 
   for (const key in fields) {
-    if (fields[key].source === "machine") {
-      next[key] = emptyField();
-    } else {
-      next[key] = fields[key];
-    }
+    next[key] =
+      fields[key].source === "machine"
+        ? emptyField()
+        : fields[key];
   }
 
   return next;
 }
 
 /* ============================================================
-   USER EDIT HANDLER
+   USER EDIT
 ============================================================ */
 
 export function handleUserEdit<
@@ -89,27 +63,22 @@ export function handleUserEdit<
 
   let nextFields = form.fields;
 
-  // If previously solved → restart editing lifecycle
+  // If editing after solved → remove machine values
   if (form.status === "solved") {
     nextFields = clearMachineFields(nextFields);
   }
 
-  // Apply user value
   const updatedFields = {
     ...nextFields,
     [key]: userField(rawValue),
   };
 
-  // Apply constraint + pair driver logic
-  const driven = applyDriverEngine(
-    updatedFields,
-    {
-      validSets,
-      pairs,
-      editedKey: key,
-      mode: "editing",
-    }
-  );
+  const driven = applyDriverEngine(updatedFields, {
+    validSets,
+    pairs,
+    editedKey: key,
+    mode: "editing",
+  });
 
   return {
     status: "editing",
@@ -119,10 +88,10 @@ export function handleUserEdit<
 }
 
 /* ============================================================
-   CALCULATE HANDLER
+   ASYNC CALCULATE
 ============================================================ */
 
-export function handleCalculate<
+export async function handleCalculateAsync<
   K extends string,
   E
 >(
@@ -130,61 +99,64 @@ export function handleCalculate<
   parse: (
     fields: Record<K, FieldState>,
     extras: E
-  ) => Record<K, number> | null,
+  ) => Partial<Record<K, number>> | null,
   solve: (
-    input: Record<K, number>,
+    input: Partial<Record<K, number>>,
     extras: E
-  ) => Partial<Record<K, number>>
-): FormState<K, E> {
+  ) => Promise<Partial<Record<K, number>>>,
+): Promise<FormState<K, E>> {
 
-  // 1️⃣ Parse
+  // 1️⃣ Parse input
   const parsed = parse(form.fields, form.extras);
 
   if (!parsed) {
-    return form;
+    return form; // Ingenting å beregne
   }
 
-  // 2️⃣ Clear old machine values
-  let nextFields = clearMachineFields(form.fields);
+  // 2️⃣ Clear gamle machine-verdier
+  const cleanedFields = clearMachineFields(form.fields);
 
-  // 3️⃣ Solve
-  const result = solve(parsed, form.extras);
+  try {
 
-  // 4️⃣ Apply machine values
-  const solvedFields: Record<K, FieldState> = {
-    ...nextFields,
-  };
+    // 3️⃣ Kjør solver
+    const result = await solve(parsed, form.extras);
 
-  for (const key in result) {
-    solvedFields[key as K] = machineField(
-      String(result[key as K])
-    );
+    const nextFields: Record<K, FieldState> = {
+      ...cleanedFields,
+    };
+
+    // 4️⃣ Sett machine-verdier riktig formatert
+    for (const key in result) {
+
+      const k = key as K;
+      const value = result[k];
+
+      if (value === undefined) continue;
+
+      const wasUser = cleanedFields[k]?.source === "user";
+
+      nextFields[k] = {
+        ...cleanedFields[k],
+        value: String(value), 
+        machineValue: value, 
+        source: wasUser ? "user" : "machine",
+        locked: false,
+        invalid: false,
+      };
+    }
+
+    return {
+      status: "solved",
+      fields: unlockAll(nextFields),
+      extras: form.extras,
+    };
+
+  } catch (error) {
+
+    // Hvis solve feiler → tilbake til editing
+    return {
+      ...form,
+      status: "editing",
+    };
   }
-
-  // 5️⃣ Unlock everything
-  const unlocked = unlockAll(solvedFields);
-
-  return {
-    status: "solved",
-    fields: unlocked,
-    extras: form.extras,
-  };
-}
-
-export function startExecution<K extends string, E>(
-  form: FormState<K, E>
-): FormState<K, E> {
-  return {
-    ...form,
-    status: "executing",
-  };
-}
-
-export function stopExecution<K extends string, E>(
-  form: FormState<K, E>
-): FormState<K, E> {
-  return {
-    ...form,
-    status: "editing",
-  };
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import {
   handleUserEdit,
-  handleCalculate,
+  handleCalculateAsync,
 } from "@shared/engine/formEngine";
 
 import { FormNumberField } from "@shared/ui/components/form/FormNumberField/FormNumberField";
@@ -11,43 +11,32 @@ import { FormNumberField } from "@shared/ui/components/form/FormNumberField/Form
 import {
   createInitialTriangleForm,
   TriangleKey,
-} from "./triangleForm";
+} from "./domain/triangleForm";
 
-import { parseTriangle } from "./parseTriangle";
-import { solveTriangle } from "./solveTriangle";
+import { parseTriangle } from "./domain/parseTriangle";
+import { solveTriangle } from "./api/solveTriangle";
+import { triangleFieldConfig } from "./ui/triangleFieldConfig";
 
-import { triangleFieldConfig } from "./triangleFieldConfig";
+import {
+  CalculateButton,
+  ResetButton,
+} from "@shared/ui/components/primitives/Button/Button";
+import { useFormNavigation } from "@shared/ui";
 
-import { CalculateButton, ResetButton } from "@shared/ui/components/primitives/Button/Button";
-
-/* ============================================================
-   Constraint definitions
-============================================================ */
-
-const validSets = [
-  ["a", "b"],
-  ["a", "alpha"],
-  ["a", "beta"],
-  ["b", "beta"],
-  ["b", "alpha"],
-  ["c", "alpha"],
-  ["c", "beta"],
-  ["c", "a"],
-  ["c", "b"]
-] as const;
-
-const pairs = [
-  ["alpha", "beta"],
-] as const;
-
-/* ============================================================
-   Component
-============================================================ */
+import {
+  validTriangleInputSets,
+  mutuallyExclusiveTrianglePairs,
+} from "./domain/triangleConstraints";
 
 export function TrianglePage() {
 
-  const [form, setForm] =
-    useState(createInitialTriangleForm());
+  const [form, setForm] = useState(createInitialTriangleForm());
+
+  const navigation = useFormNavigation({
+    keys: triangleFieldConfig.map(f => f.key),
+    autoFocusOnMount: true,
+    onSubmit: onCalculate,
+  });
 
   /* =========================
      Field change
@@ -62,8 +51,8 @@ export function TrianglePage() {
         prev,
         key,
         value,
-        validSets,
-        pairs
+        validTriangleInputSets,
+        mutuallyExclusiveTrianglePairs
       )
     );
   }
@@ -72,14 +61,15 @@ export function TrianglePage() {
      Calculate
   ========================= */
 
-  function onCalculate() {
-    setForm(prev =>
-      handleCalculate(
-        prev,
-        parseTriangle,
-        solveTriangle
-      )
+  async function onCalculate() {
+
+    const next = await handleCalculateAsync(
+      form,
+      parseTriangle,
+      solveTriangle
     );
+
+    setForm(next);
   }
 
   /* =========================
@@ -97,7 +87,6 @@ export function TrianglePage() {
   return (
     <div className="app-content split">
 
-      {/* LEFT SIDE */}
       <div className="app-left">
 
         {triangleFieldConfig.map((f) => {
@@ -116,6 +105,11 @@ export function TrianglePage() {
               onChange={(value) =>
                 onFieldChange(f.key, value)
               }
+
+              inputRef={navigation.register(f.key)}
+              onKeyDown={navigation.handleKeyDown(f.key)}
+
+
             />
           );
         })}
@@ -127,15 +121,12 @@ export function TrianglePage() {
             disabled={form.status === "executing"}
           />
 
-          <ResetButton
-            onClick={onReset}
-          />
+          <ResetButton onClick={onReset} />
 
         </div>
 
       </div>
 
-      {/* RIGHT SIDE */}
       <div className="app-right">
         {/* <TriangleFigure form={form} /> */}
       </div>
