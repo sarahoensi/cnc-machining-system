@@ -26,11 +26,14 @@ import { CalculateButton, ResetButton } from "@shared/ui/components/primitives/B
 
 const validSets = [
   ["a", "b"],
-    ["a", "alpha"],
-    ["a", "beta"],
-    ["b", "beta"],
-    ["c", "alpha"],
-    ["c", "beta"],
+  ["a", "alpha"],
+  ["a", "beta"],
+  ["b", "beta"],
+  ["b", "alpha"],
+  ["c", "alpha"],
+  ["c", "beta"],
+  ["c", "a"],
+  ["c", "b"]
 ] as const;
 
 const pairs = [

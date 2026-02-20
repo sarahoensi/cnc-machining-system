@@ -24,7 +24,8 @@ export function Topbar({ toggleSidebar }: Props) {
       </div>
 
       <div className="topbar-center">
-        <h1 className="topbar-title">My App</h1>
+        <h1 className="topbar-title">Wingardium Tooliosa
+        </h1>
       </div>
 
       <div className="topbar-right">

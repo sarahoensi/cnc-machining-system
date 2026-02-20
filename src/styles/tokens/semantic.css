@@ -172,7 +172,7 @@
 ===================================================== */
 
   --form-text-size: var(--font-size-md);
-  --form-label-size: var(--font-size-sm);
+  --form-label-size: var(--font-size-lg);
   --form-caption-size: var(--font-size-xs);
 
 
