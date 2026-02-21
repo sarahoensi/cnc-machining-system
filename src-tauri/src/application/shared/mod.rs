@@ -5,6 +5,12 @@
 
 mod error;
 mod result;
+mod validation;
+mod input_validation;
 
 pub use error::ApplicationError;
 pub use result::AppResult;
+pub use validation::{ValidationErrors};
+pub use input_validation::{validate_length_mm_positive,
+    validate_angle_degrees,
+    ensure_acute_angle,};

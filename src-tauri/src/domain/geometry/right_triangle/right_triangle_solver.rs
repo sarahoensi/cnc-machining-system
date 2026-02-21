@@ -23,10 +23,6 @@ impl RightTriangleSolver {
     /// Returns `Err(GeometryError::InvalidTriangle)` if either length is not
     /// positive and finite.
     pub fn from_legs(a: Length, b: Length) -> Result<RightTriangle, GeometryError> {
-        if !is_positive_finite(a) || !is_positive_finite(b) {
-            return Err(GeometryError::InvalidTriangle);
-        }
-
         Ok(RightTriangle::new(a, b))
     }
 
@@ -41,10 +37,6 @@ impl RightTriangleSolver {
     pub fn from_leg_and_hypotenuse(a: Length, c: Length) -> Result<RightTriangle, GeometryError> {
         let a_mm = a.mm_value();
         let c_mm = c.mm_value();
-
-        if !is_positive_finite(a) || !is_positive_finite(c) {
-            return Err(GeometryError::InvalidTriangle);
-        }
 
         if a_mm >= c_mm {
             return Err(GeometryError::ImpossibleTriangle);
@@ -78,10 +70,6 @@ impl RightTriangleSolver {
     ) -> Result<RightTriangle, GeometryError> {
         let b_mm = b.mm_value();
         let c_mm = c.mm_value();
-
-        if !is_positive_finite(b) || !is_positive_finite(c) {
-            return Err(GeometryError::InvalidTriangle);
-        }
 
         if b_mm >= c_mm {
             return Err(GeometryError::ImpossibleTriangle);
@@ -146,7 +134,7 @@ impl RightTriangleSolver {
         let s = rad.sin();
 
         if s.abs() < EPS {
-            return Err(GeometryError::InvalidTriangle);
+            return Err(GeometryError::DivisionByZero);
         }
 
         let c = Length::mm_positive(a_mm / s).map_err(|_| GeometryError::InvalidTriangle)?;
@@ -170,8 +158,13 @@ impl RightTriangleSolver {
         let b_mm = b.mm_value();
         let rad = alpha.radians_value();
 
-        let a =
-            Length::mm_positive(b_mm * rad.tan()).map_err(|_| GeometryError::InvalidTriangle)?;
+        let t = rad.tan();
+
+        if !t.is_finite() {
+            return Err(GeometryError::OutOfRange);
+        }
+
+        let a = Length::mm_positive(b_mm * t).map_err(|_| GeometryError::InvalidTriangle)?;
 
         Ok(RightTriangle::new(a, b))
     }
@@ -208,7 +201,7 @@ impl RightTriangleSolver {
         validate_acute(beta)?;
 
         let alpha = Angle::degrees(90.0 - beta.degrees_value())
-            .map_err(|_| GeometryError::InvalidTriangle)?;
+            .expect("validated acute beta guarantees valid complementary angle");
 
         Self::from_hypotenuse_and_angle(c, alpha)
     }
@@ -221,14 +214,9 @@ impl RightTriangleSolver {
 fn validate_acute(angle: Angle) -> Result<(), GeometryError> {
     let deg = angle.degrees_value();
     if deg <= 0.0 || deg >= 90.0 {
-        return Err(GeometryError::InvalidTriangle);
+        return Err(GeometryError::OutOfRange);
     }
     Ok(())
-}
-
-fn is_positive_finite(length: Length) -> bool {
-    let v = length.mm_value();
-    v.is_finite() && v > 0.0
 }
 
 // ----------- TESTS --------
@@ -241,10 +229,5 @@ mod internal_tests {
     fn validate_acute_rejects_invalid() {
         assert!(validate_acute(Angle::degrees(0.0).unwrap()).is_err());
         assert!(validate_acute(Angle::degrees(90.0).unwrap()).is_err());
-    }
-
-    #[test]
-    fn positive_finite_check() {
-        assert!(is_positive_finite(Length::mm_positive(3.0).unwrap()));
     }
 }
