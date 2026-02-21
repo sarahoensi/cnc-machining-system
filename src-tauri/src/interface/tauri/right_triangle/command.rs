@@ -5,13 +5,15 @@
 
 // interface/tauri/right_triangle/command.rs
 
-use std::collections::HashMap;
 
 use tauri::command;
-use serde::Serialize;
+
+use crate::interface::tauri::error::{
+    TauriError,
+    map_application_error,
+};
 
 use crate::application::SolveRightTriangleUseCase;
-use crate::application::ApplicationError;
 
 
 use super::{
@@ -27,14 +29,7 @@ use super::{
 /// Message safety:
 /// - Message content is produced from application errors intended for UI
 ///   handling and display/logging.
-#[derive(Debug, Serialize)]
-pub struct TauriError {
-    message: String,
-    
-  /// Inline-feil per felt (a, b, c, alpha, beta)
-  #[serde(skip_serializing_if = "Option::is_none")]
-  field_errors: Option<HashMap<String, String>>,
-}
+
 
 // ---------------------------------------------------------
 // Command
@@ -75,33 +70,5 @@ pub fn solve_right_triangle(
         .map_err(map_application_error)
 }
 
-// ---------------------------------------------------------
-// Error Mapping
-// ---------------------------------------------------------
 
-/// Maps application errors into the Tauri-facing error shape used by frontend
-/// consumers.
-fn map_application_error(err: ApplicationError) -> TauriError {
-
-    match err {
-
-        ApplicationError::Validation(v) => {
-            let mut map = HashMap::new();
-
-            for e in v.errors {
-                map.insert(e.field.to_string(), e.message);
-            }
-
-            TauriError {
-                message: v.message.to_string(),
-                field_errors: if map.is_empty() { None } else { Some(map) },
-            }
-        }
-
-        other => TauriError {
-            message: other.to_string(),
-            field_errors: None,
-        },
-    }
-}
 

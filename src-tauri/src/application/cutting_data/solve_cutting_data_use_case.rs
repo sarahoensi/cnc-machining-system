@@ -5,27 +5,19 @@
 
 // application/cutting_data/solve_cutting_data_use_case.rs
 
+use crate::application::{ApplicationError, ValidationErrors};
 use crate::application::shared::AppResult;
 
-use crate::application::cutting_data::dto::{
-    SolveCuttingDataInput,
-    SolveCuttingDataOutput,
-};
+use crate::application::cutting_data::dto::{SolveCuttingDataInput, SolveCuttingDataOutput};
 
 use crate::domain::{
     units::{ChipLoad, CuttingSpeed, Diameter, FeedRate, Rpm},
-    ToothCount,
-    ChipLoadCalculator,
-    FeedRateCalculator,
-    SpindleSpeedCalculator,
+    ChipLoadCalculator, FeedRateCalculator, SpindleSpeedCalculator, ToothCount,
 };
-
-
 
 pub struct SolveCuttingDataUseCase;
 
 impl SolveCuttingDataUseCase {
-
     /// Completes a cutting-data set from the provided partial input.
     ///
     /// Purpose:
@@ -51,85 +43,189 @@ impl SolveCuttingDataUseCase {
     /// Error scenarios:
     /// - Returns an application error when any provided value is invalid.
     /// - Returns an application error when a requested domain calculation fails.
-    pub fn execute(
-        input: SolveCuttingDataInput,
-    ) -> AppResult<SolveCuttingDataOutput> {
 
-        // --- Convert input to value objects if present ---
-        let mut vc = input
-            .cutting_speed_m_per_min
-            .map(CuttingSpeed::meters_per_min)
-            .transpose()?;
+    /// Entry point for solving cutting data.
+    pub fn execute(input: SolveCuttingDataInput) -> AppResult<SolveCuttingDataOutput> {
+        let mut state = Self::parse_input(input)?;
 
-        let mut rpm = input
-            .rpm
-            .map(Rpm::new)
-            .transpose()?;
+        Self::infer_missing_values(&mut state)?;
 
-        let mut chip = input
-            .chip_load_mm_per_tooth
-            .map(ChipLoad::mm_per_tooth)
-            .transpose()?;
+        Ok(Self::to_output(state))
+    }
 
-        let mut feed = input
-            .feed_rate_mm_per_min
-            .map(FeedRate::mm_per_min)
-            .transpose()?;
+    // ---------------------------------------------------------
+    // Step 1: Parse input into validated domain state
+    // ---------------------------------------------------------
 
-        let diameter = input
-            .diameter_mm
-            .map(Diameter::mm)
-            .transpose()?;
+    fn parse_input(input: SolveCuttingDataInput) -> Result<CuttingState, ApplicationError> {
+        let mut errors = ValidationErrors::new();
 
-        let teeth = input
-            .teeth
-            .map(ToothCount::new)
-            .transpose()?;
+        let cutting_speed = match input.cutting_speed_m_per_min {
+            Some(v) => match CuttingSpeed::meters_per_min(v) {
+                Ok(val) => Some(val),
+                Err(e) => {
+                    errors.push("cutting_speed_m_per_min", "invalid", e.to_string());
+                    None
+                }
+            },
+            None => None,
+        };
 
-        // --- Forward chaining loop ---
+        let rpm = match input.rpm {
+            Some(v) => match Rpm::new(v) {
+                Ok(val) => Some(val),
+                Err(e) => {
+                    errors.push("rpm", "invalid", e.to_string());
+                    None
+                }
+            },
+            None => None,
+        };
+
+        let diameter = match input.diameter_mm {
+            Some(v) => match Diameter::mm(v) {
+                Ok(val) => Some(val),
+                Err(e) => {
+                    errors.push("diameter_mm", "invalid", e.to_string());
+                    None
+                }
+            },
+            None => None,
+        };
+
+        let teeth = match input.teeth {
+            Some(v) => match ToothCount::new(v) {
+                Ok(val) => Some(val),
+                Err(e) => {
+                    errors.push("teeth", "invalid", e.to_string());
+                    None
+                }
+            },
+            None => None,
+        };
+
+        let chip_load = match input.chip_load_mm_per_tooth {
+    Some(v) => match ChipLoad::mm_per_tooth(v) {
+        Ok(val) => Some(val),
+        Err(e) => {
+            errors.push("chip_load_mm_per_tooth", "invalid", e.to_string());
+            None
+        }
+    },
+    None => None,
+};
+
+let feed_rate = match input.feed_rate_mm_per_min {
+    Some(v) => match FeedRate::mm_per_min(v) {
+        Ok(val) => Some(val),
+        Err(e) => {
+            errors.push("feed_rate_mm_per_min", "invalid", e.to_string());
+            None
+        }
+    },
+    None => None,
+};
+
+        if !errors.is_empty() {
+            return Err(ApplicationError::Validation(errors));
+        }
+
+        Ok(CuttingState {
+            cutting_speed,
+            rpm,
+            chip_load,
+            feed_rate,
+            diameter,
+            teeth,
+        })
+    }
+
+    // ---------------------------------------------------------
+    // Step 2: Forward-chaining inference
+    // ---------------------------------------------------------
+
+    fn infer_missing_values(state: &mut CuttingState) -> AppResult<()> {
         let mut changed = true;
 
         while changed {
             changed = false;
 
-            // VC + Diameter → RPM
-            if rpm.is_none() {
-                if let (Some(vc_val), Some(d)) = (vc, diameter) {
-                    rpm = Some(SpindleSpeedCalculator::rpm_from_cutting_speed(vc_val, d)?);
+            // -------------------------------------------------
+            // Cutting speed ↔ RPM
+            // -------------------------------------------------
+
+            if state.rpm.is_none() {
+                if let (Some(vc), Some(d)) = (state.cutting_speed, state.diameter) {
+                    state.rpm = Some(SpindleSpeedCalculator::rpm_from_cutting_speed(vc, d)?);
                     changed = true;
                 }
             }
 
-            // RPM + Diameter → VC
-            if vc.is_none() {
-                if let (Some(rpm_val), Some(d)) = (rpm, diameter) {
-                    vc = Some(SpindleSpeedCalculator::cutting_speed_from_rpm(rpm_val, d)?);
+            if state.cutting_speed.is_none() {
+                if let (Some(rpm), Some(d)) = (state.rpm, state.diameter) {
+                    state.cutting_speed =
+                        Some(SpindleSpeedCalculator::cutting_speed_from_rpm(rpm, d)?);
                     changed = true;
                 }
             }
 
-            // Chip + RPM + Teeth → Feed
-            if feed.is_none() {
-                if let (Some(chip_val), Some(rpm_val), Some(t)) = (chip, rpm, teeth) {
-                    feed = Some(FeedRateCalculator::feed_rate_from_chip_load(chip_val, rpm_val, t)?);
+            // -------------------------------------------------
+            // Chip load ↔ Feed rate
+            // -------------------------------------------------
+
+            if state.feed_rate.is_none() {
+                if let (Some(chip), Some(rpm), Some(teeth)) =
+                    (state.chip_load, state.rpm, state.teeth)
+                {
+                    state.feed_rate = Some(FeedRateCalculator::feed_rate_from_chip_load(
+                        chip, rpm, teeth,
+                    )?);
                     changed = true;
                 }
             }
 
-            // Feed + RPM + Teeth → Chip
-            if chip.is_none() {
-                if let (Some(feed_val), Some(rpm_val), Some(t)) = (feed, rpm, teeth) {
-                    chip = Some(ChipLoadCalculator::chip_load_from_feed_rate(feed_val, rpm_val, t)?);
+            if state.chip_load.is_none() {
+                if let (Some(feed), Some(rpm), Some(teeth)) =
+                    (state.feed_rate, state.rpm, state.teeth)
+                {
+                    state.chip_load = Some(ChipLoadCalculator::chip_load_from_feed_rate(
+                        feed, rpm, teeth,
+                    )?);
                     changed = true;
                 }
             }
         }
 
-        Ok(SolveCuttingDataOutput {
-            cutting_speed_m_per_min: vc.map(|v| v.meters_per_min_value()),
-            rpm: rpm.map(|r| r.value()),
-            chip_load_mm_per_tooth: chip.map(|c| c.mm_per_tooth_value()),
-            feed_rate_mm_per_min: feed.map(|f| f.mm_per_min_value()),
-        })
+        Ok(())
     }
+
+    // ---------------------------------------------------------
+    // Step 3: Convert back to DTO
+    // ---------------------------------------------------------
+
+    fn to_output(state: CuttingState) -> SolveCuttingDataOutput {
+        SolveCuttingDataOutput {
+            cutting_speed_m_per_min: state.cutting_speed.map(|v| v.meters_per_min_value()),
+
+            rpm: state.rpm.map(|r| r.value()),
+
+            chip_load_mm_per_tooth: state.chip_load.map(|c| c.mm_per_tooth_value()),
+
+            feed_rate_mm_per_min: state.feed_rate.map(|f| f.mm_per_min_value()),
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// Internal state representation
+// ---------------------------------------------------------
+
+#[derive(Debug)]
+struct CuttingState {
+    cutting_speed: Option<CuttingSpeed>,
+    rpm: Option<Rpm>,
+    chip_load: Option<ChipLoad>,
+    feed_rate: Option<FeedRate>,
+    diameter: Option<Diameter>,
+    teeth: Option<ToothCount>,
 }
