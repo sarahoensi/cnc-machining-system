@@ -6,6 +6,8 @@ use crate::application::helix::dto::{
 };
 
 use crate::application::shared::AppResult;
+use crate::application::{ApplicationError, ValidationErrors};
+
 
 use crate::domain::{
     units::{Angle, Diameter, Pitch},
@@ -25,24 +27,26 @@ impl SolveHelixUseCase {
         input: SolveHelixInput,
     ) -> AppResult<SolveHelixOutput> {
 
-        let helix = self.solve_helix(input)?;
+        let helix = self.parse_and_solve(input)?;
 
         Ok(helix.into())
     }
 
     // ---------------------------------------------------------
-    // Internal workflow
+    // Step 1: Parse + validate
     // ---------------------------------------------------------
 
-    fn solve_helix(
+    fn parse_and_solve(
         &self,
         input: SolveHelixInput,
-    ) -> AppResult<Helix> {
+    ) -> Result<Helix, ApplicationError> {
+
+        let mut errors = ValidationErrors::new();
 
         match input {
 
             // ---------------------------------------------
-            // Solve from pitch
+            // Pitch path
             // ---------------------------------------------
             SolveHelixInput::Pitch {
                 mode,
@@ -51,22 +55,41 @@ impl SolveHelixUseCase {
                 pitch_mm_per_rev,
             } => {
 
-                let nominal = Diameter::mm(diameter_mm)?;
-                let tool = Diameter::mm(tool_diameter_mm)?;
+                let nominal = match Diameter::mm(diameter_mm) {
+                    Ok(v) => v,
+                    Err(e) => {
+                        errors.push("diameter_mm", "invalid", e.to_string());
+                        return Err(ApplicationError::Validation(errors));
+                    }
+                };
+
+                let tool = match Diameter::mm(tool_diameter_mm) {
+                    Ok(v) => v,
+                    Err(e) => {
+                        errors.push("tool_diameter_mm", "invalid", e.to_string());
+                        return Err(ApplicationError::Validation(errors));
+                    }
+                };
+
+                let pitch = match Pitch::mm_per_rev(pitch_mm_per_rev) {
+                    Ok(v) => v,
+                    Err(e) => {
+                        errors.push("pitch_mm_per_rev", "invalid", e.to_string());
+                        return Err(ApplicationError::Validation(errors));
+                    }
+                };
 
                 let effective = EffectiveDiameter::new(
                     mode.into(),
                     nominal,
                     tool,
-                )?.diameter();
+                )?;
 
-                let pitch = Pitch::mm_per_rev(pitch_mm_per_rev)?;
-
-                Ok(Helix::new(effective, pitch))
+                Ok(Helix::new(effective.diameter(), pitch))
             }
 
             // ---------------------------------------------
-            // Solve from angle
+            // Angle path
             // ---------------------------------------------
             SolveHelixInput::Angle {
                 mode,
@@ -75,25 +98,44 @@ impl SolveHelixUseCase {
                 angle_deg,
             } => {
 
-                let nominal = Diameter::mm(diameter_mm)?;
-                let tool = Diameter::mm(tool_diameter_mm)?;
+                let nominal = match Diameter::mm(diameter_mm) {
+                    Ok(v) => v,
+                    Err(e) => {
+                        errors.push("diameter_mm", "invalid", e.to_string());
+                        return Err(ApplicationError::Validation(errors));
+                    }
+                };
+
+                let tool = match Diameter::mm(tool_diameter_mm) {
+                    Ok(v) => v,
+                    Err(e) => {
+                        errors.push("tool_diameter_mm", "invalid", e.to_string());
+                        return Err(ApplicationError::Validation(errors));
+                    }
+                };
+
+                let angle = match Angle::degrees(angle_deg) {
+                    Ok(v) => v,
+                    Err(e) => {
+                        errors.push("angle_deg", "invalid", e.to_string());
+                        return Err(ApplicationError::Validation(errors));
+                    }
+                };
+
+                let helix_angle = HelixAngle::new(angle)?;
 
                 let effective = EffectiveDiameter::new(
                     mode.into(),
                     nominal,
                     tool,
-                )?.diameter();
+                )?;
 
-                let angle = Angle::degrees(angle_deg)?;
-                let helix_angle = HelixAngle::new(angle)?;
-
-                // pitch = tan(angle) * circumference
-                let circumference = PI * effective.mm_value();
+                let circumference = PI * effective.diameter().mm_value();
                 let pitch_value = helix_angle.radians_value().tan() * circumference;
 
                 let pitch = Pitch::mm_per_rev(pitch_value)?;
 
-                Ok(Helix::new(effective, pitch))
+                Ok(Helix::new(effective.diameter(), pitch))
             }
         }
     }

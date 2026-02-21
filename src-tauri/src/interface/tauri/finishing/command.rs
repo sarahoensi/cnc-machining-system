@@ -9,8 +9,6 @@ use tauri::command;
 use std::sync::{Arc, OnceLock};
 use uuid::Uuid;
 
-use crate::application::ApplicationError;
-
 use crate::application::finishing::use_cases::{
     generate_finishing_plan_use_case::GenerateFinishingPlanUseCase,
     register_finishing_measurement_use_case::RegisterFinishingMeasurementUseCase,
@@ -30,6 +28,10 @@ use super::request::{
 
 use super::response::FinishingExecutionResponse;
 
+use crate::interface::tauri::error::{
+    TauriError,
+    map_application_error,
+};
 
 // ----------------------------------------------------
 // Global repository
@@ -73,13 +75,13 @@ fn repo() -> Arc<dyn FinishingExecutionRepository> {
 #[command]
 pub fn generate_finishing_plan(
     request: GenerateFinishingPlanRequest,
-) -> Result<FinishingExecutionResponse, String> {
+) -> Result<FinishingExecutionResponse, TauriError> {
 
     let uc = GenerateFinishingPlanUseCase::new(repo());
 
     let result = uc
         .execute(request.into())
-        .map_err(map_error)?;
+        .map_err(map_application_error)?;
 
     Ok(result.into())
 }
@@ -114,32 +116,23 @@ pub fn generate_finishing_plan(
 #[command]
 pub fn register_finishing_measurement(
     request: RegisterFinishingMeasurementRequest,
-) -> Result<FinishingExecutionResponse, String> {
+) -> Result<FinishingExecutionResponse, TauriError> {
 
     let uc = RegisterFinishingMeasurementUseCase::new(repo());
 
-    let id = FinishingExecutionId::from_uuid(
-        Uuid::parse_str(&request.execution_id)
-            .map_err(|_| "Invalid execution_id")?
-    );
+    let uuid = Uuid::parse_str(&request.execution_id)
+        .map_err(|_| TauriError {
+            message: "Invalid execution_id".to_string(),
+            field_errors: None,
+        })?;
+
+    let id = FinishingExecutionId::from_uuid(uuid);
 
     let result = uc
         .execute(id, request.step_number, request.measurement_mm)
-        .map_err(map_error)?;
+        .map_err(map_application_error)?;
 
     Ok(result.into())
 }
 
 
-
-// ----------------------------------------------------
-// Error mapping
-// ----------------------------------------------------
-
-/// Maps application-layer errors into frontend-safe string responses.
-///
-/// Errors returned by this mapper are intended for UI display/logging and are
-/// expected outcomes for invalid requests or constrained workflow states.
-fn map_error(err: ApplicationError) -> String {
-    err.to_string()
-}
