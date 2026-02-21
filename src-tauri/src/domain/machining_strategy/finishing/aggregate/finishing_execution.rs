@@ -1,11 +1,10 @@
 // domain/machining_strategy/finishing_execution.rs
 
 use crate::domain::{
+    machining_strategy::strategy_error::StrategyError,
     units::{Diameter, Length},
     {FinishingPlan, FinishingStep},
-    machining_strategy::strategy_error::StrategyError,
 };
-
 
 const EPS: f64 = 1e-12;
 const END_TOL: f64 = 1e-9;
@@ -99,6 +98,9 @@ impl FinishingExecution {
         // Lock earlier steps if we already have later measurements
         self.ensure_step_is_editable(idx)?;
 
+        self.validate_measurement_within_plan_bounds(measured)?;
+        self.validate_measurement_progression(idx, measured)?;
+
         // Validate measurement direction: it must not pass the target in the wrong way
         self.validate_measurement_against_target(measured)?;
 
@@ -158,6 +160,80 @@ impl FinishingExecution {
         }
         Ok(())
     }
+
+    fn validate_measurement_within_plan_bounds(
+        &self,
+        measured: Diameter,
+    ) -> Result<(), StrategyError> {
+        let start = self.plan.start().mm_value();
+        let target = self.plan.target().mm_value();
+        let m = measured.mm_value();
+        let dir = self.plan.direction_sign();
+
+        if dir > 0.0 {
+            // Inner: diameter skal øke
+            if m < start - EPS {
+                return Err(StrategyError::InvalidInputs(
+                    "measurement is below start diameter (inner mode)",
+                ));
+            }
+            if m > target + EPS {
+                return Err(StrategyError::InvalidInputs(
+                    "measurement exceeds target diameter (inner mode)",
+                ));
+            }
+        } else {
+            // Outer: diameter skal minke
+            if m > start + EPS {
+                return Err(StrategyError::InvalidInputs(
+                    "measurement is above start diameter (outer mode)",
+                ));
+            }
+            if m < target - EPS {
+                return Err(StrategyError::InvalidInputs(
+                    "measurement exceeds target diameter (outer mode)",
+                ));
+            }
+        }
+
+        Ok(())
+    }
+
+    fn validate_measurement_progression(
+    &self,
+    idx: usize,
+    measured: Diameter,
+) -> Result<(), StrategyError> {
+
+    let last_measured = self
+        .steps
+        .iter()
+        .take(idx)
+        .rev()
+        .find_map(|s| s.measurement());
+
+    let Some(prev) = last_measured else {
+        return Ok(());
+    };
+
+    let prev_val = prev.mm_value();
+    let m = measured.mm_value();
+    let dir = self.plan.direction_sign();
+
+    if dir > 0.0 && m + EPS < prev_val {
+        return Err(StrategyError::InvalidInputs(
+            "measurement goes backwards (inner mode)",
+        ));
+    }
+
+    if dir < 0.0 && m - EPS > prev_val {
+        return Err(StrategyError::InvalidInputs(
+            "measurement goes backwards (outer mode)",
+        ));
+    }
+
+    Ok(())
+}
 
     /// Recalculates all steps following a measurement.
     ///

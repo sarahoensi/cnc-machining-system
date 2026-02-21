@@ -121,10 +121,15 @@ pub fn register_finishing_measurement(
     let uc = RegisterFinishingMeasurementUseCase::new(repo());
 
     let uuid = Uuid::parse_str(&request.execution_id)
-        .map_err(|_| TauriError {
-            message: "Invalid execution_id".to_string(),
-            field_errors: None,
-        })?;
+    .map_err(|_| {
+        map_application_error(
+            crate::application::ApplicationError::Validation({
+                let mut v = crate::application::ValidationErrors::new();
+                v.push("execution_id", "invalid_uuid", "Invalid execution_id");
+                v
+            })
+        )
+    })?;
 
     let id = FinishingExecutionId::from_uuid(uuid);
 
