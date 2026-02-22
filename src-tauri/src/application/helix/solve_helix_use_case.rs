@@ -81,7 +81,7 @@ fn parse_pitch_inputs(
     let nominal = match Diameter::mm(diameter_mm) {
         Ok(v) => Some(v),
         Err(e) => {
-            errors.push("diameter_mm", "invalid", e.to_string());
+            errors.push("diameter", "invalid", e.to_string());
             None
         }
     };
@@ -89,7 +89,7 @@ fn parse_pitch_inputs(
     let tool = match Diameter::mm(tool_diameter_mm) {
         Ok(v) => Some(v),
         Err(e) => {
-            errors.push("tool_diameter_mm", "invalid", e.to_string());
+            errors.push("toolDiameter", "invalid", e.to_string());
             None
         }
     };
@@ -97,7 +97,7 @@ fn parse_pitch_inputs(
     let pitch = match Pitch::mm_per_rev(pitch_mm_per_rev) {
         Ok(v) => Some(v),
         Err(e) => {
-            errors.push("pitch_mm_per_rev", "invalid", e.to_string());
+            errors.push("pitch", "invalid", e.to_string());
             None
         }
     };
@@ -119,7 +119,7 @@ fn parse_angle_inputs(
     let nominal = match Diameter::mm(diameter_mm) {
         Ok(v) => Some(v),
         Err(e) => {
-            errors.push("diameter_mm", "invalid", e.to_string());
+            errors.push("diameter", "invalid", e.to_string());
             None
         }
     };
@@ -127,7 +127,7 @@ fn parse_angle_inputs(
     let tool = match Diameter::mm(tool_diameter_mm) {
         Ok(v) => Some(v),
         Err(e) => {
-            errors.push("tool_diameter_mm", "invalid", e.to_string());
+            errors.push("toolDiameter", "invalid", e.to_string());
             None
         }
     };
@@ -135,7 +135,7 @@ fn parse_angle_inputs(
     let angle = match Angle::degrees(angle_deg) {
         Ok(v) => Some(v),
         Err(e) => {
-            errors.push("angle_deg", "invalid", e.to_string());
+            errors.push("angle", "invalid", e.to_string());
             None
         }
     };

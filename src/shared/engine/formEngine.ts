@@ -184,7 +184,12 @@ export async function handleCalculateAsync<
 
 } catch (error) {
 
+  console.log("RAW ERROR:", error);
+
   const te = getTauriCommandError(error);
+  console.log("PARSED TAURI ERROR:", te);
+
+  
 
   // Start med "cleaned", så du ikke viser stale machine values
   const nextFields: Record<K, FieldState> = { ...cleanedFields };

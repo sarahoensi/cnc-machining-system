@@ -126,7 +126,7 @@ export function HelixPage() {
               unit={f.unit}
               field={fieldState}
               disabled={fieldState.locked || f.readOnly}
-              error={fieldState.invalid ? "Invalid value" : undefined}
+              error={fieldState.error}
               autoFocus={f.autoFocus}
               onChange={(value) =>
                 onFieldChange(f.key, value)
