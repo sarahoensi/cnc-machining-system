@@ -1,6 +1,6 @@
 // domain/units/length/pitch.rs
 
-use crate::domain::units::errors::UnitError;
+use super::error::LengthUnitError;
 use crate::domain::units::Length;
 
 /// Represents a linear pitch measurement.
@@ -16,12 +16,12 @@ impl Pitch {
     /// # Errors
     ///
     /// Returns an error if the value is not finite or is less than or equal to zero.
-    pub fn mm_per_rev(value: f64) -> Result<Self, UnitError> {
+    pub fn mm_per_rev(value: f64) -> Result<Self, LengthUnitError> {
         if !value.is_finite() {
-            return Err(UnitError::NotFinite("Pitch"));
+            return Err(LengthUnitError::NotFinite { value });
         }
         if value <= 0.0 {
-            return Err(UnitError::NonPositiveValue("Pitch"));
+            return Err(LengthUnitError::NonPositive { value });
         }
         Ok(Self(value))
     }

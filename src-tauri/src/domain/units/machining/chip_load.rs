@@ -1,6 +1,6 @@
 // domain/units/machining/chip_load.rs
 
-use crate::domain::units::errors::UnitError;
+use crate::domain::units::{machining::MachiningUnitError};
 
 /// Represents chip load per cutting tooth.
 ///
@@ -15,12 +15,12 @@ impl ChipLoad {
     /// # Errors
     ///
     /// Returns an error if the value is not finite or is less than or equal to zero.
-    pub fn mm_per_tooth(value: f64) -> Result<Self, UnitError> {
+    pub fn mm_per_tooth(value: f64) -> Result<Self, MachiningUnitError> {
         if !value.is_finite() {
-            return Err(UnitError::NotFinite("ChipLoad"));
+            return Err(MachiningUnitError::NotFinite { value });
         }
         if value <= 0.0 {
-            return Err(UnitError::NonPositiveValue("ChipLoad"));
+            return Err(MachiningUnitError::NonPositive { value });
         }
         Ok(Self(value))
     }

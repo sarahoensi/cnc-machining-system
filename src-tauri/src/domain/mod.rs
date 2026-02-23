@@ -3,6 +3,7 @@ pub mod units;
 mod geometry;
 mod machining_physics;
 mod machining_strategy;
+pub mod error;
 
 
 
@@ -18,21 +19,16 @@ pub use geometry::{
     RightTriangle,
     RightTriangleSolver,
     GeometryError,
+    RightTriangleError
 };
 
 // --------------------------------
 // Machining Physics
 // --------------------------------
 pub use machining_physics::{
-    Tool,
-    ToothCount,
-
-    ChipLoadCalculator,
-    FeedRateCalculator,
-    SpindleSpeedCalculator,
-
-    CuttingInput,
-    CuttingResult,
+    CuttingParameters,
+    MachiningSolver,
+    MachiningPhysicsError
 };
 
 // --------------------------------

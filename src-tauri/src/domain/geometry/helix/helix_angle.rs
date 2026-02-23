@@ -4,7 +4,7 @@ use std::f64::consts::PI;
 
 use crate::domain::{
     units::{Angle},
-    GeometryError,
+    geometry::HelixError
 };
 
 /// Represents a validated helix angle for geometric machining calculations.
@@ -20,15 +20,15 @@ impl HelixAngle {
     ///
     /// Returns `GeometryError::NotFinite` if the angle is not finite.
     /// Returns `GeometryError::OutOfRange` if the angle is `<= 0` or `>= pi/2`.
-    pub fn new(angle: Angle) -> Result<Self, GeometryError> {
+    pub fn new(angle: Angle) -> Result<Self, HelixError> {
         let rad = angle.radians_value();
 
         if !rad.is_finite() {
-            return Err(GeometryError::NotFinite);
+            return Err(HelixError::AngleNotFinite { radians: rad });
         }
 
         if rad <= 0.0 || rad >= PI / 2.0 {
-            return Err(GeometryError::OutOfRange);
+            return Err(HelixError::AngleOutOfRange { radians: rad });
         }
 
         Ok(Self(angle))
@@ -72,7 +72,7 @@ mod tests {
 
         let result = HelixAngle::new(angle);
 
-        assert!(matches!(result, Err(GeometryError::OutOfRange)));
+        assert!(matches!(result, Err(HelixError)));
     }
 
     #[test]
@@ -81,7 +81,7 @@ mod tests {
 
         let result = HelixAngle::new(angle);
 
-        assert!(matches!(result, Err(GeometryError::OutOfRange)));
+        assert!(matches!(result, Err(HelixError)));
     }
 
     #[test]
@@ -90,7 +90,7 @@ mod tests {
 
         let result = HelixAngle::new(angle);
 
-        assert!(matches!(result, Err(GeometryError::OutOfRange)));
+        assert!(matches!(result, Err(HelixError)));
     }
 
     #[test]
@@ -99,7 +99,7 @@ mod tests {
 
         let result = HelixAngle::new(angle);
 
-        assert!(matches!(result, Err(GeometryError::OutOfRange)));
+        assert!(matches!(result, Err(HelixError)));
     }
 
     #[test]

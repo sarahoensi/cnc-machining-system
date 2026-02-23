@@ -1,6 +1,6 @@
 // domain/units/motion/rpm.rs
 
-use crate::domain::units::errors::UnitError;
+use crate::domain::units::{motion::MotionUnitError};
 
 /// Represents rotational speed in revolutions per minute (RPM).
 ///
@@ -14,12 +14,12 @@ impl Rpm {
     /// # Errors
     ///
     /// Returns an error if the value is not finite or is less than or equal to zero.
-    pub fn new(value: f64) -> Result<Self, UnitError> {
+    pub fn new(value: f64) -> Result<Self, MotionUnitError> {
         if !value.is_finite() {
-            return Err(UnitError::NotFinite("Rpm"));
+            return Err(MotionUnitError::NotFinite { value });
         }
         if value <= 0.0 {
-            return Err(UnitError::NonPositiveValue("Rpm"));
+            return Err(MotionUnitError::NonPositive { value });
         }
         Ok(Self(value))
     }

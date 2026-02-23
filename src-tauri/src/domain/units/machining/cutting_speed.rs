@@ -2,7 +2,7 @@
 
 use std::f64::consts::PI;
 
-use crate::domain::units::errors::UnitError;
+use crate::domain::units::machining::MachiningUnitError;
 use crate::domain::units::{Diameter, Rpm};
 
 /// Represents surface cutting speed.
@@ -18,12 +18,12 @@ impl CuttingSpeed {
     /// # Errors
     ///
     /// Returns an error if the value is not finite or is less than or equal to zero.
-    pub fn meters_per_min(value: f64) -> Result<Self, UnitError> {
+    pub fn meters_per_min(value: f64) -> Result<Self, MachiningUnitError> {
         if !value.is_finite() {
-            return Err(UnitError::NotFinite("CuttingSpeed"));
+            return Err(MachiningUnitError::NotFinite { value });
         }
         if value <= 0.0 {
-            return Err(UnitError::NonPositiveValue("CuttingSpeed"));
+            return Err(MachiningUnitError::NonPositive { value });
         }
         Ok(Self(value))
     }
@@ -43,7 +43,7 @@ impl CuttingSpeed {
     /// - D = diameter in millimeters
     /// - n = spindle speed in RPM
     /// - Vc = cutting speed in meters per minute
-    pub fn from_rpm(diameter: Diameter, rpm: Rpm) -> Result<Self, UnitError> {
+    pub fn from_rpm(diameter: Diameter, rpm: Rpm) -> Result<Self, MachiningUnitError> {
         let speed = PI * diameter.mm_value() * rpm.value() / 1000.0;
         Self::meters_per_min(speed)
     }
@@ -58,9 +58,10 @@ impl CuttingSpeed {
     /// - Vc = cutting speed in meters per minute
     /// - D = diameter in millimeters
     /// - n = spindle speed in RPM
-    pub fn to_rpm(self, diameter: Diameter) -> Result<Rpm, UnitError> {
-        let rpm = (self.0 * 1000.0) / (PI * diameter.mm_value());
-        Rpm::new(rpm)
+    pub fn to_rpm(self, diameter: Diameter) -> Result<Rpm, MachiningUnitError> {
+        let rpm_value = (self.0 * 1000.0) / (PI * diameter.mm_value());
+        Rpm::new(rpm_value)
+            .map_err(|_| MachiningUnitError::NotFinite { value: rpm_value })
     }
 }
 

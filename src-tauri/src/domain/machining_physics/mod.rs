@@ -2,12 +2,13 @@
 
 //pub mod physics_error;
 
-mod calculators;
-mod cutting_input;
-mod cutting_result;
+mod error;
+mod cutting_parameters;
+mod cutting_solver;
+mod formulas;
 mod tool;
 
-pub use calculators::*;
-pub use cutting_input::CuttingInput;
-pub use cutting_result::CuttingResult;
-pub use tool::{Tool, ToothCount};
+pub use error::MachiningPhysicsError;
+pub use cutting_parameters::CuttingParameters;
+pub use cutting_solver::MachiningSolver;
+pub use tool::Tool;

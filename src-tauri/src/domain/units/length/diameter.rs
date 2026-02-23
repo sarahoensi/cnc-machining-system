@@ -1,6 +1,6 @@
 // domain/units/length/diameter.rs
 
-use crate::domain::units::errors::UnitError;
+use crate::domain::units::length::LengthUnitError;
 use crate::domain::units::{Length, Radius};
 
 /// Represents a diameter measurement.
@@ -15,12 +15,12 @@ impl Diameter {
     /// # Errors
     ///
     /// Returns an error if the value is not finite or is less than or equal to zero.
-    pub fn mm(value: f64) -> Result<Self, UnitError> {
+    pub fn mm(value: f64) -> Result<Self, LengthUnitError> {
         if !value.is_finite() {
-            return Err(UnitError::NotFinite("Diameter"));
+            return Err(LengthUnitError::NotFinite { value });
         }
         if value <= 0.0 {
-            return Err(UnitError::NonPositiveValue("Diameter"));
+            return Err(LengthUnitError::NonPositive { value });
         }
         Ok(Self(value))
     }
@@ -33,12 +33,14 @@ impl Diameter {
     /// Converts the diameter to a [`Length`] with the same millimeter value.
     pub fn as_length(self) -> Length {
         // safe because diameter is always finite and > 0
-        Length::mm(self.0).expect("Diameter is always valid length")
+        Length::mm(self.0)
+            .expect("Diameter invariant violated: must be finite")
     }
 
     /// Computes the corresponding [`Radius`] (half the diameter).
     pub fn radius(self) -> Radius {
-        Radius::mm(self.0 / 2.0).expect("Diameter is > 0 so radius is > 0")
+        Radius::mm(self.0 / 2.0)
+            .expect("Diameter invariant violated: radius must be positive")
     }
 }
 

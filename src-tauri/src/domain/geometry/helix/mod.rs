@@ -10,7 +10,9 @@
 mod helix;
 mod helix_angle;
 mod effective_diameters;
+mod error;
 
 pub use helix::Helix;
 pub use helix_angle::HelixAngle;
 pub use effective_diameters::{EffectiveDiameter, HelixMode};
+pub use error::HelixError;

@@ -1,7 +1,7 @@
 // domain/units/mod.rs
 //! Measurement unit domain models.
 
-mod errors;
+mod error;
 mod length;
 mod angle;
 mod motion;
@@ -10,7 +10,7 @@ mod machining;
 
 // ---------- Public unit facade ----------
 
-pub use errors::UnitError;
+pub use error::UnitsError;
 
 pub use length::{
     Length,

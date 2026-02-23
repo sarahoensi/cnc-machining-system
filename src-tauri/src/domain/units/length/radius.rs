@@ -1,6 +1,7 @@
 // domain/units/length/radius.rs
 
-use crate::domain::units::errors::UnitError;
+use crate::domain::units::length::error::LengthUnitError;
+
 use crate::domain::units::{Diameter, Length};
 
 /// Represents a radius measurement.
@@ -16,12 +17,12 @@ impl Radius {
     /// # Errors
     ///
     /// Returns an error if the value is not finite or is less than or equal to zero.
-    pub fn mm(value: f64) -> Result<Self, UnitError> {
+    pub fn mm(value: f64) -> Result<Self, LengthUnitError> {
         if !value.is_finite() {
-            return Err(UnitError::NotFinite("Radius"));
+            return Err(LengthUnitError::NotFinite { value });
         }
         if value <= 0.0 {
-            return Err(UnitError::NonPositiveValue("Radius"));
+            return Err(LengthUnitError::NotFinite { value });
         }
         Ok(Self(value))
     }
@@ -38,7 +39,8 @@ impl Radius {
 
     /// Computes the corresponding [`Diameter`] (double the radius).
     pub fn diameter(self) -> Diameter {
-        Diameter::mm(self.0 * 2.0).expect("Radius is > 0 so diameter is > 0")
+        Diameter::mm(self.0 * 2.0)
+            .expect("Radius is > 0 so diameter is > 0")
     }
 }
 

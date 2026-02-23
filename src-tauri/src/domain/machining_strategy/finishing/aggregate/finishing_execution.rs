@@ -128,9 +128,10 @@ impl FinishingExecution {
     fn ensure_step_is_editable(&self, idx: usize) -> Result<(), StrategyError> {
         if let Some(last_idx) = self.last_measured_index() {
             if idx < last_idx {
-                return Err(StrategyError::InvalidInputs(
-                    "cannot modify an earlier step after a later step has been measured",
-                ));
+                return Err(StrategyError::StepLocked {
+                    attempted_step: (idx + 1) as u32,
+                    last_measured_step: (last_idx + 1) as u32,
+                });
             }
         }
         Ok(())
@@ -149,14 +150,16 @@ impl FinishingExecution {
         // Inner: increasing; should not be > target (allow small eps)
         // Outer: decreasing; should not be < target (allow small eps)
         if dir > 0.0 && m > target + EPS {
-            return Err(StrategyError::InvalidInputs(
-                "measurement exceeds target (inner mode)",
-            ));
+            return Err(StrategyError::MeasurementExceedsTarget {
+                measured_mm: m,
+                target_mm: target,
+            });
         }
         if dir < 0.0 && m < target - EPS {
-            return Err(StrategyError::InvalidInputs(
-                "measurement exceeds target (outer mode)",
-            ));
+            return Err(StrategyError::MeasurementExceedsTarget {
+                measured_mm: m,
+                target_mm: target,
+            });
         }
         Ok(())
     }
@@ -173,26 +176,34 @@ impl FinishingExecution {
         if dir > 0.0 {
             // Inner: diameter skal øke
             if m < start - EPS {
-                return Err(StrategyError::InvalidInputs(
-                    "measurement is below start diameter (inner mode)",
-                ));
+                return Err(StrategyError::MeasurementOutOfBounds {
+                    measured_mm: m,
+                    start_mm: start,
+                    target_mm: target,
+                });
             }
             if m > target + EPS {
-                return Err(StrategyError::InvalidInputs(
-                    "measurement exceeds target diameter (inner mode)",
-                ));
+                return Err(StrategyError::MeasurementOutOfBounds {
+                    measured_mm: m,
+                    start_mm: start,
+                    target_mm: target,
+                });
             }
         } else {
             // Outer: diameter skal minke
             if m > start + EPS {
-                return Err(StrategyError::InvalidInputs(
-                    "measurement is above start diameter (outer mode)",
-                ));
+                return Err(StrategyError::MeasurementOutOfBounds {
+                    measured_mm: m,
+                    start_mm: start,
+                    target_mm: target,
+                });
             }
             if m < target - EPS {
-                return Err(StrategyError::InvalidInputs(
-                    "measurement exceeds target diameter (outer mode)",
-                ));
+                return Err(StrategyError::MeasurementOutOfBounds {
+                    measured_mm: m,
+                    start_mm: start,
+                    target_mm: target,
+                });
             }
         }
 
@@ -200,40 +211,41 @@ impl FinishingExecution {
     }
 
     fn validate_measurement_progression(
-    &self,
-    idx: usize,
-    measured: Diameter,
-) -> Result<(), StrategyError> {
+        &self,
+        idx: usize,
+        measured: Diameter,
+    ) -> Result<(), StrategyError> {
+        let last_measured = self
+            .steps
+            .iter()
+            .take(idx)
+            .rev()
+            .find_map(|s| s.measurement());
 
-    let last_measured = self
-        .steps
-        .iter()
-        .take(idx)
-        .rev()
-        .find_map(|s| s.measurement());
+        let Some(prev) = last_measured else {
+            return Ok(());
+        };
 
-    let Some(prev) = last_measured else {
-        return Ok(());
-    };
+        let prev_val = prev.mm_value();
+        let m = measured.mm_value();
+        let dir = self.plan.direction_sign();
 
-    let prev_val = prev.mm_value();
-    let m = measured.mm_value();
-    let dir = self.plan.direction_sign();
+        if dir > 0.0 && m + EPS < prev_val {
+            return Err(StrategyError::MeasurementBackwards {
+                previous_mm: prev_val,
+                measured_mm: m,
+            });
+        }
 
-    if dir > 0.0 && m + EPS < prev_val {
-        return Err(StrategyError::InvalidInputs(
-            "measurement goes backwards (inner mode)",
-        ));
+        if dir < 0.0 && m - EPS > prev_val {
+            return Err(StrategyError::MeasurementBackwards {
+                previous_mm: prev_val,
+                measured_mm: m,
+            });
+        }
+
+        Ok(())
     }
-
-    if dir < 0.0 && m - EPS > prev_val {
-        return Err(StrategyError::InvalidInputs(
-            "measurement goes backwards (outer mode)",
-        ));
-    }
-
-    Ok(())
-}
 
     /// Recalculates all steps following a measurement.
     ///
@@ -261,14 +273,17 @@ impl FinishingExecution {
 
         // If we’re effectively at target, remaining delta is ~0; but we still have steps.
         if remaining_delta_mag <= EPS {
-            return Err(StrategyError::ImpossiblePlan(
-                "no remaining delta but still remaining steps",
-            ));
+            return Err(StrategyError::ImpossiblePlan {
+                reason: "no remaining delta but still remaining steps",
+            });
         }
 
         let new_step_mag = remaining_delta_mag / remaining_steps as f64;
-        let new_step = Length::mm_positive(new_step_mag)
-            .map_err(|_| StrategyError::InvalidInputs("computed step was not > 0"))?;
+        let new_step = Length::mm_positive(new_step_mag).map_err(|_| {
+            StrategyError::ComputedStepNotPositive {
+                value_mm: new_step_mag,
+            }
+        })?;
 
         // Rebuild steps from start_index forward, clearing measurements in remaining steps
         let mut start_d = last_measured;
@@ -277,8 +292,9 @@ impl FinishingExecution {
             let step_no = (i + 1) as u32;
 
             let end_val = start_d.mm_value() + dir * new_step.mm_value();
-            let end_d = Diameter::mm(end_val)
-                .map_err(|_| StrategyError::ImpossiblePlan("computed diameter invalid"))?;
+            let end_d = Diameter::mm(end_val).map_err(|_| StrategyError::ImpossiblePlan {
+                reason: "computed diameter invalid",
+            })?;
 
             self.steps[i] = FinishingStep::new(step_no, start_d, new_step, end_d);
             start_d = end_d;
@@ -288,14 +304,15 @@ impl FinishingExecution {
         let last_end = self
             .steps
             .last()
-            .ok_or(StrategyError::ImpossiblePlan("no steps"))?
+            .ok_or(StrategyError::ImpossiblePlan { reason: "no steps" })?
             .planned_end()
             .mm_value();
 
         if (last_end - target).abs() > END_TOL {
-            return Err(StrategyError::ImpossiblePlan(
-                "recalculation did not reach target",
-            ));
+            return Err(StrategyError::RecalculationDidNotReachTarget {
+                final_mm: last_end,
+                target_mm: target,
+            });
         }
 
         Ok(())
@@ -308,12 +325,18 @@ impl FinishingExecution {
 
 fn to_index(step_number: u32, len: usize) -> Result<usize, StrategyError> {
     if step_number == 0 {
-        return Err(StrategyError::InvalidInputs("step_number must be 1-based"));
+        return Err(StrategyError::StepNumberMustBeOneBased);
     }
+
     let idx = (step_number - 1) as usize;
+
     if idx >= len {
-        return Err(StrategyError::InvalidInputs("step_number out of range"));
+        return Err(StrategyError::StepNumberOutOfRange {
+            step_number,
+            total_steps: len,
+        });
     }
+
     Ok(idx)
 }
 
@@ -324,6 +347,13 @@ fn build_steps_from_start(
     step: Length,
     dir: f64,
 ) -> Result<Vec<FinishingStep>, StrategyError> {
+
+    if cuts == 0 {
+        return Err(StrategyError::ImpossiblePlan {
+            reason: "plan contains zero cuts",
+        });
+    }
+
     let mut steps = Vec::with_capacity(cuts as usize);
     let mut current = start;
 
@@ -331,24 +361,30 @@ fn build_steps_from_start(
         let index = i + 1;
 
         let end_val = current.mm_value() + dir * step.mm_value();
+
         let end = Diameter::mm(end_val)
-            .map_err(|_| StrategyError::ImpossiblePlan("computed diameter invalid"))?;
+            .map_err(|_| StrategyError::ImpossiblePlan {
+                reason: "computed diameter invalid",
+            })?;
 
         steps.push(FinishingStep::new(index, current, step, end));
         current = end;
     }
 
-    // ensure last end ~= target
+    // Internal invariant: steps cannot be empty here
     let last_end = steps
         .last()
-        .ok_or(StrategyError::ImpossiblePlan("no steps"))?
+        .expect("FinishingExecution invariant violated: steps cannot be empty")
         .planned_end()
         .mm_value();
 
-    if (last_end - target.mm_value()).abs() > END_TOL {
-        return Err(StrategyError::ImpossiblePlan(
-            "initial plan does not end exactly at target (check rounding/units)",
-        ));
+    let target_mm = target.mm_value();
+
+    if (last_end - target_mm).abs() > END_TOL {
+        return Err(StrategyError::RecalculationDidNotReachTarget {
+            final_mm: last_end,
+            target_mm,
+        });
     }
 
     Ok(steps)

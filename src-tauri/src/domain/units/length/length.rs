@@ -1,6 +1,6 @@
 // domain/units/length/length.rs
 
-use crate::domain::units::errors::UnitError;
+use super::error::LengthUnitError;
 
 /// Represents a linear length measurement.
 ///
@@ -16,9 +16,9 @@ impl Length {
     /// # Errors
     ///
     /// Returns an error if the value is not finite.
-    pub fn mm(value: f64) -> Result<Self, UnitError> {
+    pub fn mm(value: f64) -> Result<Self, LengthUnitError> {
         if !value.is_finite() {
-            return Err(UnitError::NotFinite("Length"));
+            return Err(LengthUnitError::NotFinite { value });
         }
         Ok(Self(value))
     }
@@ -28,12 +28,12 @@ impl Length {
     /// # Errors
     ///
     /// Returns an error if the value is not finite or is negative.
-    pub fn mm_non_negative(value: f64) -> Result<Self, UnitError> {
+    pub fn mm_non_negative(value: f64) -> Result<Self, LengthUnitError> {
         if !value.is_finite() {
-            return Err(UnitError::NotFinite("Length"));
+            return Err(LengthUnitError::NotFinite { value });
         }
         if value < 0.0 {
-            return Err(UnitError::NegativeValue("Length"));
+            return Err(LengthUnitError::Negative { value });
         }
         Ok(Self(value))
     }
@@ -43,12 +43,12 @@ impl Length {
     /// # Errors
     ///
     /// Returns an error if the value is not finite or is less than or equal to zero.
-    pub fn mm_positive(value: f64) -> Result<Self, UnitError> {
+    pub fn mm_positive(value: f64) -> Result<Self, LengthUnitError> {
         if !value.is_finite() {
-            return Err(UnitError::NotFinite("Length"));
+            return Err(LengthUnitError::NotFinite { value });
         }
         if value <= 0.0 {
-            return Err(UnitError::NonPositiveValue("Length"));
+            return Err(LengthUnitError::NonPositive { value });
         }
         Ok(Self(value))
     }
@@ -63,9 +63,9 @@ impl Length {
     /// # Errors
     ///
     /// Returns an error if the value is not finite.
-    pub fn inches(value: f64) -> Result<Self, UnitError> {
+    pub fn inches(value: f64) -> Result<Self, LengthUnitError> {
         if !value.is_finite() {
-            return Err(UnitError::NotFinite("Length"));
+            return Err(LengthUnitError::NotFinite { value });
         }
         Ok(Self(value * 25.4))
     }

@@ -49,17 +49,18 @@ impl FinishingPlanner {
         match req.mode {
             FinishingMode::Inner => {
                 if target <= start {
-                    return Err(StrategyError::InvalidInputs(
-                        "Inner mode requires target_diameter > start_diameter",
-                    ));
+                    return Err(StrategyError::InvalidModeDirection {
+                        start_mm: start,
+                        target_mm: target,
+                    });
                 }
             }
-
             FinishingMode::Outer => {
                 if target >= start {
-                    return Err(StrategyError::InvalidInputs(
-                        "Outer mode requires target_diameter < start_diameter",
-                    ));
+                    return Err(StrategyError::InvalidModeDirection {
+                        start_mm: start,
+                        target_mm: target,
+                    });
                 }
             }
         }
@@ -70,9 +71,7 @@ impl FinishingPlanner {
         let total_delta = (target - start).abs();
 
         if total_delta <= f64::EPSILON {
-            return Err(StrategyError::InvalidInputs(
-                "start_diameter and target_diameter must differ",
-            ));
+            return Err(StrategyError::DiametersMustDiffer);
         }
 
         // ------------------------------------------------------------
@@ -83,14 +82,17 @@ impl FinishingPlanner {
             // Strategy 1: User specifies number of cuts
             // --------------------------------------------------------
             FinishingPlanning::ByCuts(cuts) => {
+
                 if cuts == 0 {
-                    return Err(StrategyError::InvalidInputs("cuts must be >= 1"));
+                    return Err(StrategyError::InvalidCutCount { cuts });
                 }
 
                 let step_mag = total_delta / cuts as f64;
 
                 let step = Length::mm_positive(step_mag)
-                    .map_err(|_| StrategyError::InvalidInputs("computed step must be > 0"))?;
+                    .map_err(|_| StrategyError::ComputedStepNotPositive {
+                        value_mm: step_mag,
+                    })?;
 
                 (cuts, step)
             }
@@ -102,9 +104,9 @@ impl FinishingPlanner {
                 let ae_mm = ae.mm_value();
 
                 if ae_mm <= 0.0 {
-                    return Err(StrategyError::InvalidInputs(
-                        "radial engagement (ae) must be > 0",
-                    ));
+                    return Err(StrategyError::InvalidRadialEngagement {
+                        value_mm: ae_mm,
+                    });
                 }
 
                 // Convert radial engagement -> diameter delta
@@ -114,16 +116,18 @@ impl FinishingPlanner {
                 let cuts = (total_delta / delta_d).ceil() as u32;
 
                 if cuts == 0 {
-                    return Err(StrategyError::ImpossiblePlan(
-                        "computed zero cuts from radial engagement",
-                    ));
+                    return Err(StrategyError::ImpossiblePlan {
+                        reason: "computed zero cuts from radial engagement",
+                    });
                 }
 
                 // Recalculate exact step so final step hits target exactly
                 let step_mag = total_delta / cuts as f64;
 
                 let step = Length::mm_positive(step_mag)
-                    .map_err(|_| StrategyError::InvalidInputs("computed step must be > 0"))?;
+                    .map_err(|_| StrategyError::ComputedStepNotPositive {
+                        value_mm: step_mag,
+                    })?;
 
                 (cuts, step)
             }

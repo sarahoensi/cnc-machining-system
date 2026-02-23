@@ -1,24 +1,25 @@
-// domain/machining_physics/tools.rs
+// domain/machining_physics/tool.rs
 
-use crate::domain::{
-    units::{Diameter, UnitError},
-};
+use crate::domain::units::Diameter;
 
+use super::MachiningPhysicsError;
 
-/// Number of cutting edges (teeth) on a tool.
+/// Number of cutting teeth on a tool.
 ///
-/// Must always be greater than zero.
+/// Invariant:
+/// - Must be strictly greater than zero.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct ToothCount(u32);
 
-/// Creates a new tooth count.
-    ///
-    /// Returns an error if the value is zero.
 impl ToothCount {
-    pub fn new(value: u32) -> Result<Self, UnitError> {
+    /// Creates a new validated tooth count.
+    pub fn new(value: u32) -> Result<Self, MachiningPhysicsError> {
         if value == 0 {
-            return Err(UnitError::NonPositiveValue("ToothCount"));
+            return Err(MachiningPhysicsError::InvalidToothCount {
+                value,
+            });
         }
+
         Ok(Self(value))
     }
 
@@ -28,15 +29,17 @@ impl ToothCount {
     }
 }
 
-/// Represents a cutting tool used in machining calculations.
+/// Represents a physical cutting tool used in machining.
 ///
 /// A tool is defined by:
-///
 /// - Tool diameter
 /// - Number of cutting teeth
 ///
-/// This information is used when calculating chip load,
-/// feed rate, and other machining parameters.
+/// This is a Value Object.
+///
+/// Invariants:
+/// - Diameter must be positive and finite (enforced by `Diameter`)
+/// - Tooth count must be > 0 (enforced by `ToothCount`)
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Tool {
     diameter: Diameter,
@@ -44,18 +47,23 @@ pub struct Tool {
 }
 
 impl Tool {
-    /// Creates a new machining tool definition.
-    pub fn new(diameter: Diameter, teeth: ToothCount) -> Self {
+    /// Creates a new validated tool definition.
+    ///
+    /// Diameter invariants are enforced by `Diameter`.
+    /// Tooth count invariants are enforced by `ToothCount`.
+    pub fn new(
+        diameter: Diameter,
+        teeth: ToothCount,
+    ) -> Self {
         Self { diameter, teeth }
     }
 
-    
-    /// Returns the tool's diameter.
+    /// Returns the tool diameter.
     pub fn diameter(&self) -> Diameter {
         self.diameter
     }
 
-    /// Returns the number of cutting teeth on the tool.
+    /// Returns the number of cutting teeth.
     pub fn teeth(&self) -> ToothCount {
         self.teeth
     }
