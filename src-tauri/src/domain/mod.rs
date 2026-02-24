@@ -3,8 +3,9 @@ pub mod units;
 mod geometry;
 mod machining_physics;
 mod machining_strategy;
+mod error;
 
-
+pub use error::DomainError;
 
 // --------------------------------
 // Geometry
@@ -14,25 +15,23 @@ pub use geometry::{
     Helix,
     HelixAngle,
     HelixMode,
+    HelixError,
     EffectiveDiameter,
     RightTriangle,
     RightTriangleSolver,
     GeometryError,
+    RightTriangleError
 };
 
 // --------------------------------
 // Machining Physics
 // --------------------------------
 pub use machining_physics::{
-    Tool,
-    ToothCount,
-
-    ChipLoadCalculator,
-    FeedRateCalculator,
-    SpindleSpeedCalculator,
-
-    CuttingInput,
-    CuttingResult,
+    CuttingParameters,
+    MachiningSolver,
+    MachiningPhysicsError,
+Tool,
+ToothCount
 };
 
 // --------------------------------
@@ -49,4 +48,5 @@ pub use machining_strategy::{
     StrategyError,
     FinishingExecutionId,
     FinishingExecutionRepository,
+    FinishingRepositoryError,
    };

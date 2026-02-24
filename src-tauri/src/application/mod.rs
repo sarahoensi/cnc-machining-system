@@ -11,11 +11,11 @@
 // application/mod.rs
  mod right_triangle;
  mod helix;
- mod shared;
+ pub mod shared;
  mod cutting_data;
  pub mod finishing;
 
-pub use shared::ApplicationError;
+pub use shared::{ApplicationError, ValidationErrors};
 
 pub use right_triangle::solve_right_triangle_use_case::SolveRightTriangleUseCase;
 pub use right_triangle::dto::{SolveRightTriangleInput, SolveRightTriangleOutput};

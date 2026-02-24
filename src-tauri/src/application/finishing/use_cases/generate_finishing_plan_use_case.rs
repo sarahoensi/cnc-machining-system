@@ -1,95 +1,73 @@
-//! Use case for starting a finishing execution lifecycle.
+//! Generates and persists a new finishing execution plan.
 //!
-//! The workflow builds a domain finishing request, delegates planning to the
-//! domain planner, creates an execution aggregate, persists it, and returns an
-//! application-facing execution snapshot.
+//! - Parses raw input into validated domain value objects.
+//! - Delegates planning to `FinishingPlanner`.
+//! - Maps `StrategyError` into field-level `ValidationErrors`.
+//! - Persists execution using repository abstraction.
 
-// application/finishing/generate_finishing_plan_use_case.rs
-use crate::application::finishing::finishing_execution_output::FinishingExecutionOutput;
-use crate::application::finishing::generate_finishing_plan_input::GenerateFinishingPlanInput;
+use std::sync::Arc;
+
+use crate::application::{ApplicationError, ValidationErrors};
 use crate::application::shared::AppResult;
 
+use crate::application::finishing::finishing_execution_output::FinishingExecutionOutput;
+use crate::application::finishing::generate_finishing_plan_input::GenerateFinishingPlanInput;
 use crate::application::finishing::mapping::finishing_execution_mapper::to_execution_output;
-
 
 use crate::domain::{
     units::{Diameter, Length},
     FinishingExecution,
+    FinishingExecutionId,
+    FinishingExecutionRepository,
     FinishingPlanner,
     FinishingPlanning,
     FinishingRequest,
-    FinishingExecutionId,
-    FinishingExecutionRepository,
+    StrategyError,
 };
 
-use std::sync::Arc;
-
-
-/// Generates and persists a new finishing execution plan.
-///
-/// This use case orchestrates the start of a finishing workflow from operator
-/// planning input.
 pub struct GenerateFinishingPlanUseCase {
     repo: Arc<dyn FinishingExecutionRepository>,
 }
 
-
 impl GenerateFinishingPlanUseCase {
 
-    /// Creates the use case with a finishing execution repository dependency.
     pub fn new(repo: Arc<dyn FinishingExecutionRepository>) -> Self {
         Self { repo }
     }
 
-
-    /// Generates a finishing plan and opens a new execution lifecycle.
-    ///
-    /// Purpose:
-    /// - Converts application input into a domain finishing request.
-    /// - Delegates step planning to the domain planner.
-    /// - Creates and persists a new finishing execution aggregate.
-    ///
-    /// Required inputs:
-    /// - A [`GenerateFinishingPlanInput`] variant with valid diameter/planning
-    ///   values in millimeters.
-    ///
-    /// Output meaning:
-    /// - Returns a [`FinishingExecutionOutput`] snapshot with execution ID and
-    ///   planned steps for downstream measurement registration.
-    ///
-    /// Domain invariants enforced:
-    /// - Diameter, radial engagement, and planning constraints are validated by
-    ///   domain value objects and planner rules.
-    ///
-    /// Side effects:
-    /// - Persists a newly created finishing execution in the repository.
-    ///
-    /// Error scenarios:
-    /// - Invalid input values rejected by domain constructors.
-    /// - Planning failures produced by domain finishing strategy rules.
-    /// - Repository save failures when persisting execution state.
     pub fn execute(
         &self,
         input: GenerateFinishingPlanInput,
     ) -> AppResult<FinishingExecutionOutput> {
 
-        let request = Self::to_request(input)?;
+        let request = Self::to_request_validated(input)?;
 
-        let plan = FinishingPlanner::generate_plan(request)?;
+        let plan =
+            FinishingPlanner::generate_plan(request)
+                .map_err(map_strategy_error)?;
 
         let id = FinishingExecutionId::new();
 
-        let execution = FinishingExecution::new(id, plan)?;
+        let execution =
+            FinishingExecution::new(id, plan)
+                .map_err(map_strategy_error)?;
 
-        self.repo.save(execution.clone())?;
+        self.repo
+            .save(execution.clone())
+            .map_err(|e| ApplicationError::Infrastructure(e.to_string()))?;
 
         Ok(to_execution_output(&execution))
     }
 
+    // ---------------------------------------------------------
+    // Validation + mapping
+    // ---------------------------------------------------------
 
-    fn to_request(
+    fn to_request_validated(
         input: GenerateFinishingPlanInput,
-    ) -> AppResult<FinishingRequest> {
+    ) -> Result<FinishingRequest, ApplicationError> {
+
+        let mut errors = ValidationErrors::new();
 
         match input {
 
@@ -99,10 +77,25 @@ impl GenerateFinishingPlanUseCase {
                 target_diameter_mm,
                 cuts,
             } => {
+
+                let start =
+                    parse_diameter("start_diameter_mm", start_diameter_mm, &mut errors);
+
+                let target =
+                    parse_diameter("target_diameter_mm", target_diameter_mm, &mut errors);
+
+                if cuts == 0 {
+                    errors.push("cuts", "non_positive", "Cut count must be > 0");
+                }
+
+                if !errors.is_empty() {
+                    return Err(ApplicationError::Validation(errors));
+                }
+
                 Ok(FinishingRequest {
                     mode,
-                    start_diameter: Diameter::mm(start_diameter_mm)?,
-                    target_diameter: Diameter::mm(target_diameter_mm)?,
+                    start_diameter: start.unwrap(),
+                    target_diameter: target.unwrap(),
                     planning: FinishingPlanning::ByCuts(cuts),
                 })
             }
@@ -113,15 +106,89 @@ impl GenerateFinishingPlanUseCase {
                 target_diameter_mm,
                 radial_engagement_mm,
             } => {
+
+                let start =
+                    parse_diameter("start_diameter_mm", start_diameter_mm, &mut errors);
+
+                let target =
+                    parse_diameter("target_diameter_mm", target_diameter_mm, &mut errors);
+
+                let radial = match Length::mm_positive(radial_engagement_mm) {
+                    Ok(v) => Some(v),
+                    Err(e) => {
+                        errors.push("radial_engagement_mm", "invalid", e.to_string());
+                        None
+                    }
+                };
+
+                if !errors.is_empty() {
+                    return Err(ApplicationError::Validation(errors));
+                }
+
                 Ok(FinishingRequest {
                     mode,
-                    start_diameter: Diameter::mm(start_diameter_mm)?,
-                    target_diameter: Diameter::mm(target_diameter_mm)?,
-                    planning: FinishingPlanning::ByRadialEngagement(
-                        Length::mm_positive(radial_engagement_mm)?
-                    ),
+                    start_diameter: start.unwrap(),
+                    target_diameter: target.unwrap(),
+                    planning: FinishingPlanning::ByRadialEngagement(radial.unwrap()),
                 })
             }
         }
     }
+}
+
+fn parse_diameter(
+    field: &'static str,
+    raw: f64,
+    v: &mut ValidationErrors,
+) -> Option<Diameter> {
+    match Diameter::mm(raw) {
+        Ok(val) => Some(val),
+        Err(e) => {
+            v.push(field, "invalid", e.to_string());
+            None
+        }
+    }
+}
+
+fn map_strategy_error(err: StrategyError) -> ApplicationError {
+
+    let mut v = ValidationErrors::new();
+
+    match err {
+
+        StrategyError::InvalidModeDirection { .. } => {
+            v.push("mode", "invalid_combination", err.to_string());
+        }
+
+        StrategyError::DiametersMustDiffer => {
+            v.push("target_diameter_mm", "invalid_combination", err.to_string());
+        }
+
+        StrategyError::InvalidCutCount { .. } => {
+            v.push("cuts", "invalid", err.to_string());
+        }
+
+        StrategyError::InvalidRadialEngagement { .. } => {
+            v.push("radial_engagement_mm", "invalid", err.to_string());
+        }
+
+        StrategyError::ComputedStepNotPositive { .. }
+        | StrategyError::ImpossiblePlan { .. }
+        | StrategyError::DivisionByZero => {
+            v.push("finishing_plan", "invalid_combination", err.to_string());
+        }
+
+        // Execution-related errors
+        StrategyError::StepNumberMustBeOneBased
+        | StrategyError::StepNumberOutOfRange { .. }
+        | StrategyError::StepLocked { .. }
+        | StrategyError::MeasurementOutOfBounds { .. }
+        | StrategyError::MeasurementBackwards { .. }
+        | StrategyError::MeasurementExceedsTarget { .. }
+        | StrategyError::RecalculationDidNotReachTarget { .. } => {
+            v.push("execution", "invalid_state", err.to_string());
+        }
+    }
+
+    ApplicationError::Validation(v)
 }

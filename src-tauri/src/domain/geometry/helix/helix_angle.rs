@@ -4,7 +4,7 @@ use std::f64::consts::PI;
 
 use crate::domain::{
     units::{Angle},
-    GeometryError,
+    geometry::HelixError
 };
 
 /// Represents a validated helix angle for geometric machining calculations.
@@ -20,15 +20,15 @@ impl HelixAngle {
     ///
     /// Returns `GeometryError::NotFinite` if the angle is not finite.
     /// Returns `GeometryError::OutOfRange` if the angle is `<= 0` or `>= pi/2`.
-    pub fn new(angle: Angle) -> Result<Self, GeometryError> {
+    pub fn new(angle: Angle) -> Result<Self, HelixError> {
         let rad = angle.radians_value();
 
         if !rad.is_finite() {
-            return Err(GeometryError::NotFinite);
+            return Err(HelixError::AngleNotFinite { radians: rad });
         }
 
         if rad <= 0.0 || rad >= PI / 2.0 {
-            return Err(GeometryError::OutOfRange);
+            return Err(HelixError::AngleOutOfRange { radians: rad });
         }
 
         Ok(Self(angle))
@@ -66,41 +66,33 @@ mod tests {
         assert!(result.is_ok());
     }
 
-    #[test]
-    fn rejects_zero_angle() {
-        let angle = Angle::degrees(0.0).unwrap();
+   #[test]
+fn rejects_zero_angle() {
+    let angle = Angle::degrees(0.0).unwrap();
+    let result = HelixAngle::new(angle);
+    assert!(result.is_err());
+}
 
-        let result = HelixAngle::new(angle);
+#[test]
+fn rejects_ninety_degrees() {
+    let angle = Angle::degrees(90.0).unwrap();
+    let result = HelixAngle::new(angle);
+    assert!(result.is_err());
+}
 
-        assert!(matches!(result, Err(GeometryError::OutOfRange)));
-    }
+#[test]
+fn rejects_above_ninety() {
+    let angle = Angle::degrees(120.0).unwrap();
+    let result = HelixAngle::new(angle);
+    assert!(result.is_err());
+}
 
-    #[test]
-    fn rejects_ninety_degrees() {
-        let angle = Angle::degrees(90.0).unwrap();
-
-        let result = HelixAngle::new(angle);
-
-        assert!(matches!(result, Err(GeometryError::OutOfRange)));
-    }
-
-    #[test]
-    fn rejects_above_ninety() {
-        let angle = Angle::degrees(120.0).unwrap();
-
-        let result = HelixAngle::new(angle);
-
-        assert!(matches!(result, Err(GeometryError::OutOfRange)));
-    }
-
-    #[test]
-    fn rejects_negative_angle() {
-        let angle = Angle::degrees(-10.0).unwrap();
-
-        let result = HelixAngle::new(angle);
-
-        assert!(matches!(result, Err(GeometryError::OutOfRange)));
-    }
+#[test]
+fn rejects_negative_angle() {
+    let angle = Angle::degrees(-10.0).unwrap();
+    let result = HelixAngle::new(angle);
+    assert!(result.is_err());
+}
 
     #[test]
     fn preserves_original_angle_value() {

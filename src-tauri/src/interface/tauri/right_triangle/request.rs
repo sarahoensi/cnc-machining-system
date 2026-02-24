@@ -3,7 +3,7 @@ use serde::Deserialize;
 /// UI payload for `solve_right_triangle`.
 ///
 /// Tagged enum serialized/deserialized with `type`.
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone)]
 #[serde(tag = "type")]
 pub enum SolveRightTriangleRequest {
 

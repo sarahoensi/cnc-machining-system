@@ -1,6 +1,7 @@
 // domain/units/motion/feed_rate.rs
 
-use crate::domain::units::errors::UnitError;
+use crate::domain::units::motion::MotionUnitError;
+
 
 /// Represents linear feed rate.
 ///
@@ -15,12 +16,12 @@ impl FeedRate {
     /// # Errors
     ///
     /// Returns an error if the value is not finite or is less than or equal to zero.
-    pub fn mm_per_min(value: f64) -> Result<Self, UnitError> {
+    pub fn mm_per_min(value: f64) -> Result<Self, MotionUnitError> {
         if !value.is_finite() {
-            return Err(UnitError::NotFinite("FeedRate"));
+           return Err(MotionUnitError::NotFinite { value });
         }
         if value <= 0.0 {
-            return Err(UnitError::NonPositiveValue("FeedRate"));
+            return Err(MotionUnitError::NonPositive { value });
         }
         Ok(Self(value))
     }

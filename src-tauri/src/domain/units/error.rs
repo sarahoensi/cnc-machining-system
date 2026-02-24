@@ -1,0 +1,29 @@
+// domain/units/error.rs
+
+use thiserror::Error;
+
+use crate::domain::units::{
+    angle::AngleError,
+    length::LengthUnitError,
+    motion::MotionUnitError,
+    machining::MachiningUnitError,
+};
+
+/// Top-level error for the units subdomain.
+///
+/// Wraps all specific unit value object errors.
+#[derive(Debug, Error)]
+pub enum UnitsError {
+
+    #[error(transparent)]
+    Angle(#[from] AngleError),
+
+    #[error(transparent)]
+    Length(#[from] LengthUnitError),
+
+    #[error(transparent)]
+    Motion(#[from] MotionUnitError),
+
+    #[error(transparent)]
+    Machining(#[from] MachiningUnitError),
+}

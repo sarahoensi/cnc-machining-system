@@ -12,6 +12,7 @@ export type FieldState = {
   invalid: boolean;
 
   machineValue?: number;
+  error?:string;
 };
 
 /* ---------------------------------- */
@@ -25,6 +26,7 @@ export const emptyField = (
   source: "empty",
   locked: false,
   invalid: false,
+  error: undefined,
   ...overrides,
 });
 
@@ -36,6 +38,7 @@ export const userField = (
   source: value === "" ? "empty" : "user",
   locked: false,
   invalid: false,
+  error: undefined,
   ...overrides,
 });
 

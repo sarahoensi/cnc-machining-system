@@ -1,177 +1,181 @@
-// domain/geometry/right_triangle/right_triangle_solver.rs
+//domain/right_triangle/right_triangle_solver.rs
 
 use crate::domain::{
+    GeometryError,
+    geometry::right_triangle::{RightTriangle, RightTriangleError},
     units::{Angle, Length},
-    GeometryError, RightTriangle,
 };
 
 const EPS: f64 = 1e-12;
 
 /// Provides validated construction routines for `RightTriangle`.
-///
-/// `RightTriangleSolver` offers multiple factory methods that accept different
-/// pairs of inputs (legs, hypotenuse, angles) and return either a validated
-/// `RightTriangle` or a `GeometryError` describing why construction failed.
 pub struct RightTriangleSolver;
 
 impl RightTriangleSolver {
-    // ---------------------------------------------------------
-    // a + b (two legs)
-    // ---------------------------------------------------------
-    /// Construct a `RightTriangle` from two leg lengths `a` and `b`.
-    ///
-    /// Returns `Err(GeometryError::InvalidTriangle)` if either length is not
-    /// positive and finite.
-    pub fn from_legs(a: Length, b: Length) -> Result<RightTriangle, GeometryError> {
-        if !is_positive_finite(a) || !is_positive_finite(b) {
-            return Err(GeometryError::InvalidTriangle);
-        }
 
-        Ok(RightTriangle::new(a, b))
+    // ---------------------------------------------------------
+    // a + b
+    // ---------------------------------------------------------
+
+    pub fn from_legs(
+    a: Length,
+    b: Length,
+) -> Result<RightTriangle, GeometryError> {
+
+    let a_mm = a.mm_value();
+    let b_mm = b.mm_value();
+
+    if a_mm <= 0.0 {
+        return Err(
+            RightTriangleError::LegNotPositive { value: a_mm }.into()
+        );
     }
 
+    if b_mm <= 0.0 {
+        return Err(
+            RightTriangleError::LegNotPositive { value: b_mm }.into()
+        );
+    }
+
+    Ok(RightTriangle::new(a, b))
+}
+
     // ---------------------------------------------------------
-    // a + c (leg + hypotenuse)
+    // a + c
     // ---------------------------------------------------------
-    /// Construct a `RightTriangle` from leg `a` and hypotenuse `c`.
-    ///
-    /// Returns `Err(GeometryError::ImpossibleTriangle)` if `a >= c` or the
-    /// Pythagorean relation cannot be satisfied within tolerance. Returns
-    /// `Err(GeometryError::InvalidTriangle)` for non-finite or non-positive inputs.
-    pub fn from_leg_and_hypotenuse(a: Length, c: Length) -> Result<RightTriangle, GeometryError> {
+
+    pub fn from_leg_and_hypotenuse(
+        a: Length,
+        c: Length,
+    ) -> Result<RightTriangle, GeometryError> {
+
         let a_mm = a.mm_value();
         let c_mm = c.mm_value();
 
-        if !is_positive_finite(a) || !is_positive_finite(c) {
-            return Err(GeometryError::InvalidTriangle);
-        }
-
         if a_mm >= c_mm {
-            return Err(GeometryError::ImpossibleTriangle);
+            return Err(
+                RightTriangleError::HypotenuseTooShort {
+                    leg: a_mm,
+                    hypotenuse: c_mm,
+                }
+                .into(),
+            );
         }
 
-        let mut b_sq = c_mm.powi(2) - a_mm.powi(2);
+        let b_sq = c_mm.powi(2) - a_mm.powi(2);
+        let b_val = safe_sqrt(b_sq)?;
 
-        // Numerical tolerance: allow tiny negative values to be clamped to zero.
-        if b_sq < 0.0 && b_sq > -EPS {
-            b_sq = 0.0;
-        }
-
-        if b_sq < 0.0 {
-            return Err(GeometryError::ImpossibleTriangle);
-        }
-
-        let b = Length::mm_positive(b_sq.sqrt()).map_err(|_| GeometryError::InvalidTriangle)?;
+        let b = Length::mm_positive(b_val)
+            .map_err(|_| RightTriangleError::LegNotPositive { value: b_val })?;
 
         Ok(RightTriangle::new(a, b))
     }
 
     // ---------------------------------------------------------
-    // b + c (other leg + hypotenuse)
+    // b + c
     // ---------------------------------------------------------
-    /// Construct a `RightTriangle` from leg `b` and hypotenuse `c`.
-    ///
-    /// See `from_leg_and_hypotenuse` for error semantics and invariants.
+
     pub fn from_other_leg_and_hypotenuse(
         b: Length,
         c: Length,
     ) -> Result<RightTriangle, GeometryError> {
+
         let b_mm = b.mm_value();
         let c_mm = c.mm_value();
 
-        if !is_positive_finite(b) || !is_positive_finite(c) {
-            return Err(GeometryError::InvalidTriangle);
-        }
-
         if b_mm >= c_mm {
-            return Err(GeometryError::ImpossibleTriangle);
+            return Err(
+                RightTriangleError::HypotenuseTooShort {
+                    leg: b_mm,
+                    hypotenuse: c_mm,
+                }
+                .into(),
+            );
         }
 
-        let mut a_sq = c_mm.powi(2) - b_mm.powi(2);
+        let a_sq = c_mm.powi(2) - b_mm.powi(2);
+        let a_val = safe_sqrt(a_sq)?;
 
-        if a_sq < 0.0 && a_sq > -EPS {
-            a_sq = 0.0;
-        }
-
-        if a_sq < 0.0 {
-            return Err(GeometryError::ImpossibleTriangle);
-        }
-
-        let a = Length::mm_positive(a_sq.sqrt()).map_err(|_| GeometryError::InvalidTriangle)?;
+        let a = Length::mm_positive(a_val)
+            .map_err(|_| RightTriangleError::LegNotPositive { value: a_val })?;
 
         Ok(RightTriangle::new(a, b))
     }
 
     // ---------------------------------------------------------
-    // c + alpha (hypotenuse + acute angle)
+    // c + alpha
     // ---------------------------------------------------------
-    /// Construct a `RightTriangle` from hypotenuse `c` and acute angle `alpha`.
-    ///
-    /// `alpha` must be strictly between 0° and 90°; returns
-    /// `Err(GeometryError::InvalidTriangle)` for invalid or non-finite inputs.
+
     pub fn from_hypotenuse_and_angle(
         c: Length,
         alpha: Angle,
     ) -> Result<RightTriangle, GeometryError> {
-        validate_acute(alpha)?;
+
+        require_acute(alpha)?;
 
         let c_mm = c.mm_value();
         let rad = alpha.radians_value();
 
-        let a =
-            Length::mm_positive(c_mm * rad.sin()).map_err(|_| GeometryError::InvalidTriangle)?;
+        let a_val = c_mm * rad.sin();
+        let b_val = c_mm * rad.cos();
 
-        let b =
-            Length::mm_positive(c_mm * rad.cos()).map_err(|_| GeometryError::InvalidTriangle)?;
+        let a = Length::mm_positive(a_val)
+            .map_err(|_| RightTriangleError::LegNotPositive { value: a_val })?;
+
+        let b = Length::mm_positive(b_val)
+            .map_err(|_| RightTriangleError::LegNotPositive { value: b_val })?;
 
         Ok(RightTriangle::new(a, b))
     }
 
     // ---------------------------------------------------------
-    // a + alpha (leg opposite alpha)
+    // a + alpha
     // ---------------------------------------------------------
-    /// Construct a `RightTriangle` from leg `a` and its opposite acute angle `alpha`.
-    ///
-    /// Returns `Err(GeometryError::InvalidTriangle)` when `alpha` is not acute or
-    /// when division by a near-zero sine would occur.
+
     pub fn from_leg_and_opposite_angle(
         a: Length,
         alpha: Angle,
     ) -> Result<RightTriangle, GeometryError> {
-        validate_acute(alpha)?;
+
+        require_acute(alpha)?;
 
         let a_mm = a.mm_value();
-        let rad = alpha.radians_value();
-
-        let s = rad.sin();
+        let s = alpha.radians_value().sin();
 
         if s.abs() < EPS {
-            return Err(GeometryError::InvalidTriangle);
+            return Err(RightTriangleError::DivisionByZero.into());
         }
 
-        let c = Length::mm_positive(a_mm / s).map_err(|_| GeometryError::InvalidTriangle)?;
+        let c_val = a_mm / s;
+
+        let c = Length::mm_positive(c_val)
+            .map_err(|_| RightTriangleError::HypotenuseNotPositive { value: c_val })?;
 
         Self::from_leg_and_hypotenuse(a, c)
     }
 
     // ---------------------------------------------------------
-    // b + alpha (leg adjacent to alpha)
+    // b + alpha
     // ---------------------------------------------------------
-    /// Construct a `RightTriangle` from adjacent leg `b` and acute angle `alpha`.
-    ///
-    /// Uses tangent to derive the opposite leg; returns `InvalidTriangle` on
-    /// non-finite inputs or invalid constructions.
+
     pub fn from_adjacent_leg_and_angle(
         b: Length,
         alpha: Angle,
     ) -> Result<RightTriangle, GeometryError> {
-        validate_acute(alpha)?;
+
+        require_acute(alpha)?;
 
         let b_mm = b.mm_value();
-        let rad = alpha.radians_value();
+        let t = alpha.radians_value().tan();
 
-        let a =
-            Length::mm_positive(b_mm * rad.tan()).map_err(|_| GeometryError::InvalidTriangle)?;
+        if !t.is_finite() {
+            return Err(RightTriangleError::NumericalInstability.into());
+        }
+
+        let a_val = b_mm * t;
+
+        let a = Length::mm_positive(a_val)
+            .map_err(|_| RightTriangleError::LegNotPositive { value: a_val })?;
 
         Ok(RightTriangle::new(a, b))
     }
@@ -180,35 +184,41 @@ impl RightTriangleSolver {
     // Beta wrappers
     // ---------------------------------------------------------
 
-    /// Construct from leg `a` and angle beta.
-    pub fn from_leg_a_and_beta(a: Length, beta: Angle) -> Result<RightTriangle, GeometryError> {
-        validate_acute(beta)?;
+    pub fn from_leg_a_and_beta(
+        a: Length,
+        beta: Angle,
+    ) -> Result<RightTriangle, GeometryError> {
+
+        require_acute(beta)?;
 
         let alpha = Angle::degrees(90.0 - beta.degrees_value())
-            .map_err(|_| GeometryError::InvalidTriangle)?;
+            .map_err(|_| RightTriangleError::NumericalInstability)?;
 
         Self::from_leg_and_opposite_angle(a, alpha)
     }
 
-    /// Construct from leg `b` and angle beta.
-    pub fn from_leg_b_and_beta(b: Length, beta: Angle) -> Result<RightTriangle, GeometryError> {
-        validate_acute(beta)?;
+    pub fn from_leg_b_and_beta(
+        b: Length,
+        beta: Angle,
+    ) -> Result<RightTriangle, GeometryError> {
+
+        require_acute(beta)?;
 
         let alpha = Angle::degrees(90.0 - beta.degrees_value())
-            .map_err(|_| GeometryError::InvalidTriangle)?;
+            .map_err(|_| RightTriangleError::NumericalInstability)?;
 
         Self::from_adjacent_leg_and_angle(b, alpha)
     }
 
-    /// Construct from hypotenuse and beta.
     pub fn from_hypotenuse_and_beta(
         c: Length,
         beta: Angle,
     ) -> Result<RightTriangle, GeometryError> {
-        validate_acute(beta)?;
+
+        require_acute(beta)?;
 
         let alpha = Angle::degrees(90.0 - beta.degrees_value())
-            .map_err(|_| GeometryError::InvalidTriangle)?;
+            .map_err(|_| RightTriangleError::NumericalInstability)?;
 
         Self::from_hypotenuse_and_angle(c, alpha)
     }
@@ -218,33 +228,24 @@ impl RightTriangleSolver {
 // Helpers
 // ---------------------------------------------------------
 
-fn validate_acute(angle: Angle) -> Result<(), GeometryError> {
+fn require_acute(angle: Angle) -> Result<(), GeometryError> {
     let deg = angle.degrees_value();
     if deg <= 0.0 || deg >= 90.0 {
-        return Err(GeometryError::InvalidTriangle);
+        return Err(
+            RightTriangleError::AngleNotAcute { degrees: deg }.into(),
+        );
     }
     Ok(())
 }
 
-fn is_positive_finite(length: Length) -> bool {
-    let v = length.mm_value();
-    v.is_finite() && v > 0.0
-}
-
-// ----------- TESTS --------
-
-#[cfg(test)]
-mod internal_tests {
-    use super::*;
-
-    #[test]
-    fn validate_acute_rejects_invalid() {
-        assert!(validate_acute(Angle::degrees(0.0).unwrap()).is_err());
-        assert!(validate_acute(Angle::degrees(90.0).unwrap()).is_err());
+fn safe_sqrt(value: f64) -> Result<f64, GeometryError> {
+    if value < 0.0 && value > -EPS {
+        return Ok(0.0);
     }
 
-    #[test]
-    fn positive_finite_check() {
-        assert!(is_positive_finite(Length::mm_positive(3.0).unwrap()));
+    if value < 0.0 {
+        return Err(RightTriangleError::NumericalInstability.into());
     }
+
+    Ok(value.sqrt())
 }

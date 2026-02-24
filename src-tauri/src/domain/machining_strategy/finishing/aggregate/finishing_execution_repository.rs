@@ -1,6 +1,6 @@
 // domain/machining_strategy/finishing/aggregate/finishing_execution_repository.rs
 
-use crate::domain::machining_strategy::strategy_error::StrategyError;
+use crate::domain::{FinishingRepositoryError,};
 
 use super::{FinishingExecution, FinishingExecutionId};
 
@@ -20,25 +20,16 @@ use super::{FinishingExecution, FinishingExecutionId};
 /// # Concurrency
 ///
 /// Implementations must be safe for concurrent access (`Send + Sync`).
-pub trait FinishingExecutionRepository: Send + Sync {
-
-    /// Retrieves a finishing execution by its identifier.
-    ///
-    /// Returns an error if the execution does not exist or
-    /// cannot be retrieved.
+pub trait FinishingExecutionRepository:
+    Send + Sync
+{
     fn get(
         &self,
         id: FinishingExecutionId,
-    ) -> Result<FinishingExecution, StrategyError>;
+    ) -> Result<FinishingExecution, FinishingRepositoryError>;
 
-    /// Persists a finishing execution.
-    ///
-    /// Implementations should either:
-    ///
-    /// - Insert a new execution
-    /// - Update an existing execution
     fn save(
         &self,
         execution: FinishingExecution,
-    ) -> Result<(), StrategyError>;
+    ) -> Result<(), FinishingRepositoryError>;
 }

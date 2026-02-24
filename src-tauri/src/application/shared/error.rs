@@ -1,58 +1,25 @@
-//! Application error boundary for use-case execution.
-//!
-//! This module wraps domain and unit validation failures into a single error
-//! type consumable by UI/API layers.
-
 // src/application/shared/error.rs
 
-use crate::domain::GeometryError;
-use crate::domain::units::UnitError;
-use crate::domain::StrategyError;
+use thiserror::Error;
 
-#[derive(Debug)]
-/// Error type returned by application use cases.
+use crate::application::shared::ValidationErrors;
+use crate::domain::DomainError;
+
+/// Stable error boundary for application layer.
 ///
-/// Error origin:
-/// - Variants wrap domain-level validation and strategy errors.
-///
-/// Exposure:
-/// - Safe to expose at application boundaries after appropriate presentation
-///   formatting by external layers.
+/// UI/API should only depend on this type.
+#[derive(Debug, Error)]
 pub enum ApplicationError {
-    /// Geometry/domain-consistency failure originating from domain services.
-    Geometry(GeometryError),
-    /// Unit/value-object validation failure originating from domain constructors.
-    Unit(UnitError),
-    /// Domain strategy or planning-rule failure.
-    Strategy(StrategyError),
-}
 
-impl std::fmt::Display for ApplicationError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            ApplicationError::Geometry(e) => write!(f, "{e}"),
-            ApplicationError::Unit(e) => write!(f, "{e}"),
-            ApplicationError::Strategy(e) => write!(f, "{e}"),
-        }
-    }
-}
+    /// Input validation failure (field-level errors).
+    #[error("Validation failed")]
+    Validation(ValidationErrors),
 
-impl std::error::Error for ApplicationError {}
+    /// Domain rule violation.
+    #[error(transparent)]
+    Domain(#[from] DomainError),
 
-impl From<GeometryError> for ApplicationError {
-    fn from(err: GeometryError) -> Self {
-        ApplicationError::Geometry(err)
-    }
-}
-
-impl From<UnitError> for ApplicationError {
-    fn from(err: UnitError) -> Self {
-        ApplicationError::Unit(err)
-    }
-}
-
-impl From<StrategyError> for ApplicationError {
-    fn from(err: StrategyError) -> Self {
-        ApplicationError::Strategy(err)
-    }
+    /// Infrastructure failure (repository, IO, etc.)
+    #[error("Infrastructure error: {0}")]
+    Infrastructure(String),
 }

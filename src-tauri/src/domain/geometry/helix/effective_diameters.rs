@@ -1,5 +1,5 @@
 use crate::domain::units::Diameter;
-use crate::domain::GeometryError;
+use crate::domain::geometry::HelixError;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum HelixMode {
@@ -11,24 +11,34 @@ pub enum HelixMode {
 pub struct EffectiveDiameter(Diameter);
 
 impl EffectiveDiameter {
-    pub fn new(mode: HelixMode, nominal: Diameter, tool: Diameter) -> Result<Self, GeometryError> {
-        let d_nom = nominal.mm_value();
-        let d_tool = tool.mm_value();
+    pub fn new(
+    mode: HelixMode,
+    nominal: Diameter,
+    tool: Diameter,
+) -> Result<Self, HelixError> {
 
-        let value = match mode {
-            HelixMode::Inner => {
-                if d_tool >= d_nom {
-                    return Err(GeometryError::InvalidHelix);
-                }
-                d_nom - d_tool
+    let d_nom = nominal.mm_value();
+    let d_tool = tool.mm_value();
+    let tool_radius = d_tool / 2.0;
+
+    let value = match mode {
+        HelixMode::Inner => {
+            if tool_radius >= d_nom {
+                return Err(HelixError::ToolTooLarge {
+                    tool_diameter: d_tool,
+                    nominal_diameter: d_nom,
+                });
             }
-            HelixMode::Outer => d_nom + d_tool,
-        };
+            d_nom - tool_radius
+        }
+        HelixMode::Outer => d_nom + tool_radius,
+    };
 
-        let diameter = Diameter::mm(value).map_err(|_| GeometryError::OutOfRange)?;
+    let diameter = Diameter::mm(value)
+        .map_err(|_| HelixError::EffectiveDiameterNotPositive { value })?;
 
-        Ok(Self(diameter))
-    }
+    Ok(Self(diameter))
+}
 
     pub fn diameter(self) -> Diameter {
         self.0

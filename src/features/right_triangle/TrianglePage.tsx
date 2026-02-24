@@ -100,7 +100,7 @@ export function TrianglePage() {
               unit={f.unit}
               field={fieldState}
               disabled={fieldState.locked}
-              error={fieldState.invalid ? "Ugyldig verdi" : undefined}
+              error={fieldState.error}
               autoFocus={f.autoFocus}
               onChange={(value) =>
                 onFieldChange(f.key, value)

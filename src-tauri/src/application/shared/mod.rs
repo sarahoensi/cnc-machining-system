@@ -5,6 +5,9 @@
 
 mod error;
 mod result;
+mod validation;
 
 pub use error::ApplicationError;
 pub use result::AppResult;
+pub use validation::{ValidationErrors};
+

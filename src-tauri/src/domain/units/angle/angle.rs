@@ -1,6 +1,7 @@
 // units/angle/angle.rs
 
-use crate::domain::units::errors::UnitError;
+use super::error::AngleError;
+
 
 /// Represents a mathematical angle.
 ///
@@ -11,45 +12,38 @@ use crate::domain::units::errors::UnitError;
 pub struct Angle(f64);
 
 impl Angle {
-    /// Ensures the provided value is finite.
-    fn validate_finite(value: f64) -> Result<f64, UnitError> {
+    fn validate_finite(value: f64) -> Result<f64, AngleError> {
         if value.is_finite() {
             Ok(value)
         } else {
-            Err(UnitError::NotFinite("Angle"))
+            Err(AngleError::NotFinite { value })
         }
     }
 
-    /// Creates an [`Angle`] from radians.
-    ///
-    /// # Errors
-    ///
-    /// Returns an error if the value is not finite.
-    pub fn radians(value: f64) -> Result<Self, UnitError> {
+    pub fn radians(value: f64) -> Result<Self, AngleError> {
         Ok(Self(Self::validate_finite(value)?))
     }
 
-    /// Creates an [`Angle`] from degrees.
-    ///
-    /// The value is converted to radians internally.
-    ///
-    /// # Errors
-    ///
-    /// Returns an error if the value is not finite.
-    pub fn degrees(value: f64) -> Result<Self, UnitError> {
+    pub fn degrees(value: f64) -> Result<Self, AngleError> {
         Ok(Self(Self::validate_finite(value)?.to_radians()))
     }
 
-    /// Returns the angle value in radians.
-    ///
-    /// This is the internal canonical representation.
     pub fn radians_value(self) -> f64 {
         self.0
     }
 
-    /// Returns the angle value in degrees.
     pub fn degrees_value(self) -> f64 {
         self.0.to_degrees()
+    }
+
+    pub fn require_acute(&self) -> Result<(), AngleError> {
+        let deg = self.degrees_value();
+
+        if deg <= 0.0 || deg >= 90.0 {
+            return Err(AngleError::NotAcute { degrees: deg });
+        }
+
+        Ok(())
     }
 }
 

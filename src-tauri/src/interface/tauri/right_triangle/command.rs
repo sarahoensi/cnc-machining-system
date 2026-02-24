@@ -5,11 +5,16 @@
 
 // interface/tauri/right_triangle/command.rs
 
+
 use tauri::command;
-use serde::Serialize;
+
+use crate::interface::tauri::error::{
+    TauriError,
+    map_application_error,
+};
 
 use crate::application::SolveRightTriangleUseCase;
-use crate::application::ApplicationError;
+
 
 use super::{
     SolveRightTriangleRequest,
@@ -24,10 +29,7 @@ use super::{
 /// Message safety:
 /// - Message content is produced from application errors intended for UI
 ///   handling and display/logging.
-#[derive(Debug, Serialize)]
-pub struct TauriError {
-    message: String,
-}
+
 
 // ---------------------------------------------------------
 // Command
@@ -60,25 +62,13 @@ pub fn solve_right_triangle(
 ) -> Result<SolveRightTriangleResponse, TauriError> {
 
     let use_case = SolveRightTriangleUseCase;
-
     let input = request.into();
 
-    let result = use_case
+    use_case
         .execute(input)
-        .map_err(map_application_error)?;
-
-    Ok(result.into())
+        .map(Into::into)
+        .map_err(map_application_error)
 }
 
 
-// ---------------------------------------------------------
-// Error Mapping
-// ---------------------------------------------------------
 
-/// Maps application errors into the Tauri-facing error shape used by frontend
-/// consumers.
-fn map_application_error(err: ApplicationError) -> TauriError {
-    TauriError {
-        message: err.to_string(),
-    }
-}

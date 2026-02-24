@@ -1,20 +1,87 @@
-// domain/machining_strategy/strategy_errors.rs
+// domain/machining_strategy/strategy_error.rs
 
-use std::fmt;
+use thiserror::Error;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Error, Clone, PartialEq)]
 pub enum StrategyError {
-    InvalidInputs(&'static str),
-    ImpossiblePlan(&'static str),
-}
 
-impl fmt::Display for StrategyError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            StrategyError::InvalidInputs(msg) => write!(f, "Invalid inputs: {msg}"),
-            StrategyError::ImpossiblePlan(msg) => write!(f, "Impossible plan: {msg}"),
-        }
-    }
-}
+    // ---------------------------------------------------------
+    // Planning errors
+    // ---------------------------------------------------------
 
-impl std::error::Error for StrategyError {}
+    #[error("Start diameter ({start_mm}) and target diameter ({target_mm}) are incompatible with the selected direction")]
+    InvalidModeDirection {
+        start_mm: f64,
+        target_mm: f64,
+    },
+
+    #[error("Start and target diameters must differ")]
+    DiametersMustDiffer,
+
+    #[error("Cut count must be greater than zero (got {cuts})")]
+    InvalidCutCount {
+        cuts: u32,
+    },
+
+    #[error("Radial engagement must be positive (got {value_mm} mm)")]
+    InvalidRadialEngagement {
+        value_mm: f64,
+    },
+
+    #[error("Computed step must be positive (got {value_mm} mm)")]
+    ComputedStepNotPositive {
+        value_mm: f64,
+    },
+
+    #[error("Impossible machining plan: {reason}")]
+    ImpossiblePlan {
+        reason: &'static str,
+    },
+
+    // ---------------------------------------------------------
+    // Execution workflow errors
+    // ---------------------------------------------------------
+
+    #[error("Step number must start at 1")]
+    StepNumberMustBeOneBased,
+
+    #[error("Step number {step_number} is out of range (total steps: {total_steps})")]
+    StepNumberOutOfRange {
+        step_number: u32,
+        total_steps: usize,
+    },
+
+    #[error("Step {attempted_step} is locked (last measured step: {last_measured_step})")]
+    StepLocked {
+        attempted_step: u32,
+        last_measured_step: u32,
+    },
+
+    #[error("Measurement {measured_mm} mm is outside bounds ({start_mm} mm → {target_mm} mm)")]
+    MeasurementOutOfBounds {
+        measured_mm: f64,
+        start_mm: f64,
+        target_mm: f64,
+    },
+
+    #[error("Measurement moved backwards ({previous_mm} mm → {measured_mm} mm)")]
+    MeasurementBackwards {
+        previous_mm: f64,
+        measured_mm: f64,
+    },
+
+    #[error("Measurement {measured_mm} mm exceeds target {target_mm} mm")]
+    MeasurementExceedsTarget {
+        measured_mm: f64,
+        target_mm: f64,
+    },
+
+    #[error("Recalculation ended at {final_mm} mm but target is {target_mm} mm")]
+    RecalculationDidNotReachTarget {
+        final_mm: f64,
+        target_mm: f64,
+    },
+
+    #[error("Division by zero")]
+    DivisionByZero,
+}

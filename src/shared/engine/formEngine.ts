@@ -5,6 +5,9 @@ import type { FieldState } from "@shared/types/fields";
 import { emptyField, userField } from "@shared/types/fields";
 import { applyDriverEngine } from "./drivers";
 
+import { getTauriCommandError } from "@shared/api/tauriError";
+
+
 /* ============================================================
    Unlock all fields
 ============================================================ */
@@ -20,6 +23,7 @@ export function unlockAll<K extends string>(
       ...fields[key],
       locked: false,
       invalid: false,
+      error: undefined,
     };
   }
 
@@ -70,7 +74,7 @@ export function handleUserEdit<
 
   const updatedFields = {
     ...nextFields,
-    [key]: userField(rawValue),
+    [key]: { ...userField(rawValue), error: undefined, invalid: false },
   };
 
   const driven = applyDriverEngine(updatedFields, {
@@ -168,6 +172,7 @@ export async function handleCalculateAsync<
         source: wasUser ? "user" : "machine",
         locked: false,
         invalid: false,
+        error: undefined,
       };
     }
 
@@ -177,12 +182,37 @@ export async function handleCalculateAsync<
       extras: form.extras,
     };
 
-  } catch (error) {
+} catch (error) {
 
-    // Hvis solve feiler → tilbake til editing
-    return {
-      ...form,
-      status: "editing",
-    };
+  console.log("RAW ERROR:", error);
+
+  const te = getTauriCommandError(error);
+  console.log("PARSED TAURI ERROR:", te);
+
+  
+
+  // Start med "cleaned", så du ikke viser stale machine values
+  const nextFields: Record<K, FieldState> = { ...cleanedFields };
+
+  if (te?.field_errors) {
+    for (const [key, msg] of Object.entries(te.field_errors)) {
+      const k = key as K;
+
+      // hvis backend sender nøkkel som ikke finnes i dette skjemaet, ignorer
+      if (!nextFields[k]) continue;
+
+      nextFields[k] = {
+        ...nextFields[k],
+        invalid: true,
+        error: msg,
+      };
+    }
+  }
+
+  return {
+    status: "editing",
+    fields: nextFields,
+    extras: form.extras,
+  };
   }
 }
