@@ -48,4 +48,5 @@ pub use machining_strategy::{
     StrategyError,
     FinishingExecutionId,
     FinishingExecutionRepository,
+    FinishingRepositoryError,
    };
