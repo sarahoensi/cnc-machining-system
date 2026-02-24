@@ -3,9 +3,10 @@
 use thiserror::Error;
 
 use crate::domain::{
-    units::UnitsError,
-    geometry::GeometryError,
-    machining_physics::MachiningPhysicsError,
+    machining_strategy::StrategyError, 
+    geometry::GeometryError, 
+    machining_physics::MachiningPhysicsError, 
+    units::UnitsError
 };
 
 /// Root error type for the entire domain layer.
@@ -22,4 +23,7 @@ pub enum DomainError {
 
     #[error(transparent)]
     MachiningPhysics(#[from] MachiningPhysicsError),
+
+    #[error(transparent)]
+    MachiningStrategy(#[from] StrategyError),
 }

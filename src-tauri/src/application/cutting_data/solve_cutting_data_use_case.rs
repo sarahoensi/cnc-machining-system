@@ -1,231 +1,214 @@
 //! Use case for solving and completing cutting data.
 //!
-//! The workflow coordinates domain calculators to infer missing machining
-//! parameters from a partial input set while preserving domain validation.
+//! - Parses raw operator input into validated domain value objects.
+//! - Delegates mathematical consistency to `MachiningSolver`.
+//! - Maps domain errors back into field-level `ValidationErrors`.
+//!
+//! This use case is pure orchestration (no persistence, no side effects).
 
-// application/cutting_data/solve_cutting_data_use_case.rs
-
-use crate::application::{ApplicationError, ValidationErrors};
 use crate::application::shared::AppResult;
+use crate::application::{ApplicationError, ValidationErrors};
 
 use crate::application::cutting_data::dto::{SolveCuttingDataInput, SolveCuttingDataOutput};
 
 use crate::domain::{
     units::{ChipLoad, CuttingSpeed, Diameter, FeedRate, Rpm},
-    ChipLoadCalculator, FeedRateCalculator, SpindleSpeedCalculator, ToothCount,
+    MachiningPhysicsError, MachiningSolver, Tool, ToothCount,
 };
 
 pub struct SolveCuttingDataUseCase;
 
 impl SolveCuttingDataUseCase {
-    /// Completes a cutting-data set from the provided partial input.
-    ///
-    /// Purpose:
-    /// - Orchestrates spindle speed, cutting speed, feed rate, and chip-load
-    ///   relationships used in milling setup workflows.
-    ///
-    /// Required inputs:
-    /// - A valid subset of fields in [`SolveCuttingDataInput`].
-    /// - `diameter_mm` is needed for speed conversions.
-    /// - `teeth` is needed for feed/chip-load conversions.
-    ///
-    /// Output guarantees:
-    /// - Returns validated and derived values in [`SolveCuttingDataOutput`].
-    /// - Leaves unresolved fields as `None` when data is insufficient.
-    ///
-    /// Domain invariants enforced:
-    /// - Unit/domain value objects validate positivity and allowed ranges.
-    /// - Formula consistency is delegated to domain calculator services.
-    ///
-    /// Side effects:
-    /// - None. This use case is pure orchestration with no persistence.
-    ///
-    /// Error scenarios:
-    /// - Returns an application error when any provided value is invalid.
-    /// - Returns an application error when a requested domain calculation fails.
-
     /// Entry point for solving cutting data.
     pub fn execute(input: SolveCuttingDataInput) -> AppResult<SolveCuttingDataOutput> {
-        let mut state = Self::parse_input(input)?;
+        let mut v = ValidationErrors::new();
 
-        Self::infer_missing_values(&mut state)?;
+        // ---------------------------------------------------------
+        // Parse raw inputs into domain value objects
+        // ---------------------------------------------------------
 
-        Ok(Self::to_output(state))
-    }
+        let cutting_speed = parse_opt_f64(
+            "cutting_speed_m_per_min",
+            input.cutting_speed_m_per_min,
+            CuttingSpeed::meters_per_min,
+            &mut v,
+        );
 
-    // ---------------------------------------------------------
-    // Step 1: Parse input into validated domain state
-    // ---------------------------------------------------------
+        let rpm = parse_opt_f64("rpm", input.rpm, Rpm::new, &mut v);
 
-    fn parse_input(input: SolveCuttingDataInput) -> Result<CuttingState, ApplicationError> {
-        let mut errors = ValidationErrors::new();
+        let diameter = parse_opt_f64("diameter_mm", input.diameter_mm, Diameter::mm, &mut v);
 
-        let cutting_speed = match input.cutting_speed_m_per_min {
-            Some(v) => match CuttingSpeed::meters_per_min(v) {
-                Ok(val) => Some(val),
-                Err(e) => {
-                    errors.push("cutting_speed_m_per_min", "invalid", e.to_string());
-                    None
-                }
-            },
-            None => None,
-        };
+        let chip = parse_opt_f64(
+            "chip_load_mm_per_tooth",
+            input.chip_load_mm_per_tooth,
+            ChipLoad::mm_per_tooth,
+            &mut v,
+        );
 
-        let rpm = match input.rpm {
-            Some(v) => match Rpm::new(v) {
-                Ok(val) => Some(val),
-                Err(e) => {
-                    errors.push("rpm", "invalid", e.to_string());
-                    None
-                }
-            },
-            None => None,
-        };
+        let feed = parse_opt_f64(
+            "feed_rate_mm_per_min",
+            input.feed_rate_mm_per_min,
+            FeedRate::mm_per_min,
+            &mut v,
+        );
 
-        let diameter = match input.diameter_mm {
-            Some(v) => match Diameter::mm(v) {
-                Ok(val) => Some(val),
-                Err(e) => {
-                    errors.push("diameter_mm", "invalid", e.to_string());
-                    None
-                }
-            },
-            None => None,
-        };
+        let teeth = parse_opt_u32("teeth", input.teeth, ToothCount::new, &mut v);
 
-        let teeth = match input.teeth {
-            Some(v) => match ToothCount::new(v) {
-                Ok(val) => Some(val),
-                Err(e) => {
-                    errors.push("teeth", "invalid", e.to_string());
-                    None
-                }
-            },
-            None => None,
-        };
-
-        let chip_load = match input.chip_load_mm_per_tooth {
-    Some(v) => match ChipLoad::mm_per_tooth(v) {
-        Ok(val) => Some(val),
-        Err(e) => {
-            errors.push("chip_load_mm_per_tooth", "invalid", e.to_string());
-            None
-        }
-    },
-    None => None,
-};
-
-let feed_rate = match input.feed_rate_mm_per_min {
-    Some(v) => match FeedRate::mm_per_min(v) {
-        Ok(val) => Some(val),
-        Err(e) => {
-            errors.push("feed_rate_mm_per_min", "invalid", e.to_string());
-            None
-        }
-    },
-    None => None,
-};
-
-        if !errors.is_empty() {
-            return Err(ApplicationError::Validation(errors));
+        if !v.is_empty() {
+            return Err(ApplicationError::Validation(v));
         }
 
-        Ok(CuttingState {
-            cutting_speed,
-            rpm,
-            chip_load,
-            feed_rate,
-            diameter,
-            teeth,
+        // ---------------------------------------------------------
+        // Tool is required for any cross-parameter calculation
+        // ---------------------------------------------------------
+
+        let tool = match (diameter, teeth) {
+            (Some(d), Some(z)) => Tool::new(d, z),
+            _ => {
+                return Ok(to_output_partial(cutting_speed, rpm, chip, feed));
+            }
+        };
+
+        // ---------------------------------------------------------
+        // Delegate to domain solver
+        // ---------------------------------------------------------
+
+        let params = match (cutting_speed, chip, rpm, feed) {
+            // Cutting speed + chip load
+            (Some(vc), Some(fz), _, _) => MachiningSolver::from_speed_and_chip_load(vc, fz, tool),
+
+            // RPM + feed rate
+            (_, _, Some(n), Some(f)) => MachiningSolver::from_rpm_and_feed(n, f, tool),
+
+            // Insufficient combination
+            _ => {
+                return Ok(to_output_partial(cutting_speed, rpm, chip, feed));
+            }
+        }
+        .map_err(map_machining_error)?;
+
+        // ---------------------------------------------------------
+        // Convert domain result to DTO
+        // ---------------------------------------------------------
+
+        Ok(SolveCuttingDataOutput {
+            cutting_speed_m_per_min: Some(params.cutting_speed().meters_per_min_value()),
+            rpm: Some(params.rpm().value()),
+            chip_load_mm_per_tooth: Some(params.chip_load().mm_per_tooth_value()),
+            feed_rate_mm_per_min: Some(params.feed_rate().mm_per_min_value()),
         })
-    }
-
-    // ---------------------------------------------------------
-    // Step 2: Forward-chaining inference
-    // ---------------------------------------------------------
-
-    fn infer_missing_values(state: &mut CuttingState) -> AppResult<()> {
-        let mut changed = true;
-
-        while changed {
-            changed = false;
-
-            // -------------------------------------------------
-            // Cutting speed ↔ RPM
-            // -------------------------------------------------
-
-            if state.rpm.is_none() {
-                if let (Some(vc), Some(d)) = (state.cutting_speed, state.diameter) {
-                    state.rpm = Some(SpindleSpeedCalculator::rpm_from_cutting_speed(vc, d)?);
-                    changed = true;
-                }
-            }
-
-            if state.cutting_speed.is_none() {
-                if let (Some(rpm), Some(d)) = (state.rpm, state.diameter) {
-                    state.cutting_speed =
-                        Some(SpindleSpeedCalculator::cutting_speed_from_rpm(rpm, d)?);
-                    changed = true;
-                }
-            }
-
-            // -------------------------------------------------
-            // Chip load ↔ Feed rate
-            // -------------------------------------------------
-
-            if state.feed_rate.is_none() {
-                if let (Some(chip), Some(rpm), Some(teeth)) =
-                    (state.chip_load, state.rpm, state.teeth)
-                {
-                    state.feed_rate = Some(FeedRateCalculator::feed_rate_from_chip_load(
-                        chip, rpm, teeth,
-                    )?);
-                    changed = true;
-                }
-            }
-
-            if state.chip_load.is_none() {
-                if let (Some(feed), Some(rpm), Some(teeth)) =
-                    (state.feed_rate, state.rpm, state.teeth)
-                {
-                    state.chip_load = Some(ChipLoadCalculator::chip_load_from_feed_rate(
-                        feed, rpm, teeth,
-                    )?);
-                    changed = true;
-                }
-            }
-        }
-
-        Ok(())
-    }
-
-    // ---------------------------------------------------------
-    // Step 3: Convert back to DTO
-    // ---------------------------------------------------------
-
-    fn to_output(state: CuttingState) -> SolveCuttingDataOutput {
-        SolveCuttingDataOutput {
-            cutting_speed_m_per_min: state.cutting_speed.map(|v| v.meters_per_min_value()),
-
-            rpm: state.rpm.map(|r| r.value()),
-
-            chip_load_mm_per_tooth: state.chip_load.map(|c| c.mm_per_tooth_value()),
-
-            feed_rate_mm_per_min: state.feed_rate.map(|f| f.mm_per_min_value()),
-        }
     }
 }
 
 // ---------------------------------------------------------
-// Internal state representation
+// Parsing helpers
 // ---------------------------------------------------------
 
-#[derive(Debug)]
-struct CuttingState {
+fn parse_opt_f64<T, E, F>(
+    field: &'static str,
+    raw: Option<f64>,
+    ctor: F,
+    v: &mut ValidationErrors,
+) -> Option<T>
+where
+    F: FnOnce(f64) -> Result<T, E>,
+    E: std::error::Error,
+{
+    match raw {
+        Some(value) => match ctor(value) {
+            Ok(val) => Some(val),
+            Err(e) => {
+                v.push(field, "invalid", e.to_string());
+                None
+            }
+        },
+        None => None,
+    }
+}
+
+fn parse_opt_u32<T, E, F>(
+    field: &'static str,
+    raw: Option<u32>,
+    ctor: F,
+    v: &mut ValidationErrors,
+) -> Option<T>
+where
+    F: FnOnce(u32) -> Result<T, E>,
+    E: std::error::Error,
+{
+    match raw {
+        Some(value) => match ctor(value) {
+            Ok(val) => Some(val),
+            Err(e) => {
+                v.push(field, "invalid", e.to_string());
+                None
+            }
+        },
+        None => None,
+    }
+}
+
+// ---------------------------------------------------------
+// Domain error → ValidationErrors mapping
+// ---------------------------------------------------------
+
+fn map_machining_error(err: MachiningPhysicsError) -> ApplicationError {
+    let mut v = ValidationErrors::new();
+
+    match err {
+        MachiningPhysicsError::InvalidDiameter { .. } => {
+            v.push("diameter_mm", "invalid", err.to_string());
+        }
+
+        MachiningPhysicsError::InvalidToothCount { .. } => {
+            v.push("teeth", "invalid", err.to_string());
+        }
+
+        MachiningPhysicsError::InvalidRpm { .. } => {
+            v.push("rpm", "invalid_combination", err.to_string());
+        }
+
+        MachiningPhysicsError::InvalidFeedRate { .. } => {
+            v.push(
+                "feed_rate_mm_per_min",
+                "invalid_combination",
+                err.to_string(),
+            );
+        }
+
+        MachiningPhysicsError::InvalidChipLoad { .. } => {
+            v.push(
+                "chip_load_mm_per_tooth",
+                "invalid_combination",
+                err.to_string(),
+            );
+        }
+
+        MachiningPhysicsError::DivisionByZero | MachiningPhysicsError::NumericalInstability => {
+            v.push("cutting_data", "invalid_combination", err.to_string());
+        }
+    }
+
+    ApplicationError::Validation(v)
+}
+
+// ---------------------------------------------------------
+// Partial output helper
+// ---------------------------------------------------------
+
+fn to_output_partial(
     cutting_speed: Option<CuttingSpeed>,
     rpm: Option<Rpm>,
-    chip_load: Option<ChipLoad>,
-    feed_rate: Option<FeedRate>,
-    diameter: Option<Diameter>,
-    teeth: Option<ToothCount>,
+    chip: Option<ChipLoad>,
+    feed: Option<FeedRate>,
+) -> SolveCuttingDataOutput {
+    SolveCuttingDataOutput {
+        cutting_speed_m_per_min: cutting_speed.map(|v| v.meters_per_min_value()),
+
+        rpm: rpm.map(|r| r.value()),
+
+        chip_load_mm_per_tooth: chip.map(|c| c.mm_per_tooth_value()),
+
+        feed_rate_mm_per_min: feed.map(|f| f.mm_per_min_value()),
+    }
 }

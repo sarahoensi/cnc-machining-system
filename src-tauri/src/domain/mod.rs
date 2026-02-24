@@ -3,9 +3,9 @@ pub mod units;
 mod geometry;
 mod machining_physics;
 mod machining_strategy;
-pub mod error;
+mod error;
 
-
+pub use error::DomainError;
 
 // --------------------------------
 // Geometry
@@ -15,6 +15,7 @@ pub use geometry::{
     Helix,
     HelixAngle,
     HelixMode,
+    HelixError,
     EffectiveDiameter,
     RightTriangle,
     RightTriangleSolver,
@@ -28,7 +29,9 @@ pub use geometry::{
 pub use machining_physics::{
     CuttingParameters,
     MachiningSolver,
-    MachiningPhysicsError
+    MachiningPhysicsError,
+Tool,
+ToothCount
 };
 
 // --------------------------------
