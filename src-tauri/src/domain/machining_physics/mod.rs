@@ -5,7 +5,6 @@
 mod error;
 mod cutting_parameters;
 mod cutting_solver;
-mod formulas;
 mod tool;
 
 pub use error::MachiningPhysicsError;

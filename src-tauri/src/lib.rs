@@ -8,6 +8,11 @@ pub mod infrastructure;
 pub mod interface;
 pub mod test_utils;
 
+use std::sync::Arc;
+
+use crate::domain::FinishingExecutionRepository;
+use crate::infrastructure::finishing::InMemoryFinishingExecutionRepository;
+
 use crate::interface::{
     cutting_data::solve_cutting_data,
     helix::solve_helix,
@@ -18,10 +23,19 @@ use crate::interface::{
     },
 };
 
+pub struct AppState {
+    pub finishing_repo: Arc<dyn FinishingExecutionRepository>,
+}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .manage(AppState {
+            finishing_repo: Arc::new(
+                InMemoryFinishingExecutionRepository::new()
+            ),
+        })
+
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             // right triangle

@@ -20,7 +20,9 @@ use super::{FinishingExecution, FinishingExecutionId};
 /// # Concurrency
 ///
 /// Implementations must be safe for concurrent access (`Send + Sync`).
-pub trait FinishingExecutionRepository {
+pub trait FinishingExecutionRepository:
+    Send + Sync
+{
     fn get(
         &self,
         id: FinishingExecutionId,

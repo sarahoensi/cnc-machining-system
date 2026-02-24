@@ -66,41 +66,33 @@ mod tests {
         assert!(result.is_ok());
     }
 
-    #[test]
-    fn rejects_zero_angle() {
-        let angle = Angle::degrees(0.0).unwrap();
+   #[test]
+fn rejects_zero_angle() {
+    let angle = Angle::degrees(0.0).unwrap();
+    let result = HelixAngle::new(angle);
+    assert!(result.is_err());
+}
 
-        let result = HelixAngle::new(angle);
+#[test]
+fn rejects_ninety_degrees() {
+    let angle = Angle::degrees(90.0).unwrap();
+    let result = HelixAngle::new(angle);
+    assert!(result.is_err());
+}
 
-        assert!(matches!(result, Err(HelixError)));
-    }
+#[test]
+fn rejects_above_ninety() {
+    let angle = Angle::degrees(120.0).unwrap();
+    let result = HelixAngle::new(angle);
+    assert!(result.is_err());
+}
 
-    #[test]
-    fn rejects_ninety_degrees() {
-        let angle = Angle::degrees(90.0).unwrap();
-
-        let result = HelixAngle::new(angle);
-
-        assert!(matches!(result, Err(HelixError)));
-    }
-
-    #[test]
-    fn rejects_above_ninety() {
-        let angle = Angle::degrees(120.0).unwrap();
-
-        let result = HelixAngle::new(angle);
-
-        assert!(matches!(result, Err(HelixError)));
-    }
-
-    #[test]
-    fn rejects_negative_angle() {
-        let angle = Angle::degrees(-10.0).unwrap();
-
-        let result = HelixAngle::new(angle);
-
-        assert!(matches!(result, Err(HelixError)));
-    }
+#[test]
+fn rejects_negative_angle() {
+    let angle = Angle::degrees(-10.0).unwrap();
+    let result = HelixAngle::new(angle);
+    assert!(result.is_err());
+}
 
     #[test]
     fn preserves_original_angle_value() {
