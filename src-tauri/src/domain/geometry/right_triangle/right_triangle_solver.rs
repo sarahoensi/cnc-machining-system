@@ -1,3 +1,5 @@
+//domain/right_triangle/right_triangle_solver.rs
+
 use crate::domain::{
     GeometryError,
     geometry::right_triangle::{RightTriangle, RightTriangleError},
@@ -16,11 +18,27 @@ impl RightTriangleSolver {
     // ---------------------------------------------------------
 
     pub fn from_legs(
-        a: Length,
-        b: Length,
-    ) -> Result<RightTriangle, GeometryError> {
-        Ok(RightTriangle::new(a, b))
+    a: Length,
+    b: Length,
+) -> Result<RightTriangle, GeometryError> {
+
+    let a_mm = a.mm_value();
+    let b_mm = b.mm_value();
+
+    if a_mm <= 0.0 {
+        return Err(
+            RightTriangleError::LegNotPositive { value: a_mm }.into()
+        );
     }
+
+    if b_mm <= 0.0 {
+        return Err(
+            RightTriangleError::LegNotPositive { value: b_mm }.into()
+        );
+    }
+
+    Ok(RightTriangle::new(a, b))
+}
 
     // ---------------------------------------------------------
     // a + c
