@@ -1,4 +1,6 @@
-use std::fmt;
+// domain/error.rs 
+
+use thiserror::Error;
 
 use crate::domain::{
     units::UnitsError,
@@ -9,33 +11,15 @@ use crate::domain::{
 /// Root error type for the entire domain layer.
 ///
 /// All domain-level failures are wrapped in this enum.
-#[derive(Debug)]
+#[derive(Debug, Error)]
 pub enum DomainError {
-    Units(UnitsError),
-    Geometry(GeometryError),
-    MachiningPhysics(MachiningPhysicsError),
+
+    #[error(transparent)]
+    Units(#[from] UnitsError),
+
+    #[error(transparent)]
+    Geometry(#[from] GeometryError),
+
+    #[error(transparent)]
+    MachiningPhysics(#[from] MachiningPhysicsError),
 }
-
-//
-// Automatic conversions (critical for `?` propagation)
-//
-
-impl From<UnitsError> for DomainError {
-    fn from(value: UnitsError) -> Self {
-        DomainError::Units(value)
-    }
-}
-
-impl From<GeometryError> for DomainError {
-    fn from(value: GeometryError) -> Self {
-        DomainError::Geometry(value)
-    }
-}
-
-impl From<MachiningPhysicsError> for DomainError {
-    fn from(value: MachiningPhysicsError) -> Self {
-        DomainError::MachiningPhysics(value)
-    }
-}
-
-
