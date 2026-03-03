@@ -15,6 +15,7 @@ pub use error::UnitsError;
 
 pub use length::{
     Length,
+    PositiveLength,
     Diameter,
     Radius,
     Pitch,

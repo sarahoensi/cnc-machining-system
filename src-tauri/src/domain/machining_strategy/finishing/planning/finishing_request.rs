@@ -1,8 +1,7 @@
 // domain/machining_strategy/finishing/finishing_request.rs
 
 use crate::domain::{
-    units::{Diameter, Length},
-    FinishingMode,
+    FinishingMode, units::{Diameter, PositiveLength}
 };
 
 
@@ -19,7 +18,7 @@ pub enum FinishingPlanning {
     /// The number of finishing cuts is derived from radial engagement (ae).
     ///
     /// Radial engagement represents the material removed per pass.
-    ByRadialEngagement(Length),
+    ByRadialEngagement(PositiveLength),
 }
 
 /// Domain-level request used to generate a finishing plan.

@@ -1,9 +1,7 @@
 // domain/machining_strategy/finishing_execution.rs
 
 use crate::domain::{
-    machining_strategy::strategy_error::StrategyError,
-    units::{Diameter, Length},
-    {FinishingPlan, FinishingStep},
+    FinishingPlan, FinishingStep, machining_strategy::strategy_error::StrategyError, units::{Diameter, PositiveLength}
 };
 
 const EPS: f64 = 1e-12;
@@ -279,7 +277,7 @@ impl FinishingExecution {
         }
 
         let new_step_mag = remaining_delta_mag / remaining_steps as f64;
-        let new_step = Length::mm_positive(new_step_mag).map_err(|_| {
+        let new_step = PositiveLength::mm(new_step_mag).map_err(|_| {
             StrategyError::ComputedStepNotPositive {
                 value_mm: new_step_mag,
             }
@@ -344,7 +342,7 @@ fn build_steps_from_start(
     start: Diameter,
     target: Diameter,
     cuts: u32,
-    step: Length,
+    step: PositiveLength,
     dir: f64,
 ) -> Result<Vec<FinishingStep>, StrategyError> {
 
