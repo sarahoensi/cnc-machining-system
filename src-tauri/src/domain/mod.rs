@@ -31,7 +31,7 @@ pub use machining_physics::{
     MachiningSolver,
     MachiningPhysicsError,
 Tool,
-ToothCount
+
 };
 
 // --------------------------------

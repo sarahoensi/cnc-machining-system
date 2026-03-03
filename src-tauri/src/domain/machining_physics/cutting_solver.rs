@@ -1,9 +1,9 @@
 // domain/machining_physics/cutting_solver.rs
 
 use crate::domain::{
-    ToothCount, machining_physics::{
+     machining_physics::{
         CuttingParameters, MachiningPhysicsError, Tool,
-    }, units::{ChipLoad, CuttingSpeed, Diameter, FeedRate, Rpm}
+    }, units::{ChipLoad, CuttingSpeed, Diameter, FeedRate, Rpm, ToothCount}
 };
 
 
@@ -79,22 +79,14 @@ impl MachiningSolver {
     diameter: Diameter,
 ) -> Result<Rpm, MachiningPhysicsError> {
 
-    let d = diameter.mm_value();
-
-    if d <= 0.0 || !d.is_finite() {
-        return Err(MachiningPhysicsError::InvalidDiameter {
-            value_mm: d,
-        });
-    }
+    // diameter er allerede > 0 og finite
 
     let rpm =
         (cutting_speed.meters_per_min_value() * 1000.0)
-            / (PI * d);
+            / (PI * diameter.mm_value());
 
-    if rpm <= 0.0 || !rpm.is_finite() {
-        return Err(MachiningPhysicsError::InvalidRpm {
-            value: rpm,
-        });
+    if !rpm.is_finite() {
+        return Err(MachiningPhysicsError::NumericalInstability);
     }
 
     Rpm::new(rpm)

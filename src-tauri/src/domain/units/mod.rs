@@ -21,7 +21,7 @@ pub use length::{
     Pitch,
 };
 
-pub use angle::Angle;
+pub use angle::{Angle, AcuteAngle};
 
 pub use motion::{
     FeedRate,
@@ -31,6 +31,7 @@ pub use motion::{
 pub use machining::{
     ChipLoad,
     CuttingSpeed,
+    ToothCount,
 };
 
 pub use core::{
