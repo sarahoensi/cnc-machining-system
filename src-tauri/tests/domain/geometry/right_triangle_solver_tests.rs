@@ -1,8 +1,7 @@
 // tests/domain/geometry/right_triangle_solver_tests.rs
 
 use cnc_machining_system_lib::domain::{
-    units::{Angle, Length},
-     RightTriangle, RightTriangleSolver,
+    RightTriangle, RightTriangleSolver, units::{AcuteAngle,  PositiveLength}
 };
 use cnc_machining_system_lib::test_utils::approx::{approx_eq, DEFAULT_EPS};
 
@@ -12,17 +11,17 @@ const TRI_345_ALPHA: f64 = 36.869897645844;
 // Helpers
 // ---------------------------------------------------------
 
-fn len(v: f64) -> Length {
-    Length::mm_positive(v).unwrap()
+fn len(v: f64) -> PositiveLength {
+    PositiveLength::mm(v).unwrap()
 }
 
 /// Used ONLY for invalid input tests
-fn len_any(v: f64) -> Length {
-    Length::mm(v).unwrap()
+fn len_any(v: f64) -> PositiveLength {
+    PositiveLength::mm(v).unwrap()
 }
 
-fn angle_deg(v: f64) -> Angle {
-    Angle::degrees(v).unwrap()
+fn angle_deg(v: f64) -> AcuteAngle {
+    AcuteAngle::degrees(v).unwrap()
 }
 
 fn t_345() -> RightTriangle {

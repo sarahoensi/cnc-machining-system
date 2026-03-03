@@ -14,8 +14,9 @@ use crate::application::finishing::finishing_execution_output::FinishingExecutio
 use crate::application::finishing::generate_finishing_plan_input::GenerateFinishingPlanInput;
 use crate::application::finishing::mapping::finishing_execution_mapper::to_execution_output;
 
+use crate::domain::units::PositiveLength;
 use crate::domain::{
-    units::{Diameter, Length},
+    units::{Diameter},
     FinishingExecution,
     FinishingExecutionId,
     FinishingExecutionRepository,
@@ -113,7 +114,7 @@ impl GenerateFinishingPlanUseCase {
                 let target =
                     parse_diameter("target_diameter_mm", target_diameter_mm, &mut errors);
 
-                let radial = match Length::mm_positive(radial_engagement_mm) {
+                let radial = match PositiveLength::mm(radial_engagement_mm) {
                     Ok(v) => Some(v),
                     Err(e) => {
                         errors.push("radial_engagement_mm", "invalid", e.to_string());

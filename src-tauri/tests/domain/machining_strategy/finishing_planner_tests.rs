@@ -6,8 +6,8 @@ fn d(v: f64) -> Diameter {
     Diameter::mm(v).unwrap()
 }
 
-fn l(v: f64) -> Length {
-    Length::mm_positive(v).unwrap()
+fn l(v: f64) -> PositiveLength {
+    PositiveLength::mm(v).unwrap()
 }
 
 //

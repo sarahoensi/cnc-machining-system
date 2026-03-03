@@ -1,6 +1,6 @@
 // domain/geometry/right_triangle/right_triangle.rs
 
-use crate::domain::units::{Angle, Length, PositiveLength};
+use crate::domain::units::{AcuteAngle, Angle, Length, PositiveLength};
 
 const TRIG_CLAMP_EPS: f64 = 1e-15;
 
@@ -53,14 +53,14 @@ impl RightTriangle {
     /// Acute angle `alpha` opposite leg `a`.
     ///
     /// Returns an `Angle` in radians constructed using validated trig input.
-    pub fn alpha(&self) -> Angle {
+    pub fn alpha(&self) -> AcuteAngle {
         let ratio = clamp_unit(self.a.mm_value() / self.c().mm_value());
-        Angle::radians(ratio.asin()).unwrap()
+        AcuteAngle::radians(ratio.asin()).unwrap()
     }
 
     /// Complementary acute angle `beta` adjacent to leg `a`.
-    pub fn beta(&self) -> Angle {
-        Angle::degrees(90.0 - self.alpha().degrees_value()).unwrap()
+    pub fn beta(&self) -> AcuteAngle {
+        AcuteAngle::degrees(90.0 - self.alpha().degrees_value()).unwrap()
     }
 
     /// Right angle `gamma` (always 90°).

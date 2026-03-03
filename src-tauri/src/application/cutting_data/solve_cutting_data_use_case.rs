@@ -4,11 +4,11 @@ use crate::application::{ApplicationError, ValidationErrors};
 use crate::application::shared::AppResult;
 use crate::application::cutting_data::dto::{SolveCuttingDataInput, SolveCuttingDataOutput};
 
+use crate::domain::units::ToothCount;
 use crate::domain::{
     units::{ChipLoad, CuttingSpeed, Diameter, FeedRate, Rpm},
     MachiningPhysicsError,
     MachiningSolver,
-    ToothCount,
 };
 
 pub struct SolveCuttingDataUseCase;
