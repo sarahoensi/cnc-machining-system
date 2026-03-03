@@ -1,7 +1,6 @@
 // domain/units/length/length.rs
 
-use crate::domain::units::core::NumericError;
-use super::error::LengthUnitError;
+use crate::domain::units::{UnitsError, core::NumericError};
 
 /// Represents a signed linear length measurement.
 ///
@@ -34,12 +33,12 @@ impl Length {
     }
 
     /// Creates a signed length in millimeters.
-    pub fn mm(value: f64) -> Result<Self, LengthUnitError> {
+    pub fn mm(value: f64) -> Result<Self, UnitsError> {
         Ok(Self(Self::validate_finite(value)?))
     }
 
     /// Creates a signed length from inches.
-    pub fn inches(value: f64) -> Result<Self, LengthUnitError> {
+    pub fn inches(value: f64) -> Result<Self, UnitsError> {
         Ok(Self(Self::validate_finite(value)? * 25.4))
     }
 
@@ -54,7 +53,7 @@ impl Length {
     }
 
     /// Attempts to convert to PositiveLength.
-    pub fn try_into_positive(self) -> Result<PositiveLength, LengthUnitError> {
+    pub fn try_into_positive(self) -> Result<PositiveLength, UnitsError> {
         PositiveLength::mm(self.0)
     }
 }
@@ -78,12 +77,12 @@ impl PositiveLength {
     }
 
     /// Creates a strictly positive length in millimeters.
-    pub fn mm(value: f64) -> Result<Self, LengthUnitError> {
+    pub fn mm(value: f64) -> Result<Self, UnitsError> {
         Ok(Self(Self::validate_positive(value)?))
     }
 
     /// Creates from inches.
-    pub fn inches(value: f64) -> Result<Self, LengthUnitError> {
+    pub fn inches(value: f64) -> Result<Self, UnitsError> {
         Ok(Self(Self::validate_positive(value)? * 25.4))
     }
 

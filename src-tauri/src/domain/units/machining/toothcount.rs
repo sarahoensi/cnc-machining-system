@@ -1,8 +1,7 @@
 // domain/units/machining/toothcount.rs
 
 use crate::domain::units::{
-    core::NumericError,
-    machining::MachiningUnitError,
+    UnitsError, core::NumericError,
 };
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -10,7 +9,7 @@ pub struct ToothCount(u32);
 
 impl ToothCount {
 
-    pub fn new(value: u32) -> Result<Self, MachiningUnitError> {
+    pub fn new(value: u32) -> Result<Self, UnitsError> {
         if value == 0 {
             return Err(NumericError::NonPositive(value as f64).into());
         }

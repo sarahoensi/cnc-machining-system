@@ -12,7 +12,7 @@ use crate::domain::{
 /// Root error type for the entire domain layer.
 ///
 /// All domain-level failures are wrapped in this enum.
-#[derive(Debug, Error, Clone, PartialEq)]
+#[derive(Debug, Error)]
 pub enum DomainError {
 
     #[error(transparent)]

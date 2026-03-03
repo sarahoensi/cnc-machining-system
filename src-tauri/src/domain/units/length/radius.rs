@@ -3,10 +3,10 @@
 use crate::domain::units::length::{
     Length,
     PositiveLength,
-    LengthUnitError,
+    
 };
 
-use crate::domain::units::Diameter;
+use crate::domain::units::{Diameter, UnitsError};
 
 /// Represents a strictly positive radius measurement.
 ///
@@ -20,7 +20,7 @@ impl Radius {
     ///
     /// # Errors
     /// Returns error if value is not finite or ≤ 0.
-    pub fn mm(value: f64) -> Result<Self, LengthUnitError> {
+    pub fn mm(value: f64) -> Result<Self, UnitsError> {
         Ok(Self(PositiveLength::mm(value)?))
     }
 

@@ -1,5 +1,6 @@
-// domain//geometry/helix/effective_diameters.rs
+// domain/geometry/helix/effective_diameters.rs
 
+use crate::domain::GeometryError;
 use crate::domain::units::Diameter;
 use crate::domain::geometry::HelixError;
 
@@ -18,7 +19,7 @@ impl EffectiveDiameter {
         mode: HelixMode,
         nominal: Diameter,
         tool: Diameter,
-    ) -> Result<Self, HelixError> {
+    ) -> Result<Self, GeometryError> {
 
         let d_nom = nominal.mm_value();
         let d_tool = tool.mm_value();
@@ -27,10 +28,13 @@ impl EffectiveDiameter {
         let value = match mode {
             HelixMode::Inner => {
                 if tool_radius >= d_nom {
-                    return Err(HelixError::ToolTooLarge {
-                        tool_diameter: d_tool,
-                        nominal_diameter: d_nom,
-                    });
+                    return Err(
+                        HelixError::ToolTooLarge {
+                            tool_diameter: d_tool,
+                            nominal_diameter: d_nom,
+                        }
+                        .into()   // 🔹 viktig
+                    );
                 }
 
                 d_nom - tool_radius
@@ -39,12 +43,8 @@ impl EffectiveDiameter {
             HelixMode::Outer => d_nom + tool_radius,
         };
 
-        // Matematisk invariant:
-        // Inner: tool_radius < d_nom → result > 0
-        // Outer: d_nom > 0 → result > 0
-        let diameter =
-            Diameter::mm(value)
-                .expect("Effective diameter must remain positive");
+        // UnitsError → GeometryError via #[from]
+        let diameter = Diameter::mm(value)?;
 
         Ok(Self(diameter))
     }

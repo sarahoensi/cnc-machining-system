@@ -3,10 +3,7 @@
 use thiserror::Error;
 
 use crate::domain::units::{
-    angle::AngleError,
-    length::LengthUnitError,
-    motion::MotionUnitError,
-    machining::MachiningUnitError,
+    angle::AngleError, core::NumericError, length::LengthUnitError, machining::MachiningUnitError, motion::MotionUnitError
 };
 
 /// Top-level error for the units subdomain.
@@ -14,6 +11,9 @@ use crate::domain::units::{
 /// Wraps all specific unit value object errors.
 #[derive(Debug, Error, Clone, PartialEq)]
 pub enum UnitsError {
+
+    #[error(transparent)]
+    Numeric(#[from] NumericError),
 
     #[error(transparent)]
     Angle(#[from] AngleError),

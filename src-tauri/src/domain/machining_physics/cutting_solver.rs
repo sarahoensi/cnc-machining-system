@@ -1,8 +1,10 @@
+//domain/machining_physics/cutting_solver.rs
+
 use crate::domain::{
     machining_physics::{
         CuttingParameters, MachiningPhysicsError, Tool,
     },
-    units::{ChipLoad, CuttingSpeed, Diameter, FeedRate, Rpm, ToothCount, UnitsError},
+    units::{ChipLoad, CuttingSpeed, Diameter, FeedRate, Rpm, ToothCount},
 };
 
 use std::f64::consts::PI;
@@ -79,6 +81,7 @@ impl MachiningSolver {
     // Core physics
     // ---------------------------------------------------------
 
+     /// n = (1000 * Vc) / (π * D)
     pub fn rpm_from_cutting_speed(
         cutting_speed: CuttingSpeed,
         diameter: Diameter,
@@ -92,7 +95,7 @@ impl MachiningSolver {
             return Err(MachiningPhysicsError::NumericalInstability);
         }
 
-        Ok(Rpm::new(rpm).map_err(UnitsError::from)?)
+        Ok(Rpm::new(rpm)?)
     }
 
     /// Vc = π * D * n / 1000
@@ -108,7 +111,7 @@ impl MachiningSolver {
             return Err(MachiningPhysicsError::NumericalInstability);
         }
 
-        Ok(CuttingSpeed::meters_per_min(vc).map_err(UnitsError::from)?)
+        Ok(CuttingSpeed::meters_per_min(vc)?)
     }
 
     /// F = fz * n * z
@@ -127,7 +130,7 @@ impl MachiningSolver {
             return Err(MachiningPhysicsError::NumericalInstability);
         }
 
-        Ok(FeedRate::mm_per_min(f).map_err(UnitsError::from)?)
+        Ok(FeedRate::mm_per_min(f)?)
     }
 
     /// fz = F / (n * z)
@@ -151,8 +154,7 @@ impl MachiningSolver {
             return Err(MachiningPhysicsError::NumericalInstability);
         }
 
-        Ok(ChipLoad::mm_per_tooth(chip)
-    .map_err(UnitsError::from)?)
+        Ok(ChipLoad::mm_per_tooth(chip)?)
     }
 }
 

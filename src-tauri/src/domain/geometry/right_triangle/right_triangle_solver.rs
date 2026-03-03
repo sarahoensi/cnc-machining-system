@@ -66,11 +66,9 @@ impl RightTriangleSolver {
         let a_val = c_mm * rad.sin();
         let b_val = c_mm * rad.cos();
 
-        let a = PositiveLength::mm(a_val)
-            .map_err(|_| RightTriangleError::LegNotPositive { value: a_val })?;
+        let a = PositiveLength::mm(a_val)?;
 
-        let b = PositiveLength::mm(b_val)
-            .map_err(|_| RightTriangleError::LegNotPositive { value: b_val })?;
+        let b = PositiveLength::mm(b_val)?;
 
         Ok(RightTriangle::new(a, b))
     }
@@ -95,7 +93,7 @@ pub fn from_leg_and_opposite_angle(
     }
 
     if sin.abs() < EPS {
-        return Err(RightTriangleError::DivisionByZero.into());
+        return Err(RightTriangleError::NumericalInstability.into());
     }
 
     // b = a * cos / sin   (more stable than a / tan)
@@ -105,8 +103,8 @@ pub fn from_leg_and_opposite_angle(
         return Err(RightTriangleError::NumericalInstability.into());
     }
 
-    let b = PositiveLength::mm(b_val)
-        .map_err(|_| RightTriangleError::LegNotPositive { value: b_val })?;
+    let b = PositiveLength::mm(b_val)?;
+
 
     Ok(RightTriangle::new(a, b))
 }
@@ -131,7 +129,7 @@ pub fn from_adjacent_leg_and_angle(
     }
 
     if cos.abs() < EPS {
-        return Err(RightTriangleError::DivisionByZero.into());
+        return Err(RightTriangleError::NumericalInstability.into());
     }
 
     // a = b * sin / cos  (more stable than b * tan)
@@ -141,8 +139,8 @@ pub fn from_adjacent_leg_and_angle(
         return Err(RightTriangleError::NumericalInstability.into());
     }
 
-    let a = PositiveLength::mm(a_val)
-        .map_err(|_| RightTriangleError::LegNotPositive { value: a_val })?;
+    let a = PositiveLength::mm(a_val)?;
+        
 
     Ok(RightTriangle::new(a, b))
 }
@@ -233,8 +231,12 @@ let alpha = AcuteAngle::radians(alpha_rad)
 
     let other_val = safe_sqrt(other_sq)?;
 
-    PositiveLength::mm(other_val)
-        .map_err(|_| RightTriangleError::LegNotPositive { value: other_val }.into())
+    PositiveLength::mm(other_val)?;
+
+    let other = PositiveLength::mm(other_val)?;
+
+    Ok(other)
+        
 }
 
     

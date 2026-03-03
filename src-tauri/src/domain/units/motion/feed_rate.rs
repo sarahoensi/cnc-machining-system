@@ -1,8 +1,7 @@
 // domain/units/motion/feed_rate.rs
 
 use crate::domain::units::{
-    PositiveScalar,
-    motion::MotionUnitError,
+    PositiveScalar, UnitsError,
 };
 
 /// Represents linear feed rate.
@@ -14,7 +13,7 @@ pub struct FeedRate(PositiveScalar);
 
 impl FeedRate {
 
-    pub fn mm_per_min(value: f64) -> Result<Self, MotionUnitError> {
+    pub fn mm_per_min(value: f64) -> Result<Self, UnitsError> {
         Ok(Self(PositiveScalar::new(value)?))
     }
 

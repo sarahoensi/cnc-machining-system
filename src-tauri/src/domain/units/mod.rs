@@ -19,19 +19,22 @@ pub use length::{
     Diameter,
     Radius,
     Pitch,
+    LengthUnitError,
 };
 
-pub use angle::{Angle, AcuteAngle};
+pub use angle::{Angle, AcuteAngle,AngleError};
 
 pub use motion::{
     FeedRate,
     Rpm,
+    MotionUnitError,
 };
 
 pub use machining::{
     ChipLoad,
     CuttingSpeed,
     ToothCount,
+    MachiningUnitError
 };
 
 pub use core::{

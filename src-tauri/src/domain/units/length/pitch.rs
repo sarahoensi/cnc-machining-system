@@ -1,10 +1,8 @@
 // domain/units/length/pitch.rs
 
-use crate::domain::units::length::{
-    Length,
-    PositiveLength,
-    LengthUnitError,
-};
+use crate::domain::units::{UnitsError, length::{
+    Length, PositiveLength
+}};
 
 /// Represents a strictly positive linear pitch (mm per revolution).
 ///
@@ -18,7 +16,7 @@ impl Pitch {
     ///
     /// # Errors
     /// Returns error if value is not finite or ≤ 0.
-    pub fn mm_per_rev(value: f64) -> Result<Self, LengthUnitError> {
+    pub fn mm_per_rev(value: f64) -> Result<Self, UnitsError> {
         Ok(Self(PositiveLength::mm(value)?))
     }
 
