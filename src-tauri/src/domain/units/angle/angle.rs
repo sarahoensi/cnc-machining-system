@@ -1,5 +1,8 @@
 // units/angle/angle.rs
 
+// units/angle/angle.rs
+
+use crate::domain::units::core::NumericError;
 use super::error::AngleError;
 
 /// Represents a mathematical angle.
@@ -25,11 +28,12 @@ pub struct AcuteAngle(f64);
 // ============================================================
 
 impl Angle {
-    fn validate_finite(value: f64) -> Result<f64, AngleError> {
+
+    fn validate_finite(value: f64) -> Result<f64, NumericError> {
         if value.is_finite() {
             Ok(value)
         } else {
-            Err(AngleError::NotFinite { value })
+            Err(NumericError::NotFinite(value))
         }
     }
 
@@ -68,16 +72,20 @@ impl Angle {
 impl AcuteAngle {
     const HALF_PI: f64 = std::f64::consts::FRAC_PI_2;
 
+    fn validate_finite(value: f64) -> Result<f64, NumericError> {
+        if value.is_finite() {
+            Ok(value)
+        } else {
+            Err(NumericError::NotFinite(value))
+        }
+    }
+
     /// Creates an acute angle from radians.
     pub fn radians(value: f64) -> Result<Self, AngleError> {
-        if !value.is_finite() {
-            return Err(AngleError::NotFinite { value });
-        }
+        let value = Self::validate_finite(value)?;
 
         if value <= 0.0 || value >= Self::HALF_PI {
-            return Err(AngleError::NotAcute {
-                degrees: value.to_degrees(),
-            });
+            return Err(AngleError::NotAcute(value.to_degrees()));
         }
 
         Ok(Self(value))
@@ -85,12 +93,10 @@ impl AcuteAngle {
 
     /// Creates an acute angle from degrees.
     pub fn degrees(value: f64) -> Result<Self, AngleError> {
-        if !value.is_finite() {
-            return Err(AngleError::NotFinite { value });
-        }
+        let value = Self::validate_finite(value)?;
 
         if value <= 0.0 || value >= 90.0 {
-            return Err(AngleError::NotAcute { degrees: value });
+            return Err(AngleError::NotAcute(value));
         }
 
         Ok(Self(value.to_radians()))

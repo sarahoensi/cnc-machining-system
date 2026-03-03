@@ -1,5 +1,6 @@
 // domain/units/length/length.rs
 
+use crate::domain::units::core::NumericError;
 use super::error::LengthUnitError;
 
 /// Represents a signed linear length measurement.
@@ -17,31 +18,29 @@ pub struct Length(f64);
 pub struct PositiveLength(f64);
 
 
+
 // ============================================================
 // Length (signed)
 // ============================================================
 
 impl Length {
-    /// Creates a signed length in millimeters.
-    ///
-    /// # Errors
-    /// Returns an error if the value is not finite.
-    pub fn mm(value: f64) -> Result<Self, LengthUnitError> {
-        if !value.is_finite() {
-            return Err(LengthUnitError::NotFinite { value });
+
+    fn validate_finite(value: f64) -> Result<f64, NumericError> {
+        if value.is_finite() {
+            Ok(value)
+        } else {
+            Err(NumericError::NotFinite(value))
         }
-        Ok(Self(value))
+    }
+
+    /// Creates a signed length in millimeters.
+    pub fn mm(value: f64) -> Result<Self, LengthUnitError> {
+        Ok(Self(Self::validate_finite(value)?))
     }
 
     /// Creates a signed length from inches.
-    ///
-    /// # Errors
-    /// Returns an error if the value is not finite.
     pub fn inches(value: f64) -> Result<Self, LengthUnitError> {
-        if !value.is_finite() {
-            return Err(LengthUnitError::NotFinite { value });
-        }
-        Ok(Self(value * 25.4))
+        Ok(Self(Self::validate_finite(value)? * 25.4))
     }
 
     /// Returns value in millimeters.
@@ -67,32 +66,25 @@ impl Length {
 // ============================================================
 
 impl PositiveLength {
-    /// Creates a strictly positive length in millimeters.
-    ///
-    /// # Errors
-    /// Returns error if not finite or ≤ 0.
-    pub fn mm(value: f64) -> Result<Self, LengthUnitError> {
+
+    fn validate_positive(value: f64) -> Result<f64, NumericError> {
         if !value.is_finite() {
-            return Err(LengthUnitError::NotFinite { value });
+            return Err(NumericError::NotFinite(value));
         }
         if value <= 0.0 {
-            return Err(LengthUnitError::NonPositive { value });
+            return Err(NumericError::NonPositive(value));
         }
-        Ok(Self(value))
+        Ok(value)
+    }
+
+    /// Creates a strictly positive length in millimeters.
+    pub fn mm(value: f64) -> Result<Self, LengthUnitError> {
+        Ok(Self(Self::validate_positive(value)?))
     }
 
     /// Creates from inches.
-    ///
-    /// # Errors
-    /// Returns error if not finite or ≤ 0.
     pub fn inches(value: f64) -> Result<Self, LengthUnitError> {
-        if !value.is_finite() {
-            return Err(LengthUnitError::NotFinite { value });
-        }
-        if value <= 0.0 {
-            return Err(LengthUnitError::NonPositive { value });
-        }
-        Ok(Self(value * 25.4))
+        Ok(Self(Self::validate_positive(value)? * 25.4))
     }
 
     /// Returns value in millimeters.

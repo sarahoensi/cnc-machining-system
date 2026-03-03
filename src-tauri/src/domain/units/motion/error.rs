@@ -2,11 +2,10 @@
 
 use thiserror::Error;
 
+use crate::domain::units::core::NumericError;
+
 #[derive(Debug, Clone, PartialEq, Error)]
 pub enum MotionUnitError {
-    #[error("Value must be finite, got {0}")]
-    NotFinite(f64),
-
-    #[error("Value must be greater than 0, got {0}")]
-    NonPositive(f64),
+    #[error(transparent)]
+    Numeric(#[from] NumericError),
 }

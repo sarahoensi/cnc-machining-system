@@ -1,19 +1,17 @@
 // domain/units/core/positive_scalar.rs
 
+use crate::domain::units::core::NumericError;
+
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct PositiveScalar(f64);
 
 impl PositiveScalar {
-    pub fn new<E>(
-        value: f64,
-        not_finite: impl Fn(f64) -> E,
-        non_positive: impl Fn(f64) -> E,
-    ) -> Result<Self, E> {
+    pub fn new(value: f64) -> Result<Self, NumericError> {
         if !value.is_finite() {
-            return Err(not_finite(value));
+            return Err(NumericError::NotFinite(value));
         }
         if value <= 0.0 {
-            return Err(non_positive(value));
+            return Err(NumericError::NonPositive(value));
         }
         Ok(Self(value))
     }

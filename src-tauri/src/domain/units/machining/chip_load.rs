@@ -1,6 +1,9 @@
 // domain/units/machining/chip_load.rs
 
-use crate::domain::units::{PositiveScalar, machining::MachiningUnitError};
+use crate::domain::units::{
+    PositiveScalar,
+    machining::MachiningUnitError,
+};
 
 /// Represents chip load per cutting tooth.
 ///
@@ -10,12 +13,9 @@ use crate::domain::units::{PositiveScalar, machining::MachiningUnitError};
 pub struct ChipLoad(PositiveScalar);
 
 impl ChipLoad {
+
     pub fn mm_per_tooth(value: f64) -> Result<Self, MachiningUnitError> {
-        Ok(Self(PositiveScalar::new(
-            value,
-            MachiningUnitError::NotFinite,
-            MachiningUnitError::NonPositive,
-        )?))
+        Ok(Self(PositiveScalar::new(value)?))
     }
 
     pub fn mm_per_tooth_value(self) -> f64 {

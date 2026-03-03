@@ -1,9 +1,9 @@
 // domain/units/machining/cutting_speed.rs
 
-
-
-use crate::domain::units::machining::MachiningUnitError;
-use crate::domain::units::{PositiveScalar};
+use crate::domain::units::{
+    PositiveScalar,
+    machining::MachiningUnitError,
+};
 
 /// Represents surface cutting speed.
 ///
@@ -13,12 +13,9 @@ use crate::domain::units::{PositiveScalar};
 pub struct CuttingSpeed(PositiveScalar);
 
 impl CuttingSpeed {
+
     pub fn meters_per_min(value: f64) -> Result<Self, MachiningUnitError> {
-        Ok(Self(PositiveScalar::new(
-            value,
-            MachiningUnitError::NotFinite,
-            MachiningUnitError::NonPositive,
-        )?))
+        Ok(Self(PositiveScalar::new(value)?))
     }
 
     pub fn meters_per_min_value(self) -> f64 {

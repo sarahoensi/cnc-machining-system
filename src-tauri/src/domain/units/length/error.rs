@@ -1,21 +1,10 @@
 // domain/units/length/error.rs
 
 use thiserror::Error;
+use crate::domain::units::core::NumericError;
 
 #[derive(Debug, Clone, PartialEq, Error)]
 pub enum LengthUnitError {
-    #[error("Length must be finite, got {value}")]
-    NotFinite {
-        value: f64,
-    },
-
-    #[error("Length must not be negative, got {value}")]
-    Negative {
-        value: f64,
-    },
-
-    #[error("Length must be greater than 0, got {value}")]
-    NonPositive {
-        value: f64,
-    },
+    #[error(transparent)]
+    Numeric(#[from] NumericError),
 }

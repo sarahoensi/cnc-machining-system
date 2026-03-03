@@ -1,6 +1,9 @@
 // domain/units/motion/rpm.rs
 
-use crate::domain::units::{PositiveScalar, motion::MotionUnitError};
+use crate::domain::units::{
+    PositiveScalar,
+    motion::MotionUnitError,
+};
 
 /// Represents rotational speed in revolutions per minute (RPM).
 ///
@@ -9,19 +12,15 @@ use crate::domain::units::{PositiveScalar, motion::MotionUnitError};
 pub struct Rpm(PositiveScalar);
 
 impl Rpm {
+
     pub fn new(value: f64) -> Result<Self, MotionUnitError> {
-        Ok(Self(PositiveScalar::new(
-            value,
-            MotionUnitError::NotFinite,
-            MotionUnitError::NonPositive,
-        )?))
+        Ok(Self(PositiveScalar::new(value)?))
     }
 
     pub fn value(self) -> f64 {
         self.0.value()
     }
 }
-
 
 // -------------- TESTS ---------------
 #[cfg(test)]
