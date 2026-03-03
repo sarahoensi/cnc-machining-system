@@ -1,46 +1,49 @@
 // domain/units/length/radius.rs
 
-use crate::domain::units::length::error::LengthUnitError;
+use crate::domain::units::length::{
+    Length,
+    PositiveLength,
+    LengthUnitError,
+};
 
-use crate::domain::units::{Diameter, Length};
+use crate::domain::units::Diameter;
 
-/// Represents a radius measurement.
+/// Represents a strictly positive radius measurement.
 ///
-/// Stored internally in millimeters (mm).
-/// Values must be finite and strictly positive.
+/// Semantically distinct from generic length,
+/// but physically represented as a positive length.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
-pub struct Radius(f64);
+pub struct Radius(PositiveLength);
 
 impl Radius {
-    /// Creates a [`Radius`] from millimeters.
+    /// Creates a Radius from millimeters.
     ///
     /// # Errors
-    ///
-    /// Returns an error if the value is not finite or is less than or equal to zero.
+    /// Returns error if value is not finite or ≤ 0.
     pub fn mm(value: f64) -> Result<Self, LengthUnitError> {
-        if !value.is_finite() {
-            return Err(LengthUnitError::NotFinite { value });
-        }
-        if value <= 0.0 {
-            return Err(LengthUnitError::NotFinite { value });
-        }
-        Ok(Self(value))
+        Ok(Self(PositiveLength::mm(value)?))
     }
 
-    /// Returns the radius value in millimeters.
+    /// Returns radius value in millimeters.
     pub fn mm_value(self) -> f64 {
+        self.0.mm_value()
+    }
+
+    /// Returns underlying PositiveLength.
+    pub fn as_positive_length(self) -> PositiveLength {
         self.0
     }
 
-    /// Converts the radius to a [`Length`] representing the radius.
+    /// Converts to signed Length.
     pub fn as_length(self) -> Length {
-        Length::mm(self.0).expect("Radius is always valid length")
+        self.0.as_length()
     }
 
-    /// Computes the corresponding [`Diameter`] (double the radius).
+    /// Computes corresponding Diameter.
     pub fn diameter(self) -> Diameter {
-        Diameter::mm(self.0 * 2.0)
-            .expect("Radius is > 0 so diameter is > 0")
+        // 2 * positive > 0
+        Diameter::mm(self.mm_value() * 2.0)
+            .expect("Invariant violation: diameter must be positive")
     }
 }
 

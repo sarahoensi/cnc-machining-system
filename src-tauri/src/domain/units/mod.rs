@@ -6,6 +6,7 @@ mod length;
 mod angle;
 mod motion;
 mod machining;
+mod core;
 // mod ratio; // optional later
 
 // ---------- Public unit facade ----------
@@ -29,4 +30,8 @@ pub use motion::{
 pub use machining::{
     ChipLoad,
     CuttingSpeed,
+};
+
+pub use core::{
+    PositiveScalar,
 };

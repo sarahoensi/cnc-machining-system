@@ -1,34 +1,27 @@
 // domain/units/motion/rpm.rs
 
-use crate::domain::units::{motion::MotionUnitError};
+use crate::domain::units::{PositiveScalar, motion::MotionUnitError};
 
 /// Represents rotational speed in revolutions per minute (RPM).
 ///
 /// Values must be finite and strictly positive.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
-pub struct Rpm(f64);
+pub struct Rpm(PositiveScalar);
 
 impl Rpm {
-    /// Creates a new [`Rpm`] value.
-    ///
-    /// # Errors
-    ///
-    /// Returns an error if the value is not finite or is less than or equal to zero.
     pub fn new(value: f64) -> Result<Self, MotionUnitError> {
-        if !value.is_finite() {
-            return Err(MotionUnitError::NotFinite { value });
-        }
-        if value <= 0.0 {
-            return Err(MotionUnitError::NonPositive { value });
-        }
-        Ok(Self(value))
+        Ok(Self(PositiveScalar::new(
+            value,
+            MotionUnitError::NotFinite,
+            MotionUnitError::NonPositive,
+        )?))
     }
 
-    /// Returns the RPM value.
     pub fn value(self) -> f64 {
-        self.0
+        self.0.value()
     }
 }
+
 
 // -------------- TESTS ---------------
 #[cfg(test)]

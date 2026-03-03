@@ -2,14 +2,27 @@
 
 use super::error::AngleError;
 
-
 /// Represents a mathematical angle.
 ///
-/// Stored internally in radians. Values must be finite.
-/// Negative angles are allowed. The value is not normalized.
-
+/// Stored internally in radians.
+/// Values must be finite.
+/// Negative angles are allowed.
+/// The value is not normalized.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Angle(f64);
+
+/// Represents a strictly acute angle (0 < θ < 90°).
+///
+/// Stored internally in radians.
+/// Values must be finite and strictly between 0 and π/2.
+#[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
+pub struct AcuteAngle(f64);
+
+
+
+// ============================================================
+// Angle (signed, finite)
+// ============================================================
 
 impl Angle {
     fn validate_finite(value: f64) -> Result<f64, AngleError> {
@@ -20,30 +33,82 @@ impl Angle {
         }
     }
 
+    /// Creates an angle from radians.
     pub fn radians(value: f64) -> Result<Self, AngleError> {
         Ok(Self(Self::validate_finite(value)?))
     }
 
+    /// Creates an angle from degrees.
     pub fn degrees(value: f64) -> Result<Self, AngleError> {
         Ok(Self(Self::validate_finite(value)?.to_radians()))
     }
 
+    /// Returns radians.
     pub fn radians_value(self) -> f64 {
         self.0
     }
 
+    /// Returns degrees.
     pub fn degrees_value(self) -> f64 {
         self.0.to_degrees()
     }
 
-    pub fn require_acute(&self) -> Result<(), AngleError> {
-        let deg = self.degrees_value();
+    /// Attempts to convert into an AcuteAngle.
+    pub fn try_into_acute(self) -> Result<AcuteAngle, AngleError> {
+        AcuteAngle::radians(self.0)
+    }
+}
 
-        if deg <= 0.0 || deg >= 90.0 {
-            return Err(AngleError::NotAcute { degrees: deg });
+
+
+// ============================================================
+// AcuteAngle (0 < θ < 90°)
+// ============================================================
+
+impl AcuteAngle {
+    const HALF_PI: f64 = std::f64::consts::FRAC_PI_2;
+
+    /// Creates an acute angle from radians.
+    pub fn radians(value: f64) -> Result<Self, AngleError> {
+        if !value.is_finite() {
+            return Err(AngleError::NotFinite { value });
         }
 
-        Ok(())
+        if value <= 0.0 || value >= Self::HALF_PI {
+            return Err(AngleError::NotAcute {
+                degrees: value.to_degrees(),
+            });
+        }
+
+        Ok(Self(value))
+    }
+
+    /// Creates an acute angle from degrees.
+    pub fn degrees(value: f64) -> Result<Self, AngleError> {
+        if !value.is_finite() {
+            return Err(AngleError::NotFinite { value });
+        }
+
+        if value <= 0.0 || value >= 90.0 {
+            return Err(AngleError::NotAcute { degrees: value });
+        }
+
+        Ok(Self(value.to_radians()))
+    }
+
+    /// Returns radians.
+    pub fn radians_value(self) -> f64 {
+        self.0
+    }
+
+    /// Returns degrees.
+    pub fn degrees_value(self) -> f64 {
+        self.0.to_degrees()
+    }
+
+    /// Converts back to general Angle.
+    pub fn as_angle(self) -> Angle {
+        Angle(self.0)
     }
 }
 

@@ -7,7 +7,7 @@ mod radius;
 mod pitch;
 mod error;
 
-pub use length::Length;
+pub use length::{Length, PositiveLength};
 pub use diameter::Diameter;
 pub use radius::Radius;
 pub use pitch::Pitch;

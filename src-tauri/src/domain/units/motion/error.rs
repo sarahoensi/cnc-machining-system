@@ -1,25 +1,12 @@
 // domain/units/motion/error.rs
 
-#[derive(Debug, Clone, PartialEq)]
+use thiserror::Error;
+
+#[derive(Debug, Clone, PartialEq, Error)]
 pub enum MotionUnitError {
-    NotFinite { value: f64 },
-    NonPositive { value: f64 },
+    #[error("Value must be finite, got {0}")]
+    NotFinite(f64),
+
+    #[error("Value must be greater than 0, got {0}")]
+    NonPositive(f64),
 }
-
-use std::fmt;
-
-impl fmt::Display for MotionUnitError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            MotionUnitError::NotFinite { value } => {
-                write!(f, "Value must be finite, got {value}")
-            }
-
-            MotionUnitError::NonPositive { value } => {
-                write!(f, "Value must be greater than 0, got {value}")
-            }
-        }
-    }
-}
-
-impl std::error::Error for MotionUnitError {}

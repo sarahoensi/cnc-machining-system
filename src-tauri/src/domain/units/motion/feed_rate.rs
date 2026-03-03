@@ -1,6 +1,6 @@
 // domain/units/motion/feed_rate.rs
 
-use crate::domain::units::motion::MotionUnitError;
+use crate::domain::units::{PositiveScalar, motion::MotionUnitError};
 
 
 /// Represents linear feed rate.
@@ -8,27 +8,19 @@ use crate::domain::units::motion::MotionUnitError;
 /// Stored internally as millimeters per minute (mm/min).
 /// Values must be finite and strictly positive.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
-pub struct FeedRate(f64);
+pub struct FeedRate(PositiveScalar);
 
 impl FeedRate {
-    /// Creates a [`FeedRate`] from millimeters per minute.
-    ///
-    /// # Errors
-    ///
-    /// Returns an error if the value is not finite or is less than or equal to zero.
     pub fn mm_per_min(value: f64) -> Result<Self, MotionUnitError> {
-        if !value.is_finite() {
-           return Err(MotionUnitError::NotFinite { value });
-        }
-        if value <= 0.0 {
-            return Err(MotionUnitError::NonPositive { value });
-        }
-        Ok(Self(value))
+        Ok(Self(PositiveScalar::new(
+            value,
+            MotionUnitError::NotFinite,
+            MotionUnitError::NonPositive,
+        )?))
     }
 
-    /// Returns the feed rate value in millimeters per minute.
     pub fn mm_per_min_value(self) -> f64 {
-        self.0
+        self.0.value()
     }
 }
 

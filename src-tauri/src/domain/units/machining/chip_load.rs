@@ -1,33 +1,25 @@
 // domain/units/machining/chip_load.rs
 
-use crate::domain::units::{machining::MachiningUnitError};
+use crate::domain::units::{PositiveScalar, machining::MachiningUnitError};
 
 /// Represents chip load per cutting tooth.
 ///
 /// Stored internally as millimeters per tooth (mm/tooth).
 /// Values must be finite and strictly positive.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
-pub struct ChipLoad(f64);
+pub struct ChipLoad(PositiveScalar);
 
 impl ChipLoad {
-    /// Creates a [`ChipLoad`] from millimeters per tooth.
-    ///
-    /// # Errors
-    ///
-    /// Returns an error if the value is not finite or is less than or equal to zero.
     pub fn mm_per_tooth(value: f64) -> Result<Self, MachiningUnitError> {
-        if !value.is_finite() {
-            return Err(MachiningUnitError::NotFinite { value });
-        }
-        if value <= 0.0 {
-            return Err(MachiningUnitError::NonPositive { value });
-        }
-        Ok(Self(value))
+        Ok(Self(PositiveScalar::new(
+            value,
+            MachiningUnitError::NotFinite,
+            MachiningUnitError::NonPositive,
+        )?))
     }
 
-    /// Returns the chip load value in millimeters per tooth.
-    pub  fn mm_per_tooth_value(self) -> f64 {
-        self.0
+    pub fn mm_per_tooth_value(self) -> f64 {
+        self.0.value()
     }
 }
 

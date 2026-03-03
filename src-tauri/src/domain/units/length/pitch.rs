@@ -1,39 +1,41 @@
 // domain/units/length/pitch.rs
 
-use super::error::LengthUnitError;
-use crate::domain::units::Length;
+use crate::domain::units::length::{
+    Length,
+    PositiveLength,
+    LengthUnitError,
+};
 
-/// Represents a linear pitch measurement.
+/// Represents a strictly positive linear pitch (mm per revolution).
 ///
-/// Stored internally as millimeters per revolution (mm/rev).
-/// Values must be finite and strictly positive.
+/// Semantically distinct from generic length,
+/// but physically represented as a positive scalar value.
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
-pub struct Pitch(f64);
+pub struct Pitch(PositiveLength);
 
 impl Pitch {
-    /// Creates a [`Pitch`] from millimeters per revolution.
+    /// Creates a Pitch from millimeters per revolution.
     ///
     /// # Errors
-    ///
-    /// Returns an error if the value is not finite or is less than or equal to zero.
+    /// Returns error if value is not finite or ≤ 0.
     pub fn mm_per_rev(value: f64) -> Result<Self, LengthUnitError> {
-        if !value.is_finite() {
-            return Err(LengthUnitError::NotFinite { value });
-        }
-        if value <= 0.0 {
-            return Err(LengthUnitError::NonPositive { value });
-        }
-        Ok(Self(value))
+        Ok(Self(PositiveLength::mm(value)?))
     }
 
-    /// Returns the pitch value in millimeters per revolution.
+    /// Returns pitch value in mm per revolution.
     pub fn mm_per_rev_value(self) -> f64 {
+        self.0.mm_value()
+    }
+
+    /// Returns underlying PositiveLength.
+    pub fn as_positive_length(self) -> PositiveLength {
         self.0
     }
 
-    /// Converts the pitch to a [`Length`] representing linear travel per revolution.
+    /// Converts pitch to a signed Length representing
+    /// linear travel per single revolution.
     pub fn as_length_per_rev(self) -> Length {
-        Length::mm(self.0).expect("Pitch is always valid length")
+        self.0.as_length()
     }
 }
 

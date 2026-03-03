@@ -1,22 +1,16 @@
 // units/angle/error.rs
 
-#[derive(Debug, Clone, PartialEq)]
+use thiserror::Error;
+
+#[derive(Debug, Clone, PartialEq, Error)]
 pub enum AngleError {
+    #[error("Angle must be finite, got {value}")]
     NotFinite {
         value: f64,
     },
 
+    #[error("Angle must be acute (0° < θ < 90°), got {degrees}°")]
     NotAcute {
         degrees: f64,
     },
 }
-
-use std::fmt;
-
-impl fmt::Display for AngleError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:?}", self)
-    }
-}
-
-impl std::error::Error for AngleError {}
