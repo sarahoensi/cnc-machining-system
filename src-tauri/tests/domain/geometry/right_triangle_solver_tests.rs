@@ -15,10 +15,6 @@ fn len(v: f64) -> PositiveLength {
     PositiveLength::mm(v).unwrap()
 }
 
-/// Used ONLY for invalid input tests
-fn len_any(v: f64) -> PositiveLength {
-    PositiveLength::mm(v).unwrap()
-}
 
 fn angle_deg(v: f64) -> AcuteAngle {
     AcuteAngle::degrees(v).unwrap()
@@ -202,14 +198,16 @@ fn near_ninety_angle_still_valid() {
 
 #[test]
 fn rejects_invalid_lengths() {
-    assert!(RightTriangleSolver::from_legs(len_any(0.0), len(4.0)).is_err());
-
-
-    assert!(
-        (RightTriangleSolver::from_legs(len_any(-3.0), len(4.0)).is_err()
-    ));
+    assert!(PositiveLength::mm(0.0).is_err());
+    assert!(PositiveLength::mm(-3.0).is_err());
 }
 
+#[test]
+fn rejects_invalid_angles() {
+    for a in [0.0, 90.0, -30.0, 120.0] {
+        assert!(AcuteAngle::degrees(a).is_err());
+    }
+}
 #[test]
 fn rejects_impossible_geometry() {
     assert!(
@@ -217,10 +215,4 @@ fn rejects_impossible_geometry() {
     ));
 }
 
-#[test]
-fn rejects_invalid_angles() {
-    for a in [0.0, 90.0, -30.0, 120.0] {
-        let r = RightTriangleSolver::from_hypotenuse_and_angle(len(5.0), angle_deg(a));
-        assert!(r.is_err());
-    }
-}
+

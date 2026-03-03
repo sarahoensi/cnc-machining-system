@@ -1,7 +1,9 @@
 // domain/machining_strategy/finishing_execution.rs
 
 use crate::domain::{
-    FinishingPlan, FinishingStep, machining_strategy::strategy_error::StrategyError, units::{Diameter, PositiveLength}
+    machining_strategy::strategy_error::StrategyError,
+    units::{Diameter, PositiveLength},
+    FinishingMode, FinishingPlan, FinishingStep,
 };
 
 const EPS: f64 = 1e-12;
@@ -52,7 +54,7 @@ impl FinishingExecution {
             plan.target(),
             plan.cuts(),
             plan.expected_step(),
-            plan.direction_sign(),
+            plan.mode(),
         )?;
 
         Ok(Self { id, plan, steps })
@@ -143,17 +145,9 @@ impl FinishingExecution {
     fn validate_measurement_against_target(&self, measured: Diameter) -> Result<(), StrategyError> {
         let target = self.plan.target().mm_value();
         let m = measured.mm_value();
-        let dir = self.plan.direction_sign();
+        let mode = self.plan.mode();
 
-        // Inner: increasing; should not be > target (allow small eps)
-        // Outer: decreasing; should not be < target (allow small eps)
-        if dir > 0.0 && m > target + EPS {
-            return Err(StrategyError::MeasurementExceedsTarget {
-                measured_mm: m,
-                target_mm: target,
-            });
-        }
-        if dir < 0.0 && m < target - EPS {
+        if mode.passes_target(target, m, EPS) {
             return Err(StrategyError::MeasurementExceedsTarget {
                 measured_mm: m,
                 target_mm: target,
@@ -169,40 +163,14 @@ impl FinishingExecution {
         let start = self.plan.start().mm_value();
         let target = self.plan.target().mm_value();
         let m = measured.mm_value();
-        let dir = self.plan.direction_sign();
+        let mode = self.plan.mode();
 
-        if dir > 0.0 {
-            // Inner: diameter skal øke
-            if m < start - EPS {
-                return Err(StrategyError::MeasurementOutOfBounds {
-                    measured_mm: m,
-                    start_mm: start,
-                    target_mm: target,
-                });
-            }
-            if m > target + EPS {
-                return Err(StrategyError::MeasurementOutOfBounds {
-                    measured_mm: m,
-                    start_mm: start,
-                    target_mm: target,
-                });
-            }
-        } else {
-            // Outer: diameter skal minke
-            if m > start + EPS {
-                return Err(StrategyError::MeasurementOutOfBounds {
-                    measured_mm: m,
-                    start_mm: start,
-                    target_mm: target,
-                });
-            }
-            if m < target - EPS {
-                return Err(StrategyError::MeasurementOutOfBounds {
-                    measured_mm: m,
-                    start_mm: start,
-                    target_mm: target,
-                });
-            }
+        if !mode.within_bounds(start, target, m, EPS) {
+            return Err(StrategyError::MeasurementOutOfBounds {
+                measured_mm: m,
+                start_mm: start,
+                target_mm: target,
+            });
         }
 
         Ok(())
@@ -226,16 +194,9 @@ impl FinishingExecution {
 
         let prev_val = prev.mm_value();
         let m = measured.mm_value();
-        let dir = self.plan.direction_sign();
+        let mode = self.plan.mode();
 
-        if dir > 0.0 && m + EPS < prev_val {
-            return Err(StrategyError::MeasurementBackwards {
-                previous_mm: prev_val,
-                measured_mm: m,
-            });
-        }
-
-        if dir < 0.0 && m - EPS > prev_val {
+        if !mode.progresses_forward(prev_val, m, EPS) {
             return Err(StrategyError::MeasurementBackwards {
                 previous_mm: prev_val,
                 measured_mm: m,
@@ -265,11 +226,11 @@ impl FinishingExecution {
 
         let target = self.plan.target().mm_value();
         let current = last_measured.mm_value();
-        let dir = self.plan.direction_sign();
+        let mode = self.plan.mode();
 
         let remaining_delta_mag = (target - current).abs();
 
-        // If we’re effectively at target, remaining delta is ~0; but we still have steps.
+        // If we’re effectively at target but still have steps left → invalid plan
         if remaining_delta_mag <= EPS {
             return Err(StrategyError::ImpossiblePlan {
                 reason: "no remaining delta but still remaining steps",
@@ -277,28 +238,31 @@ impl FinishingExecution {
         }
 
         let new_step_mag = remaining_delta_mag / remaining_steps as f64;
+
         let new_step = PositiveLength::mm(new_step_mag).map_err(|_| {
             StrategyError::ComputedStepNotPositive {
                 value_mm: new_step_mag,
             }
         })?;
 
-        // Rebuild steps from start_index forward, clearing measurements in remaining steps
+        // Rebuild steps from start_index forward
         let mut start_d = last_measured;
 
         for i in start_index..self.steps.len() {
             let step_no = (i + 1) as u32;
 
-            let end_val = start_d.mm_value() + dir * new_step.mm_value();
+            let end_val = mode.apply_delta(start_d.mm_value(), new_step.mm_value());
+
             let end_d = Diameter::mm(end_val).map_err(|_| StrategyError::ImpossiblePlan {
                 reason: "computed diameter invalid",
             })?;
 
             self.steps[i] = FinishingStep::new(step_no, start_d, new_step, end_d);
+
             start_d = end_d;
         }
 
-        // Ensure last planned end equals target (within tolerance)
+        // Ensure final step reaches target (within tolerance)
         let last_end = self
             .steps
             .last()
@@ -343,9 +307,8 @@ fn build_steps_from_start(
     target: Diameter,
     cuts: u32,
     step: PositiveLength,
-    dir: f64,
+    mode: FinishingMode,
 ) -> Result<Vec<FinishingStep>, StrategyError> {
-
     if cuts == 0 {
         return Err(StrategyError::ImpossiblePlan {
             reason: "plan contains zero cuts",
@@ -358,12 +321,11 @@ fn build_steps_from_start(
     for i in 0..cuts {
         let index = i + 1;
 
-        let end_val = current.mm_value() + dir * step.mm_value();
+        let end_val = mode.apply_delta(current.mm_value(), step.mm_value());
 
-        let end = Diameter::mm(end_val)
-            .map_err(|_| StrategyError::ImpossiblePlan {
-                reason: "computed diameter invalid",
-            })?;
+        let end = Diameter::mm(end_val).map_err(|_| StrategyError::ImpossiblePlan {
+            reason: "computed diameter invalid",
+        })?;
 
         steps.push(FinishingStep::new(index, current, step, end));
         current = end;

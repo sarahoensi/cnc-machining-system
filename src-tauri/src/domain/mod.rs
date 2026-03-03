@@ -13,7 +13,6 @@ pub use error::DomainError;
 pub use geometry::{
     Circle,
     Helix,
-    HelixAngle,
     HelixMode,
     HelixError,
     EffectiveDiameter,

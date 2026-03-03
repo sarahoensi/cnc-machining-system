@@ -12,7 +12,7 @@ use crate::domain::units::{
 /// Top-level error for the units subdomain.
 ///
 /// Wraps all specific unit value object errors.
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Clone, PartialEq)]
 pub enum UnitsError {
 
     #[error(transparent)]

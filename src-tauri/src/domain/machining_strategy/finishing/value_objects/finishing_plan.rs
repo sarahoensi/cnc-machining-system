@@ -40,12 +40,7 @@ impl FinishingPlan {
     /// Direction is determined by [`FinishingMode`].
     pub fn expected_step(&self) -> PositiveLength { self.expected_step }
 
-    /// Returns the directional sign of the diameter change.
-    ///
-    /// Delegates to [`FinishingMode::direction_sign`].
-    pub fn direction_sign(&self) -> f64 {
-        self.mode.direction_sign()
-    }
+    
 }
 
 impl FinishingPlan {

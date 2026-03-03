@@ -1,8 +1,7 @@
 // domain/geometry/right_triangle/right_triangle.rs
 
-use crate::domain::units::{AcuteAngle, Angle, Length, PositiveLength};
+use crate::domain::units::{AcuteAngle, Angle, PositiveLength};
 
-const TRIG_CLAMP_EPS: f64 = 1e-15;
 
 /// Represents a mathematically valid right triangle.
 ///
@@ -50,18 +49,28 @@ impl RightTriangle {
         PositiveLength::mm(c).unwrap()
     }
 
-    /// Acute angle `alpha` opposite leg `a`.
-    ///
-    /// Returns an `Angle` in radians constructed using validated trig input.
-    pub fn alpha(&self) -> AcuteAngle {
-        let ratio = clamp_unit(self.a.mm_value() / self.c().mm_value());
-        AcuteAngle::radians(ratio.asin()).unwrap()
-    }
+   /// Acute angle `alpha` opposite leg `a`.
+pub fn alpha(&self) -> AcuteAngle {
+    let a = self.a.mm_value();
+    let b = self.b.mm_value();
 
-    /// Complementary acute angle `beta` adjacent to leg `a`.
-    pub fn beta(&self) -> AcuteAngle {
-        AcuteAngle::degrees(90.0 - self.alpha().degrees_value()).unwrap()
-    }
+    // robust even when b is tiny (near 90°)
+    let rad = a.atan2(b);
+
+    // should always be acute given positive legs
+    AcuteAngle::radians(rad).expect("Alpha must be acute")
+}
+
+/// Complementary acute angle `beta` adjacent to leg `a`.
+pub fn beta(&self) -> AcuteAngle {
+    let a = self.a.mm_value();
+    let b = self.b.mm_value();
+
+    // robust even when a is tiny (near 0°)
+    let rad = b.atan2(a);
+
+    AcuteAngle::radians(rad).expect("Beta must be acute")
+}
 
     /// Right angle `gamma` (always 90°).
     pub fn gamma(&self) -> Angle {
@@ -78,8 +87,8 @@ impl RightTriangle {
     }
 
     /// Perimeter as a domain `Length` (a + b + c).
-    pub fn perimeter(&self) -> Length {
-        Length::mm(
+    pub fn perimeter(&self) -> PositiveLength {
+        PositiveLength::mm(
             self.a.mm_value()
                 + self.b.mm_value()
                 + self.c().mm_value(),
@@ -127,12 +136,7 @@ impl RightTriangle {
 // Helpers
 // ---------------------------------------------------------
 
-fn clamp_unit(v: f64) -> f64 {
-    if v.is_nan() {
-        return 0.0;
-    }
-    v.clamp(-1.0 + TRIG_CLAMP_EPS, 1.0 - TRIG_CLAMP_EPS)
-}
+
 
 #[cfg(test)]
 mod tests {

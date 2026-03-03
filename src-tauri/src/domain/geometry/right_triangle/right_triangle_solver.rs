@@ -1,4 +1,4 @@
-//domain/right_triangle/right_triangle_solver.rs
+// domain/geometry/right_triangle/right_triangle_solver.rs
 
 use crate::domain::{
     GeometryError,
@@ -18,27 +18,12 @@ impl RightTriangleSolver {
     // ---------------------------------------------------------
 
     pub fn from_legs(
-    a: PositiveLength,
-    b: PositiveLength,
-) -> Result<RightTriangle, GeometryError> {
-
-    let a_mm = a.mm_value();
-    let b_mm = b.mm_value();
-
-    if a_mm <= 0.0 {
-        return Err(
-            RightTriangleError::LegNotPositive { value: a_mm }.into()
-        );
+        a: PositiveLength,
+        b: PositiveLength,
+    ) -> Result<RightTriangle, GeometryError> {
+        // No validation needed — units guarantee positivity
+        Ok(RightTriangle::new(a, b))
     }
-
-    if b_mm <= 0.0 {
-        return Err(
-            RightTriangleError::LegNotPositive { value: b_mm }.into()
-        );
-    }
-
-    Ok(RightTriangle::new(a, b))
-}
 
     // ---------------------------------------------------------
     // a + c
@@ -49,25 +34,7 @@ impl RightTriangleSolver {
         c: PositiveLength,
     ) -> Result<RightTriangle, GeometryError> {
 
-        let a_mm = a.mm_value();
-        let c_mm = c.mm_value();
-
-        if a_mm >= c_mm {
-            return Err(
-                RightTriangleError::HypotenuseTooShort {
-                    leg: a_mm,
-                    hypotenuse: c_mm,
-                }
-                .into(),
-            );
-        }
-
-        let b_sq = c_mm.powi(2) - a_mm.powi(2);
-        let b_val = safe_sqrt(b_sq)?;
-
-        let b = PositiveLength::mm(b_val)
-            .map_err(|_| RightTriangleError::LegNotPositive { value: b_val })?;
-
+        let b = Self::solve_leg_and_hypotenuse(a, c)?;
         Ok(RightTriangle::new(a, b))
     }
 
@@ -80,25 +47,7 @@ impl RightTriangleSolver {
         c: PositiveLength,
     ) -> Result<RightTriangle, GeometryError> {
 
-        let b_mm = b.mm_value();
-        let c_mm = c.mm_value();
-
-        if b_mm >= c_mm {
-            return Err(
-                RightTriangleError::HypotenuseTooShort {
-                    leg: b_mm,
-                    hypotenuse: c_mm,
-                }
-                .into(),
-            );
-        }
-
-        let a_sq = c_mm.powi(2) - b_mm.powi(2);
-        let a_val = safe_sqrt(a_sq)?;
-
-        let a = PositiveLength::mm(a_val)
-            .map_err(|_| RightTriangleError::LegNotPositive { value: a_val })?;
-
+        let a = Self::solve_leg_and_hypotenuse(b, c)?;
         Ok(RightTriangle::new(a, b))
     }
 
@@ -110,8 +59,6 @@ impl RightTriangleSolver {
         c: PositiveLength,
         alpha: AcuteAngle,
     ) -> Result<RightTriangle, GeometryError> {
-
-        
 
         let c_mm = c.mm_value();
         let rad = alpha.radians_value();
@@ -132,107 +79,180 @@ impl RightTriangleSolver {
     // a + alpha
     // ---------------------------------------------------------
 
-    pub fn from_leg_and_opposite_angle(
-        a: PositiveLength,
-        alpha: AcuteAngle,
-    ) -> Result<RightTriangle, GeometryError> {
+pub fn from_leg_and_opposite_angle(
+    a: PositiveLength,
+    alpha: AcuteAngle,
+) -> Result<RightTriangle, GeometryError> {
 
+    let a_mm = a.mm_value();
+    let rad = alpha.radians_value();
 
-        let a_mm = a.mm_value();
-        let s = alpha.radians_value().sin();
+    let sin = rad.sin();
+    let cos = rad.cos();
 
-        if s.abs() < EPS {
-            return Err(RightTriangleError::DivisionByZero.into());
-        }
-
-        let c_val = a_mm / s;
-
-        let c = PositiveLength::mm(c_val)
-            .map_err(|_| RightTriangleError::HypotenuseNotPositive { value: c_val })?;
-
-        Self::from_leg_and_hypotenuse(a, c)
+    if !sin.is_finite() || !cos.is_finite() {
+        return Err(RightTriangleError::NumericalInstability.into());
     }
+
+    if sin.abs() < EPS {
+        return Err(RightTriangleError::DivisionByZero.into());
+    }
+
+    // b = a * cos / sin   (more stable than a / tan)
+    let b_val = a_mm * cos / sin;
+
+    if !b_val.is_finite() || b_val <= 0.0 {
+        return Err(RightTriangleError::NumericalInstability.into());
+    }
+
+    let b = PositiveLength::mm(b_val)
+        .map_err(|_| RightTriangleError::LegNotPositive { value: b_val })?;
+
+    Ok(RightTriangle::new(a, b))
+}
 
     // ---------------------------------------------------------
     // b + alpha
     // ---------------------------------------------------------
 
-    pub fn from_adjacent_leg_and_angle(
-        b: PositiveLength,
-        alpha: AcuteAngle,
-    ) -> Result<RightTriangle, GeometryError> {
+pub fn from_adjacent_leg_and_angle(
+    b: PositiveLength,
+    alpha: AcuteAngle,
+) -> Result<RightTriangle, GeometryError> {
 
+    let b_mm = b.mm_value();
+    let rad = alpha.radians_value();
 
-        let b_mm = b.mm_value();
-        let t = alpha.radians_value().tan();
+    let sin = rad.sin();
+    let cos = rad.cos();
 
-        if !t.is_finite() {
-            return Err(RightTriangleError::NumericalInstability.into());
-        }
-
-        let a_val = b_mm * t;
-
-        let a = PositiveLength::mm(a_val)
-            .map_err(|_| RightTriangleError::LegNotPositive { value: a_val })?;
-
-        Ok(RightTriangle::new(a, b))
+    if !sin.is_finite() || !cos.is_finite() {
+        return Err(RightTriangleError::NumericalInstability.into());
     }
 
+    if cos.abs() < EPS {
+        return Err(RightTriangleError::DivisionByZero.into());
+    }
+
+    // a = b * sin / cos  (more stable than b * tan)
+    let a_val = b_mm * sin / cos;
+
+    if !a_val.is_finite() || a_val <= 0.0 {
+        return Err(RightTriangleError::NumericalInstability.into());
+    }
+
+    let a = PositiveLength::mm(a_val)
+        .map_err(|_| RightTriangleError::LegNotPositive { value: a_val })?;
+
+    Ok(RightTriangle::new(a, b))
+}
     // ---------------------------------------------------------
     // Beta wrappers
     // ---------------------------------------------------------
 
     pub fn from_leg_a_and_beta(
-        a: PositiveLength,
-        beta: AcuteAngle,
-    ) -> Result<RightTriangle, GeometryError> {
+    a: PositiveLength,
+    beta: AcuteAngle,
+) -> Result<RightTriangle, GeometryError> {
 
+    let mut alpha_rad =
+    std::f64::consts::FRAC_PI_2 - beta.radians_value();
 
-        let alpha = AcuteAngle::degrees(90.0 - beta.degrees_value())
-            .map_err(|_| RightTriangleError::NumericalInstability)?;
+if alpha_rad < 0.0 && alpha_rad > -EPS {
+    alpha_rad = 0.0;
+}
 
-        Self::from_leg_and_opposite_angle(a, alpha)
-    }
+let alpha = AcuteAngle::radians(alpha_rad)
+    .map_err(|_| RightTriangleError::NumericalInstability)?;
+
+    Self::from_leg_and_opposite_angle(a, alpha)
+}
 
     pub fn from_leg_b_and_beta(
-        b: PositiveLength,
-        beta: AcuteAngle,
-    ) -> Result<RightTriangle, GeometryError> {
+    b: PositiveLength,
+    beta: AcuteAngle,
+) -> Result<RightTriangle, GeometryError> {
 
+    let mut alpha_rad =
+    std::f64::consts::FRAC_PI_2 - beta.radians_value();
 
-        let alpha = AcuteAngle::degrees(90.0 - beta.degrees_value())
-            .map_err(|_| RightTriangleError::NumericalInstability)?;
+if alpha_rad < 0.0 && alpha_rad > -EPS {
+    alpha_rad = 0.0;
+}
 
-        Self::from_adjacent_leg_and_angle(b, alpha)
-    }
+let alpha = AcuteAngle::radians(alpha_rad)
+    .map_err(|_| RightTriangleError::NumericalInstability)?;
+
+    Self::from_adjacent_leg_and_angle(b, alpha)
+}
 
     pub fn from_hypotenuse_and_beta(
-        c: PositiveLength,
-        beta: AcuteAngle,
-    ) -> Result<RightTriangle, GeometryError> {
+    c: PositiveLength,
+    beta: AcuteAngle,
+) -> Result<RightTriangle, GeometryError> {
 
+    let mut alpha_rad =
+    std::f64::consts::FRAC_PI_2 - beta.radians_value();
 
-        let alpha = AcuteAngle::degrees(90.0 - beta.degrees_value())
-            .map_err(|_| RightTriangleError::NumericalInstability)?;
+if alpha_rad < 0.0 && alpha_rad > -EPS {
+    alpha_rad = 0.0;
+}
 
-        Self::from_hypotenuse_and_angle(c, alpha)
+let alpha = AcuteAngle::radians(alpha_rad)
+    .map_err(|_| RightTriangleError::NumericalInstability)?;
+
+    Self::from_hypotenuse_and_angle(c, alpha)
+}
+
+    // ---------------------------------------------------------
+    // Internal helpers
+    // ---------------------------------------------------------
+
+   fn solve_leg_and_hypotenuse(
+    leg: PositiveLength,
+    hyp: PositiveLength,
+) -> Result<PositiveLength, GeometryError> {
+
+    let leg_mm = leg.mm_value();
+    let hyp_mm = hyp.mm_value();
+
+    if leg_mm >= hyp_mm {
+        return Err(
+            RightTriangleError::HypotenuseTooShort {
+                leg: leg_mm,
+                hypotenuse: hyp_mm,
+            }
+            .into(),
+        );
     }
+
+    // numerically stable
+    let diff = hyp_mm - leg_mm;
+    let sum  = hyp_mm + leg_mm;
+    let other_sq = diff * sum;
+
+    let other_val = safe_sqrt(other_sq)?;
+
+    PositiveLength::mm(other_val)
+        .map_err(|_| RightTriangleError::LegNotPositive { value: other_val }.into())
+}
+
+    
 }
 
 // ---------------------------------------------------------
-// Helpers
+// Numeric helper
 // ---------------------------------------------------------
 
-
-
 fn safe_sqrt(value: f64) -> Result<f64, GeometryError> {
-    if value < 0.0 && value > -EPS {
-        return Ok(0.0);
-    }
 
-    if value < 0.0 {
+    if !value.is_finite() {
         return Err(RightTriangleError::NumericalInstability.into());
     }
 
-    Ok(value.sqrt())
+    if value < -EPS {
+        return Err(RightTriangleError::NumericalInstability.into());
+    }
+
+    Ok(value.max(0.0).sqrt())
 }

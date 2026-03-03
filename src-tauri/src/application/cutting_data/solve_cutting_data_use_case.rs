@@ -131,26 +131,7 @@ where
 fn map_machining_error(err: MachiningPhysicsError) -> ApplicationError {
     let mut v = ValidationErrors::new();
 
-    match err {
-        MachiningPhysicsError::InvalidDiameter { .. } => {
-            v.push("diameter_mm", "invalid_combination", err.to_string());
-        }
-        MachiningPhysicsError::InvalidToothCount { .. } => {
-            v.push("teeth", "invalid_combination", err.to_string());
-        }
-        MachiningPhysicsError::InvalidRpm { .. } => {
-            v.push("rpm", "invalid_combination", err.to_string());
-        }
-        MachiningPhysicsError::InvalidFeedRate { .. } => {
-            v.push("feed_rate_mm_per_min", "invalid_combination", err.to_string());
-        }
-        MachiningPhysicsError::InvalidChipLoad { .. } => {
-            v.push("chip_load_mm_per_tooth", "invalid_combination", err.to_string());
-        }
-        MachiningPhysicsError::DivisionByZero | MachiningPhysicsError::NumericalInstability => {
-            v.push("cutting_data", "invalid_combination", err.to_string());
-        }
-    }
+    
 
     ApplicationError::Validation(v)
 }

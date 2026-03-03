@@ -30,57 +30,73 @@ impl SolveRightTriangleUseCase {
     }
 
     fn solve_triangle(
-        &self,
-        input: SolveRightTriangleInput,
-    ) -> AppResult<RightTriangle> {
+    &self,
+    input: SolveRightTriangleInput,
+) -> AppResult<RightTriangle> {
 
-        match input {
+    match input {
 
-            // ---------------------------------------------------------
-            // a + b
-            // ---------------------------------------------------------
+        SolveRightTriangleInput::Legs { a_mm, b_mm } => {
+            let (a, b) = self.parse_two_lengths("a", a_mm, "b", b_mm)?;
+            RightTriangleSolver::from_legs(a, b)
+                .map_err(|e| map_triangle_error_two_fields(e, "a", "b"))
+        }
 
-            SolveRightTriangleInput::Legs { a_mm, b_mm } => {
-                let (a, b) = self.parse_two_lengths("a", a_mm, "b", b_mm)?;
-                RightTriangleSolver::from_legs(a, b)
-                    .map_err(|e| map_triangle_error_two_fields(e, "a", "b"))
-            }
+        SolveRightTriangleInput::LegAAndHypotenuse { a_mm, c_mm } => {
+            let (a, c) = self.parse_two_lengths("a", a_mm, "c", c_mm)?;
+            RightTriangleSolver::from_leg_and_hypotenuse(a, c)
+                .map_err(|e| map_triangle_error_two_fields(e, "a", "c"))
+        }
 
-            // ---------------------------------------------------------
-            // a + c
-            // ---------------------------------------------------------
+        SolveRightTriangleInput::LegBAndHypotenuse { b_mm, c_mm } => {
+            let (b, c) = self.parse_two_lengths("b", b_mm, "c", c_mm)?;
+            RightTriangleSolver::from_other_leg_and_hypotenuse(b, c)
+                .map_err(|e| map_triangle_error_two_fields(e, "b", "c"))
+        }
 
-            SolveRightTriangleInput::LegAAndHypotenuse { a_mm, c_mm } => {
-                let (a, c) = self.parse_two_lengths("a", a_mm, "c", c_mm)?;
-                RightTriangleSolver::from_leg_and_hypotenuse(a, c)
-                    .map_err(|e| map_triangle_error_two_fields(e, "a", "c"))
-            }
+        SolveRightTriangleInput::HypotenuseAndAlpha { c_mm, alpha_deg } => {
+            let c = self.parse_length("c", c_mm)?;
+            let alpha = self.parse_angle("alpha", alpha_deg)?;
+            RightTriangleSolver::from_hypotenuse_and_angle(c, alpha)
+                .map_err(|e| map_triangle_error_length_and_angle(e, "c", "alpha"))
+        }
 
-            // ---------------------------------------------------------
-            // b + c
-            // ---------------------------------------------------------
+        SolveRightTriangleInput::HypotenuseAndBeta { c_mm, beta_deg } => {
+            let c = self.parse_length("c", c_mm)?;
+            let beta = self.parse_angle("beta", beta_deg)?;
+            RightTriangleSolver::from_hypotenuse_and_beta(c, beta)
+                .map_err(|e| map_triangle_error_length_and_angle(e, "c", "beta"))
+        }
 
-            SolveRightTriangleInput::LegBAndHypotenuse { b_mm, c_mm } => {
-                let (b, c) = self.parse_two_lengths("b", b_mm, "c", c_mm)?;
-                RightTriangleSolver::from_other_leg_and_hypotenuse(b, c)
-                    .map_err(|e| map_triangle_error_two_fields(e, "b", "c"))
-            }
+        SolveRightTriangleInput::LegAAndAlpha { a_mm, alpha_deg } => {
+            let a = self.parse_length("a", a_mm)?;
+            let alpha = self.parse_angle("alpha", alpha_deg)?;
+            RightTriangleSolver::from_leg_and_opposite_angle(a, alpha)
+                .map_err(|e| map_triangle_error_length_and_angle(e, "a", "alpha"))
+        }
 
-            // ---------------------------------------------------------
-            // c + alpha
-            // ---------------------------------------------------------
+        SolveRightTriangleInput::LegAAndBeta { a_mm, beta_deg } => {
+            let a = self.parse_length("a", a_mm)?;
+            let beta = self.parse_angle("beta", beta_deg)?;
+            RightTriangleSolver::from_leg_a_and_beta(a, beta)
+                .map_err(|e| map_triangle_error_length_and_angle(e, "a", "beta"))
+        }
 
-            SolveRightTriangleInput::HypotenuseAndAlpha { c_mm, alpha_deg } => {
-                let c = self.parse_length("c", c_mm)?;
-                let alpha = self.parse_angle("alpha", alpha_deg)?;
-                RightTriangleSolver::from_hypotenuse_and_angle(c, alpha)
-                    .map_err(|e| map_triangle_error_length_and_angle(e, "c", "alpha"))
-            }
+        SolveRightTriangleInput::LegBAndAlpha { b_mm, alpha_deg } => {
+            let b = self.parse_length("b", b_mm)?;
+            let alpha = self.parse_angle("alpha", alpha_deg)?;
+            RightTriangleSolver::from_adjacent_leg_and_angle(b, alpha)
+                .map_err(|e| map_triangle_error_length_and_angle(e, "b", "alpha"))
+        }
 
-            // Alle de andre følger samme pattern...
-            _ => unimplemented!(),
+        SolveRightTriangleInput::LegBAndBeta { b_mm, beta_deg } => {
+            let b = self.parse_length("b", b_mm)?;
+            let beta = self.parse_angle("beta", beta_deg)?;
+            RightTriangleSolver::from_leg_b_and_beta(b, beta)
+                .map_err(|e| map_triangle_error_length_and_angle(e, "b", "beta"))
         }
     }
+}
 
     // ---------------------------------------------------------
     // Parsing helpers (Helix-style)

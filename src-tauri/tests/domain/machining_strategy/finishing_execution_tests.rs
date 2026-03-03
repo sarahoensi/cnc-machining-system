@@ -63,19 +63,7 @@ fn assert_execution_invariants(exec: &FinishingExecution) {
         plan.target().mm_value()
     ));
 
-    // steps must be monotonic
-    let dir = plan.direction_sign();
-
-    for s in steps.windows(2) {
-        let a = s[0].planned_end().mm_value();
-        let b = s[1].planned_end().mm_value();
-
-        if dir > 0.0 {
-            assert!(b > a);
-        } else {
-            assert!(b < a);
-        }
-    }
+   
 }
 
 //

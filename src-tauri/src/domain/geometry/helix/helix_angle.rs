@@ -3,13 +3,13 @@
 use std::f64::consts::PI;
 
 use crate::domain::{
-    units::{Angle},
+    units::{AcuteAngle},
     geometry::HelixError
 };
 
 /// Represents a validated helix angle for geometric machining calculations.
 #[derive(Debug, Copy, Clone, PartialEq)]
-pub struct HelixAngle(Angle);
+pub struct HelixAngle(AcuteAngle);
 
 impl HelixAngle {
     /// Creates a helix angle constrained to the physically meaningful range.
@@ -20,22 +20,15 @@ impl HelixAngle {
     ///
     /// Returns `GeometryError::NotFinite` if the angle is not finite.
     /// Returns `GeometryError::OutOfRange` if the angle is `<= 0` or `>= pi/2`.
-    pub fn new(angle: Angle) -> Result<Self, HelixError> {
+    pub fn new(angle: AcuteAngle) -> Result<Self, HelixError> {
         let rad = angle.radians_value();
 
-        if !rad.is_finite() {
-            return Err(HelixError::AngleNotFinite { radians: rad });
-        }
-
-        if rad <= 0.0 || rad >= PI / 2.0 {
-            return Err(HelixError::AngleOutOfRange { radians: rad });
-        }
-
+        
         Ok(Self(angle))
     }
 
-    /// Returns the validated angle value.
-    pub fn angle(self) -> Angle {
+    /// Returns the validated AcuteAngle value.
+    pub fn angle(self) -> AcuteAngle {
         self.0
     }
 
@@ -59,7 +52,7 @@ mod tests {
 
     #[test]
     fn accepts_valid_angle() {
-        let angle = Angle::degrees(30.0).unwrap();
+        let angle = AcuteAngle::degrees(30.0).unwrap();
 
         let result = HelixAngle::new(angle);
 
@@ -68,35 +61,35 @@ mod tests {
 
    #[test]
 fn rejects_zero_angle() {
-    let angle = Angle::degrees(0.0).unwrap();
+    let angle = AcuteAngle::degrees(0.0).unwrap();
     let result = HelixAngle::new(angle);
     assert!(result.is_err());
 }
 
 #[test]
 fn rejects_ninety_degrees() {
-    let angle = Angle::degrees(90.0).unwrap();
+    let angle = AcuteAngle::degrees(90.0).unwrap();
     let result = HelixAngle::new(angle);
     assert!(result.is_err());
 }
 
 #[test]
 fn rejects_above_ninety() {
-    let angle = Angle::degrees(120.0).unwrap();
+    let angle = AcuteAngle::degrees(120.0).unwrap();
     let result = HelixAngle::new(angle);
     assert!(result.is_err());
 }
 
 #[test]
 fn rejects_negative_angle() {
-    let angle = Angle::degrees(-10.0).unwrap();
+    let angle = AcuteAngle::degrees(-10.0).unwrap();
     let result = HelixAngle::new(angle);
     assert!(result.is_err());
 }
 
     #[test]
     fn preserves_original_angle_value() {
-        let angle = Angle::degrees(42.5).unwrap();
+        let angle = AcuteAngle::degrees(42.5).unwrap();
 
         let helix_angle = HelixAngle::new(angle).unwrap();
 
@@ -105,7 +98,7 @@ fn rejects_negative_angle() {
 
     #[test]
     fn radians_and_degrees_are_consistent() {
-        let angle = Angle::degrees(25.0).unwrap();
+        let angle = AcuteAngle::degrees(25.0).unwrap();
 
         let helix_angle = HelixAngle::new(angle).unwrap();
 

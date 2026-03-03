@@ -1,27 +1,42 @@
-//! Use case for helix parameter orchestration (triangle-style).
+//! Use case for helix parameter orchestration.
 
 use std::f64::consts::PI;
 
 use crate::application::shared::AppResult;
 use crate::application::{ApplicationError, ValidationErrors};
 
-use crate::application::helix::dto::{SolveHelixInput, SolveHelixOutput};
+use crate::application::helix::dto::{
+    SolveHelixInput,
+    SolveHelixOutput,
+};
 
 use crate::domain::{
-    units::{Angle, Diameter, Pitch},
-    EffectiveDiameter, Helix, HelixAngle, HelixError, HelixMode,
+    units::{AcuteAngle, Diameter, Pitch},
+    EffectiveDiameter,
+    Helix,
+    HelixError,
+    HelixMode,
 };
 
 pub struct SolveHelixUseCase;
 
 impl SolveHelixUseCase {
-    pub fn execute(&self, input: SolveHelixInput) -> AppResult<SolveHelixOutput> {
+
+    pub fn execute(
+        &self,
+        input: SolveHelixInput,
+    ) -> AppResult<SolveHelixOutput> {
         let helix = self.solve_helix(input)?;
         Ok(helix.into())
     }
 
-    fn solve_helix(&self, input: SolveHelixInput) -> AppResult<Helix> {
+    fn solve_helix(
+        &self,
+        input: SolveHelixInput,
+    ) -> AppResult<Helix> {
+
         match input {
+
             SolveHelixInput::Pitch {
                 mode,
                 diameter_mm,
@@ -59,11 +74,17 @@ impl SolveHelixUseCase {
         tool_raw: f64,
         pitch_raw: f64,
     ) -> AppResult<Helix> {
+
         let mut v = ValidationErrors::new();
 
-        let diameter = Self::parse_diameter("diameter", diameter_raw, &mut v);
-        let tool = Self::parse_diameter("toolDiameter", tool_raw, &mut v);
-        let pitch = Self::parse_pitch("pitch", pitch_raw, &mut v);
+        let diameter =
+            Self::parse_diameter("diameter", diameter_raw, &mut v);
+
+        let tool =
+            Self::parse_diameter("toolDiameter", tool_raw, &mut v);
+
+        let pitch =
+            Self::parse_pitch("pitch", pitch_raw, &mut v);
 
         if !v.is_empty() {
             return Err(ApplicationError::Validation(v));
@@ -72,10 +93,14 @@ impl SolveHelixUseCase {
         let (diameter, tool, pitch) =
             (diameter.unwrap(), tool.unwrap(), pitch.unwrap());
 
-        let effective = EffectiveDiameter::new(mode, diameter, tool)
-            .map_err(map_effective_diameter_error)?;
+        let effective =
+            EffectiveDiameter::new(mode, diameter, tool)
+                .map_err(map_effective_diameter_error)?;
 
-        Ok(Helix::new(effective.diameter(), pitch))
+        Ok(Helix::new(
+            effective.diameter(),
+            pitch,
+        ))
     }
 
     // ---------------------------------------------------------
@@ -89,11 +114,17 @@ impl SolveHelixUseCase {
         tool_raw: f64,
         angle_raw: f64,
     ) -> AppResult<Helix> {
+
         let mut v = ValidationErrors::new();
 
-        let diameter = Self::parse_diameter("diameter", diameter_raw, &mut v);
-        let tool = Self::parse_diameter("toolDiameter", tool_raw, &mut v);
-        let angle = Self::parse_angle("angle", angle_raw, &mut v);
+        let diameter =
+            Self::parse_diameter("diameter", diameter_raw, &mut v);
+
+        let tool =
+            Self::parse_diameter("toolDiameter", tool_raw, &mut v);
+
+        let angle =
+            Self::parse_angle("angle", angle_raw, &mut v);
 
         if !v.is_empty() {
             return Err(ApplicationError::Validation(v));
@@ -102,23 +133,34 @@ impl SolveHelixUseCase {
         let (diameter, tool, angle) =
             (diameter.unwrap(), tool.unwrap(), angle.unwrap());
 
-        let effective = EffectiveDiameter::new(mode, diameter, tool)
-            .map_err(map_effective_diameter_error)?;
+        let effective =
+            EffectiveDiameter::new(mode, diameter, tool)
+                .map_err(map_effective_diameter_error)?;
 
-        let helix_angle =
-            HelixAngle::new(angle).map_err(map_helix_angle_error)?;
+        // Geometry:
+        // pitch = tan(angle) * circumference
+        let circumference =
+            PI * effective.diameter().mm_value();
 
-        let circumference = PI * effective.diameter().mm_value();
-        let pitch_value = helix_angle.radians_value().tan() * circumference;
+        let pitch_value =
+            angle.radians_value().tan() * circumference;
 
-        let pitch = Pitch::mm_per_rev(pitch_value)
-            .map_err(|e| single_field_error("angle", "invalid_combination", e.to_string()))?;
+        let pitch =
+            Pitch::mm_per_rev(pitch_value)
+                .map_err(|e| single_field_error(
+                    "angle",
+                    "invalid_combination",
+                    e.to_string(),
+                ))?;
 
-        Ok(Helix::new(effective.diameter(), pitch))
+        Ok(Helix::new(
+            effective.diameter(),
+            pitch,
+        ))
     }
 
     // ---------------------------------------------------------
-    // Parsing helpers (same pattern as triangle)
+    // Parsing helpers
     // ---------------------------------------------------------
 
     fn parse_diameter(
@@ -126,6 +168,7 @@ impl SolveHelixUseCase {
         raw: f64,
         v: &mut ValidationErrors,
     ) -> Option<Diameter> {
+
         match Diameter::mm(raw) {
             Ok(val) => Some(val),
             Err(e) => {
@@ -140,6 +183,7 @@ impl SolveHelixUseCase {
         raw: f64,
         v: &mut ValidationErrors,
     ) -> Option<Pitch> {
+
         match Pitch::mm_per_rev(raw) {
             Ok(val) => Some(val),
             Err(e) => {
@@ -153,8 +197,9 @@ impl SolveHelixUseCase {
         field: &'static str,
         raw: f64,
         v: &mut ValidationErrors,
-    ) -> Option<Angle> {
-        match Angle::degrees(raw) {
+    ) -> Option<AcuteAngle> {
+
+        match AcuteAngle::degrees(raw) {
             Ok(val) => Some(val),
             Err(e) => {
                 v.push(field, "invalid", e.to_string());
@@ -165,32 +210,35 @@ impl SolveHelixUseCase {
 }
 
 // ---------------------------------------------------------
-// HelixError -> ValidationErrors mapping
+// Error mapping
 // ---------------------------------------------------------
 
-fn map_effective_diameter_error(err: HelixError) -> ApplicationError {
-    match err {
-        HelixError::ToolTooLarge { .. } => {
-            single_field_error("toolDiameter", "invalid_combination", err.to_string())
-        }
-        HelixError::EffectiveDiameterNotPositive { .. } => {
-            single_field_error("diameter", "invalid_combination", err.to_string())
-        }
-        other => {
-            single_field_error("helix", "invalid_geometry", other.to_string())
-        }
-    }
-}
+fn map_effective_diameter_error(
+    err: HelixError,
+) -> ApplicationError {
 
-fn map_helix_angle_error(err: HelixError) -> ApplicationError {
     match err {
-        HelixError::AngleNotFinite { .. }
-        | HelixError::AngleOutOfRange { .. } => {
-            single_field_error("angle", "out_of_range", err.to_string())
-        }
-        other => {
-            single_field_error("helix", "invalid_geometry", other.to_string())
-        }
+
+        HelixError::ToolTooLarge { .. } =>
+            single_field_error(
+                "toolDiameter",
+                "invalid_combination",
+                err.to_string(),
+            ),
+
+        HelixError::EffectiveDiameterNotPositive { .. } =>
+            single_field_error(
+                "diameter",
+                "invalid_combination",
+                err.to_string(),
+            ),
+
+        other =>
+            single_field_error(
+                "helix",
+                "invalid_geometry",
+                other.to_string(),
+            ),
     }
 }
 
@@ -199,6 +247,7 @@ fn single_field_error(
     code: &'static str,
     message: String,
 ) -> ApplicationError {
+
     let mut v = ValidationErrors::new();
     v.push(field, code, message);
     ApplicationError::Validation(v)
