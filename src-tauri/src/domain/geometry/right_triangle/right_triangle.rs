@@ -1,6 +1,6 @@
 // domain/geometry/right_triangle/right_triangle.rs
 
-use crate::domain::units::{Angle, Length};
+use crate::domain::units::{Angle, Length, PositiveLength};
 
 const TRIG_CLAMP_EPS: f64 = 1e-15;
 
@@ -13,15 +13,15 @@ const TRIG_CLAMP_EPS: f64 = 1e-15;
 /// from the Pythagorean relation and is positive.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct RightTriangle {
-    a: Length,
-    b: Length,
+    a: PositiveLength,
+    b: PositiveLength,
 }
 
 impl RightTriangle {
     // ---------------------------------------------------------
     // Constructor (crate-private, solver owns validation)
     // ---------------------------------------------------------
-    pub(crate) fn new(a: Length, b: Length) -> Self {
+    pub(crate) fn new(a: PositiveLength, b: PositiveLength) -> Self {
         Self { a, b }
     }
 
@@ -30,24 +30,24 @@ impl RightTriangle {
     // ---------------------------------------------------------
 
     /// Returns the first leg length `a`.
-    pub fn a(&self) -> Length {
+    pub fn a(&self) -> PositiveLength {
         self.a
     }
 
     /// Returns the second leg length `b`.
-    pub fn b(&self) -> Length {
+    pub fn b(&self) -> PositiveLength {
         self.b
     }
 
     /// Hypotenuse `c` computed as sqrt(a² + b²).
     ///
     /// Returns a validated positive `Length` representing the hypotenuse.
-    pub fn c(&self) -> Length {
+    pub fn c(&self) -> PositiveLength {
         let a = self.a.mm_value();
         let b = self.b.mm_value();
 
         let c = (a * a + b * b).sqrt();
-        Length::mm_positive(c).unwrap()
+        PositiveLength::mm(c).unwrap()
     }
 
     /// Acute angle `alpha` opposite leg `a`.
@@ -90,21 +90,21 @@ impl RightTriangle {
     /// Height from the right angle to the hypotenuse.
     ///
     /// Returns a positive `Length` representing the altitude to the hypotenuse.
-    pub fn altitude_to_hypotenuse(&self) -> Length {
+    pub fn altitude_to_hypotenuse(&self) -> PositiveLength {
         let h = (2.0 * self.area()) / self.c().mm_value();
-        Length::mm_positive(h).unwrap()
+        PositiveLength::mm(h).unwrap()
     }
 
     /// Projection length of leg `a` onto the hypotenuse `c`.
-    pub fn projection_a_on_c(&self) -> Length {
+    pub fn projection_a_on_c(&self) -> PositiveLength {
         let val = self.a.mm_value().powi(2) / self.c().mm_value();
-        Length::mm_positive(val).unwrap()
+        PositiveLength::mm(val).unwrap()
     }
 
     /// Projection length of leg `b` onto the hypotenuse `c`.
-    pub fn projection_b_on_c(&self) -> Length {
+    pub fn projection_b_on_c(&self) -> PositiveLength {
         let val = self.b.mm_value().powi(2) / self.c().mm_value();
-        Length::mm_positive(val).unwrap()
+        PositiveLength::mm(val).unwrap()
     }
 
     /// Sine of the acute angle `alpha` (a / c).
@@ -141,8 +141,8 @@ mod tests {
 
     fn sample_triangle() -> RightTriangle {
         RightTriangle::new(
-            Length::mm_positive(3.0).unwrap(),
-            Length::mm_positive(4.0).unwrap(),
+            PositiveLength::mm(3.0).unwrap(),
+            PositiveLength::mm(4.0).unwrap(),
         )
     }
 
