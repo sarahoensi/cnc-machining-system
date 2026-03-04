@@ -22,7 +22,7 @@ pub use length::{
     LengthUnitError,
 };
 
-pub use angle::{Angle, AcuteAngle,AngleError};
+pub use angle::{Angle, AcuteAngle, AngleError};
 
 pub use motion::{
     FeedRate,

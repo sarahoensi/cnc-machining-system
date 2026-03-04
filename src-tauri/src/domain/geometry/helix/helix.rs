@@ -1,12 +1,19 @@
+// domain/geometry/helix/helix.rs
+
 use std::f64::consts::PI;
 
-use crate::domain::units::{
-    Diameter,
-    Length,
-    Pitch,
-    PositiveLength,
-    AcuteAngle,
+use crate::domain::{
+    units::{AcuteAngle, Diameter, Length, Pitch, PositiveLength},
+    GeometryError,
 };
+
+use super::HelixError;
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum HelixMode {
+    Inner,
+    Outer,
+}
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Helix {
@@ -16,13 +23,75 @@ pub struct Helix {
 
 impl Helix {
 
+    // ---------------- Constructors ----------------
+
     pub fn new(diameter: Diameter, pitch: Pitch) -> Self {
         Self { diameter, pitch }
     }
 
-    // ---------------------------------------------------------
-    // Accessors
-    // ---------------------------------------------------------
+    pub fn from_pitch(
+        mode: HelixMode,
+        nominal: Diameter,
+        tool: Diameter,
+        pitch: Pitch,
+    ) -> Result<Self, GeometryError> {
+
+        let diameter = Self::effective_diameter(mode, nominal, tool)?;
+
+        Ok(Self::new(diameter, pitch))
+    }
+
+    pub fn from_angle(
+        mode: HelixMode,
+        nominal: Diameter,
+        tool: Diameter,
+        angle: AcuteAngle,
+    ) -> Result<Self, GeometryError> {
+
+        let diameter = Self::effective_diameter(mode, nominal, tool)?;
+
+        let d = diameter.mm_value();
+        let a = angle.radians_value();
+
+        let pitch =
+            Pitch::mm_per_rev_unchecked(a.tan() * PI * d);
+
+        Ok(Self::new(diameter, pitch))
+    }
+
+    // ---------------- Internal helpers ----------------
+
+    fn effective_diameter(
+        mode: HelixMode,
+        nominal: Diameter,
+        tool: Diameter,
+    ) -> Result<Diameter, GeometryError> {
+
+        let d = nominal.mm_value();
+        let r_tool = tool.mm_value() / 2.0;
+
+        let effective = match mode {
+
+            HelixMode::Inner => {
+                if r_tool >= d {
+                    return Err(
+                        HelixError::ToolTooLarge {
+                            tool_diameter: tool.mm_value(),
+                            nominal_diameter: d,
+                        }.into()
+                    );
+                }
+
+                d - r_tool
+            }
+
+            HelixMode::Outer => d + r_tool,
+        };
+
+        Ok(Diameter::mm_unchecked(effective))
+    }
+
+    // ---------------- Accessors ----------------
 
     pub fn diameter(&self) -> Diameter {
         self.diameter
@@ -32,55 +101,33 @@ impl Helix {
         self.pitch
     }
 
-    // ---------------------------------------------------------
-    // Derived geometric properties
-    // ---------------------------------------------------------
+    // ---------------- Derived geometry ----------------
 
-    /// π * D  (always positive)
     pub fn circumference(&self) -> PositiveLength {
-        let value = PI * self.diameter.mm_value();
-        PositiveLength::mm(value)
-            .expect("Circumference must be positive")
+        PositiveLength::mm_unchecked(PI * self.diameter.mm_value())
     }
 
-    /// atan(p / circumference)
-    /// Always 0 < θ < π/2
     pub fn helix_angle(&self) -> AcuteAngle {
-        let c = self.circumference().mm_value();
         let p = self.pitch.mm_per_rev_value();
+        let c = self.circumference().mm_value();
 
-        let angle = (p / c).atan();
-
-        AcuteAngle::radians(angle)
-            .expect("Helix angle must be acute")
+        AcuteAngle::radians_unchecked((p / c).atan())
     }
 
-    /// sqrt(c² + p²) (always positive)
     pub fn length_per_revolution(&self) -> PositiveLength {
-        let c = self.circumference().mm_value();
         let p = self.pitch.mm_per_rev_value();
+        let c = self.circumference().mm_value();
 
-        let value = (c.powi(2) + p.powi(2)).sqrt();
-
-        PositiveLength::mm(value)
-            .expect("Helix length per revolution must be positive")
+        PositiveLength::mm_unchecked((c * c + p * p).sqrt())
     }
 
-    /// Total helix length for N revolutions.
-    /// May be negative if revolutions is negative.
     pub fn total_length(&self, revolutions: f64) -> Length {
-        let single = self.length_per_revolution().mm_value();
-        Length::mm(single * revolutions)
-            .expect("Finite multiplication expected")
+        let l = self.length_per_revolution().mm_value();
+        Length::mm_unchecked(l * revolutions)
     }
 
-    /// Axial travel = pitch * revolutions
-    /// May be negative if revolutions is negative.
     pub fn axial_travel(&self, revolutions: f64) -> Length {
-        let value = self.pitch.mm_per_rev_value() * revolutions;
-
-        Length::mm(value)
-            .expect("Finite multiplication expected")
+        Length::mm_unchecked(self.pitch.mm_per_rev_value() * revolutions)
     }
 }
 
@@ -92,10 +139,7 @@ mod tests {
 
     #[test]
     fn circumference_formula() {
-        let h = Helix::new(
-            Diameter::mm(10.0).unwrap(),
-            Pitch::mm_per_rev(2.0).unwrap(),
-        );
+        let h = Helix::new(Diameter::mm(10.0).unwrap(), Pitch::mm_per_rev(2.0).unwrap());
 
         let expected = PI * 10.0;
 
@@ -108,26 +152,16 @@ mod tests {
 
     #[test]
     fn axial_travel_identity() {
-        let h = Helix::new(
-            Diameter::mm(8.0).unwrap(),
-            Pitch::mm_per_rev(3.0).unwrap(),
-        );
+        let h = Helix::new(Diameter::mm(8.0).unwrap(), Pitch::mm_per_rev(3.0).unwrap());
 
         let travel = h.axial_travel(1.0);
 
-        assert!(approx_eq(
-            travel.mm_value(),
-            3.0,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(travel.mm_value(), 3.0, DEFAULT_EPS));
     }
 
     #[test]
     fn total_length_identity() {
-        let h = Helix::new(
-            Diameter::mm(6.0).unwrap(),
-            Pitch::mm_per_rev(2.0).unwrap(),
-        );
+        let h = Helix::new(Diameter::mm(6.0).unwrap(), Pitch::mm_per_rev(2.0).unwrap());
 
         let single = h.length_per_revolution();
         let total = h.total_length(5.0);

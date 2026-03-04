@@ -6,8 +6,10 @@
 mod error;
 mod result;
 mod validation;
+mod input_parser;
 
 pub use error::ApplicationError;
 pub use result::AppResult;
 pub use validation::{ValidationErrors};
+pub use input_parser::InputParser;
 

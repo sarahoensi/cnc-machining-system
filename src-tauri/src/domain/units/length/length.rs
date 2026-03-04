@@ -6,6 +6,8 @@ use crate::domain::units::{UnitsError, core::NumericError};
 ///
 /// Stored internally in millimeters (mm).
 /// Values must be finite, but may be negative.
+
+#[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Length(f64);
 
@@ -13,6 +15,7 @@ pub struct Length(f64);
 ///
 /// Stored internally in millimeters (mm).
 /// Values must be finite and greater than zero.
+#[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct PositiveLength(f64);
 
@@ -23,6 +26,11 @@ pub struct PositiveLength(f64);
 // ============================================================
 
 impl Length {
+
+    pub(crate) fn mm_unchecked(value: f64) -> Self {
+        debug_assert!(value.is_finite());
+        Self(value)
+    }
 
     fn validate_finite(value: f64) -> Result<f64, NumericError> {
         if value.is_finite() {
@@ -66,6 +74,12 @@ impl Length {
 
 impl PositiveLength {
 
+    pub(crate) fn mm_unchecked(value: f64) -> Self {
+        debug_assert!(value.is_finite());
+        debug_assert!(value > 0.0);
+        Self(value)
+    }
+
     fn validate_positive(value: f64) -> Result<f64, NumericError> {
         if !value.is_finite() {
             return Err(NumericError::NotFinite(value));
@@ -98,7 +112,7 @@ impl PositiveLength {
 
     /// Converts to signed Length.
     pub fn as_length(self) -> Length {
-        Length(self.0)
+        Length::mm_unchecked(self.0)
     }
 }
 
@@ -111,28 +125,28 @@ impl PositiveLength {
 impl std::ops::Add for Length {
     type Output = Length;
     fn add(self, rhs: Length) -> Length {
-        Length(self.0 + rhs.0)
+        Length::mm_unchecked(self.0 + rhs.0)
     }
 }
 
 impl std::ops::Sub for Length {
     type Output = Length;
     fn sub(self, rhs: Length) -> Length {
-        Length(self.0 - rhs.0)
+        Length::mm_unchecked(self.0 - rhs.0)
     }
 }
 
 impl std::ops::Mul<f64> for Length {
     type Output = Length;
     fn mul(self, rhs: f64) -> Length {
-        Length(self.0 * rhs)
+        Length::mm_unchecked(self.0 * rhs)
     }
 }
 
 impl std::ops::Div<f64> for Length {
     type Output = Length;
     fn div(self, rhs: f64) -> Length {
-        Length(self.0 / rhs)
+        Length::mm_unchecked(self.0 / rhs)
     }
 }
 
@@ -145,14 +159,14 @@ impl std::ops::Div<f64> for Length {
 impl std::ops::Mul<f64> for PositiveLength {
     type Output = Length;
     fn mul(self, rhs: f64) -> Length {
-        Length(self.0 * rhs)
+        Length::mm_unchecked(self.0 * rhs)
     }
 }
 
 impl std::ops::Div<f64> for PositiveLength {
     type Output = Length;
     fn div(self, rhs: f64) -> Length {
-        Length(self.0 / rhs)
+        Length::mm_unchecked(self.0 / rhs)
     }
 }
 

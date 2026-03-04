@@ -1,10 +1,7 @@
-//! DTOs for helix-solving workflows.
-
+// application/helix/dto.rs
 use crate::domain::{Helix, HelixMode};
 
-
 pub enum SolveHelixInput {
-
     Pitch {
         mode: HelixMode,
         diameter_mm: f64,

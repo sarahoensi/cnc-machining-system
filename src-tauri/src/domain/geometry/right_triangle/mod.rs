@@ -11,9 +11,9 @@
 #![allow(clippy::module_inception)]
 
 mod right_triangle;
-mod right_triangle_solver;
+//mod right_triangle_solver;
 mod error;
 
 pub use right_triangle::RightTriangle;
-pub use right_triangle_solver::RightTriangleSolver;
+//pub use right_triangle_solver::RightTriangleSolver;
 pub use error::RightTriangleError;

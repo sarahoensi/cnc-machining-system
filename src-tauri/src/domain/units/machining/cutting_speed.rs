@@ -1,17 +1,21 @@
 // domain/units/machining/cutting_speed.rs
 
-use crate::domain::units::{
-    PositiveScalar, UnitsError,
-};
+use crate::domain::units::{PositiveScalar, UnitsError};
 
 /// Represents surface cutting speed.
 ///
 /// Stored internally as meters per minute (m/min).
 /// Values must be finite and strictly positive.
+#[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct CuttingSpeed(PositiveScalar);
 
 impl CuttingSpeed {
+    /// Internal constructor used by domain math.
+    #[allow(dead_code)]
+    pub(crate) fn meters_per_min_unchecked(value: f64) -> Self {
+        Self(PositiveScalar::new_unchecked(value))
+    }
 
     pub fn meters_per_min(value: f64) -> Result<Self, UnitsError> {
         Ok(Self(PositiveScalar::new(value)?))
@@ -38,5 +42,4 @@ mod tests {
         assert!(CuttingSpeed::meters_per_min(f64::NAN).is_err());
         assert!(CuttingSpeed::meters_per_min(f64::INFINITY).is_err());
     }
-
 }

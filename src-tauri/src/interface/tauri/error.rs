@@ -1,41 +1,48 @@
-use std::collections::HashMap;
-use crate::application::ApplicationError;
-
 // interface/tauri/shared/error.rs
 
+use crate::application::ApplicationError;
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TauriFieldError {
+    pub field: String,
+    pub code: String,
+    pub message: String,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TauriError {
     pub message: String,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub field_errors: Option<HashMap<String, String>>,
+    pub field_errors: Option<Vec<TauriFieldError>>,
 }
-
 
 pub fn map_application_error(err: ApplicationError) -> TauriError {
     match err {
         ApplicationError::Validation(validation) => {
-            // Konverter Vec<FieldError> → HashMap<String, String>
-            let map: HashMap<String, String> = validation
+            let field_errors: Vec<TauriFieldError> = validation
                 .errors
                 .into_iter()
-                .map(|field_error| {
-                    (
-                        field_error.field.to_string(),
-                        field_error.message,
-                    )
+                .map(|e| TauriFieldError {
+                    field: e.field.to_string(),
+                    code: e.code.to_string(),
+                    message: e.message,
                 })
                 .collect();
 
             TauriError {
                 message: validation.message.to_string(),
-                field_errors: if map.is_empty() { None } else { Some(map) },
+                field_errors: if field_errors.is_empty() {
+                    None
+                } else {
+                    Some(field_errors)
+                },
             }
         }
 
-        // Alle andre feil → global feil
         other => TauriError {
             message: other.to_string(),
             field_errors: None,

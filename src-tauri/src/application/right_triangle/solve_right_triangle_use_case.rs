@@ -1,4 +1,5 @@
-use crate::application::shared::{AppResult};
+// application/right_triangle/solve_right_triangle_use_case.rs
+use crate::application::shared::AppResult;
 
 use crate::application::right_triangle::dto::{
     SolveRightTriangleInput,
@@ -8,7 +9,6 @@ use crate::application::right_triangle::dto::{
 use crate::domain::{
     DomainError,
     RightTriangle,
-    RightTriangleSolver,
     units::{PositiveLength, AcuteAngle},
 };
 
@@ -25,7 +25,7 @@ impl SolveRightTriangleUseCase {
         input: SolveRightTriangleInput,
     ) -> AppResult<SolveRightTriangleOutput> {
 
-        let triangle = self.solve_triangle(input)?; 
+        let triangle = self.solve_triangle(input)?;
         Ok(triangle.into())
     }
 
@@ -43,55 +43,55 @@ impl SolveRightTriangleUseCase {
             SolveRightTriangleInput::Legs { a_mm, b_mm } => {
                 let a = PositiveLength::mm(a_mm)?;
                 let b = PositiveLength::mm(b_mm)?;
-                Ok(RightTriangleSolver::from_legs(a, b)?)
+                Ok(RightTriangle::from_legs(a, b))
             }
 
             SolveRightTriangleInput::LegAAndHypotenuse { a_mm, c_mm } => {
                 let a = PositiveLength::mm(a_mm)?;
                 let c = PositiveLength::mm(c_mm)?;
-                Ok(RightTriangleSolver::from_leg_and_hypotenuse(a, c)?)
+                Ok(RightTriangle::from_leg_and_hypotenuse(a, c)?)
             }
 
             SolveRightTriangleInput::LegBAndHypotenuse { b_mm, c_mm } => {
                 let b = PositiveLength::mm(b_mm)?;
                 let c = PositiveLength::mm(c_mm)?;
-                Ok(RightTriangleSolver::from_other_leg_and_hypotenuse(b, c)?)
+                Ok(RightTriangle::from_other_leg_and_hypotenuse(b, c)?)
             }
 
             SolveRightTriangleInput::HypotenuseAndAlpha { c_mm, alpha_deg } => {
                 let c = PositiveLength::mm(c_mm)?;
                 let alpha = AcuteAngle::degrees(alpha_deg)?;
-                Ok(RightTriangleSolver::from_hypotenuse_and_angle(c, alpha)?)
+                Ok(RightTriangle::from_hypotenuse_and_angle(c, alpha))
             }
 
             SolveRightTriangleInput::HypotenuseAndBeta { c_mm, beta_deg } => {
                 let c = PositiveLength::mm(c_mm)?;
                 let beta = AcuteAngle::degrees(beta_deg)?;
-                Ok(RightTriangleSolver::from_hypotenuse_and_beta(c, beta)?)
+                Ok(RightTriangle::from_hypotenuse_and_beta(c, beta))
             }
 
             SolveRightTriangleInput::LegAAndAlpha { a_mm, alpha_deg } => {
                 let a = PositiveLength::mm(a_mm)?;
                 let alpha = AcuteAngle::degrees(alpha_deg)?;
-                Ok(RightTriangleSolver::from_leg_and_opposite_angle(a, alpha)?)
+                Ok(RightTriangle::from_leg_and_opposite_angle(a, alpha)?)
             }
 
             SolveRightTriangleInput::LegAAndBeta { a_mm, beta_deg } => {
                 let a = PositiveLength::mm(a_mm)?;
                 let beta = AcuteAngle::degrees(beta_deg)?;
-                Ok(RightTriangleSolver::from_leg_a_and_beta(a, beta)?)
+                Ok(RightTriangle::from_leg_a_and_beta(a, beta)?)
             }
 
             SolveRightTriangleInput::LegBAndAlpha { b_mm, alpha_deg } => {
                 let b = PositiveLength::mm(b_mm)?;
                 let alpha = AcuteAngle::degrees(alpha_deg)?;
-                Ok(RightTriangleSolver::from_adjacent_leg_and_angle(b, alpha)?)
+                Ok(RightTriangle::from_adjacent_leg_and_angle(b, alpha)?)
             }
 
             SolveRightTriangleInput::LegBAndBeta { b_mm, beta_deg } => {
                 let b = PositiveLength::mm(b_mm)?;
                 let beta = AcuteAngle::degrees(beta_deg)?;
-                Ok(RightTriangleSolver::from_leg_b_and_beta(b, beta)?)
+                Ok(RightTriangle::from_leg_b_and_beta(b, beta)?)
             }
         }
     }

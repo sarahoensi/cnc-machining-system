@@ -15,9 +15,9 @@ pub use geometry::{
     Helix,
     HelixMode,
     HelixError,
-    EffectiveDiameter,
+    //EffectiveDiameter,
     RightTriangle,
-    RightTriangleSolver,
+    //RightTriangleSolver,
     GeometryError,
     RightTriangleError
 };

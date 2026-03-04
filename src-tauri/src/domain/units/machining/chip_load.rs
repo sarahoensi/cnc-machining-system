@@ -8,10 +8,17 @@ use crate::domain::units::{
 ///
 /// Stored internally as millimeters per tooth (mm/tooth).
 /// Values must be finite and strictly positive.
+#[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct ChipLoad(PositiveScalar);
 
 impl ChipLoad {
+
+    /// Internal constructor used by domain math.
+    #[allow(dead_code)]
+    pub(crate) fn mm_per_tooth_unchecked(value: f64) -> Self {
+        Self(PositiveScalar::new_unchecked(value))
+    }
 
     pub fn mm_per_tooth(value: f64) -> Result<Self, UnitsError> {
         Ok(Self(PositiveScalar::new(value)?))

@@ -8,10 +8,16 @@ use crate::domain::units::{UnitsError, length::{
 ///
 /// Semantically distinct from generic length,
 /// but physically represented as a positive scalar value.
+#[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Pitch(PositiveLength);
 
 impl Pitch {
+    /// Internal constructor used by domain math.
+    pub(crate) fn mm_per_rev_unchecked(value: f64) -> Self {
+        Self(PositiveLength::mm_unchecked(value))
+    }
+    
     /// Creates a Pitch from millimeters per revolution.
     ///
     /// # Errors

@@ -3,9 +3,11 @@
 use crate::domain::units::{UnitsError, core::NumericError};
 use super::error::AngleError;
 
+#[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Angle(f64);
 
+#[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct AcuteAngle(f64);
 
@@ -16,6 +18,13 @@ pub struct AcuteAngle(f64);
 // ============================================================
 
 impl Angle {
+
+    /// Internal constructor used by domain math.
+    #[allow(dead_code)]
+    pub(crate) fn radians_unchecked(value: f64) -> Self {
+        debug_assert!(value.is_finite());
+        Self(value)
+    }
 
     fn validate_finite(value: f64) -> Result<f64, NumericError> {
         if value.is_finite() {
@@ -53,7 +62,16 @@ impl Angle {
 // ============================================================
 
 impl AcuteAngle {
+
     const HALF_PI: f64 = std::f64::consts::FRAC_PI_2;
+
+    /// Internal constructor used by domain math.
+    pub(crate) fn radians_unchecked(value: f64) -> Self {
+        debug_assert!(value.is_finite());
+        debug_assert!(value > 0.0);
+        debug_assert!(value < Self::HALF_PI);
+        Self(value)
+    }
 
     fn validate_finite(value: f64) -> Result<f64, NumericError> {
         if value.is_finite() {

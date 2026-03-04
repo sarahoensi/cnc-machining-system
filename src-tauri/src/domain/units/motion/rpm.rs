@@ -7,10 +7,17 @@ use crate::domain::units::{
 /// Represents rotational speed in revolutions per minute (RPM).
 ///
 /// Values must be finite and strictly positive.
+#[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Rpm(PositiveScalar);
 
 impl Rpm {
+
+    /// Internal constructor used by domain math.
+    #[allow(dead_code)]
+    pub(crate) fn new_unchecked(value: f64) -> Self {
+        Self(PositiveScalar::new_unchecked(value))
+    }
 
     pub fn new(value: f64) -> Result<Self, UnitsError> {
         Ok(Self(PositiveScalar::new(value)?))

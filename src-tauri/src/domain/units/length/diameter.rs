@@ -7,10 +7,16 @@ use crate::domain::units::{Radius, UnitsError};
 ///
 /// Semantically distinct from generic length, but
 /// physically represented as a positive length.
+#[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Diameter(PositiveLength);
 
 impl Diameter {
+    /// Internal constructor used by domain math.
+    pub(crate) fn mm_unchecked(value: f64) -> Self {
+        Self(PositiveLength::mm_unchecked(value))
+    }
+
     /// Creates a Diameter from millimeters.
     ///
     /// # Errors

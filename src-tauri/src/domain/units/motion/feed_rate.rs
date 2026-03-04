@@ -8,10 +8,17 @@ use crate::domain::units::{
 ///
 /// Stored internally as millimeters per minute (mm/min).
 /// Values must be finite and strictly positive.
+#[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct FeedRate(PositiveScalar);
 
 impl FeedRate {
+
+    /// Internal constructor used by domain math.
+    #[allow(dead_code)]
+    pub(crate) fn mm_per_min_unchecked(value: f64) -> Self {
+        Self(PositiveScalar::new_unchecked(value))
+    }
 
     pub fn mm_per_min(value: f64) -> Result<Self, UnitsError> {
         Ok(Self(PositiveScalar::new(value)?))

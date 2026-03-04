@@ -9,10 +9,12 @@
 
 mod helix;
 //mod helix_angle;
-mod effective_diameters;
+//mod effective_diameters;
 mod error;
+//mod helix_solver;
 
-pub use helix::Helix;
+pub use helix::{Helix, HelixMode};
 //pub use helix_angle::HelixAngle;
-pub use effective_diameters::{EffectiveDiameter, HelixMode};
+//pub use effective_diameters::{EffectiveDiameter, HelixMode};
 pub use error::HelixError;
+//pub use helix_solver::HelixSolver;
