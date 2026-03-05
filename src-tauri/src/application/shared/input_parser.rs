@@ -17,7 +17,11 @@ impl InputParser {
         }
     }
 
-    pub fn parse<T, E>(
+    // ---------------------------
+    // Parse primitive/domain values
+    // ---------------------------
+
+    pub fn value<T, E>(
         &mut self,
         field: &'static str,
         result: Result<T, E>,
@@ -34,20 +38,32 @@ impl InputParser {
         }
     }
 
-    pub fn check<E>(
+    // ---------------------------
+    // Domain rule validation
+    // ---------------------------
+
+    pub fn domain<T, E>(
         &mut self,
         field: &'static str,
-        result: Result<(), E>,
-    )
+        result: Result<T, E>,
+    ) -> Option<T>
     where
         E: std::fmt::Display,
     {
-        if let Err(e) = result {
-            self.errors.push(field, "invalid_combination", e.to_string());
+        match result {
+            Ok(v) => Some(v),
+            Err(e) => {
+                self.errors.push(field, "invalid_geometry", e.to_string());
+                None
+            }
         }
     }
 
-    pub fn push_error(
+    // ---------------------------
+    // Push custom error
+    // ---------------------------
+
+    pub fn push(
         &mut self,
         field: &'static str,
         code: &'static str,
@@ -55,6 +71,10 @@ impl InputParser {
     ) {
         self.errors.push(field, code, message);
     }
+
+    // ---------------------------
+    // Finish validation
+    // ---------------------------
 
     pub fn finish(self) -> Result<(), ApplicationError> {
         if self.errors.is_empty() {
@@ -64,26 +84,15 @@ impl InputParser {
         }
     }
 
-    pub fn domain<T, E>(
-    &mut self,
-    field: &'static str,
-    result: Result<T, E>,
-) -> Option<T>
-where
-    E: std::fmt::Display,
-{
-    match result {
-        Ok(v) => Some(v),
-        Err(e) => {
-            self.push_error(field, "invalid_geometry", e.to_string());
-            None
+    // ---------------------------
+    // Finish with value
+    // ---------------------------
+
+    pub fn finish_with<T>(self, value: Option<T>) -> Result<T, ApplicationError> {
+        if self.errors.is_empty() {
+            Ok(value.expect("validation succeeded but value missing"))
+        } else {
+            Err(ApplicationError::Validation(self.errors))
         }
     }
-}
-pub fn pair<A, B>(a: Option<A>, b: Option<B>) -> Option<(A, B)> {
-    match (a, b) {
-        (Some(a), Some(b)) => Some((a, b)),
-        _ => None,
-    }
-}
 }

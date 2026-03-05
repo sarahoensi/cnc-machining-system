@@ -1,2 +1,0 @@
-
-mod effective_diameter;

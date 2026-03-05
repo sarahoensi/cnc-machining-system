@@ -1,57 +1,65 @@
 // application/helix/solve_helix_use_case.rs
 
-// application/helix/solve_helix_use_case.rs
-
-use crate::application::shared::AppResult;
-
-use crate::application::helix::dto::{SolveHelixInput, SolveHelixOutput};
+use crate::application::{
+    helix::dto::{SolveHelixInput, SolveHelixOutput},
+    shared::{AppResult, InputParser},
+};
 
 use crate::domain::{
     units::{AcuteAngle, Diameter, Pitch},
-    DomainError, Helix,
+    Helix,
 };
 
 pub struct SolveHelixUseCase;
 
 impl SolveHelixUseCase {
-    // ---------------------------------------------------------
-    // Public entrypoint (Application boundary)
-    // ---------------------------------------------------------
-
     pub fn execute(&self, input: SolveHelixInput) -> AppResult<SolveHelixOutput> {
-        let helix = self.solve_helix(input)?;
-        Ok(helix.into())
-    }
+        let mut p = InputParser::new();
 
-    // ---------------------------------------------------------
-    // Internal orchestration (Domain boundary)
-    // ---------------------------------------------------------
-
-    fn solve_helix(&self, input: SolveHelixInput) -> Result<Helix, DomainError> {
-        match input {
+        let helix = match input {
             SolveHelixInput::Pitch {
                 mode,
-                diameter_mm,
-                tool_diameter_mm,
-                pitch_mm_per_rev,
-            } => Ok(Helix::from_pitch(
-                mode.into(),
-                Diameter::mm(diameter_mm)?,
-                Diameter::mm(tool_diameter_mm)?,
-                Pitch::mm_per_rev(pitch_mm_per_rev)?,
-            )?),
+                diameter,
+                tool_diameter,
+                pitch,
+            } => {
+                let diameter = p.value("diameter", Diameter::mm(diameter));
+
+                let tool = p.value("tool_diameter", Diameter::mm(tool_diameter));
+
+                let pitch = p.value("pitch", Pitch::mm_per_rev(pitch));
+
+                match (diameter, tool, pitch) {
+                    (Some(d), Some(t), Some(pitch)) => {
+                        p.domain("toolDiameter", Helix::from_pitch(mode.into(), d, t, pitch))
+                    }
+                    _ => None,
+                }
+            }
 
             SolveHelixInput::Angle {
                 mode,
-                diameter_mm,
-                tool_diameter_mm,
-                angle_deg,
-            } => Ok(Helix::from_angle(
-                mode.into(),
-                Diameter::mm(diameter_mm)?,
-                Diameter::mm(tool_diameter_mm)?,
-                AcuteAngle::degrees(angle_deg)?,
-            )?),
-        }
+                diameter,
+                tool_diameter,
+                angle,
+            } => {
+                let diameter = p.value("diameter", Diameter::mm(diameter));
+
+                let tool = p.value("tool_diameter", Diameter::mm(tool_diameter));
+
+                let angle = p.value("angle", AcuteAngle::degrees(angle));
+
+                match (diameter, tool, angle) {
+                    (Some(d), Some(t), Some(a)) => {
+                        p.domain("toolDiameter", Helix::from_angle(mode.into(), d, t, a))
+                    }
+                    _ => None,
+                }
+            }
+        };
+
+        let helix = p.finish_with(helix)?;
+
+        Ok(helix.into())
     }
 }

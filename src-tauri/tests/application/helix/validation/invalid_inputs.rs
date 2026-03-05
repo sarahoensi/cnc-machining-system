@@ -9,9 +9,9 @@ fn fails_when_diameter_is_invalid() {
     let result = uc.execute(
         SolveHelixInput::Pitch {
             mode: HelixMode::Outer,
-            diameter_mm: 0.0,
-            tool_diameter_mm: 2.0,
-            pitch_mm_per_rev: 4.0,
+            diameter: 0.0,
+            tool_diameter: 2.0,
+            pitch: 4.0,
         }
     );
 

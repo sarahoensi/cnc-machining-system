@@ -4,7 +4,7 @@ import type { SolveHelixRequest } from "../api/types";
 export function buildHelixRequest(
   input: Partial<Record<HelixKey, number>>,
   mode: "Inner" | "Outer"
-): SolveHelixRequest {
+): SolveHelixRequest{
 
   const {
     diameter,
@@ -20,9 +20,9 @@ export function buildHelixRequest(
     return {
       type: "Pitch",
       mode,
-      diameter_mm: diameter,
-      tool_diameter_mm: toolDiameter,
-      pitch_mm_per_rev: pitch,
+      diameter: diameter,
+      tool_diameter: toolDiameter,
+      pitch: pitch,
     };
   }
 
@@ -30,9 +30,9 @@ export function buildHelixRequest(
     return {
       type: "Angle",
       mode,
-      diameter_mm: diameter,
-      tool_diameter_mm: toolDiameter,
-      angle_deg: angle,
+      diameter: diameter,
+      tool_diameter: toolDiameter,
+      angle: angle,
     };
   }
 

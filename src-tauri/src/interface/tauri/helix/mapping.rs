@@ -37,26 +37,26 @@ impl From<SolveHelixRequest> for SolveHelixInput {
 
             SolveHelixRequest::Pitch {
                 mode,
-                diameter_mm,
-                tool_diameter_mm,
-                pitch_mm_per_rev,
+                diameter,
+                tool_diameter,
+                pitch,
             } => SolveHelixInput::Pitch {
                 mode: mode.into(),
-                diameter_mm,
-                tool_diameter_mm,
-                pitch_mm_per_rev,
+                diameter,
+                tool_diameter,
+                pitch,
             },
 
             SolveHelixRequest::Angle {
                 mode,
-                diameter_mm,
-                tool_diameter_mm,
-                angle_deg,
+                diameter,
+                tool_diameter,
+                angle,
             } => SolveHelixInput::Angle {
                 mode: mode.into(),
-                diameter_mm,
-                tool_diameter_mm,
-                angle_deg,
+                diameter,
+                tool_diameter,
+                angle,
             },
         }
     }
@@ -69,8 +69,8 @@ impl From<SolveHelixRequest> for SolveHelixInput {
 impl From<SolveHelixOutput> for SolveHelixResponse {
     fn from(out: SolveHelixOutput) -> Self {
         Self {
-            pitch_mm_per_rev: out.pitch_mm_per_rev,
-            angle_deg: out.angle_deg,
+            pitch: out.pitch,
+            angle: out.angle,
         }
     }
 }
