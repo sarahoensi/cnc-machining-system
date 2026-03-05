@@ -6,7 +6,7 @@
 // application/cutting_data/dto.rs
 
 /// Input where user provides a valid combination
-#[derive(Default)]
+
 /// Input DTO for cutting-data completion.
 ///
 /// This type carries optional known machining values. The use case attempts to
@@ -19,6 +19,7 @@
 /// Unit expectations:
 /// - Speeds in meters per minute and revolutions per minute.
 /// - Length-related rates in millimeters-based units.
+#[derive(Default)]
 pub struct SolveCuttingDataInput {
     /// Cutting speed in meters per minute (`m/min`).
     pub cutting_speed_m_per_min: Option<f64>,

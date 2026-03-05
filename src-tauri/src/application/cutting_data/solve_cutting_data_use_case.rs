@@ -1,7 +1,7 @@
 // application/cutting_data/solve_cutting_data_use_case.rs
 
-use crate::application::{ApplicationError, ValidationErrors};
-use crate::application::shared::AppResult;
+use crate::application::shared::{AppResult, InputParser};
+
 use crate::application::cutting_data::dto::{
     SolveCuttingDataInput,
     SolveCuttingDataOutput,
@@ -18,75 +18,64 @@ pub struct SolveCuttingDataUseCase;
 impl SolveCuttingDataUseCase {
 
     // ---------------------------------------------------------
-    // Public boundary (Application layer)
+    // Public boundary
     // ---------------------------------------------------------
 
-    pub fn execute(input: SolveCuttingDataInput)
-        -> AppResult<SolveCuttingDataOutput>
-    {
-        let mut v = ValidationErrors::new();
+    pub fn execute(
+        input: SolveCuttingDataInput,
+    ) -> AppResult<SolveCuttingDataOutput> {
 
-        let parsed = Self::parse_input(input, &mut v);
+        let mut p = InputParser::new();
 
-        if !v.is_empty() {
-            return Err(ApplicationError::Validation(v));
-        }
+        let parsed = ParsedCuttingInput {
 
-        let parsed = parsed.unwrap(); // safe: we checked errors
+            cutting_speed: p.optional(
+                "cutting_speed_m_per_min",
+                input.cutting_speed_m_per_min,
+                CuttingSpeed::meters_per_min,
+            ),
 
-        let output = Self::solve(parsed)?; // DomainError → ApplicationError
+            rpm: p.optional(
+                "rpm",
+                input.rpm,
+                Rpm::new,
+            ),
+
+            diameter: p.optional(
+                "diameter_mm",
+                input.diameter_mm,
+                Diameter::mm,
+            ),
+
+            teeth: p.optional(
+                "teeth",
+                input.teeth,
+                ToothCount::new,
+            ),
+
+            chip: p.optional(
+                "chip_load_mm_per_tooth",
+                input.chip_load_mm_per_tooth,
+                ChipLoad::mm_per_tooth,
+            ),
+
+            feed: p.optional(
+                "feed_rate_mm_per_min",
+                input.feed_rate_mm_per_min,
+                FeedRate::mm_per_min,
+            ),
+        };
+
+        // stop early if parsing failed
+        p.finish()?;
+
+        let output = Self::solve(parsed)?;
 
         Ok(output)
     }
 
     // ---------------------------------------------------------
-    // Parsing (Application concern)
-    // ---------------------------------------------------------
-
-    fn parse_input(
-        input: SolveCuttingDataInput,
-        v: &mut ValidationErrors,
-    ) -> Option<ParsedCuttingInput> {
-
-        let cutting_speed = parse_opt(
-            "cutting_speed_m_per_min",
-            input.cutting_speed_m_per_min,
-            CuttingSpeed::meters_per_min,
-            v,
-        );
-
-        let rpm = parse_opt("rpm", input.rpm, Rpm::new, v);
-
-        let diameter = parse_opt("diameter_mm", input.diameter_mm, Diameter::mm, v);
-
-        let teeth = parse_opt("teeth", input.teeth, ToothCount::new, v);
-
-        let chip = parse_opt(
-            "chip_load_mm_per_tooth",
-            input.chip_load_mm_per_tooth,
-            ChipLoad::mm_per_tooth,
-            v,
-        );
-
-        let feed = parse_opt(
-            "feed_rate_mm_per_min",
-            input.feed_rate_mm_per_min,
-            FeedRate::mm_per_min,
-            v,
-        );
-
-        Some(ParsedCuttingInput {
-            cutting_speed,
-            rpm,
-            diameter,
-            teeth,
-            chip,
-            feed,
-        })
-    }
-
-    // ---------------------------------------------------------
-    // Domain orchestration (pure domain errors)
+    // Domain orchestration
     // ---------------------------------------------------------
 
     fn solve(
@@ -98,7 +87,7 @@ impl SolveCuttingDataUseCase {
         while changed {
             changed = false;
 
-            // vc ↔ rpm (needs diameter)
+            // vc ↔ rpm
             if input.rpm.is_none() {
                 if let (Some(vc), Some(d)) = (input.cutting_speed, input.diameter) {
                     input.rpm =
@@ -115,7 +104,7 @@ impl SolveCuttingDataUseCase {
                 }
             }
 
-            // chip ↔ feed (needs rpm + teeth)
+            // chip ↔ feed
             if input.feed.is_none() {
                 if let (Some(fz), Some(n), Some(z)) =
                     (input.chip, input.rpm, input.teeth)
@@ -140,10 +129,13 @@ impl SolveCuttingDataUseCase {
         Ok(SolveCuttingDataOutput {
             cutting_speed_m_per_min:
                 input.cutting_speed.map(|v| v.meters_per_min_value()),
+
             rpm:
                 input.rpm.map(|v| v.value()),
+
             chip_load_mm_per_tooth:
                 input.chip.map(|v| v.mm_per_tooth_value()),
+
             feed_rate_mm_per_min:
                 input.feed.map(|v| v.mm_per_min_value()),
         })
@@ -161,30 +153,4 @@ struct ParsedCuttingInput {
     teeth: Option<ToothCount>,
     chip: Option<ChipLoad>,
     feed: Option<FeedRate>,
-}
-
-// ------------------------------------------------------------
-// Shared parsing helper
-// ------------------------------------------------------------
-
-fn parse_opt<T, Raw, F, E>(
-    field: &'static str,
-    raw: Option<Raw>,
-    ctor: F,
-    v: &mut ValidationErrors,
-) -> Option<T>
-where
-    F: FnOnce(Raw) -> Result<T, E>,
-    E: std::error::Error,
-{
-    match raw {
-        Some(value) => match ctor(value) {
-            Ok(val) => Some(val),
-            Err(e) => {
-                v.push(field, "invalid", e.to_string());
-                None
-            }
-        },
-        None => None,
-    }
 }

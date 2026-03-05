@@ -1,16 +1,12 @@
 // application/shared/input_parser.rs
 
-use crate::application::{
-    ApplicationError,
-    shared::ValidationErrors,
-};
+use crate::application::{shared::ValidationErrors, ApplicationError};
 
 pub struct InputParser {
     errors: ValidationErrors,
 }
 
 impl InputParser {
-
     pub fn new() -> Self {
         Self {
             errors: ValidationErrors::new(),
@@ -21,11 +17,7 @@ impl InputParser {
     // Parse primitive/domain values
     // ---------------------------
 
-    pub fn value<T, E>(
-        &mut self,
-        field: &'static str,
-        result: Result<T, E>,
-    ) -> Option<T>
+    pub fn value<T, E>(&mut self, field: &'static str, result: Result<T, E>) -> Option<T>
     where
         E: std::fmt::Display,
     {
@@ -42,11 +34,7 @@ impl InputParser {
     // Domain rule validation
     // ---------------------------
 
-    pub fn domain<T, E>(
-        &mut self,
-        field: &'static str,
-        result: Result<T, E>,
-    ) -> Option<T>
+    pub fn domain<T, E>(&mut self, field: &'static str, result: Result<T, E>) -> Option<T>
     where
         E: std::fmt::Display,
     {
@@ -63,12 +51,7 @@ impl InputParser {
     // Push custom error
     // ---------------------------
 
-    pub fn push(
-        &mut self,
-        field: &'static str,
-        code: &'static str,
-        message: impl Into<String>,
-    ) {
+    pub fn push(&mut self, field: &'static str, code: &'static str, message: impl Into<String>) {
         self.errors.push(field, code, message);
     }
 
@@ -97,18 +80,42 @@ impl InputParser {
     }
 
     pub fn combine<A, B, T, E>(
-    &mut self,
-    field: &'static str,
-    a: Option<A>,
-    b: Option<B>,
-    f: impl FnOnce(A, B) -> Result<T, E>,
-) -> Option<T>
-where
-    E: std::fmt::Display,
-{
-    match (a, b) {
-        (Some(a), Some(b)) => self.domain(field, f(a, b)),
-        _ => None,
+        &mut self,
+        field: &'static str,
+        a: Option<A>,
+        b: Option<B>,
+        f: impl FnOnce(A, B) -> Result<T, E>,
+    ) -> Option<T>
+    where
+        E: std::fmt::Display,
+    {
+        match (a, b) {
+            (Some(a), Some(b)) => self.domain(field, f(a, b)),
+            _ => None,
+        }
     }
-}
+
+    pub fn map2<A, B, T>(
+        &mut self,
+        a: Option<A>,
+        b: Option<B>,
+        f: impl FnOnce(A, B) -> T,
+    ) -> Option<T> {
+        match (a, b) {
+            (Some(a), Some(b)) => Some(f(a, b)),
+            _ => None,
+        }
+    }
+
+    pub fn optional<T, Raw, E>(
+        &mut self,
+        field: &'static str,
+        raw: Option<Raw>,
+        f: impl FnOnce(Raw) -> Result<T, E>,
+    ) -> Option<T>
+    where
+        E: std::fmt::Display,
+    {
+        raw.and_then(|v| self.value(field, f(v)))
+    }
 }
