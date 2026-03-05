@@ -22,6 +22,22 @@ pub struct Helix {
 }
 
 impl Helix {
+// ------------ Rules --------------
+    pub fn validate_tool(
+        mode: HelixMode,
+        nominal: Diameter,
+        tool: Diameter,
+    ) -> Result<(), HelixError> {
+
+        if matches!(mode, HelixMode::Inner) && tool >= nominal {
+            return Err(HelixError::ToolTooLarge {
+                tool_diameter: tool.mm_value(),
+                nominal_diameter: nominal.mm_value()
+            });
+        }
+
+        Ok(())
+    }
 
     // ---------------- Constructors ----------------
 
@@ -35,7 +51,6 @@ impl Helix {
         tool: Diameter,
         pitch: Pitch,
     ) -> Result<Self, GeometryError> {
-
         let diameter = Self::effective_diameter(mode, nominal, tool)?;
 
         Ok(Self::new(diameter, pitch))
@@ -47,14 +62,12 @@ impl Helix {
         tool: Diameter,
         angle: AcuteAngle,
     ) -> Result<Self, GeometryError> {
-
         let diameter = Self::effective_diameter(mode, nominal, tool)?;
 
         let d = diameter.mm_value();
         let a = angle.radians_value();
 
-        let pitch =
-            Pitch::mm_per_rev_unchecked(a.tan() * PI * d);
+        let pitch = Pitch::mm_per_rev_unchecked(a.tan() * PI * d);
 
         Ok(Self::new(diameter, pitch))
     }
@@ -62,34 +75,24 @@ impl Helix {
     // ---------------- Internal helpers ----------------
 
     fn effective_diameter(
-        mode: HelixMode,
-        nominal: Diameter,
-        tool: Diameter,
-    ) -> Result<Diameter, GeometryError> {
+    mode: HelixMode,
+    nominal: Diameter,
+    tool: Diameter,
+) -> Result<Diameter, GeometryError> {
 
-        let d = nominal.mm_value();
-        let r_tool = tool.mm_value() / 2.0;
+    // Kjør domeneregelen først
+    Self::validate_tool(mode, nominal, tool)?;
 
-        let effective = match mode {
+    let d = nominal.mm_value();
+    let r_tool = tool.mm_value() / 2.0;
 
-            HelixMode::Inner => {
-                if r_tool >= d {
-                    return Err(
-                        HelixError::ToolTooLarge {
-                            tool_diameter: tool.mm_value(),
-                            nominal_diameter: d,
-                        }.into()
-                    );
-                }
+    let effective = match mode {
+        HelixMode::Inner => d - r_tool,
+        HelixMode::Outer => d + r_tool,
+    };
 
-                d - r_tool
-            }
-
-            HelixMode::Outer => d + r_tool,
-        };
-
-        Ok(Diameter::mm_unchecked(effective))
-    }
+    Ok(Diameter::mm_unchecked(effective))
+}
 
     // ---------------- Accessors ----------------
 

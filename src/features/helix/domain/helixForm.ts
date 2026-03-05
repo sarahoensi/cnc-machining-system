@@ -1,3 +1,5 @@
+// features/helix/domain/helixForm.ts
+
 import type { FormState } from "@shared/types/forms";
 import { emptyField } from "@shared/types/fields";
 
@@ -9,9 +11,7 @@ export type HelixKey =
   | "diameter"
   | "toolDiameter"
   | "pitch"
-  | "angle"
-  | "effectiveDiameter"
-  | "circumference";
+  | "angle";
 
 /* ============================================================
    Extras
@@ -36,8 +36,6 @@ export function createInitialHelixForm(): FormState<
       toolDiameter: emptyField(),
       pitch: emptyField(),
       angle: emptyField(),
-      effectiveDiameter: emptyField(),
-      circumference: emptyField(),
     },
     extras: {
       mode: "Outer",

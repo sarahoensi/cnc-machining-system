@@ -3,7 +3,7 @@
 //! This serialized type defines the external response contract returned to UI
 //! clients for helix-solving operations.
 
-// interface/tauri/helix/request.rs
+// interface/tauri/helix/response.rs
 
 use serde::Serialize;
 

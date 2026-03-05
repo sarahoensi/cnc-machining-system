@@ -1,3 +1,4 @@
+
 // application/helix/solve_helix_use_case.rs
 
 use crate::application::{
@@ -17,21 +18,28 @@ impl SolveHelixUseCase {
         let mut p = InputParser::new();
 
         let helix = match input {
+
             SolveHelixInput::Pitch {
                 mode,
                 diameter,
                 tool_diameter,
                 pitch,
             } => {
+                let mode = mode.into();
+
                 let diameter = p.value("diameter", Diameter::mm(diameter));
-
                 let tool = p.value("tool_diameter", Diameter::mm(tool_diameter));
-
                 let pitch = p.value("pitch", Pitch::mm_per_rev(pitch));
 
+                // Geometric rule independent of pitch
+                if let (Some(d), Some(t)) = (diameter.clone(), tool.clone()) {
+                    p.domain("tool_diameter", Helix::validate_tool(mode, d, t));
+                }
+
+                // Construct helix if all inputs valid
                 match (diameter, tool, pitch) {
                     (Some(d), Some(t), Some(pitch)) => {
-                        p.domain("toolDiameter", Helix::from_pitch(mode.into(), d, t, pitch))
+                        p.domain("tool_diameter", Helix::from_pitch(mode, d, t, pitch))
                     }
                     _ => None,
                 }
@@ -43,15 +51,15 @@ impl SolveHelixUseCase {
                 tool_diameter,
                 angle,
             } => {
+                let mode = mode.into();
+
                 let diameter = p.value("diameter", Diameter::mm(diameter));
-
                 let tool = p.value("tool_diameter", Diameter::mm(tool_diameter));
-
                 let angle = p.value("angle", AcuteAngle::degrees(angle));
 
                 match (diameter, tool, angle) {
                     (Some(d), Some(t), Some(a)) => {
-                        p.domain("toolDiameter", Helix::from_angle(mode.into(), d, t, a))
+                        p.domain("tool_diameter", Helix::from_angle(mode, d, t, a))
                     }
                     _ => None,
                 }

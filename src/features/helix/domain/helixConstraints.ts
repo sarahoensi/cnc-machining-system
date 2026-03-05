@@ -1,3 +1,5 @@
+// features/helix/domain/helixConstraints.ts
+
 import type { HelixKey } from "./helixForm";
 
 export const validHelixInputSets: readonly (readonly HelixKey[])[] = [

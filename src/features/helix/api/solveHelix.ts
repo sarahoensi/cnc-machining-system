@@ -12,8 +12,8 @@ export async function solveHelix(
 
   return {
     
-    pitch: result.pitch_mm_per_rev,
-    angle: result.angle_deg,
+    pitch: result.pitch,
+    angle: result.angle,
     
   };
 }

@@ -9,6 +9,6 @@ export function solveHelixApi(
 ) {
   return tauriInvoke<SolveHelixResponse>(
     "solve_helix",
-    { request }
+    request
   );
 }

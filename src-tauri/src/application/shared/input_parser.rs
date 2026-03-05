@@ -95,4 +95,20 @@ impl InputParser {
             Err(ApplicationError::Validation(self.errors))
         }
     }
+
+    pub fn combine<A, B, T, E>(
+    &mut self,
+    field: &'static str,
+    a: Option<A>,
+    b: Option<B>,
+    f: impl FnOnce(A, B) -> Result<T, E>,
+) -> Option<T>
+where
+    E: std::fmt::Display,
+{
+    match (a, b) {
+        (Some(a), Some(b)) => self.domain(field, f(a, b)),
+        _ => None,
+    }
+}
 }
