@@ -18,7 +18,6 @@ impl SolveHelixUseCase {
         let mut p = InputParser::new();
 
         let helix = match input {
-
             SolveHelixInput::Pitch {
                 mode,
                 diameter,
@@ -27,16 +26,17 @@ impl SolveHelixUseCase {
             } => {
                 let mode = mode.into();
 
+                // felles parsing
                 let diameter = p.value("diameter", Diameter::mm(diameter));
                 let tool = p.value("tool_diameter", Diameter::mm(tool_diameter));
-                let pitch = p.value("pitch", Pitch::mm_per_rev(pitch));
 
-                // Geometric rule independent of pitch
+                // geometriregel skal alltid kjøres hvis mulig
                 if let (Some(d), Some(t)) = (diameter.clone(), tool.clone()) {
                     p.domain("tool_diameter", Helix::validate_tool(mode, d, t));
                 }
 
-                // Construct helix if all inputs valid
+                let pitch = p.value("pitch", Pitch::mm_per_rev(pitch));
+
                 match (diameter, tool, pitch) {
                     (Some(d), Some(t), Some(pitch)) => {
                         p.domain("tool_diameter", Helix::from_pitch(mode, d, t, pitch))
@@ -55,6 +55,11 @@ impl SolveHelixUseCase {
 
                 let diameter = p.value("diameter", Diameter::mm(diameter));
                 let tool = p.value("tool_diameter", Diameter::mm(tool_diameter));
+
+                if let (Some(d), Some(t)) = (diameter.clone(), tool.clone()) {
+                    p.domain("tool_diameter", Helix::validate_tool(mode, d, t));
+                }
+
                 let angle = p.value("angle", AcuteAngle::degrees(angle));
 
                 match (diameter, tool, angle) {
@@ -67,7 +72,6 @@ impl SolveHelixUseCase {
         };
 
         let helix = p.finish_with(helix)?;
-
         Ok(helix.into())
     }
 }
