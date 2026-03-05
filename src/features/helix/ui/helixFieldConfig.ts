@@ -18,7 +18,7 @@ export const helixFieldConfig: HelixFieldConfig[] = [
     autoFocus: true,
   },
   {
-    key: "toolDiameter",
+    key: "tool_diameter",
     label: "Tool diameter",
     unit: "mm",
   },

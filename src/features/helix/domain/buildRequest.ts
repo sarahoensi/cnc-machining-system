@@ -9,13 +9,13 @@ export function buildHelixRequest(
 ): SolveHelixRequest{
 
   const {
-    diameter,
-    toolDiameter,
-    pitch,
-    angle,
+    diameter: diameter,
+    tool_diameter: tool_diameter,
+    pitch: pitch,
+    angle: angle,
   } = input;
 
-  if (!diameter || !toolDiameter)
+  if (!diameter || !tool_diameter)
     throw new Error("Missing required values");
 
   if (pitch !== undefined) {
@@ -23,7 +23,7 @@ export function buildHelixRequest(
       type: "Pitch",
       mode,
       diameter: diameter,
-      tool_diameter: toolDiameter,
+      tool_diameter: tool_diameter,
       pitch: pitch,
     };
   }
@@ -33,7 +33,7 @@ export function buildHelixRequest(
       type: "Angle",
       mode,
       diameter: diameter,
-      tool_diameter: toolDiameter,
+      tool_diameter: tool_diameter,
       angle: angle,
     };
   }

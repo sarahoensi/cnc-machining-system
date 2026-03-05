@@ -9,7 +9,7 @@ import { emptyField } from "@shared/types/fields";
 
 export type HelixKey =
   | "diameter"
-  | "toolDiameter"
+  | "tool_diameter"
   | "pitch"
   | "angle";
 
@@ -33,7 +33,7 @@ export function createInitialHelixForm(): FormState<
     status: "editing",
     fields: {
       diameter: emptyField(),
-      toolDiameter: emptyField(),
+      tool_diameter: emptyField(),
       pitch: emptyField(),
       angle: emptyField(),
     },
