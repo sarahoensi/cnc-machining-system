@@ -3,7 +3,7 @@
 //! This serialized type defines the external response contract returned to UI
 //! clients for helix-solving operations.
 
-// interface/tauri/helix/request.rs
+// interface/tauri/helix/response.rs
 
 use serde::Serialize;
 
@@ -13,8 +13,8 @@ use serde::Serialize;
 /// - Serialized as a JSON object with stable field names.
 #[derive(Serialize)]
 pub struct SolveHelixResponse {
-    /// Helix pitch in millimeters per revolution (`mm/rev`).
-    pub pitch_mm_per_rev: f64,
-    /// Helix angle in degrees (`deg`).
-    pub angle_deg: f64,
+
+    pub pitch: f64,
+
+    pub angle: f64,
 }

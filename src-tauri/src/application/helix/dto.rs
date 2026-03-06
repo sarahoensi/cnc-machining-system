@@ -1,30 +1,27 @@
-//! DTOs for helix-solving workflows.
-
+// application/helix/dto.rs
 use crate::domain::{Helix, HelixMode};
 
-
 pub enum SolveHelixInput {
-
     Pitch {
         mode: HelixMode,
-        diameter_mm: f64,
-        tool_diameter_mm: f64,
-        pitch_mm_per_rev: f64,
+        diameter: f64,
+        tool_diameter: f64,
+        pitch: f64,
     },
 
     Angle {
         mode: HelixMode,
-        diameter_mm: f64,
-        tool_diameter_mm: f64,
-        angle_deg: f64,
+        diameter: f64,
+        tool_diameter: f64,
+        angle: f64,
     },
 }
 
 pub struct SolveHelixOutput {
-    pub effective_diameter_mm: f64,
-    pub pitch_mm_per_rev: f64,
-    pub angle_deg: f64,
-    pub circumference_mm: f64,
+    //pub effective_diameter: f64,
+    pub pitch: f64,
+    pub angle: f64,
+    //pub circumference: f64,
 }
 
 // ---------------------------------------------------------
@@ -37,10 +34,10 @@ impl From<Helix> for SolveHelixOutput {
         let angle = helix.helix_angle();
 
         Self {
-            effective_diameter_mm: helix.diameter().mm_value(),
-            pitch_mm_per_rev: pitch.mm_per_rev_value(),
-            angle_deg: angle.degrees_value(),
-            circumference_mm: helix.circumference().mm_value(),
+            //effective_diameter: helix.diameter().mm_value(),
+            pitch: pitch.mm_per_rev_value(),
+            angle: angle.degrees_value(),
+            //circumference: helix.circumference().mm_value(),
         }
     }
 }

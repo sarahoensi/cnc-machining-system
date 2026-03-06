@@ -13,12 +13,11 @@ pub use error::DomainError;
 pub use geometry::{
     Circle,
     Helix,
-    HelixAngle,
     HelixMode,
     HelixError,
-    EffectiveDiameter,
+    //EffectiveDiameter,
     RightTriangle,
-    RightTriangleSolver,
+    //RightTriangleSolver,
     GeometryError,
     RightTriangleError
 };
@@ -31,7 +30,7 @@ pub use machining_physics::{
     MachiningSolver,
     MachiningPhysicsError,
 Tool,
-ToothCount
+
 };
 
 // --------------------------------

@@ -2,9 +2,7 @@
 
 
 use crate::domain::{
-    units::{Length},
-    {FinishingMode, FinishingPlan, FinishingPlanning, FinishingRequest},
-    machining_strategy::strategy_error::StrategyError,
+    FinishingMode, FinishingPlan, FinishingPlanning, FinishingRequest, machining_strategy::strategy_error::StrategyError, units::{PositiveLength}
 };
 
 /// Domain service responsible for generating a valid [`FinishingPlan`].
@@ -89,7 +87,7 @@ impl FinishingPlanner {
 
                 let step_mag = total_delta / cuts as f64;
 
-                let step = Length::mm_positive(step_mag)
+                let step = PositiveLength::mm(step_mag)
                     .map_err(|_| StrategyError::ComputedStepNotPositive {
                         value_mm: step_mag,
                     })?;
@@ -124,7 +122,7 @@ impl FinishingPlanner {
                 // Recalculate exact step so final step hits target exactly
                 let step_mag = total_delta / cuts as f64;
 
-                let step = Length::mm_positive(step_mag)
+                let step = PositiveLength::mm(step_mag)
                     .map_err(|_| StrategyError::ComputedStepNotPositive {
                         value_mm: step_mag,
                     })?;

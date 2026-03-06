@@ -20,17 +20,51 @@ pub enum FinishingMode {
 }
 
 impl FinishingMode {
-    /// Returns the dimensional change direction.
-    ///
-    /// Returns:
-    /// - `+1.0` for increasing diameter
-    /// - `-1.0` for decreasing diameter
-    ///
-    /// This is commonly used when applying diameter deltas in finishing calculations.
-    pub fn direction_sign(self) -> f64 {
+
+    pub fn apply_delta(self, base: f64, delta: f64) -> f64 {
         match self {
-            FinishingMode::Inner => 1.0,
-            FinishingMode::Outer => -1.0,
+            FinishingMode::Inner => base + delta,
+            FinishingMode::Outer => base - delta,
+        }
+    }
+
+    pub fn progresses_forward(
+        self,
+        previous: f64,
+        next: f64,
+        eps: f64,
+    ) -> bool {
+        match self {
+            FinishingMode::Inner => next + eps >= previous,
+            FinishingMode::Outer => next - eps <= previous,
+        }
+    }
+
+    pub fn within_bounds(
+        self,
+        start: f64,
+        target: f64,
+        value: f64,
+        eps: f64,
+    ) -> bool {
+        match self {
+            FinishingMode::Inner =>
+                value >= start - eps && value <= target + eps,
+
+            FinishingMode::Outer =>
+                value <= start + eps && value >= target - eps,
+        }
+    }
+
+    pub fn passes_target(
+        self,
+        target: f64,
+        value: f64,
+        eps: f64,
+    ) -> bool {
+        match self {
+            FinishingMode::Inner => value > target + eps,
+            FinishingMode::Outer => value < target - eps,
         }
     }
 }

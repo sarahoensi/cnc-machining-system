@@ -1,46 +1,50 @@
 // domain/units/length/diameter.rs
 
-use crate::domain::units::length::LengthUnitError;
-use crate::domain::units::{Length, Radius};
+use crate::domain::units::length::{Length, PositiveLength, };
+use crate::domain::units::{Radius, UnitsError};
 
-/// Represents a diameter measurement.
+/// Represents a strictly positive diameter measurement.
 ///
-/// Stored internally in millimeters (mm). Values must be finite and strictly positive.
+/// Semantically distinct from generic length, but
+/// physically represented as a positive length.
+#[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
-pub struct Diameter(f64);
+pub struct Diameter(PositiveLength);
 
 impl Diameter {
-    /// Creates a [`Diameter`] from millimeters.
-    ///
-    /// # Errors
-    ///
-    /// Returns an error if the value is not finite or is less than or equal to zero.
-    pub fn mm(value: f64) -> Result<Self, LengthUnitError> {
-        if !value.is_finite() {
-            return Err(LengthUnitError::NotFinite { value });
-        }
-        if value <= 0.0 {
-            return Err(LengthUnitError::NonPositive { value });
-        }
-        Ok(Self(value))
+    /// Internal constructor used by domain math.
+    pub(crate) fn mm_unchecked(value: f64) -> Self {
+        Self(PositiveLength::mm_unchecked(value))
     }
 
-    /// Returns the diameter value in millimeters.
+    /// Creates a Diameter from millimeters.
+    ///
+    /// # Errors
+    /// Returns error if value is not finite or ≤ 0.
+    pub fn mm(value: f64) -> Result<Self, UnitsError> {
+        Ok(Self(PositiveLength::mm(value)?))
+    }
+
+    /// Returns diameter value in millimeters.
     pub fn mm_value(self) -> f64 {
+        self.0.mm_value()
+    }
+
+    /// Returns underlying PositiveLength.
+    pub fn as_positive_length(self) -> PositiveLength {
         self.0
     }
 
-    /// Converts the diameter to a [`Length`] with the same millimeter value.
+    /// Converts to signed Length.
     pub fn as_length(self) -> Length {
-        // safe because diameter is always finite and > 0
-        Length::mm(self.0)
-            .expect("Diameter invariant violated: must be finite")
+        self.0.as_length()
     }
 
-    /// Computes the corresponding [`Radius`] (half the diameter).
+    /// Computes corresponding Radius.
     pub fn radius(self) -> Radius {
-        Radius::mm(self.0 / 2.0)
-            .expect("Diameter invariant violated: radius must be positive")
+        // safe: half of positive length is still positive
+        Radius::mm(self.mm_value() / 2.0)
+            .expect("Invariant violation: radius must be positive")
     }
 }
 

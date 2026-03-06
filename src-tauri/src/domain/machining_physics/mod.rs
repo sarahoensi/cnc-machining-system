@@ -10,4 +10,4 @@ mod tool;
 pub use error::MachiningPhysicsError;
 pub use cutting_parameters::CuttingParameters;
 pub use cutting_solver::MachiningSolver;
-pub use tool::{Tool, ToothCount};
+pub use tool::{Tool};

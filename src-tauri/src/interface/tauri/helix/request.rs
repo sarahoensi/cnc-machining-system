@@ -25,11 +25,11 @@ pub enum SolveHelixRequest {
         /// Path mode controlling effective-diameter offset direction.
         mode: HelixMode,
         /// Nominal diameter in millimeters (`mm`).
-        diameter_mm: f64,
+        diameter: f64,
         /// Tool diameter in millimeters (`mm`).
-        tool_diameter_mm: f64,
+        tool_diameter: f64,
         /// Pitch in millimeters per revolution (`mm/rev`).
-        pitch_mm_per_rev: f64,
+        pitch: f64,
     },
 
     /// Solve helix values when angle is known.
@@ -37,11 +37,11 @@ pub enum SolveHelixRequest {
         /// Path mode controlling effective-diameter offset direction.
         mode: HelixMode,
         /// Nominal diameter in millimeters (`mm`).
-        diameter_mm: f64,
+        diameter: f64,
         /// Tool diameter in millimeters (`mm`).
-        tool_diameter_mm: f64,
+        tool_diameter: f64,
         /// Helix angle in degrees (`deg`).
-        angle_deg: f64,
+        angle: f64,
     },
 }
 

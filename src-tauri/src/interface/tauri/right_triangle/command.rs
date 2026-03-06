@@ -1,9 +1,9 @@
+// interface/tauri/right_triangle/command.rs
+
 //! Tauri command endpoint for right-triangle solving.
 //!
 //! This module defines the frontend integration boundary for right-triangle
 //! geometry requests and standardized error mapping.
-
-// interface/tauri/right_triangle/command.rs
 
 
 use tauri::command;

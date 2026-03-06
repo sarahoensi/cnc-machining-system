@@ -20,11 +20,17 @@ use super::{
 pub fn solve_helix(
     request: SolveHelixRequest,
 ) -> Result<SolveHelixResponse, TauriError> {
+
     let use_case = SolveHelixUseCase;
     let input = request.into();
 
-    use_case
-        .execute(input)
-        .map(Into::into)
-        .map_err(map_application_error)
+    match use_case.execute(input) {
+
+        Ok(result) => Ok(result.into()),
+
+        Err(err) => {
+            println!("APPLICATION ERROR: {:?}", err);
+            Err(map_application_error(err))
+        }
+    }
 }

@@ -1,31 +1,42 @@
 // shared/api/tauriError.ts
 
+export type TauriFieldError = {
+  field: string;
+  code: string;
+  message: string;
+};
+
 export type TauriCommandError = {
   message: string;
-  field_errors?: Record<string, string>;
+  fieldErrors?: TauriFieldError[];
 };
 
 export function getTauriCommandError(e: unknown): TauriCommandError | null {
-  // Avhenger av hvordan tauriInvoke kaster errors.
-  // Vanlig: e er object med `message` som enten er tekst eller JSON.
+
   if (!e || typeof e !== "object") return null;
 
   const anyE = e as any;
 
-  // Case 1: already structured
-  if (typeof anyE.message === "string" && anyE.field_errors && typeof anyE.field_errors === "object") {
-    return { message: anyE.message, field_errors: anyE.field_errors };
+  // Case 1: Tauri sender allerede structured object
+  if (anyE.fieldErrors) {
+    return {
+      message: anyE.message ?? "Unknown error",
+      fieldErrors: anyE.fieldErrors,
+    };
   }
 
-  // Case 2: message is JSON string (ofte i Tauri)
+  // Case 2: message inneholder JSON string (vanlig i Tauri)
   if (typeof anyE.message === "string") {
     try {
+
       const parsed = JSON.parse(anyE.message);
-      if (parsed && typeof parsed.message === "string") {
+
+      if (parsed?.fieldErrors) {
         return parsed;
       }
+
     } catch {
-      // ignore
+      // ignore parse failure
     }
   }
 

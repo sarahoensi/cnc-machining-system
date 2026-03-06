@@ -1,8 +1,14 @@
 // tests/application/finishing/register/edit.rs
 
-use cnc_machining_system_lib::application::finishing::use_cases::RegisterFinishingMeasurementUseCase;
+use cnc_machining_system_lib::{
+    application::finishing::{
+        dto::RegisterFinishingMeasurementInput,
+        RegisterFinishingMeasurementUseCase,
+    },
+};
 
 use crate::application::finishing::fixtures::{create_execution, repo};
+
 
 #[test]
 fn edit_overwrites_existing_measurement() {
@@ -11,8 +17,17 @@ fn edit_overwrites_existing_measurement() {
 
     let id = create_execution(repo.clone(), 2);
 
-    register.execute(id, 1, 9.6).unwrap();
-    register.execute(id, 1, 9.4).unwrap();
+    register.execute(RegisterFinishingMeasurementInput {
+        execution_id: id,
+        step_number: 1,
+        measurement_mm: 9.6,
+    }).unwrap();
+
+    register.execute(RegisterFinishingMeasurementInput {
+        execution_id: id,
+        step_number: 1,
+        measurement_mm: 9.4,
+    }).unwrap();
 
     let execution = repo.get(id).unwrap();
 
@@ -22,6 +37,7 @@ fn edit_overwrites_existing_measurement() {
     );
 }
 
+
 #[test]
 fn edit_recalculates_remaining_steps() {
     let repo = repo();
@@ -29,18 +45,27 @@ fn edit_recalculates_remaining_steps() {
 
     let id = create_execution(repo.clone(), 3);
 
-    register.execute(id, 1, 9.6).unwrap();
+    register.execute(RegisterFinishingMeasurementInput {
+        execution_id: id,
+        step_number: 1,
+        measurement_mm: 9.6,
+    }).unwrap();
 
     let before = repo.get(id).unwrap();
     let step2_before = before.steps()[1].planned_end().mm_value();
 
-    register.execute(id, 1, 9.3).unwrap();
+    register.execute(RegisterFinishingMeasurementInput {
+        execution_id: id,
+        step_number: 1,
+        measurement_mm: 9.3,
+    }).unwrap();
 
     let after = repo.get(id).unwrap();
     let step2_after = after.steps()[1].planned_end().mm_value();
 
     assert_ne!(step2_before, step2_after);
 }
+
 
 #[test]
 fn edit_does_not_change_previous_steps() {
@@ -49,19 +74,31 @@ fn edit_does_not_change_previous_steps() {
 
     let id = create_execution(repo.clone(), 3);
 
-    register.execute(id, 1, 9.6).unwrap();
-    register.execute(id, 2, 8.9).unwrap();
+    register.execute(RegisterFinishingMeasurementInput {
+        execution_id: id,
+        step_number: 1,
+        measurement_mm: 9.6,
+    }).unwrap();
+
+    register.execute(RegisterFinishingMeasurementInput {
+        execution_id: id,
+        step_number: 2,
+        measurement_mm: 8.9,
+    }).unwrap();
 
     let before = repo.get(id).unwrap();
     let step1_before = before.steps()[0].measurement();
 
-    register.execute(id, 2, 8.7).unwrap();
+    register.execute(RegisterFinishingMeasurementInput {
+        execution_id: id,
+        step_number: 2,
+        measurement_mm: 8.7,
+    }).unwrap();
 
     let after = repo.get(id).unwrap();
 
     assert_eq!(after.steps()[0].measurement(), step1_before);
 }
-
 
 
 #[test]
@@ -71,7 +108,11 @@ fn edit_preserves_target_diameter() {
 
     let id = create_execution(repo.clone(), 3);
 
-    register.execute(id, 1, 9.5).unwrap();
+    register.execute(RegisterFinishingMeasurementInput {
+        execution_id: id,
+        step_number: 1,
+        measurement_mm: 9.5,
+    }).unwrap();
 
     let execution = repo.get(id).unwrap();
 
@@ -82,4 +123,3 @@ fn edit_preserves_target_diameter() {
 
     assert!((last_end - target).abs() < 1e-9);
 }
-

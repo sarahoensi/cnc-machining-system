@@ -1,7 +1,10 @@
 // tests/application/finishing/workflow/lifecycle.rs
 
-use cnc_machining_system_lib::application::finishing::use_cases::{
-    RegisterFinishingMeasurementUseCase,
+use cnc_machining_system_lib::{
+    application::finishing::{
+        dto::RegisterFinishingMeasurementInput,
+        RegisterFinishingMeasurementUseCase,
+    },
 };
 
 use super::super::fixtures::*;
@@ -15,7 +18,11 @@ fn full_finishing_workflow() {
     let id = create_execution(repo.clone(), 3);
 
     // --- Step 1 measurement ---
-    register.execute(id, 1, 9.6).unwrap();
+    register.execute(RegisterFinishingMeasurementInput {
+        execution_id: id,
+        step_number: 1,
+        measurement_mm: 9.6,
+    }).unwrap();
 
     let after_step1 = repo.get(id).unwrap();
     assert_eq!(
@@ -24,7 +31,11 @@ fn full_finishing_workflow() {
     );
 
     // --- Step 2 measurement ---
-    register.execute(id, 2, 8.9).unwrap();
+    register.execute(RegisterFinishingMeasurementInput {
+        execution_id: id,
+        step_number: 2,
+        measurement_mm: 8.9,
+    }).unwrap();
 
     let after_step2 = repo.get(id).unwrap();
     assert_eq!(
@@ -33,7 +44,11 @@ fn full_finishing_workflow() {
     );
 
     // --- Edit step 2 ---
-    register.execute(id, 2, 8.7).unwrap();
+    register.execute(RegisterFinishingMeasurementInput {
+        execution_id: id,
+        step_number: 2,
+        measurement_mm: 8.7,
+    }).unwrap();
 
     let after_edit = repo.get(id).unwrap();
 

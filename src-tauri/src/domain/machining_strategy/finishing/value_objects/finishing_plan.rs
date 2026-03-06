@@ -1,8 +1,7 @@
 // domain/machining_strategy/finishing/finishing_plan.rs
 
 use crate::domain::{
-    units::{Diameter, Length},
-    FinishingMode,
+    FinishingMode, units::{Diameter, PositiveLength}
 };
 
 
@@ -19,7 +18,7 @@ pub struct FinishingPlan {
     start: Diameter,
     target: Diameter,
     cuts: u32,
-    expected_step: Length, // always positive magnitude
+    expected_step: PositiveLength, // always positive magnitude
 }
 
 impl FinishingPlan {
@@ -39,14 +38,9 @@ impl FinishingPlan {
     ///
     /// This value is always a positive magnitude.
     /// Direction is determined by [`FinishingMode`].
-    pub fn expected_step(&self) -> Length { self.expected_step }
+    pub fn expected_step(&self) -> PositiveLength { self.expected_step }
 
-    /// Returns the directional sign of the diameter change.
-    ///
-    /// Delegates to [`FinishingMode::direction_sign`].
-    pub fn direction_sign(&self) -> f64 {
-        self.mode.direction_sign()
-    }
+    
 }
 
 impl FinishingPlan {
@@ -58,7 +52,7 @@ impl FinishingPlan {
         start: Diameter,
         target: Diameter,
         cuts: u32,
-        expected_step: Length,
+        expected_step: PositiveLength,
     ) -> Self {
         Self {
             mode,

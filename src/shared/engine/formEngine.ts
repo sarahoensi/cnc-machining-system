@@ -194,20 +194,23 @@ export async function handleCalculateAsync<
   // Start med "cleaned", så du ikke viser stale machine values
   const nextFields: Record<K, FieldState> = { ...cleanedFields };
 
-  if (te?.field_errors) {
-    for (const [key, msg] of Object.entries(te.field_errors)) {
-      const k = key as K;
+  if (te?.fieldErrors) {
 
-      // hvis backend sender nøkkel som ikke finnes i dette skjemaet, ignorer
-      if (!nextFields[k]) continue;
+  for (const err of te.fieldErrors) {
 
-      nextFields[k] = {
-        ...nextFields[k],
-        invalid: true,
-        error: msg,
-      };
-    }
+    const k = err.field as K;
+
+    if (!nextFields[k]) continue;
+
+    nextFields[k] = {
+      ...nextFields[k],
+      invalid: true,
+      error: err.message,
+    };
+
   }
+
+}
 
   return {
     status: "editing",

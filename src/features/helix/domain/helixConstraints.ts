@@ -1,8 +1,10 @@
+// features/helix/domain/helixConstraints.ts
+
 import type { HelixKey } from "./helixForm";
 
 export const validHelixInputSets: readonly (readonly HelixKey[])[] = [
-  ["diameter", "toolDiameter", "pitch"],
-  ["diameter", "toolDiameter", "angle"],
+  ["diameter", "tool_diameter", "pitch"],
+  ["diameter", "tool_diameter", "angle"],
 ] as const;
 
 export const mutuallyExclusiveHelixPairs: readonly (readonly [HelixKey, HelixKey])[] = [

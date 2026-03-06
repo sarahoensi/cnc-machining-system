@@ -1,22 +1,14 @@
 // units/angle/error.rs
 
-#[derive(Debug, Clone, PartialEq)]
+use thiserror::Error;
+use crate::domain::units::core::NumericError;
+
+#[derive(Debug, Clone, PartialEq, Error)]
 pub enum AngleError {
-    NotFinite {
-        value: f64,
-    },
 
-    NotAcute {
-        degrees: f64,
-    },
+    #[error(transparent)]
+    Numeric(#[from] NumericError),
+
+    #[error("Angle must be acute (0° < θ < 90°), got {0}°")]
+    NotAcute(f64),
 }
-
-use std::fmt;
-
-impl fmt::Display for AngleError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:?}", self)
-    }
-}
-
-impl std::error::Error for AngleError {}

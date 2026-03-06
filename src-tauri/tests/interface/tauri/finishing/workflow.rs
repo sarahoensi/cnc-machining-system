@@ -1,14 +1,17 @@
 // tests/integration/finishing/workflow.rs
 
 use std::sync::Arc;
-use cnc_machining_system_lib::application::finishing::generate_finishing_plan_input::GenerateFinishingPlanInput;
 use uuid::Uuid;
 
-use cnc_machining_system_lib::application::finishing::use_cases::{
-    generate_finishing_plan_use_case::GenerateFinishingPlanUseCase,
-    register_finishing_measurement_use_case::RegisterFinishingMeasurementUseCase,
+use cnc_machining_system_lib::application::finishing::dto::{
+    GenerateFinishingPlanInput,
+    RegisterFinishingMeasurementInput,
 };
 
+use cnc_machining_system_lib::application::finishing::{
+    GenerateFinishingPlanUseCase,
+    RegisterFinishingMeasurementUseCase,
+};
 
 use cnc_machining_system_lib::domain::{
     FinishingExecutionRepository,
@@ -22,7 +25,10 @@ use cnc_machining_system_lib::infrastructure::finishing::InMemoryFinishingExecut
 #[test]
 fn finishing_full_workflow_via_use_cases() {
 
+    // -------------------------------------------------
     // Shared in-memory repository
+    // -------------------------------------------------
+
     let repo: Arc<dyn FinishingExecutionRepository> =
         Arc::new(InMemoryFinishingExecutionRepository::new());
 
@@ -50,7 +56,11 @@ fn finishing_full_workflow_via_use_cases() {
     // -------------------------------------------------
 
     let after_step1 = register_uc
-        .execute(id, 1, 9.6)
+        .execute(RegisterFinishingMeasurementInput {
+            execution_id: id,
+            step_number: 1,
+            measurement_mm: 9.6,
+        })
         .unwrap();
 
     assert_eq!(after_step1.steps[0].measurement_mm, Some(9.6));
@@ -60,7 +70,11 @@ fn finishing_full_workflow_via_use_cases() {
     // -------------------------------------------------
 
     let after_step2 = register_uc
-        .execute(id, 2, 8.9)
+        .execute(RegisterFinishingMeasurementInput {
+            execution_id: id,
+            step_number: 2,
+            measurement_mm: 8.9,
+        })
         .unwrap();
 
     assert_eq!(after_step2.steps[1].measurement_mm, Some(8.9));

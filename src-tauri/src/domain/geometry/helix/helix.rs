@@ -1,15 +1,20 @@
 // domain/geometry/helix/helix.rs
 
-
 use std::f64::consts::PI;
 
-use crate::domain::units::{Angle, Diameter, Length, Pitch};
+use crate::domain::{
+    units::{AcuteAngle, Diameter, Length, Pitch, PositiveLength},
+    GeometryError,
+};
 
-/// Represents a cylindrical helix used in machining geometry.
-///
-/// Encapsulates `diameter` and `pitch` to derive helix-specific measures.
-///
-/// Invariants: `diameter` and `pitch` are positive and finite.
+use super::HelixError;
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum HelixMode {
+    Inner,
+    Outer,
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Helix {
     diameter: Diameter,
@@ -17,80 +22,115 @@ pub struct Helix {
 }
 
 impl Helix {
-    // ---------------------------------------------------------
-    // Constructor
-    // ---------------------------------------------------------
+// ------------ Rules --------------
+    pub fn validate_tool(
+        mode: HelixMode,
+        nominal: Diameter,
+        tool: Diameter,
+    ) -> Result<(), HelixError> {
 
-    /// Create a new `Helix` from validated `Diameter` and `Pitch`.
-    ///
-    /// Both `Diameter` and `Pitch` enforce unit correctness and positivity.
+        if matches!(mode, HelixMode::Inner) && tool >= nominal {
+            return Err(HelixError::ToolTooLarge {
+                tool_diameter: tool.mm_value(),
+                nominal_diameter: nominal.mm_value()
+            });
+        }
+
+        Ok(())
+    }
+
+    // ---------------- Constructors ----------------
+
     pub fn new(diameter: Diameter, pitch: Pitch) -> Self {
         Self { diameter, pitch }
     }
 
-    // ---------------------------------------------------------
-    // Accessors
-    // ---------------------------------------------------------
+    pub fn from_pitch(
+        mode: HelixMode,
+        nominal: Diameter,
+        tool: Diameter,
+        pitch: Pitch,
+    ) -> Result<Self, GeometryError> {
+        let diameter = Self::effective_diameter(mode, nominal, tool)?;
 
-    /// Returns the helix `Diameter` (domain type).
+        Ok(Self::new(diameter, pitch))
+    }
+
+    pub fn from_angle(
+        mode: HelixMode,
+        nominal: Diameter,
+        tool: Diameter,
+        angle: AcuteAngle,
+    ) -> Result<Self, GeometryError> {
+        let diameter = Self::effective_diameter(mode, nominal, tool)?;
+
+        let d = diameter.mm_value();
+        let a = angle.radians_value();
+
+        let pitch = Pitch::mm_per_rev_unchecked(a.tan() * PI * d);
+
+        Ok(Self::new(diameter, pitch))
+    }
+
+    // ---------------- Internal helpers ----------------
+
+    fn effective_diameter(
+    mode: HelixMode,
+    nominal: Diameter,
+    tool: Diameter,
+) -> Result<Diameter, GeometryError> {
+
+    // Kjør domeneregelen først
+    Self::validate_tool(mode, nominal, tool)?;
+
+    let d = nominal.mm_value();
+    let r_tool = tool.mm_value() / 2.0;
+
+    let effective = match mode {
+        HelixMode::Inner => d - r_tool,
+        HelixMode::Outer => d + r_tool,
+    };
+
+    Ok(Diameter::mm_unchecked(effective))
+}
+
+    // ---------------- Accessors ----------------
+
     pub fn diameter(&self) -> Diameter {
         self.diameter
     }
 
-    /// Returns the helix `Pitch` (millimetres per revolution).
     pub fn pitch(&self) -> Pitch {
         self.pitch
     }
 
-    // ---------------------------------------------------------
-    // Derived geometric properties
-    // ---------------------------------------------------------
+    // ---------------- Derived geometry ----------------
 
-    /// Circumference of the helix cylinder (π * diameter) as a domain `Length`.
-    ///
-    /// Units: millimetres. The result is finite and positive.
-    pub fn circumference(&self) -> Length {
-        let value = PI * self.diameter.mm_value();
-        Length::mm(value).unwrap()
+    pub fn circumference(&self) -> PositiveLength {
+        PositiveLength::mm_unchecked(PI * self.diameter.mm_value())
     }
 
-    /// Helix angle computed as atan(pitch / circumference).
-    ///
-    /// Returned `Angle` is finite and in radians; callers should use domain
-    /// facilities to inspect degrees or radians as needed.
-    pub fn helix_angle(&self) -> Angle {
-        let c = self.circumference().mm_value();
+    pub fn helix_angle(&self) -> AcuteAngle {
         let p = self.pitch.mm_per_rev_value();
-
-        let angle = (p / c).atan();
-        Angle::radians(angle).unwrap()
-    }
-
-    /// Helix length per single revolution: sqrt(circumference² + pitch²).
-    ///
-    /// Units: millimetres. Useful for computing actual toolpath lengths.
-    pub fn length_per_revolution(&self) -> Length {
         let c = self.circumference().mm_value();
-        let p = self.pitch.mm_per_rev_value();
 
-        let value = (c.powi(2) + p.powi(2)).sqrt();
-        Length::mm(value).unwrap()
+        AcuteAngle::radians_unchecked((p / c).atan())
     }
 
-    /// Total helix length for a given number of revolutions.
-    ///
-    /// The `revolutions` parameter may be fractional; units are millimetres.
+    pub fn length_per_revolution(&self) -> PositiveLength {
+        let p = self.pitch.mm_per_rev_value();
+        let c = self.circumference().mm_value();
+
+        PositiveLength::mm_unchecked((c * c + p * p).sqrt())
+    }
+
     pub fn total_length(&self, revolutions: f64) -> Length {
-        let single = self.length_per_revolution().mm_value();
-        Length::mm(single * revolutions).unwrap()
+        let l = self.length_per_revolution().mm_value();
+        Length::mm_unchecked(l * revolutions)
     }
 
-    /// Axial travel for a given number of revolutions (pitch * revolutions).
-    ///
-    /// Units: millimetres. Positive or negative revolutions reflect direction.
     pub fn axial_travel(&self, revolutions: f64) -> Length {
-        let value = self.pitch.mm_per_rev_value() * revolutions;
-        Length::mm(value).unwrap()
+        Length::mm_unchecked(self.pitch.mm_per_rev_value() * revolutions)
     }
 }
 
@@ -102,10 +142,7 @@ mod tests {
 
     #[test]
     fn circumference_formula() {
-        let h = Helix::new(
-            Diameter::mm(10.0).unwrap(),
-            Pitch::mm_per_rev(2.0).unwrap(),
-        );
+        let h = Helix::new(Diameter::mm(10.0).unwrap(), Pitch::mm_per_rev(2.0).unwrap());
 
         let expected = PI * 10.0;
 
@@ -118,26 +155,16 @@ mod tests {
 
     #[test]
     fn axial_travel_identity() {
-        let h = Helix::new(
-            Diameter::mm(8.0).unwrap(),
-            Pitch::mm_per_rev(3.0).unwrap(),
-        );
+        let h = Helix::new(Diameter::mm(8.0).unwrap(), Pitch::mm_per_rev(3.0).unwrap());
 
         let travel = h.axial_travel(1.0);
 
-        assert!(approx_eq(
-            travel.mm_value(),
-            3.0,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(travel.mm_value(), 3.0, DEFAULT_EPS));
     }
 
     #[test]
     fn total_length_identity() {
-        let h = Helix::new(
-            Diameter::mm(6.0).unwrap(),
-            Pitch::mm_per_rev(2.0).unwrap(),
-        );
+        let h = Helix::new(Diameter::mm(6.0).unwrap(), Pitch::mm_per_rev(2.0).unwrap());
 
         let single = h.length_per_revolution();
         let total = h.total_length(5.0);

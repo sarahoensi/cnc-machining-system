@@ -5,9 +5,8 @@
 
 // interface/tauri/finishing/mapping.rs
 
-use crate::application::finishing::finishing_execution_output::FinishingExecutionOutput;
-use crate::application::finishing::finishing_step_output::FinishingStepOutput;
-use crate::application::finishing::generate_finishing_plan_input::GenerateFinishingPlanInput;
+
+use crate::application::finishing::{FinishingExecutionOutput, FinishingStepOutput, GenerateFinishingPlanInput};
 use crate::domain::FinishingMode as AppFinishingMode;
 
 use super::request::{

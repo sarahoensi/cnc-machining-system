@@ -4,10 +4,14 @@ use std::sync::Arc;
 
 use cnc_machining_system_lib::{
     application::finishing::{
-        generate_finishing_plan_input::GenerateFinishingPlanInput,
-        use_cases::GenerateFinishingPlanUseCase,
+        dto::GenerateFinishingPlanInput,
+        GenerateFinishingPlanUseCase,
     },
-    domain::{FinishingExecutionId, FinishingExecutionRepository, FinishingMode},
+    domain::{
+        FinishingExecutionId,
+        FinishingExecutionRepository,
+        FinishingMode,
+    },
     infrastructure::finishing::InMemoryFinishingExecutionRepository,
 };
 
@@ -23,6 +27,7 @@ pub fn create_execution(
     repo: Arc<dyn FinishingExecutionRepository>,
     cuts: u32,
 ) -> FinishingExecutionId {
+
     let generate = GenerateFinishingPlanUseCase::new(repo.clone());
 
     let generated = generate
@@ -36,5 +41,3 @@ pub fn create_execution(
 
     parse_id(&generated.execution_id)
 }
-
-

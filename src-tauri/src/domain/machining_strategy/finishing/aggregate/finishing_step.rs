@@ -1,6 +1,6 @@
 // domain/machining_strategy/finishing/finishing_step.rs
 
-use crate::domain::units::{Diameter, Length};
+use crate::domain::units::{Diameter, PositiveLength};
 
 /// Represents a single machining pass within a finishing execution.
 ///
@@ -28,7 +28,7 @@ pub struct FinishingStep {
     start: Diameter,
 
     /// Planned delta magnitude (positive)
-    planned_delta: Length,
+    planned_delta: PositiveLength,
 
     /// Planned end diameter (start +/- planned_delta)
     planned_end: Diameter,
@@ -47,7 +47,7 @@ impl FinishingStep {
     pub fn new(
         index: u32,
         start: Diameter,
-        planned_delta: Length,
+        planned_delta: PositiveLength,
         planned_end: Diameter,
     ) -> Self {
         Self {
@@ -66,7 +66,7 @@ impl FinishingStep {
     pub fn start(&self) -> Diameter { self.start }
 
     /// Planned diameter change magnitude for this step.
-    pub fn planned_delta(&self) -> Length { self.planned_delta }
+    pub fn planned_delta(&self) -> PositiveLength { self.planned_delta }
 
     /// Planned diameter after this machining step.
     pub fn planned_end(&self) -> Diameter { self.planned_end }

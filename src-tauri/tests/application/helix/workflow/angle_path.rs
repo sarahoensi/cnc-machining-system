@@ -11,11 +11,11 @@ fn angle_input_generates_consistent_pitch() {
     let result = uc.execute(
         SolveHelixInput::Angle {
             mode: HelixMode::Outer,
-            diameter_mm: 10.0,
-            tool_diameter_mm: 2.0,
-            angle_deg: 20.0,
+            diameter: 10.0,
+            tool_diameter: 2.0,
+            angle: 20.0,
         }
     ).unwrap();
 
-    assert!(result.pitch_mm_per_rev > 0.0);
+    assert!(result.pitch > 0.0);
 }

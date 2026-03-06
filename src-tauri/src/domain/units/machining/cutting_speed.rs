@@ -1,67 +1,28 @@
 // domain/units/machining/cutting_speed.rs
 
-use std::f64::consts::PI;
-
-use crate::domain::units::machining::MachiningUnitError;
-use crate::domain::units::{Diameter, Rpm};
+use crate::domain::units::{PositiveScalar, UnitsError};
 
 /// Represents surface cutting speed.
 ///
 /// Stored internally as meters per minute (m/min).
 /// Values must be finite and strictly positive.
+#[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
-pub struct CuttingSpeed(f64);
+pub struct CuttingSpeed(PositiveScalar);
 
 impl CuttingSpeed {
-    /// Creates a [`CuttingSpeed`] from meters per minute.
-    ///
-    /// # Errors
-    ///
-    /// Returns an error if the value is not finite or is less than or equal to zero.
-    pub fn meters_per_min(value: f64) -> Result<Self, MachiningUnitError> {
-        if !value.is_finite() {
-            return Err(MachiningUnitError::NotFinite { value });
-        }
-        if value <= 0.0 {
-            return Err(MachiningUnitError::NonPositive { value });
-        }
-        Ok(Self(value))
+    /// Internal constructor used by domain math.
+    #[allow(dead_code)]
+    pub(crate) fn meters_per_min_unchecked(value: f64) -> Self {
+        Self(PositiveScalar::new_unchecked(value))
     }
 
-    /// Returns the cutting speed value in meters per minute.
+    pub fn meters_per_min(value: f64) -> Result<Self, UnitsError> {
+        Ok(Self(PositiveScalar::new(value)?))
+    }
+
     pub fn meters_per_min_value(self) -> f64 {
-        self.0
-    }
-
-    /// Computes cutting speed from spindle speed and tool diameter.
-    ///
-    /// Formula:
-    ///
-    /// Vc = π × D × n / 1000
-    ///
-    /// where:
-    /// - D = diameter in millimeters
-    /// - n = spindle speed in RPM
-    /// - Vc = cutting speed in meters per minute
-    pub fn from_rpm(diameter: Diameter, rpm: Rpm) -> Result<Self, MachiningUnitError> {
-        let speed = PI * diameter.mm_value() * rpm.value() / 1000.0;
-        Self::meters_per_min(speed)
-    }
-
-    /// Computes spindle speed from cutting speed and tool diameter.
-    ///
-    /// Formula:
-    ///
-    /// n = (Vc × 1000) / (π × D)
-    ///
-    /// where:
-    /// - Vc = cutting speed in meters per minute
-    /// - D = diameter in millimeters
-    /// - n = spindle speed in RPM
-    pub fn to_rpm(self, diameter: Diameter) -> Result<Rpm, MachiningUnitError> {
-        let rpm_value = (self.0 * 1000.0) / (PI * diameter.mm_value());
-        Rpm::new(rpm_value)
-            .map_err(|_| MachiningUnitError::NotFinite { value: rpm_value })
+        self.0.value()
     }
 }
 
@@ -69,7 +30,6 @@ impl CuttingSpeed {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
 
     #[test]
     fn rejects_non_positive() {
@@ -82,83 +42,4 @@ mod tests {
         assert!(CuttingSpeed::meters_per_min(f64::NAN).is_err());
         assert!(CuttingSpeed::meters_per_min(f64::INFINITY).is_err());
     }
-
-    #[test]
-    fn rpm_roundtrip() {
-        let d = Diameter::mm(10.0).unwrap();
-        let rpm = Rpm::new(1000.0).unwrap();
-
-        let speed = CuttingSpeed::from_rpm(d, rpm).unwrap();
-        let rpm2 = speed.to_rpm(d).unwrap();
-
-        assert!(approx_eq(
-            rpm2.value(),
-            rpm.value(),
-            DEFAULT_EPS
-        ));
-    }
-
-    #[test]
-    fn increases_with_rpm() {
-        let d = Diameter::mm(10.0).unwrap();
-
-        let low = CuttingSpeed::from_rpm(d, Rpm::new(500.0).unwrap()).unwrap();
-        let high = CuttingSpeed::from_rpm(d, Rpm::new(1000.0).unwrap()).unwrap();
-
-        assert!(low < high);
-    }
-
-    #[test]
-    fn increases_with_diameter() {
-        let rpm = Rpm::new(1000.0).unwrap();
-
-        let small = CuttingSpeed::from_rpm(Diameter::mm(5.0).unwrap(), rpm).unwrap();
-        let large = CuttingSpeed::from_rpm(Diameter::mm(10.0).unwrap(), rpm).unwrap();
-
-        assert!(small < large);
-    }
 }
-
-#[cfg(test)]
-mod property_tests {
-    use super::*;
-    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
-    use proptest::prelude::*;
-
-    proptest! {
-        #[test]
-        fn rpm_roundtrip_property(
-            diameter in 1e-6f64..1e4f64,
-            rpm in 1e-6f64..1e6f64
-        ) {
-
-            let d = Diameter::mm(diameter).unwrap();
-            let rpm = Rpm::new(rpm).unwrap();
-
-            let speed = CuttingSpeed::from_rpm(d, rpm).unwrap();
-            let rpm2 = speed.to_rpm(d).unwrap();
-
-            prop_assert!(approx_eq(
-                rpm.value(),
-                rpm2.value(),
-                DEFAULT_EPS
-            ));
-        }
-    }
-
-    proptest! {
-        #[test]
-        fn speed_is_finite(
-            diameter in 1e-6f64..1e4f64,
-            rpm in 1e-6f64..1e6f64
-        ) {
-            let d = Diameter::mm(diameter).unwrap();
-            let rpm = Rpm::new(rpm).unwrap();
-
-            let speed = CuttingSpeed::from_rpm(d, rpm).unwrap();
-
-            prop_assert!(speed.meters_per_min_value().is_finite());
-        }
-    }
-}
-

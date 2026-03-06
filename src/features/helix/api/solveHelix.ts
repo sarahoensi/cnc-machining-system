@@ -1,3 +1,5 @@
+// features/helix/api/solveHelix.ts
+
 import { buildHelixRequest } from "../domain/buildRequest";
 import { solveHelixApi } from "./client";
 import type { HelixKey } from "../domain/helixForm";
@@ -12,8 +14,8 @@ export async function solveHelix(
 
   return {
     
-    pitch: result.pitch_mm_per_rev,
-    angle: result.angle_deg,
+    pitch: result.pitch,
+    angle: result.angle,
     
   };
 }

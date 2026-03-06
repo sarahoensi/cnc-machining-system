@@ -2,8 +2,8 @@
 
 use cnc_machining_system_lib::{
     application::finishing::{
-        generate_finishing_plan_input::GenerateFinishingPlanInput,
-        use_cases::GenerateFinishingPlanUseCase,
+        dto::GenerateFinishingPlanInput,
+        GenerateFinishingPlanUseCase,
     },
     domain::FinishingMode,
 };
