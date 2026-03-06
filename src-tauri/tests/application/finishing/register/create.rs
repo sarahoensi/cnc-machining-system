@@ -1,8 +1,14 @@
 // tests/application/finishing/register/create.rs
 
-use cnc_machining_system_lib::{application::finishing::use_cases::RegisterFinishingMeasurementUseCase};
+use cnc_machining_system_lib::{
+    application::finishing::{
+        dto::RegisterFinishingMeasurementInput,
+        RegisterFinishingMeasurementUseCase,
+    },
+};
 
 use crate::application::finishing::fixtures::{create_execution, repo};
+
 
 #[test]
 fn register_updates_only_selected_step() {
@@ -11,7 +17,13 @@ fn register_updates_only_selected_step() {
 
     let id = create_execution(repo.clone(), 3);
 
-    register.execute(id, 2, 8.7).unwrap();
+    register.execute(
+        RegisterFinishingMeasurementInput {
+            execution_id: id,
+            step_number: 2,
+            measurement_mm: 8.7,
+        }
+    ).unwrap();
 
     let execution = repo.get(id).unwrap();
 
@@ -21,7 +33,6 @@ fn register_updates_only_selected_step() {
 }
 
 
-
 #[test]
 fn register_creates_measurement() {
     let repo = repo();
@@ -29,7 +40,13 @@ fn register_creates_measurement() {
 
     let id = create_execution(repo.clone(), 2);
 
-    register.execute(id, 1, 9.5).unwrap();
+    register.execute(
+        RegisterFinishingMeasurementInput {
+            execution_id: id,
+            step_number: 1,
+            measurement_mm: 9.5,
+        }
+    ).unwrap();
 
     let execution = repo.get(id).unwrap();
 

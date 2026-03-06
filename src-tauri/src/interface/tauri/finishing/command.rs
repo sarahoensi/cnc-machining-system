@@ -4,9 +4,8 @@ use uuid::Uuid;
 use crate::AppState;
 use crate::domain::FinishingExecutionId;
 
-use crate::application::finishing::use_cases::{
-    generate_finishing_plan_use_case::GenerateFinishingPlanUseCase,
-    register_finishing_measurement_use_case::RegisterFinishingMeasurementUseCase,
+use crate::application::finishing::{
+    GenerateFinishingPlanUseCase, RegisterFinishingMeasurementInput, RegisterFinishingMeasurementUseCase
 };
 
 use crate::interface::finishing::{
@@ -59,7 +58,10 @@ pub fn register_finishing_measurement(
         state.finishing_repo.clone(),
     );
 
+    // ----------------------------------------------------
     // Validate UUID at interface boundary
+    // ----------------------------------------------------
+
     let uuid = Uuid::parse_str(&request.execution_id)
         .map_err(|_| {
             map_application_error(
@@ -73,8 +75,22 @@ pub fn register_finishing_measurement(
 
     let id = FinishingExecutionId::from_uuid(uuid);
 
+    // ----------------------------------------------------
+    // Build application input
+    // ----------------------------------------------------
+
+    let input = RegisterFinishingMeasurementInput {
+        execution_id: id,
+        step_number: request.step_number,
+        measurement_mm: request.measurement_mm,
+    };
+
+    // ----------------------------------------------------
+    // Execute use case
+    // ----------------------------------------------------
+
     let result = uc
-        .execute(id, request.step_number, request.measurement_mm)
+        .execute(input)
         .map_err(map_application_error)?;
 
     Ok(result.into())

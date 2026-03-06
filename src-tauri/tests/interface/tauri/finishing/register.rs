@@ -2,13 +2,15 @@
 
 use std::sync::Arc;
 
-use cnc_machining_system_lib::application::finishing::generate_finishing_plan_input::GenerateFinishingPlanInput;
-use cnc_machining_system_lib::application::finishing::use_cases::{
-    generate_finishing_plan_use_case::GenerateFinishingPlanUseCase,
-    register_finishing_measurement_use_case::RegisterFinishingMeasurementUseCase,
+use cnc_machining_system_lib::application::finishing::dto::{
+    GenerateFinishingPlanInput,
+    RegisterFinishingMeasurementInput,
 };
 
-
+use cnc_machining_system_lib::application::finishing::{
+    GenerateFinishingPlanUseCase,
+    RegisterFinishingMeasurementUseCase,
+};
 
 use cnc_machining_system_lib::domain::{
     FinishingExecutionRepository,
@@ -18,18 +20,25 @@ use cnc_machining_system_lib::domain::{
 
 use cnc_machining_system_lib::infrastructure::finishing::InMemoryFinishingExecutionRepository;
 
+use uuid::Uuid;
 
 #[test]
 fn registers_measurement_via_use_cases() {
 
+    // ----------------------------------------------------
     // Shared repository
+    // ----------------------------------------------------
+
     let repo: Arc<dyn FinishingExecutionRepository> =
         Arc::new(InMemoryFinishingExecutionRepository::new());
 
     let generate_uc = GenerateFinishingPlanUseCase::new(repo.clone());
     let register_uc = RegisterFinishingMeasurementUseCase::new(repo.clone());
 
+    // ----------------------------------------------------
     // Step 1: Generate plan
+    // ----------------------------------------------------
+
     let generated = generate_uc
         .execute(GenerateFinishingPlanInput::ByCuts {
             mode: FinishingMode::Outer,
@@ -39,18 +48,29 @@ fn registers_measurement_via_use_cases() {
         })
         .unwrap();
 
-    use uuid::Uuid;
+    // Convert returned id → domain id
+    let uuid = Uuid::parse_str(&generated.execution_id)
+        .expect("valid uuid");
 
-let uuid = Uuid::parse_str(&generated.execution_id)
-    .expect("valid uuid");
+    let id = FinishingExecutionId::from_uuid(uuid);
 
-let id = FinishingExecutionId::from_uuid(uuid);
-
+    // ----------------------------------------------------
     // Step 2: Register measurement
+    // ----------------------------------------------------
+
+    let input = RegisterFinishingMeasurementInput {
+        execution_id: id,
+        step_number: 1,
+        measurement_mm: 9.6,
+    };
+
     let response = register_uc
-        .execute(id, 1, 9.6)
+        .execute(input)
         .unwrap();
 
+    // ----------------------------------------------------
     // Step 3: Assert
+    // ----------------------------------------------------
+
     assert_eq!(response.steps[0].measurement_mm, Some(9.6));
 }
