@@ -1,6 +1,5 @@
 // features/cuttingData/ui/CuttingDataPage.tsx
 
-import { useState } from "react";
 import {
   handleUserEdit,
   handleCalculateAsync,
@@ -28,15 +27,19 @@ import {
   validCuttingDataInputSets,
 } from "../domain/cuttingDataConstraints";
 
+import { useFeatureForm } from "@app/providers/FormStateProvider";
+
+
 /* ============================================================
    Component
 ============================================================ */
 
 export function CuttingDataPage() {
 
-  const [form, setForm] = useState(
-    createInitialCuttingDataForm()
-  );
+const [form, setForm] = useFeatureForm(
+  "cutting",
+  createInitialCuttingDataForm
+);
 
   const navigation = useFormNavigation({
     keys: cuttingDataFieldConfig.map(f => f.key),

@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { to: "/helix", label: "Helix" },
   { to: "/cutting", label: "Cutting Data" },
   { to: "/finishing", label: "Finishing" },
+  { to: "/example", label: "Example" },
 ];
 
 export function Sidebar() {
