@@ -6,18 +6,18 @@ use crate::domain::units::{
 
 #[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct ToothCount(u32);
+pub struct ToothCount(i32);
 
 impl ToothCount {
 
     /// Internal constructor used by domain math.
     #[allow(dead_code)]
-    pub(crate) fn new_unchecked(value: u32) -> Self {
+    pub(crate) fn new_unchecked(value: i32) -> Self {
         debug_assert!(value > 0);
         Self(value)
     }
 
-    pub fn new(value: u32) -> Result<Self, UnitsError> {
+    pub fn new(value: i32) -> Result<Self, UnitsError> {
         if value == 0 {
             return Err(NumericError::NonPositive(value as f64).into());
         }
@@ -25,7 +25,7 @@ impl ToothCount {
         Ok(Self(value))
     }
 
-    pub fn value(self) -> u32 {
+    pub fn value(self) -> i32 {
         self.0
     }
 }

@@ -12,7 +12,7 @@ use proptest::prelude::*;
 // ------------------------------------------------------------
 //
 
-fn tool(d: f64, z: u32) -> Tool {
+fn tool(d: f64, z: i32) -> Tool {
     Tool::new(
         Diameter::mm(d).unwrap(),
         ToothCount::new(z).unwrap(),
@@ -133,7 +133,7 @@ fn feed_rate() -> impl Strategy<Value = FeedRate> {
 }
 
 fn tooth_count() -> impl Strategy<Value = ToothCount> {
-    (1u32..16u32)
+    (1i32..16i32)
         .prop_map(|z| ToothCount::new(z).unwrap())
 }
 

@@ -161,7 +161,7 @@ export async function handleCalculateAsync<
       const k = key as K;
       const value = result[k];
 
-      if (value === undefined) continue;
+      if (value === undefined || value === null) continue;
 
       const wasUser = cleanedFields[k]?.source === "user";
 
@@ -184,38 +184,32 @@ export async function handleCalculateAsync<
 
 } catch (error) {
 
-  console.log("RAW ERROR:", error);
+  console.error(error);
 
   const te = getTauriCommandError(error);
-  console.log("PARSED TAURI ERROR:", te);
 
-  
-
-  // Start med "cleaned", så du ikke viser stale machine values
-  const nextFields: Record<K, FieldState> = { ...cleanedFields };
+  const nextFields = { ...cleanedFields };
 
   if (te?.fieldErrors) {
 
-  for (const err of te.fieldErrors) {
+    for (const err of te.fieldErrors) {
+      const k = err.field as K;
 
-    const k = err.field as K;
+      if (!nextFields[k]) continue;
 
-    if (!nextFields[k]) continue;
-
-    nextFields[k] = {
-      ...nextFields[k],
-      invalid: true,
-      error: err.message,
-    };
+      nextFields[k] = {
+        ...nextFields[k],
+        invalid: true,
+        error: err.message,
+      };
+    }
 
   }
-
-}
 
   return {
     status: "editing",
     fields: nextFields,
     extras: form.extras,
   };
-  }
+}
 }

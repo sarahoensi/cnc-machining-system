@@ -27,7 +27,7 @@ pub struct SolveCuttingDataRequest {
     /// Feed rate in millimeters per minute (`mm/min`), optional.
     pub feed_rate_mm_per_min: Option<f64>,
     /// Tool tooth count, optional.
-    pub teeth: Option<u32>,
+    pub teeth: Option<i32>,
     /// Tool diameter in millimeters (`mm`), optional.
     pub diameter_mm: Option<f64>,
 }

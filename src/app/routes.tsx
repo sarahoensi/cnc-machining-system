@@ -5,6 +5,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { PlaceholderPage } from "@app/PlaceholderPage";
 import { TrianglePage } from "@features/right_triangle/TrianglePage";
 import { HelixPage } from "@features/helix/ui/HelixPage";
+import  {CuttingDataPage} from "@features/cutting_data/ui/cuttingDataPage";
 
 
 export function AppRoutes() {
@@ -18,7 +19,7 @@ export function AppRoutes() {
       <Route path="/helix" element={<HelixPage />} />
 
       {/* Machining physics */}
-      <Route path="/cutting" element={<PlaceholderPage title="Cutting Data" />} />
+      <Route path="/cutting" element={<CuttingDataPage />} />
 
       {/* Machining strategy */}
       <Route path="/finishing" element={<PlaceholderPage title="Finishing" />} />
