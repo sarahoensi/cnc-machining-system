@@ -94,9 +94,9 @@ export function NumberInput({
 
 const displayValue =
   field.source === "machine" &&
-  field.machineValue !== undefined
+  typeof field.machineValue === "number"
     ? field.machineValue.toFixed(decimals)
-    : field.value;
+    : field.value ?? "";
 
   return (
     <div className={clsx("number-input", className)}>

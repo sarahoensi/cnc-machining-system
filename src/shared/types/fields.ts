@@ -26,6 +26,7 @@ export const emptyField = (
   source: "empty",
   locked: false,
   invalid: false,
+  machineValue: undefined,
   error: undefined,
   ...overrides,
 });
