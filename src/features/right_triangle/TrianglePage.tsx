@@ -1,6 +1,5 @@
 // features/right_triangle/TrianglePage.tsx
 
-import { useState } from "react";
 import {
   handleUserEdit,
   handleCalculateAsync,
@@ -28,9 +27,17 @@ import {
   mutuallyExclusiveTrianglePairs,
 } from "./domain/triangleConstraints";
 
+import { useFeatureForm } from "@app/providers/FormStateProvider";
+
+
+
+
 export function TrianglePage() {
 
-  const [form, setForm] = useState(createInitialTriangleForm());
+  const [form, setForm] = useFeatureForm(
+  "triangle",
+  createInitialTriangleForm
+);
 
   const navigation = useFormNavigation({
     keys: triangleFieldConfig.map(f => f.key),

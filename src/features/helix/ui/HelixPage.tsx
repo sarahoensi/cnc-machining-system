@@ -1,6 +1,5 @@
 // features/helix/ui/HelixPage.tsx
 
-import { useState } from "react";
 import {
   handleUserEdit,
   handleCalculateAsync,
@@ -29,15 +28,19 @@ import {
   validHelixInputSets,
   mutuallyExclusiveHelixPairs,
 } from "../domain/helixConstraints"
+
+import { useFeatureForm } from "@app/providers/FormStateProvider";
+
 /* ============================================================
    Component
 ============================================================ */
 
 export function HelixPage() {
 
-  const [form, setForm] = useState<
-    ReturnType<typeof createInitialHelixForm>
-  >(createInitialHelixForm());
+ const [form, setForm] = useFeatureForm(
+  "helix",
+  createInitialHelixForm
+);
 
   const navigation = useFormNavigation({
     keys: helixFieldConfig.map(f => f.key),

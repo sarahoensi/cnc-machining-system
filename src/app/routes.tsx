@@ -26,6 +26,10 @@ export function AppRoutes() {
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/triangle" replace />} />
+
+      {/* Example placeholder */}
+      <Route path="/example" element={<PlaceholderPage title="Example" />} />
+
     </Routes>
   );
 }
