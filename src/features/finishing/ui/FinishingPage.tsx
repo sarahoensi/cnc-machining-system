@@ -6,7 +6,7 @@ import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { handleGenerateAsync } from "@shared/form";
 
 import {
-  createInitialFinishingForm,
+    createInitialFinishingForm,
 } from "../domain/plan/finishingForm";
 
 import { parseFinishingPlan } from "../domain/plan/parseFinishingPlan";
@@ -24,124 +24,184 @@ import type { FinishingStepData } from "../domain/execution/mapExecution";
 import { PlanForm } from "./plan/PlanForm";
 import { FinishingExecutionTable } from "./execution/ExecutionTable";
 
+/* ============================================================
+   Component
+============================================================ */
+
 export function FinishingPage() {
 
-  const [form, setForm] = useFeatureForm(
-    "finishing",
-    createInitialFinishingForm
-  );
+    const [form, setForm] = useFeatureForm(
+        "finishing",
+        createInitialFinishingForm
+    );
 
-  const [executionId, setExecutionId] =
-    useState<string | null>(null);
+    const [executionId, setExecutionId] =
+        useState<string | null>(null);
 
-  const [execution, setExecution] =
-    useState<ExecutionState<FinishingStepData> | null>(null);
+    const [execution, setExecution] =
+        useState<ExecutionState<FinishingStepData> | null>(null);
 
-  /* ============================================================
-     Generate plan
-  ============================================================ */
+    const formReadOnly = execution !== null;
 
-  async function onGenerate() {
+    /* ============================================================
+       Helpers
+    ============================================================ */
 
-    const { form: nextForm, execution: result } =
-      await handleGenerateAsync(
-        form,
-        parseFinishingPlan,
-        generateFinishingPlan
-      );
+    function executionHasMeasurements() {
 
-    setForm(nextForm);
+        if (!execution) return false;
 
-    if (result) {
-
-      setExecutionId(result.execution_id);
-
-      setExecution(
-        mapFinishingExecution(result)
-      );
+        return execution.steps.some(
+            s => s.measurement.value !== ""
+        );
     }
-  }
 
-  /* ============================================================
-     Register measurement
-  ============================================================ */
+    function confirmExecutionReset(): boolean {
 
-  async function onRegisterMeasurement(
-    step: number,
-    measurement: number
-  ) {
+        if (!executionHasMeasurements()) {
+            return true;
+        }
 
-    if (!executionId) return;
+        return window.confirm(
+            "Det finnes registrerte målinger.\n\n" +
+            "Hvis du endrer planen vil utførelsen bli slettet.\n\n" +
+            "Vil du fortsette?"
+        );
+    }
 
-    const request = buildRegisterRequest(
-      executionId,
-      step,
-      measurement
+    function clearExecution() {
+        setExecution(null);
+        setExecutionId(null);
+    }
+
+    /* ============================================================
+       Form update wrapper
+    ============================================================ */
+
+
+
+    function updateForm(nextForm: any) {
+
+        if (execution && !confirmExecutionReset()) {
+            return;
+        }
+
+        clearExecution();
+        setForm(nextForm);
+    }
+
+    /* ============================================================
+       Generate plan
+    ============================================================ */
+
+    async function onGenerate() {
+
+        const { form: nextForm, execution: result } =
+            await handleGenerateAsync(
+                form,
+                parseFinishingPlan,
+                generateFinishingPlan
+            );
+
+        setForm(nextForm);
+
+        if (result) {
+
+            setExecutionId(result.execution_id);
+
+            setExecution(
+                mapFinishingExecution(result)
+            );
+        }
+    }
+
+    /* ============================================================
+       Register measurement
+    ============================================================ */
+
+    async function onRegisterMeasurement(
+        step: number,
+        measurement: number
+    ) {
+
+        if (!executionId) return;
+
+        const request = buildRegisterRequest(
+            executionId,
+            step,
+            measurement
+        );
+
+        const result =
+            await registerFinishingMeasurement(request);
+
+        setExecutionId(result.execution_id);
+
+        setExecution(
+            mapFinishingExecution(result)
+        );
+    }
+
+    /* ============================================================
+       Reset
+    ============================================================ */
+
+    function onReset() {
+
+        if (execution && !confirmExecutionReset()) {
+            return;
+        }
+
+        clearExecution();
+
+        setForm(createInitialFinishingForm());
+    }
+
+    /* ============================================================
+       Render
+    ============================================================ */
+
+    return (
+
+        <div className="app-content split">
+
+            <div className="app-left">
+
+                <PlanForm
+                    form={form}
+                    setForm={updateForm}
+                    onGenerate={onGenerate}
+                    onReset={onReset}
+                    onEdit={() => {
+                        if (!confirmExecutionReset()) return;
+                        clearExecution();
+                    }}
+                    readOnly={formReadOnly}
+                />
+
+            </div>
+
+            <div className="app-right">
+
+                {execution ? (
+
+                    <FinishingExecutionTable
+                        execution={execution}
+                        onRegisterMeasurement={
+                            onRegisterMeasurement
+                        }
+                    />
+
+                ) : (
+
+                    <p className="hint">
+                        Ingen utførelse startet ennå
+                    </p>
+
+                )}
+
+            </div>
+
+        </div>
     );
-
-    const result =
-      await registerFinishingMeasurement(request);
-
-    /* IMPORTANT:
-       Replace execution with backend result
-       (never mutate locally)
-    */
-
-    setExecution(
-      mapFinishingExecution(result)
-    );
-  }
-
-  /* ============================================================
-     Reset
-  ============================================================ */
-
-  function onReset() {
-
-    setForm(createInitialFinishingForm());
-
-    setExecution(null);
-    setExecutionId(null);
-  }
-
-  /* ============================================================
-     Render
-  ============================================================ */
-
-  return (
-
-    <div className="app-content split">
-
-      <div className="app-left">
-
-        <PlanForm
-          form={form}
-          setForm={setForm}
-          onGenerate={onGenerate}
-          onReset={onReset}
-        />
-
-      </div>
-
-      <div className="app-right">
-
-        {execution ? (
-
-          <FinishingExecutionTable
-            execution={execution}
-            onRegisterMeasurement={onRegisterMeasurement}
-          />
-
-        ) : (
-
-          <p className="hint">
-            Ingen utførelse startet ennå
-          </p>
-
-        )}
-
-      </div>
-
-    </div>
-  );
 }

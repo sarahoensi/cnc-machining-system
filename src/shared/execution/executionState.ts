@@ -15,6 +15,7 @@ export type ExecutionStep<T> = {
   data: T;
   measurement: ExecutionValue;
   status: ExecutionStepStatus;
+  editable: boolean;
 };
 
 export type ExecutionState<T> = {
@@ -40,6 +41,12 @@ export function createExecutionState<T>(steps: {
       ? steps.length
       : firstIncomplete;
 
+  const lastMeasuredIndex =
+    steps
+      .map((s, i) => s.measurement != null ? i : -1)
+      .filter(i => i !== -1)
+      .pop();
+
   const mappedSteps: ExecutionStep<T>[] =
     steps.map((step, i) => {
 
@@ -49,6 +56,10 @@ export function createExecutionState<T>(steps: {
           : i === activeIndex
           ? "active"
           : "pending";
+
+      const editable =
+        status === "active" ||
+        i === lastMeasuredIndex;
 
       const measurement: ExecutionValue = {
         value:
@@ -62,6 +73,7 @@ export function createExecutionState<T>(steps: {
         data: step.data,
         measurement,
         status,
+        editable,
       };
     });
 

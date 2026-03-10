@@ -3,10 +3,19 @@
 import { useState } from "react";
 
 import { Table } from "@shared/ui/components/table/Table/Table";
+import { TableHeaderSelect } from "@shared/ui/components/table/Table";
+
 import { ExecutionNumberField } from "@shared/ui/components/execution/ExecutionNumberField";
-import { RegisterButton } from "@shared/ui/components/primitives/Button/Button";
+
+import {
+  CancelButton,
+  OkButton,
+  RegisterButton,
+  EditButton,
+} from "@shared/ui/components/primitives/Button/Button";
 
 import type { ExecutionState } from "@shared/execution";
+
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 import { formatNumber } from "@shared/ui/format/formatNumber";
 
@@ -43,21 +52,50 @@ export function FinishingExecutionTable({
 
   const { decimals } = useDisplaySettings();
 
-  /* ----------------------------------------------------------
-     Local drafts (user input before submit)
-  ---------------------------------------------------------- */
+  const [cutMode, setCutMode] =
+    useState<"deltaD" | "ae">("deltaD");
+
+  const [editingStep, setEditingStep] =
+    useState<number | null>(null);
 
   const [drafts, setDrafts] =
     useState<Record<number, string>>({});
 
-  function updateDraft(
-    step: number,
-    value: string
-  ) {
+  /* ----------------------------------------------------------
+     Draft helpers
+  ---------------------------------------------------------- */
+
+  function updateDraft(step: number, value: string) {
     setDrafts(d => ({
       ...d,
       [step]: value,
     }));
+  }
+
+  function startEdit(step: number, value: string) {
+    setDrafts(d => ({
+      ...d,
+      [step]: value ?? "",
+    }));
+    setEditingStep(step);
+  }
+
+  function cancelEdit() {
+    setEditingStep(null);
+  }
+
+  function confirmEdit(step: number) {
+
+    const value = drafts[step];
+
+    if (!value) return;
+
+    onRegisterMeasurement(
+      step,
+      Number(value)
+    );
+
+    setEditingStep(null);
   }
 
   /* ----------------------------------------------------------
@@ -68,9 +106,9 @@ export function FinishingExecutionTable({
 
     <Table.Root>
 
-      {/* ------------------------------------------- */}
-      {/* Header                                      */}
-      {/* ------------------------------------------- */}
+      {/* ===================================================== */}
+      {/* Header                                                */}
+      {/* ===================================================== */}
 
       <Table.Head>
 
@@ -84,9 +122,15 @@ export function FinishingExecutionTable({
             Start Ø
           </Table.HeaderCell>
 
-          <Table.HeaderCell align="right">
-            ΔD
-          </Table.HeaderCell>
+          <TableHeaderSelect
+            value={cutMode}
+            onChange={setCutMode}
+            options={[
+              { value: "deltaD", label: "ΔD" },
+              { value: "ae", label: "ae" },
+            ]}
+            align="right"
+          />
 
           <Table.HeaderCell align="right">
             Measurement
@@ -98,9 +142,9 @@ export function FinishingExecutionTable({
 
       </Table.Head>
 
-      {/* ------------------------------------------- */}
-      {/* Body                                        */}
-      {/* ------------------------------------------- */}
+      {/* ===================================================== */}
+      {/* Body                                                  */}
+      {/* ===================================================== */}
 
       <Table.Body>
 
@@ -108,13 +152,29 @@ export function FinishingExecutionTable({
 
           const draft =
             drafts[step.index] ??
-            step.measurement.value;
+            step.measurement.value ??
+            "";
+
+          const deltaValue =
+            cutMode === "deltaD"
+              ? step.data.deltaD
+              : step.data.deltaD / 2;
+
+          const isEditing =
+            editingStep === step.index;
+
+          const isActive =
+            step.status === "active";
+
+          const isEditableCompleted =
+            step.status === "completed" &&
+            step.editable;
 
           return (
 
             <Table.Row
               key={step.index}
-              isActive={step.status === "active"}
+              isActive={isActive}
             >
 
               {/* Step index */}
@@ -129,19 +189,25 @@ export function FinishingExecutionTable({
 
                 <ExecutionNumberField
                   state={step.status}
-                  value={formatNumber(step.data.startDiameter, decimals)}
+                  value={formatNumber(
+                    step.data.startDiameter,
+                    decimals
+                  )}
                   readonly
                 />
 
               </Table.Cell>
 
-              {/* Delta */}
+              {/* ΔD / ae */}
 
               <Table.Cell align="right">
 
                 <ExecutionNumberField
                   state={step.status}
-                  value={formatNumber(step.data.deltaD, decimals)}
+                  value={formatNumber(
+                    deltaValue,
+                    decimals
+                  )}
                   readonly
                 />
 
@@ -152,26 +218,40 @@ export function FinishingExecutionTable({
               <Table.Cell align="right">
 
                 <ExecutionNumberField
-                  state={step.status}
+                  state={
+                    isEditing
+                      ? "active"
+                      : step.status
+                  }
 
-                  value={draft}
+                  value={
+                    isEditing || isActive
+                      ? draft
+                      : step.measurement.value
+                  }
 
-                  placeholder={formatNumber(
-                    step.data.expectedDiameter,
-                    decimals
-                  )}
+                  placeholder={
+                    step.measurement.value
+                      ? undefined
+                      : formatNumber(
+                        step.data.expectedDiameter,
+                        decimals
+                      )
+                  }
 
-                  onChange={(v) =>
-                    updateDraft(step.index, v)
+                  onChange={
+                    isEditing || isActive
+                      ? (v) =>
+                        updateDraft(
+                          step.index,
+                          v
+                        )
+                      : undefined
                   }
 
                   onSubmit={() =>
-                    onRegisterMeasurement(
-                      step.index,
-                      Number(draft)
-                    )
+                    confirmEdit(step.index)
                   }
-
                 />
 
               </Table.Cell>
@@ -180,19 +260,58 @@ export function FinishingExecutionTable({
 
               <Table.Cell align="center">
 
-                {step.status === "active" && (
+                {/* EDIT MODE */}
+
+                {isEditing && (
+
+                  <>
+                    <OkButton
+                      onClick={() =>
+                        confirmEdit(
+                          step.index
+                        )
+                      }
+                    />
+
+                    <CancelButton
+                      onClick={cancelEdit}
+                    />
+                  </>
+
+                )}
+
+                {/* ACTIVE STEP */}
+
+                {!isEditing && isActive && (
 
                   <RegisterButton
                     disabled={!draft}
                     onClick={() =>
-                      onRegisterMeasurement(
-                        step.index,
-                        Number(draft)
+                      confirmEdit(
+                        step.index
                       )
                     }
                   />
 
                 )}
+
+                {/* COMPLETED STEP */}
+
+                {!isEditing &&
+                  isEditableCompleted && (
+
+                    <EditButton
+                      onClick={() =>
+                        startEdit(
+                          step.index,
+                          step.measurement.value
+                        )
+                      }
+                    >
+                      Edit
+                    </EditButton>
+
+                  )}
 
               </Table.Cell>
 

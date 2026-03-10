@@ -9,6 +9,7 @@ import { FormNumberField } from "@shared/ui/components/form/FormNumberField/Form
 import { ModeSelector } from "@shared/ui/components/form/ModeSelector/ModeSelector";
 import {
   CalculateButton,
+  EditButton,
   ResetButton,
 } from "@shared/ui/components/primitives/Button/Button";
 
@@ -31,12 +32,17 @@ type Props = {
   setForm: (v: any) => void;
   onGenerate: () => void;
   onReset: () => void;
+  onEdit: () => void;
+  readOnly: boolean;
 };
 
 export function PlanForm({
   form,
   setForm,
   onGenerate,
+  onReset,
+  onEdit,
+  readOnly,
 }: Props) {
 
   const navigation = useFormNavigation({
@@ -60,9 +66,6 @@ export function PlanForm({
     );
   }
 
-  function onReset() {
-    setForm(createInitialFinishingForm());
-  }
 
   return (
     <>
@@ -72,6 +75,7 @@ export function PlanForm({
           name="finishing-mode"
           label="Mode"
           value={form.extras.mode}
+          readonly={readOnly}
           onChange={(newMode) =>
             setForm((prev: any) =>
               handleModeChange(prev, {
@@ -83,7 +87,7 @@ export function PlanForm({
           options={[
             { value: "Inner", label: "Inner" },
             { value: "Outer", label: "Outer" },
-            
+
           ]}
         />
       </div>
@@ -99,6 +103,7 @@ export function PlanForm({
             unit={f.unit}
             field={fieldState}
             disabled={fieldState.locked || f.readOnly}
+            readonly={readOnly}
             error={fieldState.error}
             autoFocus={f.autoFocus}
             onChange={(value) =>
@@ -111,8 +116,20 @@ export function PlanForm({
       })}
 
       <div style={{ marginTop: 16, display: "flex", gap: 12 }}>
-        <CalculateButton onClick={onGenerate} />
+
+        <CalculateButton
+          onClick={onGenerate}
+          disabled={readOnly}
+        />
+
         <ResetButton onClick={onReset} />
+
+        {readOnly && (
+          <EditButton onClick={onEdit}>
+            Edit plan
+          </EditButton>
+        )}
+
       </div>
 
     </>
