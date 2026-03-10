@@ -1,7 +1,7 @@
 // features/right_triangle/triangleForm.ts
 
-import type { FormState } from "@shared/types/forms";
-import { emptyField } from "@shared/types/fields";
+import type { FormState } from "@shared/form/types/forms";
+import { emptyField } from "@shared/form/types/fields";
 
 export type TriangleKey =
   | "a"

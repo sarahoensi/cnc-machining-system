@@ -1,7 +1,7 @@
 // features/cutting_data/domain/parseCuttingData.ts
 
-import { safeParseDecimal } from "@shared/engine/parsing/decimalParser";
-import { FieldState } from "@shared/types";
+import { safeParseDecimal } from "@shared/parsing/decimalParser";
+import { FieldState } from "@shared/form/types";
 import { CuttingDataKey } from "./cuttingDataForm";
 
 export function parseCuttingData(

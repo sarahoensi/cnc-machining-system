@@ -1,4 +1,4 @@
-// features/cutting_data/domain/cuttingDataForm.ts
+// features/finishing/domain/plan/finishingForm.ts
 
 import type { FormState } from "@shared/form/types/forms";
 import { emptyField } from "@shared/form/types/fields";
@@ -7,44 +7,40 @@ import { emptyField } from "@shared/form/types/fields";
    Keys
 ============================================================ */
 
-export type CuttingDataKey =
-  | "diameter"         // D
-  | "cutting_speed"    // Vc
-  | "rpm"              // n
-  | "teeth"            // z
-  | "feed_rate"        // F
-  | "chip_load";       // fz
-  
-  
-  
+export type FinishingKey =
+  | "start_diameter"
+  | "target_diameter"
+  | "cuts"
+  | "radial_engagement";
 
 /* ============================================================
    Extras
 ============================================================ */
 
-export type CuttingDataExtras = {
-  
+export type FinishingExtras = {
+  mode: "Inner" | "Outer";
+  planning: "ByCuts" | "ByRadialEngagement";
 };
 
 /* ============================================================
    Factory
 ============================================================ */
 
-export function createInitialCuttingDataForm(): FormState<
-  CuttingDataKey,
-  CuttingDataExtras
+export function createInitialFinishingForm(): FormState<
+  FinishingKey,
+  FinishingExtras
 > {
   return {
     status: "editing",
     fields: {
-      diameter: emptyField(),
-      teeth: emptyField(),
-      cutting_speed: emptyField(),
-      rpm: emptyField(),
-      feed_rate: emptyField(),
-      chip_load: emptyField()
+      start_diameter: emptyField(),
+      target_diameter: emptyField(),
+      cuts: emptyField(),
+      radial_engagement: emptyField(),
     },
-    extras: { },
+    extras: {
+      mode: "Inner",
+      planning: "ByCuts",
+    },
   };
 }
-

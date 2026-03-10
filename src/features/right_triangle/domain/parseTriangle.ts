@@ -1,8 +1,8 @@
 // features/right_triangle/parseTriangle.ts
 
-import { safeParseDecimal } from "@shared/engine/parsing/decimalParser";
+import { safeParseDecimal } from "@shared/parsing/decimalParser";
 import { TriangleKey } from "./triangleForm";
-import { FieldState } from "@shared/types";
+import { FieldState } from "@shared/form/types";
 
 export function parseTriangle(
   fields: Record<TriangleKey, FieldState>

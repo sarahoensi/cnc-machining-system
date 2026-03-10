@@ -15,6 +15,8 @@ use serde::Serialize;
 pub struct FinishingExecutionResponse {
     /// Stable identifier for subsequent measurement registration calls.
     pub execution_id: String,
+    pub active_step: Option<u32>,
+    pub finished: bool,
     /// Ordered execution steps with planned and optional measured values.
     pub steps: Vec<FinishingStepResponse>,
 }

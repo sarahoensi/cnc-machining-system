@@ -79,6 +79,8 @@ impl From<FinishingExecutionOutput> for FinishingExecutionResponse {
     fn from(out: FinishingExecutionOutput) -> Self {
         Self {
             execution_id: out.execution_id,
+            active_step: out.active_step,
+            finished: out.finished,
             steps: out.steps.into_iter().map(Into::into).collect(),
         }
     }

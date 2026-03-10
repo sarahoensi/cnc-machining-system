@@ -48,6 +48,7 @@ impl FinishingExecution {
     /// Generates the initial list of machining steps.
     pub fn new(id: FinishingExecutionId, plan: FinishingPlan) -> Result<Self, StrategyError> {
         let steps = build_steps_from_start(
+            1,
             plan.start(),
             plan.target(),
             plan.cuts(),
@@ -214,7 +215,7 @@ impl FinishingExecution {
     last_measured: Diameter,
 ) -> Result<(), StrategyError> {
 
-    let remaining_steps = self.steps.len() - start_index;
+    let remaining_steps = self.steps.len().saturating_sub(start_index);
 
     if remaining_steps == 0 {
         return Ok(());
@@ -231,6 +232,7 @@ impl FinishingExecution {
 
     // Generate the remaining steps using the same logic as initial build
     let new_steps = build_steps_from_start(
+        (start_index as u32) + 1,
         last_measured,
         self.plan.target(),
         remaining_steps as u32,
@@ -245,6 +247,20 @@ impl FinishingExecution {
 
     Ok(())
 }
+
+pub fn active_step(&self) -> Option<u32> {
+        self.steps
+            .iter()
+            .find(|s| s.measurement().is_none())
+            .map(|s| s.index())
+    }
+
+    pub fn finished(&self) -> bool {
+        self.active_step().is_none()
+    }
+
+
+
 }
 
 // -------------------------------------------------------------------------
@@ -269,6 +285,7 @@ fn to_index(step_number: u32, len: usize) -> Result<usize, StrategyError> {
 }
 
 fn build_steps_from_start(
+    first_index: u32,
     start: Diameter,
     target: Diameter,
     cuts: u32,
@@ -285,7 +302,7 @@ fn build_steps_from_start(
     let mut current = start;
 
     for i in 0..cuts {
-        let index = i + 1;
+        let index = first_index + i;
 
         let end_val = mode.apply_delta(current.mm_value(), step.mm_value());
 
