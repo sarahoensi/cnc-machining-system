@@ -1,7 +1,10 @@
+// shared/ui/components/form/formNumberField/FormNumberField.tsx
+
 import React, { useId } from "react";
 import { Field } from "../Field/Field";
 import { NumberInput } from "../../primitives/NumberInput/NumberInput";
-import type { FieldState } from "@shared/types/fields";
+import type { FieldState } from "@shared/form/types/fields";
+import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 
 type Props = {
   label: string;
@@ -37,7 +40,19 @@ export function FormNumberField({
   onFocus,
   onBlur,
 }: Props) {
+
   const id = useId();
+
+  const { decimals } = useDisplaySettings();
+
+  const isDisabled = disabled || field.locked;
+  const isReadOnly = readonly && !isDisabled;
+
+  const displayValue =
+    field.source === "machine" &&
+    typeof field.machineValue === "number"
+      ? field.machineValue.toFixed(decimals)
+      : field.value ?? "";
 
   return (
     <Field
@@ -48,11 +63,11 @@ export function FormNumberField({
     >
       <NumberInput
         id={id}
-        field={field}
+        value={displayValue}
         onChange={onChange}
         unit={unit}
-        disabled={disabled}
-        readonly={readonly}
+        disabled={isDisabled}
+        readonly={isReadOnly}
         autoFocus={autoFocus}
         inputRef={inputRef}
         onKeyDown={onKeyDown}

@@ -1,7 +1,7 @@
 // features/helix/domain/parseHelix.ts
 
-import { safeParseDecimal } from "@shared/engine/parsing/decimalParser";
-import { FieldState } from "@shared/types";
+import { safeParseDecimal } from "@shared/parsing/decimalParser";
+import { FieldState } from "@shared/form/types";
 import { HelixKey } from "./helixForm";
 
 export function parseHelix(

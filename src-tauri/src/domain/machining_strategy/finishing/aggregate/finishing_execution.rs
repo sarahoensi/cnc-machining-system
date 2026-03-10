@@ -1,9 +1,7 @@
 // domain/machining_strategy/finishing_execution.rs
 
 use crate::domain::{
-    machining_strategy::strategy_error::StrategyError,
-    units::{Diameter, PositiveLength},
-    FinishingMode, FinishingPlan, FinishingStep,
+    FinishingMode, FinishingPlan, FinishingPlanner, FinishingPlanning, FinishingRequest, FinishingStep, machining_strategy::strategy_error::StrategyError, units::{Diameter, PositiveLength}
 };
 
 const EPS: f64 = 1e-12;
@@ -50,6 +48,7 @@ impl FinishingExecution {
     /// Generates the initial list of machining steps.
     pub fn new(id: FinishingExecutionId, plan: FinishingPlan) -> Result<Self, StrategyError> {
         let steps = build_steps_from_start(
+            1,
             plan.start(),
             plan.target(),
             plan.cuts(),
@@ -211,74 +210,57 @@ impl FinishingExecution {
     /// Remaining steps are redistributed evenly to ensure
     /// final planned diameter reaches the target.
     fn recalculate_from(
-        &mut self,
-        start_index: usize,
-        last_measured: Diameter,
-    ) -> Result<(), StrategyError> {
-        if start_index >= self.steps.len() {
-            return Ok(()); // nothing left
-        }
+    &mut self,
+    start_index: usize,
+    last_measured: Diameter,
+) -> Result<(), StrategyError> {
 
-        let remaining_steps = self.steps.len() - start_index;
-        if remaining_steps == 0 {
-            return Ok(());
-        }
+    let remaining_steps = self.steps.len().saturating_sub(start_index);
 
-        let target = self.plan.target().mm_value();
-        let current = last_measured.mm_value();
-        let mode = self.plan.mode();
-
-        let remaining_delta_mag = (target - current).abs();
-
-        // If we’re effectively at target but still have steps left → invalid plan
-        if remaining_delta_mag <= EPS {
-            return Err(StrategyError::ImpossiblePlan {
-                reason: "no remaining delta but still remaining steps",
-            });
-        }
-
-        let new_step_mag = remaining_delta_mag / remaining_steps as f64;
-
-        let new_step = PositiveLength::mm(new_step_mag).map_err(|_| {
-            StrategyError::ComputedStepNotPositive {
-                value_mm: new_step_mag,
-            }
-        })?;
-
-        // Rebuild steps from start_index forward
-        let mut start_d = last_measured;
-
-        for i in start_index..self.steps.len() {
-            let step_no = (i + 1) as u32;
-
-            let end_val = mode.apply_delta(start_d.mm_value(), new_step.mm_value());
-
-            let end_d = Diameter::mm(end_val).map_err(|_| StrategyError::ImpossiblePlan {
-                reason: "computed diameter invalid",
-            })?;
-
-            self.steps[i] = FinishingStep::new(step_no, start_d, new_step, end_d);
-
-            start_d = end_d;
-        }
-
-        // Ensure final step reaches target (within tolerance)
-        let last_end = self
-            .steps
-            .last()
-            .ok_or(StrategyError::ImpossiblePlan { reason: "no steps" })?
-            .planned_end()
-            .mm_value();
-
-        if (last_end - target).abs() > END_TOL {
-            return Err(StrategyError::RecalculationDidNotReachTarget {
-                final_mm: last_end,
-                target_mm: target,
-            });
-        }
-
-        Ok(())
+    if remaining_steps == 0 {
+        return Ok(());
     }
+
+    let request = FinishingRequest {
+        mode: self.plan.mode(),
+        start_diameter: last_measured,
+        target_diameter: self.plan.target(),
+        planning: FinishingPlanning::ByCuts(remaining_steps as u32),
+    };
+
+    let new_plan = FinishingPlanner::generate_plan(request)?;
+
+    // Generate the remaining steps using the same logic as initial build
+    let new_steps = build_steps_from_start(
+        (start_index as u32) + 1,
+        last_measured,
+        self.plan.target(),
+        remaining_steps as u32,
+        new_plan.expected_step(),
+        self.plan.mode(),
+    )?;
+
+    // Replace remaining steps
+    for (offset, step) in new_steps.into_iter().enumerate() {
+        self.steps[start_index + offset] = step;
+    }
+
+    Ok(())
+}
+
+pub fn active_step(&self) -> Option<u32> {
+        self.steps
+            .iter()
+            .find(|s| s.measurement().is_none())
+            .map(|s| s.index())
+    }
+
+    pub fn finished(&self) -> bool {
+        self.active_step().is_none()
+    }
+
+
+
 }
 
 // -------------------------------------------------------------------------
@@ -303,6 +285,7 @@ fn to_index(step_number: u32, len: usize) -> Result<usize, StrategyError> {
 }
 
 fn build_steps_from_start(
+    first_index: u32,
     start: Diameter,
     target: Diameter,
     cuts: u32,
@@ -319,7 +302,7 @@ fn build_steps_from_start(
     let mut current = start;
 
     for i in 0..cuts {
-        let index = i + 1;
+        let index = first_index + i;
 
         let end_val = mode.apply_delta(current.mm_value(), step.mm_value());
 

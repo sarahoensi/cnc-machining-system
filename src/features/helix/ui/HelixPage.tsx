@@ -4,7 +4,7 @@ import {
   handleUserEdit,
   handleCalculateAsync,
   handleModeChange,
-} from "@shared/engine/formEngine";
+} from "@shared/form/engine/formEngine";
 
 import { FormNumberField } from "@shared/ui/components/form/FormNumberField/FormNumberField";
 import {

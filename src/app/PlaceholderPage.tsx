@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ModeSelector } from "@shared/ui/components/form/ModeSelector/ModeSelector";
-import type { FieldState } from "@shared/types/fields";
+import type { FieldState } from "@shared/form/types/fields";
 import {
   CalculateButton,
   ResetButton,
@@ -13,7 +13,7 @@ import {
   Table,
   TableHeader,
   TableHeaderSelect,
-} from "@shared/ui/components/data/Table";
+} from "@shared/ui/components/table/Table";
 
 type Props = {
   title: string;

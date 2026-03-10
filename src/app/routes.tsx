@@ -6,6 +6,7 @@ import { PlaceholderPage } from "@app/PlaceholderPage";
 import { TrianglePage } from "@features/right_triangle/TrianglePage";
 import { HelixPage } from "@features/helix/ui/HelixPage";
 import  {CuttingDataPage} from "@features/cutting_data/ui/cuttingDataPage";
+import { FinishingPage } from "@features/finishing/ui/FinishingPage";
 
 
 export function AppRoutes() {
@@ -22,7 +23,7 @@ export function AppRoutes() {
       <Route path="/cutting" element={<CuttingDataPage />} />
 
       {/* Machining strategy */}
-      <Route path="/finishing" element={<PlaceholderPage title="Finishing" />} />
+      <Route path="/finishing" element={<FinishingPage />} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/triangle" replace />} />

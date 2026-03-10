@@ -1,17 +1,17 @@
+// shared/ui/primitives/NumberInput/NumberInput.tsx
+
 import React, { useId } from "react";
 import clsx from "clsx";
-import type { FieldState } from "@shared/types/fields";
 import {
   normalizeDecimalInput,
   safeParseDecimal,
-} from "@shared/engine";
+} from "@shared/parsing/decimalParser";
 import "./NumberInput.css";
-import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 
 type Props = {
-  id?: string; // ← NY
+  id?: string;
 
-  field: FieldState;
+  value: string;
   onChange: (value: string) => void;
 
   unit?: string;
@@ -25,6 +25,8 @@ type Props = {
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
 
+  placeholder?: string;
+
   className?: string;
 };
 
@@ -32,7 +34,7 @@ const INPUT_REGEX = /^-?\d*([.,]\d*)?$/;
 
 export function NumberInput({
   id,
-  field,
+  value,
   onChange,
   unit,
   disabled = false,
@@ -42,15 +44,18 @@ export function NumberInput({
   onKeyDown,
   onFocus,
   onBlur,
+  placeholder,
   className,
 }: Props) {
+
   const generatedId = useId();
   const inputId = id ?? generatedId;
 
-  const isDisabled = disabled || field.locked;
+  const isDisabled = disabled;
   const isReadOnly = readonly && !isDisabled;
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+
     if (isDisabled || isReadOnly) return;
 
     const raw = e.target.value;
@@ -68,12 +73,13 @@ export function NumberInput({
   function handleBlurInternal(
     e: React.FocusEvent<HTMLInputElement>
   ) {
+
     if (isDisabled || isReadOnly) {
       onBlur?.(e);
       return;
     }
 
-    const raw = field.value;
+    const raw = value;
 
     if (!raw.trim()) {
       onBlur?.(e);
@@ -90,17 +96,10 @@ export function NumberInput({
     onBlur?.(e);
   }
 
-  const { decimals } = useDisplaySettings();
-
-const displayValue =
-  field.source === "machine" &&
-  typeof field.machineValue === "number"
-    ? field.machineValue.toFixed(decimals)
-    : field.value ?? "";
-
   return (
     <div className={clsx("number-input", className)}>
       <div className="ni-input-wrapper">
+
         <input
           id={inputId}
           ref={inputRef}
@@ -108,17 +107,17 @@ const displayValue =
           inputMode="decimal"
           pattern="-?[0-9]*[.,]?[0-9]*"
           autoFocus={autoFocus}
-          value={isDisabled ? "" : displayValue}
+          value={isDisabled ? "" : value}
           disabled={isDisabled}
           readOnly={isReadOnly}
           tabIndex={isReadOnly ? -1 : undefined}
+          placeholder={placeholder}
           onChange={handleChange}
           onFocus={onFocus}
           onBlur={handleBlurInternal}
           onKeyDown={onKeyDown}
           className={clsx(
             "ni-input",
-            `source-${field.source}`,
             isDisabled && "disabled",
             isReadOnly && "readonly"
           )}
@@ -129,6 +128,7 @@ const displayValue =
             {unit}
           </span>
         )}
+
       </div>
     </div>
   );

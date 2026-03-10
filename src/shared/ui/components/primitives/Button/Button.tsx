@@ -67,13 +67,13 @@ export const RegisterButton = forwardRef<
   );
 });
 
-export const UpdateButton = forwardRef<
+export const EditButton = forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement>
->(function UpdateButton(props, ref) {
+>(function EditButton(props, ref) {
   return (
     <Button ref={ref} variant="secondary" size="small" {...props}>
-      Oppdater
+      Edit
     </Button>
   );
 });

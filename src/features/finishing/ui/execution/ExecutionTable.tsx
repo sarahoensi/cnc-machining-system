@@ -1,0 +1,328 @@
+// features/finishing/ui/execution/ExecutionTable.tsx
+
+import { useState } from "react";
+
+import { Table } from "@shared/ui/components/table/Table/Table";
+import { TableHeaderSelect } from "@shared/ui/components/table/Table";
+
+import { ExecutionNumberField } from "@shared/ui/components/execution/ExecutionNumberField";
+
+import {
+  CancelButton,
+  OkButton,
+  RegisterButton,
+  EditButton,
+} from "@shared/ui/components/primitives/Button/Button";
+
+import type { ExecutionState } from "@shared/execution";
+
+import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
+import { formatNumber } from "@shared/ui/format/formatNumber";
+
+/* ============================================================
+   Step data
+============================================================ */
+
+type FinishingStepData = {
+  startDiameter: number;
+  deltaD: number;
+  expectedDiameter: number;
+};
+
+/* ============================================================
+   Props
+============================================================ */
+
+type Props = {
+  execution: ExecutionState<FinishingStepData>;
+  onRegisterMeasurement(
+    step: number,
+    measurement: number
+  ): void;
+};
+
+/* ============================================================
+   Component
+============================================================ */
+
+export function FinishingExecutionTable({
+  execution,
+  onRegisterMeasurement,
+}: Props) {
+
+  const { decimals } = useDisplaySettings();
+
+  const [cutMode, setCutMode] =
+    useState<"deltaD" | "ae">("deltaD");
+
+  const [editingStep, setEditingStep] =
+    useState<number | null>(null);
+
+  const [drafts, setDrafts] =
+    useState<Record<number, string>>({});
+
+  /* ----------------------------------------------------------
+     Draft helpers
+  ---------------------------------------------------------- */
+
+  function updateDraft(step: number, value: string) {
+    setDrafts(d => ({
+      ...d,
+      [step]: value,
+    }));
+  }
+
+  function startEdit(step: number, value: string) {
+    setDrafts(d => ({
+      ...d,
+      [step]: value ?? "",
+    }));
+    setEditingStep(step);
+  }
+
+  function cancelEdit() {
+    setEditingStep(null);
+  }
+
+  function confirmEdit(step: number) {
+
+    const value = drafts[step];
+
+    if (!value) return;
+
+    onRegisterMeasurement(
+      step,
+      Number(value)
+    );
+
+    setEditingStep(null);
+  }
+
+  /* ----------------------------------------------------------
+     Render
+  ---------------------------------------------------------- */
+
+  return (
+
+    <Table.Root>
+
+      {/* ===================================================== */}
+      {/* Header                                                */}
+      {/* ===================================================== */}
+
+      <Table.Head>
+
+        <Table.Row>
+
+          <Table.HeaderCell>
+            Step
+          </Table.HeaderCell>
+
+          <Table.HeaderCell align="right">
+            Start Ø
+          </Table.HeaderCell>
+
+          <TableHeaderSelect
+            value={cutMode}
+            onChange={setCutMode}
+            options={[
+              { value: "deltaD", label: "ΔD" },
+              { value: "ae", label: "ae" },
+            ]}
+            align="right"
+          />
+
+          <Table.HeaderCell align="right">
+            Measurement
+          </Table.HeaderCell>
+
+          <Table.HeaderCell align="center" />
+
+        </Table.Row>
+
+      </Table.Head>
+
+      {/* ===================================================== */}
+      {/* Body                                                  */}
+      {/* ===================================================== */}
+
+      <Table.Body>
+
+        {execution.steps.map(step => {
+
+          const draft =
+            drafts[step.index] ??
+            step.measurement.value ??
+            "";
+
+          const deltaValue =
+            cutMode === "deltaD"
+              ? step.data.deltaD
+              : step.data.deltaD / 2;
+
+          const isEditing =
+            editingStep === step.index;
+
+          const isActive =
+            step.status === "active";
+
+          const isEditableCompleted =
+            step.status === "completed" &&
+            step.editable;
+
+          return (
+
+            <Table.Row
+              key={step.index}
+              isActive={isActive}
+            >
+
+              {/* Step index */}
+
+              <Table.Cell>
+                {step.index}
+              </Table.Cell>
+
+              {/* Start diameter */}
+
+              <Table.Cell align="right">
+
+                <ExecutionNumberField
+                  state={step.status}
+                  value={formatNumber(
+                    step.data.startDiameter,
+                    decimals
+                  )}
+                  readonly
+                />
+
+              </Table.Cell>
+
+              {/* ΔD / ae */}
+
+              <Table.Cell align="right">
+
+                <ExecutionNumberField
+                  state={step.status}
+                  value={formatNumber(
+                    deltaValue,
+                    decimals
+                  )}
+                  readonly
+                />
+
+              </Table.Cell>
+
+              {/* Measurement */}
+
+              <Table.Cell align="right">
+
+                <ExecutionNumberField
+                  state={
+                    isEditing
+                      ? "active"
+                      : step.status
+                  }
+
+                  value={
+                    isEditing || isActive
+                      ? draft
+                      : step.measurement.value
+                  }
+
+                  placeholder={
+                    step.measurement.value
+                      ? undefined
+                      : formatNumber(
+                        step.data.expectedDiameter,
+                        decimals
+                      )
+                  }
+
+                  onChange={
+                    isEditing || isActive
+                      ? (v) =>
+                        updateDraft(
+                          step.index,
+                          v
+                        )
+                      : undefined
+                  }
+
+                  onSubmit={() =>
+                    confirmEdit(step.index)
+                  }
+                />
+
+              </Table.Cell>
+
+              {/* Action column */}
+
+              <Table.Cell align="center">
+
+                {/* EDIT MODE */}
+
+                {isEditing && (
+
+                  <>
+                    <OkButton
+                      onClick={() =>
+                        confirmEdit(
+                          step.index
+                        )
+                      }
+                    />
+
+                    <CancelButton
+                      onClick={cancelEdit}
+                    />
+                  </>
+
+                )}
+
+                {/* ACTIVE STEP */}
+
+                {!isEditing && isActive && (
+
+                  <RegisterButton
+                    disabled={!draft}
+                    onClick={() =>
+                      confirmEdit(
+                        step.index
+                      )
+                    }
+                  />
+
+                )}
+
+                {/* COMPLETED STEP */}
+
+                {!isEditing &&
+                  isEditableCompleted && (
+
+                    <EditButton
+                      onClick={() =>
+                        startEdit(
+                          step.index,
+                          step.measurement.value
+                        )
+                      }
+                    >
+                      Edit
+                    </EditButton>
+
+                  )}
+
+              </Table.Cell>
+
+            </Table.Row>
+
+          );
+
+        })}
+
+      </Table.Body>
+
+    </Table.Root>
+  );
+}
