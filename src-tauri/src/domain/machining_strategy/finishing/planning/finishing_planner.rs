@@ -4,6 +4,7 @@
 use crate::domain::{
     FinishingMode, FinishingPlan, FinishingPlanning, FinishingRequest, machining_strategy::strategy_error::StrategyError, units::{PositiveLength}
 };
+use crate::domain::units::{Diameter};
 
 /// Domain service responsible for generating a valid [`FinishingPlan`].
 ///
@@ -142,4 +143,43 @@ impl FinishingPlanner {
             expected_step,
         ))
     }
+
+
+    pub fn validate_direction(
+        mode: FinishingMode,
+        start: Diameter,
+        target: Diameter,
+    ) -> Result<(), StrategyError> {
+
+        let s = start.mm_value();
+        let t = target.mm_value();
+
+        match mode {
+            FinishingMode::Inner if t <= s =>
+                Err(StrategyError::InvalidModeDirection { start_mm: s, target_mm: t }),
+
+            FinishingMode::Outer if t >= s =>
+                Err(StrategyError::InvalidModeDirection { start_mm: s, target_mm: t }),
+
+            _ => Ok(()),
+        }
+    }
+
+    pub fn validate_cuts(cuts: u32) -> Result<(), StrategyError> {
+        if cuts == 0 {
+            Err(StrategyError::InvalidCutCount { cuts })
+        } else {
+            Ok(())
+        }
+    }
+
+    pub fn validate_radial_engagement(ae: PositiveLength) -> Result<(), StrategyError> {
+        if ae.mm_value() <= 0.0 {
+            Err(StrategyError::InvalidRadialEngagement { value_mm: ae.mm_value() })
+        } else {
+            Ok(())
+        }
+    }
+
+
 }

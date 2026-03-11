@@ -11,6 +11,7 @@ type Props = {
   value?: string;
   placeholder?: string;
   unit?: string;
+  error?: string
   readonly?: boolean;
 
   onChange?: (value: string) => void;
@@ -22,6 +23,7 @@ export function ExecutionNumberField({
   value,
   placeholder,
   unit,
+  error,
   readonly = false,
   onChange,
   onSubmit,
@@ -42,6 +44,7 @@ export function ExecutionNumberField({
   ----------------------------------------------------------- */
 
   return (
+  <div className="execution-number-field">
     <NumberInput
       value={value ?? ""}
       placeholder={placeholder}
@@ -54,5 +57,12 @@ export function ExecutionNumberField({
         }
       }}
     />
-  );
+
+    {error && (
+      <div className="execution-number-error">
+        {error}
+      </div>
+    )}
+  </div>
+);
 }

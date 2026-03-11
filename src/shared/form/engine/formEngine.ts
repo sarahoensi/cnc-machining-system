@@ -172,6 +172,28 @@ function applyFieldErrors<K extends string>(
 }
 
 /* ============================================================
+   Clean field errors
+============================================================ */
+
+
+function clearFieldErrors<K extends string>(
+  fields: Record<K, FieldState>
+): Record<K, FieldState> {
+
+  const next = {} as Record<K, FieldState>;
+
+  for (const key in fields) {
+    next[key] = {
+      ...fields[key],
+      invalid: false,
+      error: undefined,
+    };
+  }
+
+  return next;
+}
+
+/* ============================================================
    ASYNC CALCULATE
 ============================================================ */
 
@@ -282,15 +304,19 @@ export async function handleGenerateAsync<
     return { form };
   }
 
+  const cleanedFields = clearFieldErrors(form.fields);
+
   try {
 
     const execution = await execute(parsed, form.extras);
 
     return {
-      form,
-      execution,
-    };
-
+    form: {
+      ...form,
+      fields: cleanedFields,
+    },
+    execution,
+  };
   } catch (error) {
 
   console.error(error);

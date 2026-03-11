@@ -59,7 +59,7 @@ impl RegisterFinishingMeasurementUseCase {
         if let Some(measurement) = measurement {
 
             p.domain(
-                "execution",
+                "measurement_mm",
                 execution.register_measurement(
                     input.step_number,
                     measurement,

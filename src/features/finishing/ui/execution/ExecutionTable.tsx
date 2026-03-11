@@ -18,6 +18,7 @@ import type { ExecutionState } from "@shared/execution";
 
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 import { formatNumber } from "@shared/ui/format/formatNumber";
+import { getTauriCommandError } from "@shared/api/tauriError";
 
 /* ============================================================
    Step data
@@ -61,6 +62,9 @@ export function FinishingExecutionTable({
   const [drafts, setDrafts] =
     useState<Record<number, string>>({});
 
+    const [errors, setErrors] =
+  useState<Record<number, string>>({});
+
   /* ----------------------------------------------------------
      Draft helpers
   ---------------------------------------------------------- */
@@ -84,19 +88,33 @@ export function FinishingExecutionTable({
     setEditingStep(null);
   }
 
-  function confirmEdit(step: number) {
+  async function confirmEdit(step: number) {
 
-    const value = drafts[step];
+  const value = drafts[step];
 
-    if (!value) return;
+  if (!value) return;
 
-    onRegisterMeasurement(
+  try {
+
+    await onRegisterMeasurement(
       step,
       Number(value)
     );
 
     setEditingStep(null);
-  }
+
+  } catch (error) {
+  const te = getTauriCommandError(error);
+  const firstError = te?.fieldErrors?.[0];
+
+  if (!firstError) return;
+
+  setErrors(e => ({
+    ...e,
+    [step]: firstError.message
+  }));
+}
+}
 
   /* ----------------------------------------------------------
      Render
@@ -218,41 +236,43 @@ export function FinishingExecutionTable({
               <Table.Cell align="right">
 
                 <ExecutionNumberField
-                  state={
-                    isEditing
-                      ? "active"
-                      : step.status
-                  }
+  state={isEditing ? "active" : step.status}
 
-                  value={
-                    isEditing || isActive
-                      ? draft
-                      : step.measurement.value
-                  }
+  value={
+    isEditing || isActive
+      ? draft
+      : step.measurement.value
+  }
 
-                  placeholder={
-                    step.measurement.value
-                      ? undefined
-                      : formatNumber(
-                        step.data.expectedDiameter,
-                        decimals
-                      )
-                  }
+  placeholder={
+    step.measurement.value
+      ? undefined
+      : formatNumber(
+          step.data.expectedDiameter,
+          decimals
+        )
+  }
 
-                  onChange={
-                    isEditing || isActive
-                      ? (v) =>
-                        updateDraft(
-                          step.index,
-                          v
-                        )
-                      : undefined
-                  }
+  error={errors[step.index]}
 
-                  onSubmit={() =>
-                    confirmEdit(step.index)
-                  }
-                />
+  onChange={
+    isEditing || isActive
+      ? (v) => {
+          updateDraft(step.index, v);
+
+          setErrors(e => {
+            const next = { ...e };
+            delete next[step.index];
+            return next;
+          });
+        }
+      : undefined
+  }
+
+  onSubmit={() =>
+    confirmEdit(step.index)
+  }
+/>
 
               </Table.Cell>
 
