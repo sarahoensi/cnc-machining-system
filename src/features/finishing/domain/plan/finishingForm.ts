@@ -8,10 +8,10 @@ import { emptyField } from "@shared/form/types/fields";
 ============================================================ */
 
 export type FinishingKey =
-  | "start_diameter"
-  | "target_diameter"
+  | "start_diameter_mm"
+  | "target_diameter_mm"
   | "cuts"
-  | "radial_engagement";
+  | "radial_engagement_mm";
 
 /* ============================================================
    Extras
@@ -33,10 +33,10 @@ export function createInitialFinishingForm(): FormState<
   return {
     status: "editing",
     fields: {
-      start_diameter: emptyField(),
-      target_diameter: emptyField(),
+      start_diameter_mm: emptyField(),
+      target_diameter_mm: emptyField(),
       cuts: emptyField(),
-      radial_engagement: emptyField(),
+      radial_engagement_mm: emptyField(),
     },
     extras: {
       mode: "Inner",
@@ -44,3 +44,4 @@ export function createInitialFinishingForm(): FormState<
     },
   };
 }
+

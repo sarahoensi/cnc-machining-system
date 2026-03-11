@@ -125,7 +125,7 @@ export function TrianglePage() {
 
           <CalculateButton
             onClick={onCalculate}
-            disabled={form.status === "executing"}
+            //disabled={form.status === "executing"}
           />
 
           <ResetButton onClick={onReset} />

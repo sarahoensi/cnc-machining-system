@@ -31,109 +31,108 @@ impl GenerateFinishingPlanUseCase {
     }
 
     pub fn execute(
-        &self,
-        input: GenerateFinishingPlanInput,
-    ) -> AppResult<FinishingExecutionOutput> {
+    &self,
+    input: GenerateFinishingPlanInput,
+) -> AppResult<FinishingExecutionOutput> {
 
-        let mut p = InputParser::new();
+    let mut p = InputParser::new();
 
-        // -----------------------------------------------------
-        // Parse input → FinishingRequest
-        // -----------------------------------------------------
+    let request = match input {
 
-        let request = match input {
+        GenerateFinishingPlanInput::ByCuts {
+            mode,
+            start_diameter_mm,
+            target_diameter_mm,
+            cuts,
+        } => {
 
-            GenerateFinishingPlanInput::ByCuts {
-                mode,
-                start_diameter_mm,
-                target_diameter_mm,
-                cuts,
-            } => {
+            let start =
+                p.value("start_diameter_mm", Diameter::mm(start_diameter_mm));
 
-                let start =
-                    p.value("start_diameter_mm", Diameter::mm(start_diameter_mm));
+            let target =
+                p.value("target_diameter_mm", Diameter::mm(target_diameter_mm));
 
-                let target =
-                    p.value("target_diameter_mm", Diameter::mm(target_diameter_mm));
-
-                if cuts == 0 {
-                    p.push("cuts", "non_positive", "Cut count must be > 0");
-                }
-
-                match (start, target) {
-                    (Some(start), Some(target)) => Some(FinishingRequest {
-                        mode,
-                        start_diameter: start,
-                        target_diameter: target,
-                        planning: FinishingPlanning::ByCuts(cuts),
-                    }),
-                    _ => None,
-                }
+            if cuts == 0 {
+                p.push("cuts", "non_positive", "Cut count must be > 0");
             }
 
-            GenerateFinishingPlanInput::ByRadialEngagement {
-                mode,
-                start_diameter_mm,
-                target_diameter_mm,
-                radial_engagement_mm,
-            } => {
-
-                let start =
-                    p.value("start_diameter_mm", Diameter::mm(start_diameter_mm));
-
-                let target =
-                    p.value("target_diameter_mm", Diameter::mm(target_diameter_mm));
-
-                let radial =
-                    p.value("radial_engagement_mm", PositiveLength::mm(radial_engagement_mm));
-
-                match (start, target, radial) {
-                    (Some(start), Some(target), Some(radial)) => Some(FinishingRequest {
-                        mode,
-                        start_diameter: start,
-                        target_diameter: target,
-                        planning: FinishingPlanning::ByRadialEngagement(radial),
-                    }),
-                    _ => None,
-                }
+            match (start, target) {
+                (Some(start), Some(target)) => Some(FinishingRequest {
+                    mode,
+                    start_diameter: start,
+                    target_diameter: target,
+                    planning: FinishingPlanning::ByCuts(cuts),
+                }),
+                _ => None,
             }
-        };
+        }
 
-        // -----------------------------------------------------
-        // Domain planning
-        // -----------------------------------------------------
+        GenerateFinishingPlanInput::ByRadialEngagement {
+            mode,
+            start_diameter_mm,
+            target_diameter_mm,
+            radial_engagement_mm,
+        } => {
 
-        let plan = request.and_then(|req|
-            p.domain(
-                "finishing_plan",
-                FinishingPlanner::generate_plan(req),
-            )
-        );
+            let start =
+                p.value("start_diameter_mm", Diameter::mm(start_diameter_mm));
 
-        // -----------------------------------------------------
-        // Create execution aggregate
-        // -----------------------------------------------------
+            let target =
+                p.value("target_diameter_mm", Diameter::mm(target_diameter_mm));
 
-        let execution = plan.and_then(|plan| {
+            let radial =
+                p.value(
+                    "radial_engagement_mm",
+                    PositiveLength::mm(radial_engagement_mm)
+                );
 
-            let id = FinishingExecutionId::new();
+            match (start, target, radial) {
+                (Some(start), Some(target), Some(radial)) => Some(FinishingRequest {
+                    mode,
+                    start_diameter: start,
+                    target_diameter: target,
+                    planning: FinishingPlanning::ByRadialEngagement(radial),
+                }),
+                _ => None,
+            }
+        }
+    };
 
-            p.domain(
-                "execution",
-                FinishingExecution::new(id, plan),
-            )
-        });
+    // -----------------------------------------------------
+    // Domain planning (mapped to target_diameter_mm)
+    // -----------------------------------------------------
 
-        let execution = p.finish_with(execution)?;
+    let plan = request.and_then(|req| {
+        p.domain(
+            "target_diameter_mm",
+            FinishingPlanner::generate_plan(req),
+        )
+    });
 
-        // -----------------------------------------------------
-        // Persist
-        // -----------------------------------------------------
+    // -----------------------------------------------------
+    // Create execution
+    // -----------------------------------------------------
 
-        self.repo
-            .save(execution.clone())
-            .map_err(|e| ApplicationError::Infrastructure(e.to_string()))?;
+    let execution = plan.and_then(|plan| {
 
-        Ok((&execution).into())
-    }
+        let id = FinishingExecutionId::new();
+
+        p.domain(
+            "target_diameter_mm",
+            FinishingExecution::new(id, plan),
+        )
+    });
+
+    let execution = p.finish_with(execution)?;
+
+    // -----------------------------------------------------
+    // Persist
+    // -----------------------------------------------------
+
+    self.repo
+        .save(execution.clone())
+        .map_err(|e| ApplicationError::Infrastructure(e.to_string()))?;
+
+    Ok((&execution).into())
+}
 }

@@ -9,6 +9,16 @@
 
 import { invoke } from "@tauri-apps/api/core";
 
-export async function tauriInvoke<T>(command: string, payload?: Record<string, unknown>) {
-  return invoke<T>(command, payload);
+export async function tauriInvoke<T>(
+  command: string, 
+  payload?: Record<string, unknown>) {
+
+    console.log("TAURI CALL →", command, payload);
+
+    const result = await invoke<T>(command, payload);
+
+ console.log("TAURI RESULT ←", command, result);
+
+  return result;
+
 }

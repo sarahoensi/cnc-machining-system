@@ -9,13 +9,13 @@ export function buildFinishingRequest(
 ): GenerateFinishingPlanRequest {
 
   const {
-    start_diameter,
-    target_diameter,
+    start_diameter_mm,
+    target_diameter_mm,
     cuts,
-    radial_engagement,
+    radial_engagement_mm,
   } = input;
 
-  if (start_diameter == null || target_diameter == null) {
+  if (start_diameter_mm == null || target_diameter_mm == null) {
     throw new Error("Missing required diameters");
   }
 
@@ -24,21 +24,21 @@ export function buildFinishingRequest(
     return {
       type: "ByCuts",
       mode: extras.mode,
-      start_diameter_mm: start_diameter,
-      target_diameter_mm: target_diameter,
+      start_diameter_mm: start_diameter_mm,
+      target_diameter_mm: target_diameter_mm,
       cuts,
     };
 
   }
 
-  if (radial_engagement !== undefined) {
+  if (radial_engagement_mm !== undefined) {
 
     return {
       type: "ByRadialEngagement",
       mode: extras.mode,
-      start_diameter_mm: start_diameter,
-      target_diameter_mm: target_diameter,
-      radial_engagement_mm: radial_engagement,
+      start_diameter_mm: start_diameter_mm,
+      target_diameter_mm: target_diameter_mm,
+      radial_engagement_mm: radial_engagement_mm,
     };
 
   }

@@ -3,12 +3,12 @@
 import type { FinishingKey } from "./finishingForm";
 
 export const validFinishingInputSets: readonly (readonly FinishingKey[])[] = [
-  ["start_diameter", "target_diameter", "cuts"],
-  ["start_diameter", "target_diameter", "radial_engagement"],
+  ["start_diameter_mm", "target_diameter_mm", "cuts"],
+  ["start_diameter_mm", "target_diameter_mm", "radial_engagement_mm"],
 ] as const;
 
 export const mutuallyExclusiveFinishingPairs: readonly (
   readonly [FinishingKey, FinishingKey]
 )[] = [
-  ["cuts", "radial_engagement"],
+  ["cuts", "radial_engagement_mm"],
 ] as const;
