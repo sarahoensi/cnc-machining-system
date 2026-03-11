@@ -1,5 +1,3 @@
-// application/finishing/plan/generate_plan_use_case.rs
-
 use std::sync::Arc;
 
 use crate::application::{ApplicationError};
@@ -37,11 +35,7 @@ impl GenerateFinishingPlanUseCase {
 
         let mut p = InputParser::new();
 
-        // -----------------------------------------------------
-        // Parse input → FinishingRequest
-        // -----------------------------------------------------
-
-        let request = match input {
+        let (mode, start, target, planning) = match input {
 
             GenerateFinishingPlanInput::ByCuts {
                 mode,
@@ -56,19 +50,22 @@ impl GenerateFinishingPlanUseCase {
                 let target =
                     p.value("target_diameter_mm", Diameter::mm(target_diameter_mm));
 
-                if cuts == 0 {
-                    p.push("cuts", "non_positive", "Cut count must be > 0");
+                // planregel
+                p.domain("cuts", FinishingPlanner::validate_cuts(cuts));
+
+                if let (Some(s), Some(t)) = (start.clone(), target.clone()) {
+                    p.domain(
+                        "target_diameter_mm",
+                        FinishingPlanner::validate_direction(mode, s, t),
+                    );
                 }
 
-                match (start, target) {
-                    (Some(start), Some(target)) => Some(FinishingRequest {
-                        mode,
-                        start_diameter: start,
-                        target_diameter: target,
-                        planning: FinishingPlanning::ByCuts(cuts),
-                    }),
-                    _ => None,
-                }
+                (
+                    mode,
+                    start,
+                    target,
+                    Some(FinishingPlanning::ByCuts(cuts)),
+                )
             }
 
             GenerateFinishingPlanInput::ByRadialEngagement {
@@ -85,33 +82,61 @@ impl GenerateFinishingPlanUseCase {
                     p.value("target_diameter_mm", Diameter::mm(target_diameter_mm));
 
                 let radial =
-                    p.value("radial_engagement_mm", PositiveLength::mm(radial_engagement_mm));
+                    p.value(
+                        "radial_engagement_mm",
+                        PositiveLength::mm(radial_engagement_mm),
+                    );
 
-                match (start, target, radial) {
-                    (Some(start), Some(target), Some(radial)) => Some(FinishingRequest {
-                        mode,
-                        start_diameter: start,
-                        target_diameter: target,
-                        planning: FinishingPlanning::ByRadialEngagement(radial),
-                    }),
-                    _ => None,
+                if let Some(ae) = radial {
+                    p.domain(
+                        "radial_engagement_mm",
+                        FinishingPlanner::validate_radial_engagement(ae),
+                    );
                 }
+
+                if let (Some(s), Some(t)) = (start.clone(), target.clone()) {
+                    p.domain(
+                        "target_diameter_mm",
+                        FinishingPlanner::validate_direction(mode, s, t),
+                    );
+                }
+
+                (
+                    mode,
+                    start,
+                    target,
+                    radial.map(FinishingPlanning::ByRadialEngagement),
+                )
             }
+        };
+
+        // -----------------------------------------------------
+        // Build request if inputs are valid
+        // -----------------------------------------------------
+
+        let request = match (start, target, planning) {
+            (Some(start), Some(target), Some(planning)) => Some(FinishingRequest {
+                mode,
+                start_diameter: start,
+                target_diameter: target,
+                planning,
+            }),
+            _ => None,
         };
 
         // -----------------------------------------------------
         // Domain planning
         // -----------------------------------------------------
 
-        let plan = request.and_then(|req|
+        let plan = request.and_then(|req| {
             p.domain(
-                "finishing_plan",
+                "target_diameter_mm",
                 FinishingPlanner::generate_plan(req),
             )
-        );
+        });
 
         // -----------------------------------------------------
-        // Create execution aggregate
+        // Create execution
         // -----------------------------------------------------
 
         let execution = plan.and_then(|plan| {
@@ -119,7 +144,7 @@ impl GenerateFinishingPlanUseCase {
             let id = FinishingExecutionId::new();
 
             p.domain(
-                "execution",
+                "target_diameter_mm",
                 FinishingExecution::new(id, plan),
             )
         });

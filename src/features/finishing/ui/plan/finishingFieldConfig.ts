@@ -12,13 +12,13 @@ export type FinishingFieldConfig = {
 
 export const finishingFieldConfig: FinishingFieldConfig[] = [
   {
-    key: "start_diameter",
+    key: "start_diameter_mm",
     label: "Start diameter",
     unit: "mm",
     autoFocus: true,
   },
   {
-    key: "target_diameter",
+    key: "target_diameter_mm",
     label: "Target diameter",
     unit: "mm",
   },
@@ -27,7 +27,7 @@ export const finishingFieldConfig: FinishingFieldConfig[] = [
     label: "Number of cuts",
   },
   {
-    key: "radial_engagement",
+    key: "radial_engagement_mm",
     label: "Radial engagement",
     unit: "mm",
   },

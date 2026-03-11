@@ -139,6 +139,61 @@ export function handleModeChange<
 }
 
 /* ============================================================
+   Apply field errors
+============================================================ */
+
+function applyFieldErrors<K extends string>(
+  fields: Record<K, FieldState>,
+  error: unknown
+): Record<K, FieldState> {
+
+  const te = getTauriCommandError(error);
+
+  if (!te?.fieldErrors) {
+    return fields;
+  }
+
+  const next = { ...fields };
+
+  for (const err of te.fieldErrors) {
+
+    const k = err.field as K;
+
+    if (!next[k]) continue;
+
+    next[k] = {
+      ...next[k],
+      invalid: true,
+      error: err.message,
+    };
+  }
+
+  return next;
+}
+
+/* ============================================================
+   Clean field errors
+============================================================ */
+
+
+function clearFieldErrors<K extends string>(
+  fields: Record<K, FieldState>
+): Record<K, FieldState> {
+
+  const next = {} as Record<K, FieldState>;
+
+  for (const key in fields) {
+    next[key] = {
+      ...fields[key],
+      invalid: false,
+      error: undefined,
+    };
+  }
+
+  return next;
+}
+
+/* ============================================================
    ASYNC CALCULATE
 ============================================================ */
 
@@ -207,25 +262,10 @@ export async function handleCalculateAsync<
 
   console.error(error);
 
-  const te = getTauriCommandError(error);
-
-  const nextFields = { ...cleanedFields };
-
-  if (te?.fieldErrors) {
-
-    for (const err of te.fieldErrors) {
-      const k = err.field as K;
-
-      if (!nextFields[k]) continue;
-
-      nextFields[k] = {
-        ...nextFields[k],
-        invalid: true,
-        error: err.message,
-      };
-    }
-
-  }
+  const nextFields = applyFieldErrors(
+    cleanedFields,
+    error
+  );
 
   return {
     status: "editing",
@@ -264,44 +304,33 @@ export async function handleGenerateAsync<
     return { form };
   }
 
+  const cleanedFields = clearFieldErrors(form.fields);
+
   try {
 
     const execution = await execute(parsed, form.extras);
 
     return {
-      form,
-      execution,
-    };
-
+    form: {
+      ...form,
+      fields: cleanedFields,
+    },
+    execution,
+  };
   } catch (error) {
 
-    console.error(error);
+  console.error(error);
 
-    const te = getTauriCommandError(error);
+  const nextFields = applyFieldErrors(
+    form.fields,
+    error
+  );
 
-    const nextFields = { ...form.fields };
-
-    if (te?.fieldErrors) {
-
-      for (const err of te.fieldErrors) {
-
-        const k = err.field as K;
-
-        if (!nextFields[k]) continue;
-
-        nextFields[k] = {
-          ...nextFields[k],
-          invalid: true,
-          error: err.message,
-        };
-      }
+  return {
+    form: {
+      ...form,
+      fields: nextFields,
     }
-
-    return {
-      form: {
-        ...form,
-        fields: nextFields,
-      }
-    };
-  }
+  };
+}
 }
