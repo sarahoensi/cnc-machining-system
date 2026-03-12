@@ -112,7 +112,6 @@ export function PlanForm({
         );
       })}
 
-      
 
         <CalculateButton
           onClick={onGenerate}
