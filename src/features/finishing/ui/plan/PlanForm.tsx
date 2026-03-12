@@ -8,9 +8,7 @@ import {
 import { FormNumberField } from "@shared/ui/components/form/FormNumberField/FormNumberField";
 import { ModeSelector } from "@shared/ui/components/form/ModeSelector/ModeSelector";
 import {
-  CalculateButton,
   EditButton,
-  ResetButton,
 } from "@shared/ui/components/primitives/Button/Button";
 
 import { useFormNavigation } from "@shared/ui";
@@ -26,6 +24,7 @@ import {
 } from "../../domain/plan/finishingConstraints";
 
 import { finishingFieldConfig } from "./finishingFieldConfig";
+import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 
 type Props = {
   form: ReturnType<typeof createInitialFinishingForm>;
@@ -69,26 +68,26 @@ export function PlanForm({
 
   return (
     <>
-        <ModeSelector
-          name="finishing-mode"
-          label="Mode"
-          value={form.extras.mode}
-          readonly={readOnly}
-          onChange={(newMode) =>
-            setForm((prev: any) =>
-              handleModeChange(prev, {
-                ...prev.extras,
-                mode: newMode,
-              })
-            )
-          }
-          options={[
-            { value: "Inner", label: "Inner" },
-            { value: "Outer", label: "Outer" },
+      <ModeSelector
+        name="finishing-mode"
+        label="Mode"
+        value={form.extras.mode}
+        readonly={readOnly}
+        onChange={(newMode) =>
+          setForm((prev: any) =>
+            handleModeChange(prev, {
+              ...prev.extras,
+              mode: newMode,
+            })
+          )
+        }
+        options={[
+          { value: "Inner", label: "Inner" },
+          { value: "Outer", label: "Outer" },
 
-          ]}
-        />
-    
+        ]}
+      />
+
       {finishingFieldConfig.map((f) => {
 
         const fieldState = form.fields[f.key];
@@ -113,20 +112,19 @@ export function PlanForm({
       })}
 
 
-        <CalculateButton
-          onClick={onGenerate}
-          disabled={readOnly}
-        />
-
-        <ResetButton onClick={onReset} />
-
+      <FormActions
+        onCalculate={onGenerate}
+        onReset={onReset}
+        disabled={readOnly}
+      >
         {readOnly && (
           <EditButton onClick={onEdit}>
             Edit plan
           </EditButton>
         )}
+      </FormActions>
 
-      
+
 
     </>
   );

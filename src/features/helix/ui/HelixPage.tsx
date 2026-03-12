@@ -7,10 +7,6 @@ import {
 } from "@shared/form/engine/formEngine";
 
 import { FormNumberField } from "@shared/ui/components/form/FormNumberField/FormNumberField";
-import {
-  CalculateButton,
-  ResetButton,
-} from "@shared/ui/components/primitives/Button/Button";
 
 import { useFormNavigation } from "@shared/ui";
 
@@ -30,6 +26,7 @@ import {
 } from "../domain/helixConstraints"
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
+import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 
 /* ============================================================
    Component
@@ -140,10 +137,10 @@ export function HelixPage() {
           );
         })}
 
-          <CalculateButton
-            onClick={onCalculate}
-          />
-          <ResetButton onClick={onReset} />
+          <FormActions
+  onCalculate={onCalculate}
+  onReset={onReset}
+/>
 
       </div>
 

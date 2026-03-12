@@ -16,10 +16,7 @@ import { parseTriangle } from "./domain/parseTriangle";
 import { solveTriangle } from "./api/solveTriangle";
 import { triangleFieldConfig } from "./ui/triangleFieldConfig";
 
-import {
-  CalculateButton,
-  ResetButton,
-} from "@shared/ui/components/primitives/Button/Button";
+
 import { useFormNavigation } from "@shared/ui";
 
 import {
@@ -28,6 +25,8 @@ import {
 } from "./domain/triangleConstraints";
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
+
+import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 
 
 
@@ -123,12 +122,10 @@ export function TrianglePage() {
 
         
 
-          <CalculateButton
-            onClick={onCalculate}
-            //disabled={form.status === "executing"}
-          />
-
-          <ResetButton onClick={onReset} />
+          <FormActions
+  onCalculate={onCalculate}
+  onReset={onReset}
+/>
 
         
 
