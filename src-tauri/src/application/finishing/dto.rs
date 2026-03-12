@@ -4,10 +4,7 @@
 //!
 //! These types form the transport contracts used by finishing use cases.
 
-use crate::domain::FinishingExecution;
-use crate::domain::FinishingMode;
-use crate::domain::FinishingExecutionId;
-use crate::domain::FinishingStep;
+use crate::domain::machining::finishing::{FinishingExecution, FinishingMode, FinishingStep};
 
 //
 // PLAN INPUT
@@ -34,7 +31,6 @@ pub enum GenerateFinishingPlanInput {
 //
 
 pub struct RegisterFinishingMeasurementInput {
-    pub execution_id: FinishingExecutionId,
     pub step_number: u32,
     pub measurement_mm: f64,
 }
@@ -44,7 +40,6 @@ pub struct RegisterFinishingMeasurementInput {
 //
 
 pub struct FinishingExecutionOutput {
-    pub execution_id: String,
     pub active_step: Option<u32>,
     pub finished: bool,
     pub steps: Vec<FinishingStepOutput>,
@@ -77,7 +72,6 @@ impl From<&FinishingStep> for FinishingStepOutput {
 impl From<&FinishingExecution> for FinishingExecutionOutput {
     fn from(exec: &FinishingExecution) -> Self {
         Self {
-            execution_id: exec.id().value().to_string(),
             active_step: exec.active_step(),
             finished: exec.finished(),
             steps: exec.steps().iter().map(Into::into).collect(),

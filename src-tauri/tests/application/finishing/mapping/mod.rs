@@ -1,3 +1,3 @@
 // tests/application/finishing/mapping/mod.rs
 
-//mod mapping_tests;
+mod finishing_execution_output_test;

@@ -5,17 +5,15 @@ use cnc_machining_system_lib::{
         dto::GenerateFinishingPlanInput,
         GenerateFinishingPlanUseCase,
     },
-    domain::FinishingMode,
+    domain::machining::finishing::FinishingMode,
 };
-
-use super::super::fixtures::*;
 
 #[test]
 fn generate_creates_execution_with_expected_steps() {
-    let repo = repo();
-    let generate = GenerateFinishingPlanUseCase::new(repo.clone());
 
-    let result = generate
+    let generate = GenerateFinishingPlanUseCase::new();
+
+    let execution = generate
         .execute(GenerateFinishingPlanInput::ByCuts {
             mode: FinishingMode::Outer,
             start_diameter_mm: 10.0,
@@ -24,32 +22,6 @@ fn generate_creates_execution_with_expected_steps() {
         })
         .unwrap();
 
-    assert_eq!(result.steps.len(), 3);
-    assert!(!result.execution_id.is_empty());
-}
-
-#[test]
-fn generate_creates_unique_execution_ids() {
-    let repo = repo();
-    let generate = GenerateFinishingPlanUseCase::new(repo.clone());
-
-    let a = generate
-        .execute(GenerateFinishingPlanInput::ByCuts {
-            mode: FinishingMode::Outer,
-            start_diameter_mm: 10.0,
-            target_diameter_mm: 8.0,
-            cuts: 2,
-        })
-        .unwrap();
-
-    let b = generate
-        .execute(GenerateFinishingPlanInput::ByCuts {
-            mode: FinishingMode::Outer,
-            start_diameter_mm: 10.0,
-            target_diameter_mm: 8.0,
-            cuts: 2,
-        })
-        .unwrap();
-
-    assert_ne!(a.execution_id, b.execution_id);
+    assert_eq!(execution.steps().len(), 3);
+    assert!(!execution.finished());
 }

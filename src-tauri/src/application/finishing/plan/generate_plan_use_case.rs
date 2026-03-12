@@ -1,37 +1,29 @@
-use std::sync::Arc;
-
-use crate::application::{ApplicationError};
 use crate::application::shared::{AppResult, InputParser};
 
-use crate::application::finishing::dto::{
-    FinishingExecutionOutput,
-    GenerateFinishingPlanInput,
-};
+use crate::application::finishing::dto::GenerateFinishingPlanInput;
 
 use crate::domain::{
     units::{Diameter, PositiveLength},
-    FinishingExecution,
-    FinishingExecutionId,
-    FinishingExecutionRepository,
-    FinishingPlanner,
-    FinishingPlanning,
-    FinishingRequest,
+    machining::finishing::{
+        FinishingExecution,
+        FinishingPlanner,
+        FinishingPlanning,
+        FinishingRequest,
+    },
 };
 
-pub struct GenerateFinishingPlanUseCase {
-    repo: Arc<dyn FinishingExecutionRepository>,
-}
+pub struct GenerateFinishingPlanUseCase;
 
 impl GenerateFinishingPlanUseCase {
 
-    pub fn new(repo: Arc<dyn FinishingExecutionRepository>) -> Self {
-        Self { repo }
+    pub fn new() -> Self {
+        Self
     }
 
     pub fn execute(
         &self,
         input: GenerateFinishingPlanInput,
-    ) -> AppResult<FinishingExecutionOutput> {
+    ) -> AppResult<FinishingExecution> {
 
         let mut p = InputParser::new();
 
@@ -50,7 +42,6 @@ impl GenerateFinishingPlanUseCase {
                 let target =
                     p.value("target_diameter_mm", Diameter::mm(target_diameter_mm));
 
-                // planregel
                 p.domain("cuts", FinishingPlanner::validate_cuts(cuts));
 
                 if let (Some(s), Some(t)) = (start.clone(), target.clone()) {
@@ -110,10 +101,6 @@ impl GenerateFinishingPlanUseCase {
             }
         };
 
-        // -----------------------------------------------------
-        // Build request if inputs are valid
-        // -----------------------------------------------------
-
         let request = match (start, target, planning) {
             (Some(start), Some(target), Some(planning)) => Some(FinishingRequest {
                 mode,
@@ -124,10 +111,6 @@ impl GenerateFinishingPlanUseCase {
             _ => None,
         };
 
-        // -----------------------------------------------------
-        // Domain planning
-        // -----------------------------------------------------
-
         let plan = request.and_then(|req| {
             p.domain(
                 "target_diameter_mm",
@@ -135,30 +118,15 @@ impl GenerateFinishingPlanUseCase {
             )
         });
 
-        // -----------------------------------------------------
-        // Create execution
-        // -----------------------------------------------------
-
         let execution = plan.and_then(|plan| {
-
-            let id = FinishingExecutionId::new();
-
             p.domain(
                 "target_diameter_mm",
-                FinishingExecution::new(id, plan),
+                FinishingExecution::new(plan),
             )
         });
 
         let execution = p.finish_with(execution)?;
 
-        // -----------------------------------------------------
-        // Persist
-        // -----------------------------------------------------
-
-        self.repo
-            .save(execution.clone())
-            .map_err(|e| ApplicationError::Infrastructure(e.to_string()))?;
-
-        Ok((&execution).into())
+        Ok(execution)
     }
 }

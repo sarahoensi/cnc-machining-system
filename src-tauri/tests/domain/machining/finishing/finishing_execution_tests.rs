@@ -1,6 +1,16 @@
 // tests/domain/machining_strategy/finishing_execution_tests.rs
 
-use cnc_machining_system_lib::domain::{units::*,*};
+use cnc_machining_system_lib::domain::{
+    units::*,
+    machining::finishing::{
+        FinishingExecution,
+        FinishingPlan,
+        FinishingPlanner,
+        FinishingPlanning,
+        FinishingRequest,
+        FinishingMode,
+    },
+};
 
 const EPS: f64 = 1e-9;
 
@@ -15,10 +25,8 @@ fn d(v: f64) -> Diameter {
 }
 
 fn exec(plan: FinishingPlan) -> FinishingExecution {
-    FinishingExecution::new(FinishingExecutionId::new(), plan).unwrap()
+    FinishingExecution::new(plan).unwrap()
 }
-
-
 
 fn outer_plan(start: f64, target: f64, cuts: u32) -> FinishingPlan {
     FinishingPlanner::generate_plan(FinishingRequest {
@@ -58,12 +66,25 @@ fn assert_execution_invariants(exec: &FinishingExecution) {
 
     // last step must end at target
     let last = steps.last().unwrap();
+
     assert!(approx(
         last.planned_end().mm_value(),
         plan.target().mm_value()
     ));
 
-   
+    // ensure continuity between steps
+    for pair in steps.windows(2) {
+
+    let previous_end =
+        pair[0]
+            .measurement()
+            .unwrap_or(pair[0].planned_end())
+            .mm_value();
+
+    let next_start = pair[1].start().mm_value();
+
+    assert!(approx(previous_end, next_start));
+}
 }
 
 //
@@ -82,6 +103,7 @@ fn builds_correct_number_of_steps() {
 #[test]
 fn builds_steps_reaching_target() {
     let exec = exec(outer_plan(10.0, 8.0, 2));
+
     assert_execution_invariants(&exec);
 }
 
@@ -97,7 +119,10 @@ fn register_measurement_stores_value() {
 
     exec.register_measurement(1, d(9.3)).unwrap();
 
-    assert!(exec.steps()[0].measurement().is_some());
+    assert_eq!(
+        exec.steps()[0].measurement().map(|d| d.mm_value()),
+        Some(9.3)
+    );
 }
 
 //
@@ -113,6 +138,7 @@ fn measurement_recalculates_remaining_steps() {
     exec.register_measurement(1, d(9.5)).unwrap();
 
     let last = exec.steps().last().unwrap();
+
     assert!(approx(last.planned_end().mm_value(), 8.0));
 }
 
@@ -142,8 +168,6 @@ fn cannot_edit_earlier_step_when_later_measured() {
     assert!(result.is_err());
 }
 
-
-
 //
 // ======================================================
 // Direction behaviour
@@ -153,12 +177,14 @@ fn cannot_edit_earlier_step_when_later_measured() {
 #[test]
 fn outer_mode_decreases_diameter() {
     let exec = exec(outer_plan(10.0, 8.0, 3));
+
     assert_execution_invariants(&exec);
 }
 
 #[test]
 fn inner_mode_increases_diameter() {
     let exec = exec(inner_plan(8.0, 10.0, 3));
+
     assert_execution_invariants(&exec);
 }
 
@@ -173,6 +199,7 @@ fn rejects_measurement_past_target_outer() {
     let mut exec = exec(outer_plan(10.0, 8.0, 2));
 
     let r = exec.register_measurement(1, d(7.0));
+
     assert!(r.is_err());
 }
 
@@ -181,6 +208,7 @@ fn rejects_measurement_past_target_inner() {
     let mut exec = exec(inner_plan(8.0, 10.0, 2));
 
     let r = exec.register_measurement(1, d(11.0));
+
     assert!(r.is_err());
 }
 

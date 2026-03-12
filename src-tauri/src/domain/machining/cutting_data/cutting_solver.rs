@@ -1,8 +1,8 @@
-//domain/machining_physics/cutting_solver.rs
+//domain/machining/cutting_data/cutting_solver.rs
 
 use crate::domain::{
-    machining_physics::{
-        CuttingParameters, MachiningPhysicsError, Tool,
+    machining::{
+        CuttingParameters, CuttingError, Tool,
     },
     units::{ChipLoad, CuttingSpeed, Diameter, FeedRate, Rpm, ToothCount},
 };
@@ -11,9 +11,9 @@ use std::f64::consts::PI;
 
 const EPS: f64 = 1e-12;
 
-pub struct MachiningSolver;
+pub struct CuttingSolver;
 
-impl MachiningSolver {
+impl CuttingSolver {
 
     // ---------------------------------------------------------
     // Cutting speed + chip load
@@ -23,7 +23,7 @@ impl MachiningSolver {
         cutting_speed: CuttingSpeed,
         chip_load: ChipLoad,
         tool: Tool,
-    ) -> Result<CuttingParameters, MachiningPhysicsError> {
+    ) -> Result<CuttingParameters, CuttingError> {
 
         let rpm =
             Self::rpm_from_cutting_speed(
@@ -54,7 +54,7 @@ impl MachiningSolver {
         rpm: Rpm,
         feed: FeedRate,
         tool: Tool,
-    ) -> Result<CuttingParameters, MachiningPhysicsError> {
+    ) -> Result<CuttingParameters, CuttingError> {
 
         let chip =
             Self::chip_from_feed(
@@ -85,14 +85,14 @@ impl MachiningSolver {
     pub fn rpm_from_cutting_speed(
         cutting_speed: CuttingSpeed,
         diameter: Diameter,
-    ) -> Result<Rpm, MachiningPhysicsError> {
+    ) -> Result<Rpm, CuttingError> {
 
         let rpm =
             (cutting_speed.meters_per_min_value() * 1000.0)
                 / (PI * diameter.mm_value());
 
         if !rpm.is_finite() {
-            return Err(MachiningPhysicsError::NumericalInstability);
+            return Err(CuttingError::NumericalInstability);
         }
 
         Ok(Rpm::new(rpm)?)
@@ -102,13 +102,13 @@ impl MachiningSolver {
     pub fn cutting_speed_from_rpm(
         rpm: Rpm,
         diameter: Diameter,
-    ) -> Result<CuttingSpeed, MachiningPhysicsError> {
+    ) -> Result<CuttingSpeed, CuttingError> {
 
         let vc =
             PI * diameter.mm_value() * rpm.value() / 1000.0;
 
         if !vc.is_finite() {
-            return Err(MachiningPhysicsError::NumericalInstability);
+            return Err(CuttingError::NumericalInstability);
         }
 
         Ok(CuttingSpeed::meters_per_min(vc)?)
@@ -119,7 +119,7 @@ impl MachiningSolver {
         chip: ChipLoad,
         rpm: Rpm,
         teeth: ToothCount,
-    ) -> Result<FeedRate, MachiningPhysicsError> {
+    ) -> Result<FeedRate, CuttingError> {
 
         let f =
             chip.mm_per_tooth_value()
@@ -127,7 +127,7 @@ impl MachiningSolver {
                 * f64::from(teeth.value());
 
         if !f.is_finite() {
-            return Err(MachiningPhysicsError::NumericalInstability);
+            return Err(CuttingError::NumericalInstability);
         }
 
         Ok(FeedRate::mm_per_min(f)?)
@@ -138,20 +138,20 @@ impl MachiningSolver {
         feed: FeedRate,
         rpm: Rpm,
         teeth: ToothCount,
-    ) -> Result<ChipLoad, MachiningPhysicsError> {
+    ) -> Result<ChipLoad, CuttingError> {
 
         let denom =
             rpm.value() * f64::from(teeth.value());
 
         if denom.abs() < EPS {
-            return Err(MachiningPhysicsError::DivisionByZero);
+            return Err(CuttingError::DivisionByZero);
         }
 
         let chip =
             feed.mm_per_min_value() / denom;
 
         if !chip.is_finite() {
-            return Err(MachiningPhysicsError::NumericalInstability);
+            return Err(CuttingError::NumericalInstability);
         }
 
         Ok(ChipLoad::mm_per_tooth(chip)?)

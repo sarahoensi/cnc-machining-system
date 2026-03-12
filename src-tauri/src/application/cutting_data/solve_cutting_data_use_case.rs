@@ -9,7 +9,7 @@ use crate::application::cutting_data::dto::{
 
 use crate::domain::{
     DomainError,
-    MachiningSolver,
+    machining::CuttingSolver,
     units::{ChipLoad, CuttingSpeed, Diameter, FeedRate, Rpm, ToothCount},
 };
 
@@ -91,7 +91,7 @@ impl SolveCuttingDataUseCase {
             if input.rpm.is_none() {
                 if let (Some(vc), Some(d)) = (input.cutting_speed, input.diameter) {
                     input.rpm =
-                        Some(MachiningSolver::rpm_from_cutting_speed(vc, d)?);
+                        Some(CuttingSolver::rpm_from_cutting_speed(vc, d)?);
                     changed = true;
                 }
             }
@@ -99,7 +99,7 @@ impl SolveCuttingDataUseCase {
             if input.cutting_speed.is_none() {
                 if let (Some(n), Some(d)) = (input.rpm, input.diameter) {
                     input.cutting_speed =
-                        Some(MachiningSolver::cutting_speed_from_rpm(n, d)?);
+                        Some(CuttingSolver::cutting_speed_from_rpm(n, d)?);
                     changed = true;
                 }
             }
@@ -110,7 +110,7 @@ impl SolveCuttingDataUseCase {
                     (input.chip, input.rpm, input.teeth)
                 {
                     input.feed =
-                        Some(MachiningSolver::feed_from_chip_load(fz, n, z)?);
+                        Some(CuttingSolver::feed_from_chip_load(fz, n, z)?);
                     changed = true;
                 }
             }
@@ -120,7 +120,7 @@ impl SolveCuttingDataUseCase {
                     (input.feed, input.rpm, input.teeth)
                 {
                     input.chip =
-                        Some(MachiningSolver::chip_from_feed(f, n, z)?);
+                        Some(CuttingSolver::chip_from_feed(f, n, z)?);
                     changed = true;
                 }
             }

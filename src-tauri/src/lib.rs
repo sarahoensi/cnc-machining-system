@@ -4,15 +4,13 @@
 
 pub mod application;
 pub mod domain;
-pub mod infrastructure;
 pub mod interface;
 pub mod test_utils;
 
-use std::sync::Arc;
+use std::sync::Mutex;
 
-use crate::domain::FinishingExecutionRepository;
-use crate::infrastructure::finishing::InMemoryFinishingExecutionRepository;
 
+use crate::domain::machining::finishing::FinishingExecution;
 use crate::interface::{
     cutting_data::solve_cutting_data,
     helix::solve_helix,
@@ -24,16 +22,14 @@ use crate::interface::{
 };
 
 pub struct AppState {
-    pub finishing_repo: Arc<dyn FinishingExecutionRepository>,
+    pub finishing_execution: Mutex<Option<FinishingExecution>>,
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .manage(AppState {
-            finishing_repo: Arc::new(
-                InMemoryFinishingExecutionRepository::new()
-            ),
+            finishing_execution: std::sync::Mutex::new(None),
         })
 
         .plugin(tauri_plugin_opener::init())

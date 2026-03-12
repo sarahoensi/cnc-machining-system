@@ -3,9 +3,9 @@
 use thiserror::Error;
 
 use crate::domain::{
-    machining_strategy::StrategyError, 
+    machining::finishing::FinishingError, 
     geometry::GeometryError, 
-    machining_physics::MachiningPhysicsError, 
+    machining::CuttingError, 
     units::UnitsError
 };
 
@@ -22,8 +22,8 @@ pub enum DomainError {
     Geometry(#[from] GeometryError),
 
     #[error(transparent)]
-    MachiningPhysics(#[from] MachiningPhysicsError),
+    MachiningPhysics(#[from] CuttingError),
 
     #[error(transparent)]
-    MachiningStrategy(#[from] StrategyError),
+    MachiningStrategy(#[from] FinishingError),
 }

@@ -1,6 +1,6 @@
 // tests/domain/machining_physics/cutting_data_solver_test.rs
 
-use cnc_machining_system_lib::domain::*;
+use cnc_machining_system_lib::domain::machining::{CuttingSolver, Tool};
 use cnc_machining_system_lib::domain::units::*;
 use cnc_machining_system_lib::test_utils::approx::{approx_eq, DEFAULT_EPS};
 
@@ -34,12 +34,12 @@ fn from_speed_and_chip_load_produces_consistent_set() {
     let chip = ChipLoad::mm_per_tooth(0.05).unwrap();
 
     let params =
-        MachiningSolver::from_speed_and_chip_load(vc, chip, tool)
+        CuttingSolver::from_speed_and_chip_load(vc, chip, tool)
             .unwrap();
 
     // Recalculate chip from feed
     let reconstructed =
-    MachiningSolver::chip_from_feed(
+    CuttingSolver::chip_from_feed(
         params.feed_rate(),
         params.rpm(),
         tool.teeth(),
@@ -61,11 +61,11 @@ fn from_rpm_and_feed_produces_consistent_set() {
     let feed = FeedRate::mm_per_min(180.0).unwrap();
 
     let params =
-        MachiningSolver::from_rpm_and_feed(rpm, feed, tool)
+        CuttingSolver::from_rpm_and_feed(rpm, feed, tool)
             .unwrap();
 
     let reconstructed =
-        MachiningSolver::feed_from_chip_load(
+        CuttingSolver::feed_from_chip_load(
             params.chip_load(),
             rpm,
             tool.teeth(),
@@ -87,8 +87,8 @@ fn rpm_scales_inverse_with_diameter() {
     let vc = CuttingSpeed::meters_per_min(100.0).unwrap();
     let chip = ChipLoad::mm_per_tooth(0.04).unwrap();
 
-    let p1 = MachiningSolver::from_speed_and_chip_load(vc, chip, tool1).unwrap();
-    let p2 = MachiningSolver::from_speed_and_chip_load(vc, chip, tool2).unwrap();
+    let p1 = CuttingSolver::from_speed_and_chip_load(vc, chip, tool1).unwrap();
+    let p2 = CuttingSolver::from_speed_and_chip_load(vc, chip, tool2).unwrap();
 
     assert!(approx_eq(
         p2.rpm().value(),
@@ -150,11 +150,11 @@ proptest! {
         let tool = Tool::new(d, z);
 
         let params =
-            MachiningSolver::from_speed_and_chip_load(vc, chip, tool)
+            CuttingSolver::from_speed_and_chip_load(vc, chip, tool)
                 .unwrap();
 
         let chip2 =
-            MachiningSolver::chip_from_feed(
+            CuttingSolver::chip_from_feed(
                 params.feed_rate(),
                 params.rpm(),
                 tool.teeth(),
@@ -178,11 +178,11 @@ proptest! {
         let tool = Tool::new(d, z);
 
         let params =
-            MachiningSolver::from_rpm_and_feed(n, f, tool)
+            CuttingSolver::from_rpm_and_feed(n, f, tool)
                 .unwrap();
 
         let feed2 =
-            MachiningSolver::feed_from_chip_load(
+            CuttingSolver::feed_from_chip_load(
                 params.chip_load(),
                 params.rpm(),
                 tool.teeth(),

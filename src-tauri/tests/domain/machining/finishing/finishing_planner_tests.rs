@@ -1,6 +1,16 @@
 // tests/domain/machining_strategy/finishing_planner_tests.rs
 
-use cnc_machining_system_lib::domain::{units::*,*};
+use cnc_machining_system_lib::domain::{
+    units::*,
+    machining::finishing::{
+        FinishingPlanner,
+        FinishingPlanning,
+        FinishingRequest,
+        FinishingMode,
+    },
+};
+
+const EPS: f64 = 1e-9;
 
 fn d(v: f64) -> Diameter {
     Diameter::mm(v).unwrap()
@@ -27,7 +37,8 @@ fn bycuts_generates_correct_step() {
     let plan = FinishingPlanner::generate_plan(req).unwrap();
 
     assert_eq!(plan.cuts(), 2);
-    assert!((plan.expected_step().mm_value() - 1.0).abs() < 1e-9);
+
+    assert!((plan.expected_step().mm_value() - 1.0).abs() < EPS);
 }
 
 //
@@ -64,7 +75,6 @@ fn rejects_wrong_direction_inner() {
     };
 
     assert!(FinishingPlanner::generate_plan(req).is_err());
-
 }
 
 //

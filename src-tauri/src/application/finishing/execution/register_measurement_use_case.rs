@@ -1,8 +1,5 @@
 // application/finishing/execution/register_measurement_use_case.rs
 
-use std::sync::Arc;
-
-use crate::application::{ApplicationError};
 use crate::application::shared::{AppResult, InputParser};
 
 use crate::application::finishing::dto::{
@@ -12,22 +9,20 @@ use crate::application::finishing::dto::{
 
 use crate::domain::{
     units::Diameter,
-    FinishingExecutionRepository,
+    machining::finishing::FinishingExecution,
 };
 
-/// Registers one measured diameter value for a finishing step.
-pub struct RegisterFinishingMeasurementUseCase {
-    repo: Arc<dyn FinishingExecutionRepository>,
-}
+pub struct RegisterFinishingMeasurementUseCase;
 
 impl RegisterFinishingMeasurementUseCase {
 
-    pub fn new(repo: Arc<dyn FinishingExecutionRepository>) -> Self {
-        Self { repo }
+    pub fn new() -> Self {
+        Self
     }
 
     pub fn execute(
         &self,
+        execution: &mut FinishingExecution,
         input: RegisterFinishingMeasurementInput,
     ) -> AppResult<FinishingExecutionOutput> {
 
@@ -43,14 +38,6 @@ impl RegisterFinishingMeasurementUseCase {
         if input.step_number == 0 {
             p.push("step_number", "invalid", "Step number must be ≥ 1");
         }
-
-        // -----------------------------------------------------
-        // Load execution
-        // -----------------------------------------------------
-
-        let mut execution = self.repo
-            .get(input.execution_id)
-            .map_err(|e| ApplicationError::Infrastructure(e.to_string()))?;
 
         // -----------------------------------------------------
         // Domain operation
@@ -69,14 +56,6 @@ impl RegisterFinishingMeasurementUseCase {
 
         p.finish()?;
 
-        // -----------------------------------------------------
-        // Persist updated state
-        // -----------------------------------------------------
-
-        self.repo
-            .save(execution.clone())
-            .map_err(|e| ApplicationError::Infrastructure(e.to_string()))?;
-
-        Ok((&execution).into())
+        Ok((&*execution).into())
     }
 }

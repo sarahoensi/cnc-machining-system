@@ -1,8 +1,8 @@
 // domain/mod.rs
 pub mod units;
 mod geometry;
-mod machining_physics;
-mod machining_strategy;
+pub mod machining;
+//mod machining_strategy;
 mod error;
 
 pub use error::DomainError;
@@ -25,6 +25,7 @@ pub use geometry::{
 // --------------------------------
 // Machining Physics
 // --------------------------------
+/*
 pub use machining_physics::{
     CuttingParameters,
     MachiningSolver,
@@ -32,10 +33,12 @@ pub use machining_physics::{
 Tool,
 
 };
+ */
 
 // --------------------------------
 // Machining Strategy
 // --------------------------------
+/* 
 pub use machining_strategy::{
     FinishingPlanner,
     FinishingExecution,
@@ -49,3 +52,4 @@ pub use machining_strategy::{
     FinishingExecutionRepository,
     FinishingRepositoryError,
    };
+*/

@@ -1,6 +1,5 @@
 // tests/application/finishing/mod.rs
 
-mod fixtures;
 
 mod workflow;
 mod register;

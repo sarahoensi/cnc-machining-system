@@ -1,11 +1,12 @@
 use tauri::{command, State};
-use uuid::Uuid;
 
 use crate::AppState;
-use crate::domain::FinishingExecutionId;
 
 use crate::application::finishing::{
-    GenerateFinishingPlanUseCase, RegisterFinishingMeasurementInput, RegisterFinishingMeasurementUseCase
+    GenerateFinishingPlanUseCase,
+    RegisterFinishingMeasurementInput,
+    RegisterFinishingMeasurementUseCase,
+    FinishingExecutionOutput,
 };
 
 use crate::interface::finishing::{
@@ -19,12 +20,10 @@ use crate::interface::tauri::error::{
     map_application_error,
 };
 
-use crate::application::{ApplicationError, ValidationErrors};
 
-
-// ----------------------------------------------------
+//
 // Generate plan
-// ----------------------------------------------------
+//
 
 #[command]
 pub fn generate_finishing_plan(
@@ -32,21 +31,23 @@ pub fn generate_finishing_plan(
     request: GenerateFinishingPlanRequest,
 ) -> Result<FinishingExecutionResponse, TauriError> {
 
-    let uc = GenerateFinishingPlanUseCase::new(
-        state.finishing_repo.clone(),
-    );
+    let uc = GenerateFinishingPlanUseCase::new();
 
-    let result = uc
+    let execution = uc
         .execute(request.into())
         .map_err(map_application_error)?;
 
-    Ok(result.into())
+    let mut guard = state.finishing_execution.lock().unwrap();
+    *guard = Some(execution.clone());
+
+    let output: FinishingExecutionOutput = (&execution).into();
+
+    Ok(output.into())
 }
 
-
-// ----------------------------------------------------
+//
 // Register measurement
-// ----------------------------------------------------
+//
 
 #[command]
 pub fn register_finishing_measurement(
@@ -54,43 +55,24 @@ pub fn register_finishing_measurement(
     request: RegisterFinishingMeasurementRequest,
 ) -> Result<FinishingExecutionResponse, TauriError> {
 
-    let uc = RegisterFinishingMeasurementUseCase::new(
-        state.finishing_repo.clone(),
-    );
+    let uc = RegisterFinishingMeasurementUseCase::new();
 
-    // ----------------------------------------------------
-    // Validate UUID at interface boundary
-    // ----------------------------------------------------
+    let mut guard = state.finishing_execution.lock().unwrap();
 
-    let uuid = Uuid::parse_str(&request.execution_id)
-        .map_err(|_| {
-            map_application_error(
-                ApplicationError::Validation({
-                    let mut v = ValidationErrors::new();
-                    v.push("execution_id", "invalid_uuid", "Invalid execution_id");
-                    v
-                })
-            )
+    let execution = guard
+        .as_mut()
+        .ok_or_else(|| TauriError {
+            message: "No active finishing execution".to_string(),
+            field_errors: None,
         })?;
 
-    let id = FinishingExecutionId::from_uuid(uuid);
-
-    // ----------------------------------------------------
-    // Build application input
-    // ----------------------------------------------------
-
     let input = RegisterFinishingMeasurementInput {
-        execution_id: id,
         step_number: request.step_number,
         measurement_mm: request.measurement_mm,
     };
 
-    // ----------------------------------------------------
-    // Execute use case
-    // ----------------------------------------------------
-
     let result = uc
-        .execute(input)
+        .execute(execution, input)
         .map_err(map_application_error)?;
 
     Ok(result.into())

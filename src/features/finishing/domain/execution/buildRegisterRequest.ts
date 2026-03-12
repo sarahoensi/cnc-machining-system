@@ -5,13 +5,10 @@ import type {
 } from "../../api/types";
 
 export function buildRegisterRequest(
-  executionId: string,
   step: number,
   measurement: number
 ): RegisterFinishingMeasurementRequest {
 
-  if (!executionId)
-    throw new Error("Missing execution id");
 
   if (step <= 0)
     throw new Error("Invalid step number");
@@ -20,7 +17,6 @@ export function buildRegisterRequest(
     throw new Error("Invalid measurement");
 
   return {
-    execution_id: executionId,
     step_number: step,
     measurement_mm: measurement,
   };
