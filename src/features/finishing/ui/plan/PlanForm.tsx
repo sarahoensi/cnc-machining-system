@@ -69,8 +69,6 @@ export function PlanForm({
 
   return (
     <>
-
-      <div style={{ marginBottom: 16 }}>
         <ModeSelector
           name="finishing-mode"
           label="Mode"
@@ -90,8 +88,7 @@ export function PlanForm({
 
           ]}
         />
-      </div>
-
+    
       {finishingFieldConfig.map((f) => {
 
         const fieldState = form.fields[f.key];
@@ -115,7 +112,7 @@ export function PlanForm({
         );
       })}
 
-      <div style={{ marginTop: 16, display: "flex", gap: 12 }}>
+      
 
         <CalculateButton
           onClick={onGenerate}
@@ -130,7 +127,7 @@ export function PlanForm({
           </EditButton>
         )}
 
-      </div>
+      
 
     </>
   );

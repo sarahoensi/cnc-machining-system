@@ -62,8 +62,8 @@ export function FinishingExecutionTable({
   const [drafts, setDrafts] =
     useState<Record<number, string>>({});
 
-    const [errors, setErrors] =
-  useState<Record<number, string>>({});
+  const [errors, setErrors] =
+    useState<Record<number, string>>({});
 
   /* ----------------------------------------------------------
      Draft helpers
@@ -90,31 +90,31 @@ export function FinishingExecutionTable({
 
   async function confirmEdit(step: number) {
 
-  const value = drafts[step];
+    const value = drafts[step];
 
-  if (!value) return;
+    if (!value) return;
 
-  try {
+    try {
 
-    await onRegisterMeasurement(
-      step,
-      Number(value)
-    );
+      await onRegisterMeasurement(
+        step,
+        Number(value)
+      );
 
-    setEditingStep(null);
+      setEditingStep(null);
 
-  } catch (error) {
-  const te = getTauriCommandError(error);
-  const firstError = te?.fieldErrors?.[0];
+    } catch (error) {
+      const te = getTauriCommandError(error);
+      const firstError = te?.fieldErrors?.[0];
 
-  if (!firstError) return;
+      if (!firstError) return;
 
-  setErrors(e => ({
-    ...e,
-    [step]: firstError.message
-  }));
-}
-}
+      setErrors(e => ({
+        ...e,
+        [step]: firstError.message
+      }));
+    }
+  }
 
   /* ----------------------------------------------------------
      Render
@@ -236,43 +236,43 @@ export function FinishingExecutionTable({
               <Table.Cell align="right">
 
                 <ExecutionNumberField
-  state={isEditing ? "active" : step.status}
+                  state={isEditing ? "active" : step.status}
 
-  value={
-    isEditing || isActive
-      ? draft
-      : step.measurement.value
-  }
+                  value={
+                    isEditing || isActive
+                      ? draft
+                      : step.measurement.value
+                  }
 
-  placeholder={
-    step.measurement.value
-      ? undefined
-      : formatNumber(
-          step.data.expectedDiameter,
-          decimals
-        )
-  }
+                  placeholder={
+                    step.measurement.value
+                      ? undefined
+                      : formatNumber(
+                        step.data.expectedDiameter,
+                        decimals
+                      )
+                  }
 
-  error={errors[step.index]}
+                  error={errors[step.index]}
 
-  onChange={
-    isEditing || isActive
-      ? (v) => {
-          updateDraft(step.index, v);
+                  onChange={
+                    isEditing || isActive
+                      ? (v) => {
+                        updateDraft(step.index, v);
 
-          setErrors(e => {
-            const next = { ...e };
-            delete next[step.index];
-            return next;
-          });
-        }
-      : undefined
-  }
+                        setErrors(e => {
+                          const next = { ...e };
+                          delete next[step.index];
+                          return next;
+                        });
+                      }
+                      : undefined
+                  }
 
-  onSubmit={() =>
-    confirmEdit(step.index)
-  }
-/>
+                  onSubmit={() =>
+                    confirmEdit(step.index)
+                  }
+                />
 
               </Table.Cell>
 

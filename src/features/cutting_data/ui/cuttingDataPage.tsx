@@ -119,13 +119,10 @@ const [form, setForm] = useFeatureForm(
           );
         })}
 
-        <div style={{ marginTop: 16, display: "flex", gap: 12 }}>
           <CalculateButton
             onClick={onCalculate}
-            disabled={form.status === "executing"}
           />
           <ResetButton onClick={onReset} />
-        </div>
 
       </div>
 

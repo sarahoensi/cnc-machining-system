@@ -121,7 +121,7 @@ export function TrianglePage() {
           );
         })}
 
-        <div style={{ marginTop: 16, display: "flex", gap: 12 }}>
+        
 
           <CalculateButton
             onClick={onCalculate}
@@ -130,7 +130,7 @@ export function TrianglePage() {
 
           <ResetButton onClick={onReset} />
 
-        </div>
+        
 
       </div>
 
