@@ -5,15 +5,13 @@ use cnc_machining_system_lib::{
         dto::GenerateFinishingPlanInput,
         GenerateFinishingPlanUseCase,
     },
-    domain::FinishingMode,
+    domain::machining::finishing::FinishingMode,
 };
-
-use super::super::fixtures::*;
 
 #[test]
 fn generate_fails_when_cuts_is_zero() {
-    let repo = repo();
-    let generate = GenerateFinishingPlanUseCase::new(repo);
+
+    let generate = GenerateFinishingPlanUseCase::new();
 
     let result = generate.execute(
         GenerateFinishingPlanInput::ByCuts {

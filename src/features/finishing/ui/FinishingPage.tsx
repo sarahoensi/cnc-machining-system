@@ -24,9 +24,6 @@ import type { FinishingStepData } from "../domain/execution/mapExecution";
 import { PlanForm } from "./plan/PlanForm";
 import { FinishingExecutionTable } from "./execution/ExecutionTable";
 
-/* ============================================================
-   Component
-============================================================ */
 
 export function FinishingPage() {
 
@@ -34,9 +31,6 @@ export function FinishingPage() {
         "finishing",
         createInitialFinishingForm
     );
-
-    const [executionId, setExecutionId] =
-        useState<string | null>(null);
 
     const [execution, setExecution] =
         useState<ExecutionState<FinishingStepData> | null>(null);
@@ -71,14 +65,11 @@ export function FinishingPage() {
 
     function clearExecution() {
         setExecution(null);
-        setExecutionId(null);
     }
 
     /* ============================================================
        Form update wrapper
     ============================================================ */
-
-
 
     function updateForm(nextForm: any) {
 
@@ -107,7 +98,7 @@ export function FinishingPage() {
 
         if (result) {
 
-            setExecutionId(result.execution_id);
+            console.log("Finishing response:", result);
 
             setExecution(
                 mapFinishingExecution(result)
@@ -124,18 +115,13 @@ export function FinishingPage() {
         measurement: number
     ) {
 
-        if (!executionId) return;
-
         const request = buildRegisterRequest(
-            executionId,
             step,
             measurement
         );
 
         const result =
             await registerFinishingMeasurement(request);
-
-        setExecutionId(result.execution_id);
 
         setExecution(
             mapFinishingExecution(result)
@@ -203,5 +189,6 @@ export function FinishingPage() {
             </div>
 
         </div>
+
     );
 }

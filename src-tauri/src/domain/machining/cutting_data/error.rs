@@ -1,12 +1,10 @@
-// domain/machining_physics/error.rs
-
-// domain/machining_physics/error.rs
+// domain/machining/cutting_data/error.rs
 
 use crate::domain::units::{MachiningUnitError, MotionUnitError, UnitsError};
 use thiserror::Error;
 
 #[derive(Debug, Error, Clone, PartialEq)]
-pub enum MachiningPhysicsError {
+pub enum CuttingError {
     #[error(transparent)]
     Unit(#[from] UnitsError),
 

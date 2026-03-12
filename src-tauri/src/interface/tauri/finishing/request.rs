@@ -7,6 +7,11 @@
 
 use serde::Deserialize;
 
+//
+// -----------------------------------------------------
+// Generate plan
+// -----------------------------------------------------
+
 /// UI payload for `generate_finishing_plan`.
 ///
 /// Frontend representation:
@@ -15,7 +20,7 @@ use serde::Deserialize;
 /// Validation expectations:
 /// - Diameter and planning values must satisfy domain/application constraints.
 /// - Units are millimeters unless otherwise noted.
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 #[serde(tag = "type")]
 pub enum GenerateFinishingPlanRequest {
 
@@ -44,21 +49,29 @@ pub enum GenerateFinishingPlanRequest {
     },
 }
 
+//
+// -----------------------------------------------------
+// Register measurement
+// -----------------------------------------------------
+
 /// UI payload for `register_finishing_measurement`.
 ///
 /// Required fields:
-/// - `execution_id`: execution identifier returned by plan generation.
 /// - `step_number`: step index to update.
 /// - `measurement_mm`: measured diameter in millimeters.
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct RegisterFinishingMeasurementRequest {
-    /// Execution ID as string UUID.
-    pub execution_id: String,
     /// Step number to update.
     pub step_number: u32,
+
     /// Measured diameter in millimeters (`mm`).
     pub measurement_mm: f64,
 }
+
+//
+// -----------------------------------------------------
+// Finishing mode
+// -----------------------------------------------------
 
 /// Frontend finishing mode selector.
 ///
@@ -66,10 +79,11 @@ pub struct RegisterFinishingMeasurementRequest {
 /// - Deserialized as enum string variant.
 ///
 /// This enum is part of the Tauri interface contract.
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub enum FinishingMode {
     /// Inner finishing path behavior.
     Inner,
+
     /// Outer finishing path behavior.
     Outer,
 }

@@ -2,58 +2,88 @@
 
 use cnc_machining_system_lib::{
     application::finishing::{
-        dto::RegisterFinishingMeasurementInput,
+        dto::{GenerateFinishingPlanInput, RegisterFinishingMeasurementInput},
+        GenerateFinishingPlanUseCase,
         RegisterFinishingMeasurementUseCase,
     },
+    domain::machining::finishing::FinishingMode,
 };
-
-use super::super::fixtures::*;
 
 #[test]
 fn register_fails_when_step_number_is_zero() {
-    let repo = repo();
-    let register = RegisterFinishingMeasurementUseCase::new(repo.clone());
 
-    let id = create_execution(repo.clone(), 3);
+    let generate = GenerateFinishingPlanUseCase::new();
+    let register = RegisterFinishingMeasurementUseCase::new();
 
-    let result = register.execute(RegisterFinishingMeasurementInput {
-        execution_id: id,
-        step_number: 0,
-        measurement_mm: 9.5,
-    });
+    let mut execution = generate
+        .execute(GenerateFinishingPlanInput::ByCuts {
+            mode: FinishingMode::Outer,
+            start_diameter_mm: 10.0,
+            target_diameter_mm: 8.0,
+            cuts: 3,
+        })
+        .unwrap();
+
+    let result = register.execute(
+        &mut execution,
+        RegisterFinishingMeasurementInput {
+            step_number: 0,
+            measurement_mm: 9.5,
+        },
+    );
 
     assert!(result.is_err());
 }
 
 #[test]
 fn register_fails_when_step_number_out_of_range() {
-    let repo = repo();
-    let register = RegisterFinishingMeasurementUseCase::new(repo.clone());
 
-    let id = create_execution(repo.clone(), 2);
+    let generate = GenerateFinishingPlanUseCase::new();
+    let register = RegisterFinishingMeasurementUseCase::new();
 
-    let result = register.execute(RegisterFinishingMeasurementInput {
-        execution_id: id,
-        step_number: 99,
-        measurement_mm: 9.5,
-    });
+    let mut execution = generate
+        .execute(GenerateFinishingPlanInput::ByCuts {
+            mode: FinishingMode::Outer,
+            start_diameter_mm: 10.0,
+            target_diameter_mm: 8.0,
+            cuts: 2,
+        })
+        .unwrap();
+
+    let result = register.execute(
+        &mut execution,
+        RegisterFinishingMeasurementInput {
+            step_number: 99,
+            measurement_mm: 9.5,
+        },
+    );
 
     assert!(result.is_err());
 }
 
 #[test]
 fn register_fails_when_measurement_passes_target() {
-    let repo = repo();
-    let register = RegisterFinishingMeasurementUseCase::new(repo.clone());
 
-    let id = create_execution(repo.clone(), 2);
+    let generate = GenerateFinishingPlanUseCase::new();
+    let register = RegisterFinishingMeasurementUseCase::new();
+
+    let mut execution = generate
+        .execute(GenerateFinishingPlanInput::ByCuts {
+            mode: FinishingMode::Outer,
+            start_diameter_mm: 10.0,
+            target_diameter_mm: 8.0,
+            cuts: 2,
+        })
+        .unwrap();
 
     // Outer finishing → cannot go below target
-    let result = register.execute(RegisterFinishingMeasurementInput {
-        execution_id: id,
-        step_number: 1,
-        measurement_mm: 7.5,
-    });
+    let result = register.execute(
+        &mut execution,
+        RegisterFinishingMeasurementInput {
+            step_number: 1,
+            measurement_mm: 7.5,
+        },
+    );
 
     assert!(result.is_err());
 }

@@ -1,4 +1,4 @@
-// domain/machining_physics/tool.rs
+// domain/machining/cutting_data/tool.rs
 
 use crate::domain::units::{
     Diameter,

@@ -27,7 +27,6 @@ export type GenerateFinishingPlanRequest =
 ============================================================ */
 
 export type RegisterFinishingMeasurementRequest = {
-  execution_id: string;
   step_number: number;
   measurement_mm: number;
 };
@@ -37,21 +36,15 @@ export type RegisterFinishingMeasurementRequest = {
 ============================================================ */
 
 export type FinishingStep = {
-  index: number;
-  start_mm: number;
-  planned_delta_mm: number;
-  planned_end_mm: number;
-  measurement_mm: number | null;
-};
+  index: number
+  startMm: number
+  plannedDeltaMm: number
+  plannedEndMm: number
+  measurementMm: number | null
+}
 
 export type FinishingExecutionResponse = {
-  execution_id: string;
-
-    /** step currently waiting for measurement */
-  active_step: number | null;
-
-  /** execution completed */
-  finished: boolean;
-
-  steps: FinishingStep[];
-};
+  activeStep: number | null
+  finished: boolean
+  steps: FinishingStep[]
+}

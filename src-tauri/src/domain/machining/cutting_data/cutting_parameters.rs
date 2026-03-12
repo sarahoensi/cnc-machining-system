@@ -1,4 +1,4 @@
-// domain/machining_physics/cutting_parameters.rs
+// domain/machining/cutting_data/cutting_parameters.rs
 
 use crate::domain::units::{
     ChipLoad,

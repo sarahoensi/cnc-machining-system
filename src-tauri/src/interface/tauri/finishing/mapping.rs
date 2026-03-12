@@ -1,13 +1,16 @@
+// interface/tauri/finishing/mapping.rs
 //! Mapping between finishing Tauri DTOs and application DTOs.
 //!
 //! This module performs boundary translation for request and response models
 //! without changing workflow meaning.
 
-// interface/tauri/finishing/mapping.rs
+use crate::application::finishing::{
+    FinishingExecutionOutput,
+    FinishingStepOutput,
+    GenerateFinishingPlanInput,
+};
 
-
-use crate::application::finishing::{FinishingExecutionOutput, FinishingStepOutput, GenerateFinishingPlanInput};
-use crate::domain::FinishingMode as AppFinishingMode;
+use crate::domain::machining::finishing::FinishingMode as AppFinishingMode;
 
 use super::request::{
     GenerateFinishingPlanRequest,
@@ -19,24 +22,26 @@ use super::response::{
     FinishingStepResponse,
 };
 
-
+//
 // -----------------------------
 // Mode mapping
 // -----------------------------
+//
 
 impl From<UiFinishingMode> for AppFinishingMode {
-    fn from(m: UiFinishingMode) -> Self {
-        match m {
+    fn from(mode: UiFinishingMode) -> Self {
+        match mode {
             UiFinishingMode::Inner => AppFinishingMode::Inner,
             UiFinishingMode::Outer => AppFinishingMode::Outer,
         }
     }
 }
 
-
+//
 // -----------------------------
 // Request → Application input
 // -----------------------------
+//
 
 impl From<GenerateFinishingPlanRequest> for GenerateFinishingPlanInput {
     fn from(req: GenerateFinishingPlanRequest) -> Self {
@@ -70,15 +75,15 @@ impl From<GenerateFinishingPlanRequest> for GenerateFinishingPlanInput {
     }
 }
 
-
+//
 // -----------------------------
 // Application output → response
 // -----------------------------
+//
 
 impl From<FinishingExecutionOutput> for FinishingExecutionResponse {
     fn from(out: FinishingExecutionOutput) -> Self {
         Self {
-            execution_id: out.execution_id,
             active_step: out.active_step,
             finished: out.finished,
             steps: out.steps.into_iter().map(Into::into).collect(),
@@ -86,15 +91,14 @@ impl From<FinishingExecutionOutput> for FinishingExecutionResponse {
     }
 }
 
-
 impl From<FinishingStepOutput> for FinishingStepResponse {
-    fn from(s: FinishingStepOutput) -> Self {
+    fn from(step: FinishingStepOutput) -> Self {
         Self {
-            index: s.index,
-            start_mm: s.start_mm,
-            planned_delta_mm: s.planned_delta_mm,
-            planned_end_mm: s.planned_end_mm,
-            measurement_mm: s.measurement_mm,
+            index: step.index,
+            start_mm: step.start_mm,
+            planned_delta_mm: step.planned_delta_mm,
+            planned_end_mm: step.planned_end_mm,
+            measurement_mm: step.measurement_mm,
         }
     }
 }

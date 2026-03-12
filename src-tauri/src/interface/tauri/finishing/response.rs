@@ -1,42 +1,53 @@
+
 //! Frontend response DTOs for finishing commands.
 //!
-//! These serialized types are returned by finishing Tauri commands and are
-//! treated as the external API contract for finishing UI workflows.
-
-// interface/tauri/finishing/response.rs
+//! These types define the serialized response contract returned
+//! by Tauri finishing commands.
 
 use serde::Serialize;
 
-/// UI response payload representing finishing execution state.
-///
-/// Frontend representation:
-/// - Serialized as JSON object with stable field names.
-#[derive(Serialize)]
+//
+// -----------------------------------------------------
+// Execution response
+// -----------------------------------------------------
+
+/// Response payload describing the current finishing execution state.
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct FinishingExecutionResponse {
-    /// Stable identifier for subsequent measurement registration calls.
-    pub execution_id: String,
+
+    /// Index of the next step expecting a measurement.
     pub active_step: Option<u32>,
+
+    /// Indicates whether all finishing steps have been completed.
     pub finished: bool,
-    /// Ordered execution steps with planned and optional measured values.
+
+    /// Ordered list of finishing steps.
     pub steps: Vec<FinishingStepResponse>,
 }
 
+//
+// -----------------------------------------------------
+// Step response
+// -----------------------------------------------------
 
-/// UI response payload representing one finishing step.
-///
-/// Frontend representation:
-/// - Serialized as JSON object.
-/// - `measurement_mm` is optional until recorded.
-#[derive(Serialize)]
+/// Response payload representing a single finishing step.
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct FinishingStepResponse {
-    /// Step index in workflow order.
+
+    /// Step index (1-based).
     pub index: u32,
-    /// Start diameter in millimeters (`mm`).
+
+    /// Diameter before the step.
     pub start_mm: f64,
-    /// Planned diameter delta in millimeters (`mm`).
+
+    /// Planned diameter change.
     pub planned_delta_mm: f64,
-    /// Planned resulting diameter in millimeters (`mm`).
+
+    /// Planned resulting diameter.
     pub planned_end_mm: f64,
-    /// Optional measured diameter in millimeters (`mm`).
+
+    /// Optional operator measurement.
     pub measurement_mm: Option<f64>,
 }

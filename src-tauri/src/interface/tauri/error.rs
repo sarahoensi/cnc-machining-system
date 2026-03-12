@@ -49,3 +49,12 @@ pub fn map_application_error(err: ApplicationError) -> TauriError {
         },
     }
 }
+
+impl TauriError {
+    pub fn message(msg: impl Into<String>) -> Self {
+        Self {
+            message: msg.into(),
+            field_errors: None,
+        }
+    }
+}

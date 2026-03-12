@@ -1,7 +1,6 @@
-// features/domain/execution/mapExecution.ts
+// features/finishing/domain/execution/mapExecution.ts
 
-import {
-  createExecutionState} from "@shared/execution/executionState"
+import { createExecutionState } from "@shared/execution/executionState"
 
 import type {
   FinishingExecutionResponse
@@ -22,12 +21,12 @@ export function mapFinishingExecution(
 
       index: s.index,
 
-      measurement: s.measurement_mm,
+      measurement: s.measurementMm,
 
       data: {
-        startDiameter: s.start_mm,
-        deltaD: s.planned_delta_mm,
-        expectedDiameter: s.planned_end_mm,
+        startDiameter: s.startMm,
+        deltaD: s.plannedDeltaMm,
+        expectedDiameter: s.plannedEndMm,
       }
 
     }))
