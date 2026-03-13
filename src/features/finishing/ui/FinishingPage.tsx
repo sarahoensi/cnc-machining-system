@@ -1,6 +1,6 @@
 // features/finishing/ui/FinishingPage.tsx
 
-import { useState } from "react";
+//import { useState } from "react";
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { handleGenerateAsync } from "@shared/form";
@@ -32,8 +32,12 @@ export function FinishingPage() {
         createInitialFinishingForm
     );
 
-    const [execution, setExecution] =
-        useState<ExecutionState<FinishingStepData> | null>(null);
+    const [execution, setExecution] = useFeatureForm<
+  ExecutionState<FinishingStepData> | null
+>(
+  "finishing-execution",
+  () => null
+);
 
     const formReadOnly = execution !== null;
 

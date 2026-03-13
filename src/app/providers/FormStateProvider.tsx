@@ -51,7 +51,7 @@ export function useFeatureForm<T>(
 
   const form = forms[key] as T | undefined;
 
-  if (!form) {
+  if (form === undefined) {
     const initial = createInitial();
     setForm(key, initial);
     return [initial, (v: any) => setForm(key, v)] as const;
