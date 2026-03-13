@@ -80,27 +80,27 @@ export function FinishingExecutionTable({
 
   useEffect(() => {
 
-  if (editingStep !== null) return;
+    if (editingStep !== null) return;
 
-  const active = execution.steps.find(
-    s => s.status === "active"
-  );
+    const active = execution.steps.find(
+      s => s.status === "active"
+    );
 
-  if (!active) return;
+    if (!active) return;
 
-  const input = inputRefs.current[active.index];
+    const input = inputRefs.current[active.index];
 
-  input?.focus();
+    input?.focus();
 
-}, [execution, editingStep]);
+  }, [execution, editingStep]);
 
-useEffect(() => {
-  if (editingStep === null) return;
+  useEffect(() => {
+    if (editingStep === null) return;
 
-  const input = inputRefs.current[editingStep];
+    const input = inputRefs.current[editingStep];
 
-  input?.focus();
-}, [editingStep]);
+    input?.focus();
+  }, [editingStep]);
 
 
   /* ----------------------------------------------------------
@@ -288,12 +288,12 @@ useEffect(() => {
 
                 <ExecutionNumberField
                   ref={(el) => {
-  if (el) {
-    inputRefs.current[step.index] = el;
-  } else {
-    delete inputRefs.current[step.index];
-  }
-}}
+                    if (el) {
+                      inputRefs.current[step.index] = el;
+                    } else {
+                      delete inputRefs.current[step.index];
+                    }
+                  }}
                   state={isEditing ? "active" : step.status}
 
                   value={
