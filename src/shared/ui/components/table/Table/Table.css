@@ -40,11 +40,17 @@
    CELLS
 ===================================================== */
 
-.ui-table th,
-.ui-table td {
-  padding: var(--space-2) var(--space-3);
+.ui-table th{
+  padding: var(--space-3) var(--space-3);
   vertical-align: middle;
 }
+
+.ui-table td {
+  padding: var(--space-1) var(--space-3);
+  vertical-align: middle;
+}
+
+
 
 /* Alignment helpers */
 
@@ -83,12 +89,3 @@
   background: var(--table-header-bg);
 }
 
-/* =====================================================
-   INPUTS INSIDE TABLE
-===================================================== */
-
-.ui-table .ni-input {
-  height: var(--table-control-height);
-  font-size: var(--table-text-size);
-  padding: 0 var(--space-2);
-}

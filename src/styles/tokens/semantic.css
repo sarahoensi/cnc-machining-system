@@ -59,6 +59,7 @@
    CONTROL SIZING
 ===================================================== */
 
+  --control-height-xsm: var(--size-control-xsm);
   --control-height-sm: var(--size-control-sm);
   --control-height-md: var(--size-control-md);
   --control-height-lg: var(--size-control-lg);
@@ -149,8 +150,6 @@
 ===================================================== */
 
 --table-control-height: 32px;
-
-
 
 /* =====================================================
    OVERLAY / MODAL

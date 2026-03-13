@@ -28,3 +28,26 @@
 .execution-table td:nth-child(5) {
   width: 80px;    /* Actions */
 }
+
+
+/* ============================================================
+   UI active row (controlled by React activeStep)
+   Independent of backend active step while editing
+============================================================ */
+
+.execution-table .ui-table-row.active td {
+  border-top: 2px solid var(--brand-primary);
+  border-bottom: 2px solid var(--brand-primary);
+}
+
+.execution-table .ui-table-row.active td:first-child {
+  border-left: 2px solid var(--brand-primary);
+  border-top-left-radius: var(--control-radius);
+  border-bottom-left-radius: var(--control-radius);
+}
+
+.execution-table .ui-table-row.active td:last-child {
+  border-right: 2px solid var(--brand-primary);
+  border-top-right-radius: var(--control-radius);
+  border-bottom-right-radius: var(--control-radius);
+}

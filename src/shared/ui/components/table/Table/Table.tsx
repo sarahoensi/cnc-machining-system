@@ -67,6 +67,7 @@ function Row({
 type CellProps = {
   children: ReactNode;
   align?: "left" | "center" | "right";
+  padding?: "default" | "none";
   className?: string;
 };
 

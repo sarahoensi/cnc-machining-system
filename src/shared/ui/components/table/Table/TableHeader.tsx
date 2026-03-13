@@ -3,7 +3,6 @@
 import { ReactNode } from "react";
 import { Table } from "./Table";
 import { LabelWithTooltip } from "../../primitives/LabelWithToolTip/LabelWithTooltip";
-import "./TableHeader.css";
 
 type Props = {
   label?: string;

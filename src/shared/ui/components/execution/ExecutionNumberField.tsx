@@ -1,7 +1,6 @@
 // shared/ui/components/execution/ExecutionNumberField.tsx
 
-// shared/ui/components/execution/ExecutionNumberField.tsx
-
+import { useEffect, useRef } from "react";
 import { NumberInput } from "../primitives/NumberInput/NumberInput";
 import type { ExecutionStepStatus } from "@shared/execution";
 import "./ExecutionNumberField.css";
@@ -12,8 +11,10 @@ type Props = {
   value?: string;
   placeholder?: string;
   unit?: string;
-  error?: string
+  error?: string;
   readonly?: boolean;
+
+  autoFocus?: boolean;
 
   onChange?: (value: string) => void;
   onSubmit?: () => void;
@@ -26,9 +27,18 @@ export function ExecutionNumberField({
   unit,
   error,
   readonly = false,
+  autoFocus,
   onChange,
   onSubmit,
 }: Props) {
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (autoFocus) {
+      inputRef.current?.focus();
+    }
+  }, [autoFocus]);
 
   /* -----------------------------------------------------------
      Pending step
@@ -39,31 +49,27 @@ export function ExecutionNumberField({
     return <span></span>;
   }
 
-  /* -----------------------------------------------------------
-     Active step
-     Allow user input
-  ----------------------------------------------------------- */
-
   return (
-  <div className="execution-number-field">
-    <NumberInput
-      value={value ?? ""}
-      placeholder={placeholder}
-      unit={unit}
-      readonly={readonly || state === "completed"}
-      onChange={(v) => onChange?.(v)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          onSubmit?.();
-        }
-      }}
-    />
+    <div className="execution-number-field">
+      <NumberInput
+        inputRef={inputRef}
+        value={value ?? ""}
+        placeholder={placeholder}
+        unit={unit}
+        readonly={readonly || state === "completed"}
+        onChange={(v) => onChange?.(v)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            onSubmit?.();
+          }
+        }}
+      />
 
-    {error && (
-      <div className="execution-number-error">
-        {error}
-      </div>
-    )}
-  </div>
-);
+      {error && (
+        <div className="execution-number-error">
+          {error}
+        </div>
+      )}
+    </div>
+  );
 }
