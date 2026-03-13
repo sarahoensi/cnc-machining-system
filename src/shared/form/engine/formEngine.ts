@@ -7,6 +7,10 @@ import { applyDriverEngine } from "../constraints";
 
 import { getTauriCommandError } from "@shared/api/tauriError";
 
+import {
+  parseDecimalInput
+} from "@shared/parsing/decimalParser";
+
 
 /* ============================================================
    Unlock all fields
@@ -86,6 +90,13 @@ export function handleUserEdit<
   pairs: readonly (readonly [K, K])[]
 ): FormState<K, E> {
 
+  const prev = form.fields[key];
+  const { normalized } = parseDecimalInput(rawValue);
+
+if (!didUserEdit(prev, normalized)) {
+  return form;
+}
+
   let nextFields = form.fields;
 
   // If editing after solved → remove machine values
@@ -95,7 +106,11 @@ export function handleUserEdit<
 
   const updatedFields = {
     ...nextFields,
-    [key]: { ...userField(rawValue), error: undefined, invalid: false },
+    [key]: {
+      ...userField(normalized),
+      error: undefined,
+      invalid: false,
+    },
   };
 
   const driven = applyDriverEngine(updatedFields, {
@@ -110,6 +125,20 @@ export function handleUserEdit<
     fields: driven.fields,
     extras: form.extras,
   };
+}
+
+function didUserEdit(
+  prev: FieldState,
+  nextValue: string
+): boolean {
+
+  if (prev.source !== "user") {
+    return true;
+  }
+
+  const prevNorm = parseDecimalInput(prev.value ?? "").normalized;
+
+  return prevNorm !== nextValue;
 }
 
 /* ============================================================
@@ -194,6 +223,34 @@ function clearFieldErrors<K extends string>(
 }
 
 /* ============================================================
+   Field Normalization
+============================================================ */
+
+export function applyFieldNormalization<K extends string, E>(
+  form: FormState<K, E>,
+  key: K,
+  value: string
+): FormState<K, E> {
+
+  const prev = form.fields[key];
+
+  if (prev.value === value) {
+    return form;
+  }
+
+  return {
+    ...form,
+    fields: {
+      ...form.fields,
+      [key]: {
+        ...prev,
+        value,
+      },
+    },
+  };
+}
+
+/* ============================================================
    ASYNC CALCULATE
 ============================================================ */
 
@@ -241,15 +298,23 @@ export async function handleCalculateAsync<
 
       const wasUser = cleanedFields[k]?.source === "user";
 
-      nextFields[k] = {
-        ...cleanedFields[k],
-        value: String(value), 
-        machineValue: value, 
-        source: wasUser ? "user" : "machine",
-        locked: false,
-        invalid: false,
-        error: undefined,
-      };
+      if (wasUser) {
+        nextFields[k] = {
+          ...cleanedFields[k],
+          machineValue: value,
+          invalid: false,
+          error: undefined,
+        };
+      } else {
+        nextFields[k] = {
+          ...cleanedFields[k],
+          value: String(value),
+          machineValue: value,
+          source: "machine",
+          invalid: false,
+          error: undefined,
+        };
+      }
     }
 
     return {
@@ -258,21 +323,21 @@ export async function handleCalculateAsync<
       extras: form.extras,
     };
 
-} catch (error) {
+  } catch (error) {
 
-  console.error(error);
+    console.error(error);
 
-  const nextFields = applyFieldErrors(
-    cleanedFields,
-    error
-  );
+    const nextFields = applyFieldErrors(
+      cleanedFields,
+      error
+    );
 
-  return {
-    status: "editing",
-    fields: nextFields,
-    extras: form.extras,
-  };
-}
+    return {
+      status: "editing",
+      fields: nextFields,
+      extras: form.extras,
+    };
+  }
 }
 
 /* ============================================================
@@ -311,26 +376,26 @@ export async function handleGenerateAsync<
     const execution = await execute(parsed, form.extras);
 
     return {
-    form: {
-      ...form,
-      fields: cleanedFields,
-    },
-    execution,
-  };
+      form: {
+        ...form,
+        fields: cleanedFields,
+      },
+      execution,
+    };
   } catch (error) {
 
-  console.error(error);
+    console.error(error);
 
-  const nextFields = applyFieldErrors(
-    form.fields,
-    error
-  );
+    const nextFields = applyFieldErrors(
+      form.fields,
+      error
+    );
 
-  return {
-    form: {
-      ...form,
-      fields: nextFields,
-    }
-  };
-}
+    return {
+      form: {
+        ...form,
+        fields: nextFields,
+      }
+    };
+  }
 }

@@ -29,14 +29,12 @@ import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 
 
-
-
 export function TrianglePage() {
 
   const [form, setForm] = useFeatureForm(
-  "triangle",
-  createInitialTriangleForm
-);
+    "triangle",
+    createInitialTriangleForm
+  );
 
   const navigation = useFormNavigation({
     keys: triangleFieldConfig.map(f => f.key),
@@ -120,14 +118,14 @@ export function TrianglePage() {
           );
         })}
 
-        
 
-          <FormActions
-  onCalculate={onCalculate}
-  onReset={onReset}
-/>
 
-        
+        <FormActions
+          onCalculate={onCalculate}
+          onReset={onReset}
+        />
+
+
 
       </div>
 

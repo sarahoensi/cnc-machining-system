@@ -2,10 +2,6 @@
 
 import React, { useId } from "react";
 import clsx from "clsx";
-import {
-  normalizeDecimalInput,
-  safeParseDecimal,
-} from "@shared/parsing/decimalParser";
 import "./NumberInput.css";
 
 type Props = {
@@ -70,31 +66,15 @@ export function NumberInput({
     }
   }
 
-  function handleBlurInternal(
-    e: React.FocusEvent<HTMLInputElement>
-  ) {
+  function handleBlurInternal(e: React.FocusEvent<HTMLInputElement>) {
 
-    if (isDisabled || isReadOnly) {
-      onBlur?.(e);
-      return;
-    }
-
-    const raw = value;
-
-    if (!raw.trim()) {
-      onBlur?.(e);
-      return;
-    }
-
-    const normalized = normalizeDecimalInput(raw);
-    const parsed = safeParseDecimal(normalized);
-
-    if (parsed !== null) {
-      onChange(parsed.toString());
-    }
-
+  if (isDisabled || isReadOnly) {
     onBlur?.(e);
+    return;
   }
+
+  onBlur?.(e);
+}
 
   return (
     <div className={clsx("number-input", className)}>

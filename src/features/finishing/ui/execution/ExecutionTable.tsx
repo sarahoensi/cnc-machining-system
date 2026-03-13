@@ -22,6 +22,8 @@ import { getTauriCommandError } from "@shared/api/tauriError";
 
 import "./ExecutionTable.css";
 
+import { parseDecimalInput } from "@shared/parsing/decimalParser";
+
 
 
 /* ============================================================
@@ -94,31 +96,44 @@ export function FinishingExecutionTable({
 
   async function confirmEdit(step: number) {
 
-    const value = drafts[step];
+  const value = drafts[step];
 
-    if (!value) return;
+  if (!value) return;
 
-    try {
+  const { normalized, number } = parseDecimalInput(value);
 
-      await onRegisterMeasurement(
-        step,
-        Number(value)
-      );
-
-      setEditingStep(null);
-
-    } catch (error) {
-      const te = getTauriCommandError(error);
-      const firstError = te?.fieldErrors?.[0];
-
-      if (!firstError) return;
-
-      setErrors(e => ({
-        ...e,
-        [step]: firstError.message
-      }));
-    }
+  if (number === null) {
+    setErrors(e => ({
+      ...e,
+      [step]: "Invalid number"
+    }));
+    return;
   }
+
+  try {
+
+    await onRegisterMeasurement(step, number);
+
+    setDrafts(d => ({
+      ...d,
+      [step]: normalized
+    }));
+
+    setEditingStep(null);
+
+  } catch (error) {
+
+    const te = getTauriCommandError(error);
+    const firstError = te?.fieldErrors?.[0];
+
+    if (!firstError) return;
+
+    setErrors(e => ({
+      ...e,
+      [step]: firstError.message
+    }));
+  }
+}
 
   /* ----------------------------------------------------------
      Render
