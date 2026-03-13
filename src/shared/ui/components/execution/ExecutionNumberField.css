@@ -1,0 +1,55 @@
+/* ExecutionNumberField.css */
+
+/* =====================================================
+   EXECUTION FIELD
+===================================================== */
+
+.execution-number-field {
+  display: flex;
+  flex-direction: column;
+}
+
+/* =====================================================
+   INPUT STYLE
+===================================================== */
+
+.execution-number-field .ni-input {
+  width: 100%;
+  height: var(--control-height-s);
+
+  padding: 0 var(--control-padding-x-md);
+  padding-right: var(--space-8);
+
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+
+  border-radius: var(--control-radius);
+  border: var(--border-width-thin) solid transparent;
+
+  background: transparent;
+  color: var(--text-primary);
+
+  outline: none;
+}
+
+/* =====================================================
+   READONLY STATE
+===================================================== */
+
+.execution-number-field .ni-input.readonly {
+  border-color: transparent;
+  cursor: default;
+}
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.execution-number-error {
+  margin-top: var(--space-1);
+
+  font-size: var(--form-caption-size);
+  font-weight: var(--text-caption-weight);
+
+  color: var(--feedback-error);
+}
