@@ -105,7 +105,7 @@ export function PlanForm({
             onChange={(value) =>
               onFieldChange(f.key, value)
             }
-            inputRef={navigation.register(f.key)}
+            ref={navigation.register(f.key)}
             onKeyDown={navigation.handleKeyDown(f.key)}
           />
         );

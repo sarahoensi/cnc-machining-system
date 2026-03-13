@@ -34,10 +34,10 @@ import { FormActions } from "@shared/ui/components/form/FormActions/FormActions"
 
 export function HelixPage() {
 
- const [form, setForm] = useFeatureForm(
-  "helix",
-  createInitialHelixForm
-);
+  const [form, setForm] = useFeatureForm(
+    "helix",
+    createInitialHelixForm
+  );
 
   const navigation = useFormNavigation({
     keys: helixFieldConfig.map(f => f.key),
@@ -131,16 +131,16 @@ export function HelixPage() {
               onChange={(value) =>
                 onFieldChange(f.key, value)
               }
-              inputRef={navigation.register(f.key)}
+              ref={navigation.register(f.key)}
               onKeyDown={navigation.handleKeyDown(f.key)}
             />
           );
         })}
 
-          <FormActions
-  onCalculate={onCalculate}
-  onReset={onReset}
-/>
+        <FormActions
+          onCalculate={onCalculate}
+          onReset={onReset}
+        />
 
       </div>
 

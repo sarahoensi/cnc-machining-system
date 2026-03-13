@@ -1,6 +1,6 @@
 // shared/ui/components/execution/ExecutionNumberField.tsx
 
-import { useEffect, useRef } from "react";
+import { forwardRef } from "react";
 import { NumberInput } from "../primitives/NumberInput/NumberInput";
 import type { ExecutionStepStatus } from "@shared/execution";
 import "./ExecutionNumberField.css";
@@ -20,25 +20,24 @@ type Props = {
   onSubmit?: () => void;
 };
 
-export function ExecutionNumberField({
-  state,
-  value,
-  placeholder,
-  unit,
-  error,
-  readonly = false,
-  autoFocus,
-  onChange,
-  onSubmit,
-}: Props) {
+export const ExecutionNumberField = forwardRef<
+  HTMLInputElement,
+  Props
+>(function ExecutionNumberField(
+  {
+    state,
+    value,
+    placeholder,
+    unit,
+    error,
+    readonly = false,
+    autoFocus,
+    onChange,
+    onSubmit,
+  },
+  ref
+) {
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (autoFocus) {
-      inputRef.current?.focus();
-    }
-  }, [autoFocus]);
 
   /* -----------------------------------------------------------
      Pending step
@@ -52,11 +51,13 @@ export function ExecutionNumberField({
   return (
     <div className="execution-number-field">
       <NumberInput
-        inputRef={inputRef}
+        ref={ref}
         value={value ?? ""}
         placeholder={placeholder}
         unit={unit}
         readonly={readonly || state === "completed"}
+        autoFocus={autoFocus}
+      
         onChange={(v) => onChange?.(v)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
@@ -72,4 +73,4 @@ export function ExecutionNumberField({
       )}
     </div>
   );
-}
+});
