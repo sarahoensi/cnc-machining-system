@@ -1,6 +1,6 @@
 // features/finishing/ui/execution/ExecutionTable.tsx
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { Table } from "@shared/ui/components/table/Table/Table";
 import { TableHeaderSelect } from "@shared/ui/components/table/Table";
@@ -45,7 +45,7 @@ type Props = {
   onRegisterMeasurement(
     step: number,
     measurement: number
-  ): void;
+  ): Promise<void>;
 };
 
 /* ============================================================
@@ -70,6 +70,38 @@ export function FinishingExecutionTable({
 
   const [errors, setErrors] =
     useState<Record<number, string>>({});
+
+  /* ============================================================
+     Input refs (for autofocus)
+  ============================================================ */
+
+  const inputRefs =
+    useRef<Record<number, HTMLInputElement | null>>({});
+
+  useEffect(() => {
+
+  if (editingStep !== null) return;
+
+  const active = execution.steps.find(
+    s => s.status === "active"
+  );
+
+  if (!active) return;
+
+  const input = inputRefs.current[active.index];
+
+  input?.focus();
+
+}, [execution, editingStep]);
+
+useEffect(() => {
+  if (editingStep === null) return;
+
+  const input = inputRefs.current[editingStep];
+
+  input?.focus();
+}, [editingStep]);
+
 
   /* ----------------------------------------------------------
      Draft helpers
@@ -96,44 +128,44 @@ export function FinishingExecutionTable({
 
   async function confirmEdit(step: number) {
 
-  const value = drafts[step];
+    const value = drafts[step];
 
-  if (!value) return;
+    if (!value) return;
 
-  const { normalized, number } = parseDecimalInput(value);
+    const { normalized, number } = parseDecimalInput(value);
 
-  if (number === null) {
-    setErrors(e => ({
-      ...e,
-      [step]: "Invalid number"
-    }));
-    return;
+    if (number === null) {
+      setErrors(e => ({
+        ...e,
+        [step]: "Invalid number"
+      }));
+      return;
+    }
+
+    try {
+
+      await onRegisterMeasurement(step, number);
+
+      setDrafts(d => ({
+        ...d,
+        [step]: normalized
+      }));
+
+      setEditingStep(null);
+
+    } catch (error) {
+
+      const te = getTauriCommandError(error);
+      const firstError = te?.fieldErrors?.[0];
+
+      if (!firstError) return;
+
+      setErrors(e => ({
+        ...e,
+        [step]: firstError.message
+      }));
+    }
   }
-
-  try {
-
-    await onRegisterMeasurement(step, number);
-
-    setDrafts(d => ({
-      ...d,
-      [step]: normalized
-    }));
-
-    setEditingStep(null);
-
-  } catch (error) {
-
-    const te = getTauriCommandError(error);
-    const firstError = te?.fieldErrors?.[0];
-
-    if (!firstError) return;
-
-    setErrors(e => ({
-      ...e,
-      [step]: firstError.message
-    }));
-  }
-}
 
   /* ----------------------------------------------------------
      Render
@@ -255,6 +287,13 @@ export function FinishingExecutionTable({
               <Table.Cell align="right">
 
                 <ExecutionNumberField
+                  ref={(el) => {
+  if (el) {
+    inputRefs.current[step.index] = el;
+  } else {
+    delete inputRefs.current[step.index];
+  }
+}}
                   state={isEditing ? "active" : step.status}
 
                   value={
