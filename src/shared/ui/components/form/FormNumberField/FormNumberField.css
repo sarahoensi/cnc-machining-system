@@ -1,3 +1,5 @@
+/* FormNumberField.css */
+
 /* =====================================================
    FORM NUMBER FIELD
    - Layout wrapper only
@@ -15,3 +17,17 @@
   margin: 0;
 }
 
+
+/* =====================================================
+   SOURCE STATES
+===================================================== */
+
+.ni-input.source-user {
+  background: var(--color-user);
+}
+
+.ni-input.source-machine {
+  background: transparent;
+  color: var(--text-strong);
+  border-color: transparent;
+}

@@ -20,6 +20,10 @@ import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 import { formatNumber } from "@shared/ui/format/formatNumber";
 import { getTauriCommandError } from "@shared/api/tauriError";
 
+import "./ExecutionTable.css";
+
+
+
 /* ============================================================
    Step data
 ============================================================ */
@@ -122,7 +126,7 @@ export function FinishingExecutionTable({
 
   return (
 
-    <Table.Root>
+    <Table.Root className="execution-table">
 
       {/* ===================================================== */}
       {/* Header                                                */}
@@ -136,7 +140,7 @@ export function FinishingExecutionTable({
             Step
           </Table.HeaderCell>
 
-          <Table.HeaderCell align="right">
+          <Table.HeaderCell align="center">
             Start Ø
           </Table.HeaderCell>
 
@@ -147,10 +151,10 @@ export function FinishingExecutionTable({
               { value: "deltaD", label: "ΔD" },
               { value: "ae", label: "ae" },
             ]}
-            align="right"
+            align="center"
           />
 
-          <Table.HeaderCell align="right">
+          <Table.HeaderCell align="center">
             Measurement
           </Table.HeaderCell>
 

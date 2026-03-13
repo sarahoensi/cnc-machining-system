@@ -1,3 +1,5 @@
+/* NumberInput.css */
+
 /* =====================================================
    NUMBER INPUT (PRIMITIVE)
    - No form knowledge
@@ -48,19 +50,7 @@
     color var(--duration-fast) var(--easing-standard);
 }
 
-/* =====================================================
-   SOURCE STATES
-===================================================== */
 
-.ni-input.source-user {
-  background: var(--color-user);
-}
-
-.ni-input.source-machine {
-  background: transparent;
-  color: var(--text-strong);
-  border-color: transparent;
-}
 
 /* =====================================================
    INTERACTION STATES

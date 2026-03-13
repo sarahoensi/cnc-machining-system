@@ -1,0 +1,30 @@
+/* ExecutionTable.css */
+
+.execution-table {
+  table-layout: fixed;
+}
+
+.execution-table th:nth-child(1),
+.execution-table td:nth-child(1) {
+  width: 20px;     /* Step */
+}
+
+.execution-table th:nth-child(2),
+.execution-table td:nth-child(2) {
+  width: 90px;     /* Start Ø */
+}
+
+.execution-table th:nth-child(3),
+.execution-table td:nth-child(3) {
+  width: 90px;     /* ΔD / ae */
+}
+
+.execution-table th:nth-child(4),
+.execution-table td:nth-child(4) {
+  width: 100px;    /* Measurement */
+}
+
+.execution-table th:nth-child(5),
+.execution-table td:nth-child(5) {
+  width: 80px;    /* Actions */
+}

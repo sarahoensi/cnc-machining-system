@@ -4,6 +4,7 @@
 
 import { NumberInput } from "../primitives/NumberInput/NumberInput";
 import type { ExecutionStepStatus } from "@shared/execution";
+import "./ExecutionNumberField.css";
 
 type Props = {
   state: ExecutionStepStatus;
@@ -35,7 +36,7 @@ export function ExecutionNumberField({
   ----------------------------------------------------------- */
 
   if (state === "pending") {
-    return <span>—</span>;
+    return <span></span>;
   }
 
   /* -----------------------------------------------------------

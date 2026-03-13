@@ -6,6 +6,8 @@ import { NumberInput } from "../../primitives/NumberInput/NumberInput";
 import type { FieldState } from "@shared/form/types/fields";
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 
+import "./FormNumberField.css";
+
 type Props = {
   label: string;
   field: FieldState;
