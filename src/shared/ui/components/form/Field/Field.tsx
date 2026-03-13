@@ -1,4 +1,4 @@
-// shares/ui/components/Field/Fields.tsx
+// shared/ui/components/Field/Field.tsx
 
 import { ReactNode } from "react";
 import { LabelWithTooltip } from "../../primitives/LabelWithToolTip/LabelWithTooltip";
@@ -12,6 +12,7 @@ type Props = {
   htmlFor?: string;
   as?: "div" | "fieldset";
   children: ReactNode;
+  className?: string;
 };
 
 export function Field({
@@ -21,12 +22,14 @@ export function Field({
   htmlFor,
   as = "div",
   children,
+  className,
 }: Props) {
+
   const Component = as;
 
   if (as === "fieldset") {
     return (
-      <fieldset className={clsx("field", error && "has-error")}>
+      <fieldset className={clsx("field", className, error && "has-error")}>
         <legend className="field-label">
           <LabelWithTooltip label={label} tooltip={tooltip} />
         </legend>
@@ -39,7 +42,7 @@ export function Field({
   }
 
   return (
-    <Component className={clsx("field", error && "has-error")}>
+    <Component className={clsx("field", className, error && "has-error")}>
       <label className="field-label" htmlFor={htmlFor}>
         <LabelWithTooltip label={label} tooltip={tooltip} />
       </label>

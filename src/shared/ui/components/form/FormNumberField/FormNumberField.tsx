@@ -62,6 +62,7 @@ export function FormNumberField({
       tooltip={tooltip}
       error={error}
       htmlFor={id}
+      className={`nf-input source-${field.source}`}
     >
       <NumberInput
         id={id}

@@ -22,12 +22,16 @@
    SOURCE STATES
 ===================================================== */
 
-.ni-input.source-user {
+.nf-input.source-user .ni-input {
   background: var(--color-user);
 }
 
-.ni-input.source-machine {
+.nf-input.source-machine .ni-input {
   background: transparent;
-  color: var(--text-strong);
   border-color: transparent;
+  color: var(--text-strong);
+}
+
+.nf-input.source-empty .ni-input {
+  background: var(--control-bg);
 }
