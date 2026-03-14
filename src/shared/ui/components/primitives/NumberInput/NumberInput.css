@@ -19,8 +19,9 @@
   display: flex;
   align-items: center;
   width: 100%;
-
   min-width: 0;
+
+
 }
 
 /* =====================================================
@@ -37,6 +38,7 @@
 
   font: inherit;
   color: inherit;
+
 }
 
 /* =====================================================
@@ -45,11 +47,10 @@
 
 .ni-unit {
   position: absolute;
-  right: var(--space-3);
+  right: 0;
 
   font-size: inherit;
   font-weight: inherit;
-
   color: var(--text-muted);
 
   pointer-events: none;

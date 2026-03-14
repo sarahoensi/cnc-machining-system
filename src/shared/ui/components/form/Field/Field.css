@@ -47,8 +47,6 @@
 ===================================================== */
 
 .field-error {
-  margin-top: var(--space-1);
-
   font-size: var(--form-caption-size);
   font-weight: var(--text-caption-weight);
   color: var(--feedback-error);

@@ -4,28 +4,35 @@
    BASE FORM INPUT STYLE
 ===================================================== */
 
+.nf-input {
+
+  --nf-padding-x: 0.75em;
+  --nf-unit-space: 2.5em;
+}
+
 .nf-input .ni-input {
-  width: 100%;
-  min-width: 0;
-  height: var(--control-height-md);
 
-  padding: 0 var(--control-padding-x-md);
-  padding-right: calc(var(--space-6) + var(--space-3));
+  font-size: var(--font-size-md);
+  font-variant-numeric: tabular-nums;
 
-  font-size: var(--text-body-size);
-  font-weight: var(--text-body-weight);
+  padding-block: 0.35em;
 
-  border-radius: var(--control-radius);
-  border: var(--border-width-sm) solid var(--control-border);
+  padding-left: var(--nf-padding-x);
+  padding-right: calc(var(--nf-padding-x) + var(--nf-unit-space));
+
+  border-radius: 0.35em;
+  border: 0.0625em solid var(--control-border);
 
   background: var(--control-bg);
   color: var(--control-text);
+}
 
-  transition:
-    background var(--duration-fast) var(--easing-standard),
-    border-color var(--duration-fast) var(--easing-standard),
-    box-shadow var(--duration-fast) var(--easing-standard),
-    color var(--duration-fast) var(--easing-standard);
+/* =====================================================
+   UNIT POSITION
+===================================================== */
+
+.nf-input .ni-unit {
+  right: var(--nf-padding-x);
 }
 
 /* =====================================================
@@ -33,7 +40,7 @@
 ===================================================== */
 
 .nf-input .ni-input:focus-visible {
-  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  box-shadow: 0 0 0 0.125em var(--focus-ring-color);
   border-color: var(--control-border-focus);
 }
 
