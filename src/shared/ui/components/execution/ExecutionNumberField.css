@@ -1,0 +1,66 @@
+/* ExecutionNumberField.css */
+
+/* =====================================================
+   EXECUTION FIELD
+===================================================== */
+
+.execution-number-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* =====================================================
+   INPUT STYLE
+===================================================== */
+
+.execution-number-field .ni-input {
+  width: 100%;
+  min-width: 0;
+  height: var(--control-height-sm);
+
+  padding: 0 var(--control-padding-x-sm);
+  /* padding-right: calc(var(--space-6) + var(--space-3)); */
+
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+
+  border-radius: var(--control-radius);
+  border: var(--border-width-sm) solid var(--control-border);
+
+  background: transparent;
+  color: var(--text-primary);
+
+  outline: none;
+}
+
+
+.execution-number-field .ni-input:focus-visible {
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  border-color: var(--control-border-focus);
+}
+
+/* =====================================================
+   READONLY STATE
+===================================================== */
+
+.execution-number-field .ni-input.readonly {
+  border-color: transparent;
+  cursor: default;
+
+  pointer-events: none;
+}
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.execution-number-error {
+  margin-top: var(--space-1);
+
+  font-size: var(--form-caption-size);
+  font-weight: var(--text-caption-weight);
+
+  color: var(--feedback-error);
+}
+

@@ -1,0 +1,20 @@
+/* shared/ui/components/form/FormActions/FormActions.css */
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.form-actions-primary {
+  width: 100%;
+}
+
+.form-actions-primary .app-button {
+  width: 100%;
+}
+
+.form-actions-secondary {
+  align-self: flex-end;
+}

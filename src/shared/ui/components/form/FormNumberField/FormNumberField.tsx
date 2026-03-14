@@ -1,10 +1,12 @@
 // shared/ui/components/form/formNumberField/FormNumberField.tsx
 
-import React, { useId } from "react";
+import React, { forwardRef, useId } from "react";
 import { Field } from "../Field/Field";
 import { NumberInput } from "../../primitives/NumberInput/NumberInput";
 import type { FieldState } from "@shared/form/types/fields";
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
+
+import "./FormNumberField.css";
 
 type Props = {
   label: string;
@@ -19,13 +21,17 @@ type Props = {
   readonly?: boolean;
 
   autoFocus?: boolean;
-  inputRef?: React.Ref<HTMLInputElement>;
+
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
 };
 
-export function FormNumberField({
+export const FormNumberField = forwardRef<
+HTMLInputElement,
+Props
+>(function FormNumberField(
+{
   label,
   tooltip,
   error,
@@ -35,11 +41,12 @@ export function FormNumberField({
   disabled,
   readonly,
   autoFocus,
-  inputRef,
   onKeyDown,
   onFocus,
   onBlur,
-}: Props) {
+},
+ref
+) {
 
   const id = useId();
 
@@ -60,6 +67,7 @@ export function FormNumberField({
       tooltip={tooltip}
       error={error}
       htmlFor={id}
+      className={`nf-input source-${field.source}`}
     >
       <NumberInput
         id={id}
@@ -69,11 +77,11 @@ export function FormNumberField({
         disabled={isDisabled}
         readonly={isReadOnly}
         autoFocus={autoFocus}
-        inputRef={inputRef}
+        ref={ref}
         onKeyDown={onKeyDown}
         onFocus={onFocus}
         onBlur={onBlur}
       />
     </Field>
   );
-}
+});

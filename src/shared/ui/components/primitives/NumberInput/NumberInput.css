@@ -1,7 +1,9 @@
+/* NumberInput.css */
+
 /* =====================================================
    NUMBER INPUT (PRIMITIVE)
-   - No form knowledge
-   - No execution knowledge
+   - Structure only
+   - No design decisions
 ===================================================== */
 
 .number-input {
@@ -17,80 +19,24 @@
   display: flex;
   align-items: center;
   width: 100%;
+
+  min-width: 0;
 }
 
 /* =====================================================
-   INPUT BASE
+   INPUT BASE (unstyled)
 ===================================================== */
 
 .ni-input {
   width: 100%;
-  height: var(--control-height-md);
+  min-width: 0;
 
-  padding: 0 var(--control-padding-x-md);
-  padding-right: var(--space-8);
-
-  font-size: var(--text-body-size);
-  font-weight: var(--text-body-weight);
-
-  border-radius: var(--control-radius);
-  border: var(--border-width-thin) solid var(--control-border);
-
-  background: var(--control-bg);
-  color: var(--control-text);
-
+  border: none;
   outline: none;
-
-  transition:
-    background var(--duration-fast) var(--easing-standard),
-    border-color var(--duration-fast) var(--easing-standard),
-    box-shadow var(--duration-fast) var(--easing-standard),
-    color var(--duration-fast) var(--easing-standard);
-}
-
-/* =====================================================
-   SOURCE STATES
-===================================================== */
-
-.ni-input.source-user {
-  background: var(--color-user);
-}
-
-.ni-input.source-machine {
   background: transparent;
-  color: var(--text-strong);
-  border-color: transparent;
-}
 
-/* =====================================================
-   INTERACTION STATES
-===================================================== */
-
-
-.ni-input:focus-visible {
-  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
-  border-color: var(--control-border-focus);
-}
-
-/* =====================================================
-   DISABLED
-===================================================== */
-
-.ni-input:disabled {
-  background: var(--control-bg-disabled);
-  color: var(--control-text-disabled);
-  cursor: not-allowed;
-  opacity: var(--opacity-disabled);
-}
-
-/* =====================================================
-   READONLY
-===================================================== */
-
-.ni-input.readonly {
-  background: var(--control-bg);
-  border-color: transparent;
-  cursor: default;
+  font: inherit;
+  color: inherit;
 }
 
 /* =====================================================
@@ -101,9 +47,11 @@
   position: absolute;
   right: var(--space-3);
 
-  font-size: var(--text-body-size);
-  font-weight: var(--text-body-weight);
+  font-size: inherit;
+  font-weight: inherit;
 
   color: var(--text-muted);
+
   pointer-events: none;
+  white-space: nowrap;
 }

@@ -1,6 +1,6 @@
 // features/finishing/ui/FinishingPage.tsx
 
-import { useState } from "react";
+//import { useState } from "react";
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { handleGenerateAsync } from "@shared/form";
@@ -24,6 +24,8 @@ import type { FinishingStepData } from "../domain/execution/mapExecution";
 import { PlanForm } from "./plan/PlanForm";
 import { FinishingExecutionTable } from "./execution/ExecutionTable";
 
+import { Page } from "@app/shell/Page";
+
 
 export function FinishingPage() {
 
@@ -32,8 +34,12 @@ export function FinishingPage() {
         createInitialFinishingForm
     );
 
-    const [execution, setExecution] =
-        useState<ExecutionState<FinishingStepData> | null>(null);
+    const [execution, setExecution] = useFeatureForm<
+        ExecutionState<FinishingStepData> | null
+    >(
+        "finishing-execution",
+        () => null
+    );
 
     const formReadOnly = execution !== null;
 
@@ -148,6 +154,7 @@ export function FinishingPage() {
     ============================================================ */
 
     return (
+        <Page title="Finishing">
 
         <div className="app-content split">
 
@@ -189,6 +196,8 @@ export function FinishingPage() {
             </div>
 
         </div>
+
+        </Page>
 
     );
 }

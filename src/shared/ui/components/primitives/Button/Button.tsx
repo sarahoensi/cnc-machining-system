@@ -1,8 +1,9 @@
 // src/ui/components/Button/Button.tsx
 
 import React, { forwardRef } from "react";
+import clsx from "clsx";
 import "./Button.css";
-//import SettingsIcon from "@assets/settings-icon.svg";
+
 import SettingsIcon from "../../../../../assets/settings-icon.svg";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -15,15 +16,23 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     {
       variant = "primary",
       size = "medium",
-      className = "",
+      className,
       children,
       ...rest
     },
     ref
   ) {
-    const classes = `app-button ${variant} ${size} ${className}`;
     return (
-      <button ref={ref} className={classes} {...rest}>
+      <button
+        ref={ref}
+        className={clsx(
+          "app-button",
+          variant,
+          size,
+          className
+        )}
+        {...rest}
+      >
         {children}
       </button>
     );
@@ -78,18 +87,16 @@ export const EditButton = forwardRef<
   );
 });
 
-
 export const SettingsButton = forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement>
 >(function SettingsButton(props, ref) {
   return (
     <Button ref={ref} variant="icon" size="icon" {...props}>
-     <img src={SettingsIcon} alt="settings" className="icon-img" />
+      <img src={SettingsIcon} alt="settings" className="icon-img" />
     </Button>
   );
 });
-
 
 export const OkButton = forwardRef<
   HTMLButtonElement,

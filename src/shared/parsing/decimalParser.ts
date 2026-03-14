@@ -27,3 +27,17 @@ export function safeParseDecimal(value: string): number | null {
 export function normalizeDecimalInput(value: string): string {
   return value.trim().replace(",", ".");
 }
+
+
+export function parseDecimalInput(value: string): {
+  normalized: string;
+  number: number | null;
+} {
+  const normalized = normalizeDecimalInput(value);
+  const parsed = safeParseDecimal(normalized);
+
+  return {
+    normalized,
+    number: parsed,
+  };
+}

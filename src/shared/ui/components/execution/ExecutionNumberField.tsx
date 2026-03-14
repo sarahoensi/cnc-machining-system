@@ -1,9 +1,9 @@
 // shared/ui/components/execution/ExecutionNumberField.tsx
 
-// shared/ui/components/execution/ExecutionNumberField.tsx
-
+import { forwardRef } from "react";
 import { NumberInput } from "../primitives/NumberInput/NumberInput";
 import type { ExecutionStepStatus } from "@shared/execution";
+import "./ExecutionNumberField.css";
 
 type Props = {
   state: ExecutionStepStatus;
@@ -11,23 +11,33 @@ type Props = {
   value?: string;
   placeholder?: string;
   unit?: string;
-  error?: string
+  error?: string;
   readonly?: boolean;
+
+  autoFocus?: boolean;
 
   onChange?: (value: string) => void;
   onSubmit?: () => void;
 };
 
-export function ExecutionNumberField({
-  state,
-  value,
-  placeholder,
-  unit,
-  error,
-  readonly = false,
-  onChange,
-  onSubmit,
-}: Props) {
+export const ExecutionNumberField = forwardRef<
+  HTMLInputElement,
+  Props
+>(function ExecutionNumberField(
+  {
+    state,
+    value,
+    placeholder,
+    unit,
+    error,
+    readonly = false,
+    autoFocus,
+    onChange,
+    onSubmit,
+  },
+  ref
+) {
+
 
   /* -----------------------------------------------------------
      Pending step
@@ -35,34 +45,32 @@ export function ExecutionNumberField({
   ----------------------------------------------------------- */
 
   if (state === "pending") {
-    return <span>—</span>;
+    return <span></span>;
   }
 
-  /* -----------------------------------------------------------
-     Active step
-     Allow user input
-  ----------------------------------------------------------- */
-
   return (
-  <div className="execution-number-field">
-    <NumberInput
-      value={value ?? ""}
-      placeholder={placeholder}
-      unit={unit}
-      readonly={readonly || state === "completed"}
-      onChange={(v) => onChange?.(v)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          onSubmit?.();
-        }
-      }}
-    />
+    <div className="execution-number-field">
+      <NumberInput
+        ref={ref}
+        value={value ?? ""}
+        placeholder={placeholder}
+        unit={unit}
+        readonly={readonly || state === "completed"}
+        autoFocus={autoFocus}
+      
+        onChange={(v) => onChange?.(v)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            onSubmit?.();
+          }
+        }}
+      />
 
-    {error && (
-      <div className="execution-number-error">
-        {error}
-      </div>
-    )}
-  </div>
-);
-}
+      {error && (
+        <div className="execution-number-error">
+          {error}
+        </div>
+      )}
+    </div>
+  );
+});

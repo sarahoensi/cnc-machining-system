@@ -1,16 +1,77 @@
+/* FormNumberField.css */
+
 /* =====================================================
-   FORM NUMBER FIELD
-   - Layout wrapper only
-   - No control styling
+   BASE FORM INPUT STYLE
 ===================================================== */
 
-.form-number-field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+.nf-input .ni-input {
+  width: 100%;
+  min-width: 0;
+  height: var(--control-height-md);
+
+  padding: 0 var(--control-padding-x-md);
+  padding-right: calc(var(--space-6) + var(--space-3));
+
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+
+  border-radius: var(--control-radius);
+  border: var(--border-width-sm) solid var(--control-border);
+
+  background: var(--control-bg);
+  color: var(--control-text);
+
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    border-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    color var(--duration-fast) var(--easing-standard);
 }
 
-/* Optional: tighter spacing inside field-control */
-.form-number-field .field-control {
-  margin: 0;
+/* =====================================================
+   FOCUS
+===================================================== */
+
+.nf-input .ni-input:focus-visible {
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  border-color: var(--control-border-focus);
+}
+
+/* =====================================================
+   DISABLED
+===================================================== */
+
+.nf-input .ni-input:disabled {
+  background: var(--control-bg-disabled);
+  color: var(--control-text-disabled);
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
+
+/* =====================================================
+   READONLY
+===================================================== */
+
+.nf-input .ni-input.readonly {
+  background: var(--control-bg);
+  border-color: transparent;
+  cursor: default;
+}
+
+/* =====================================================
+   SOURCE STATES
+===================================================== */
+
+.nf-input.source-user .ni-input {
+  background: var(--color-user);
+}
+
+.nf-input.source-machine .ni-input {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-strong);
+}
+
+.nf-input.source-empty .ni-input {
+  background: var(--control-bg);
 }

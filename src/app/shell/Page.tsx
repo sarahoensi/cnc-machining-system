@@ -1,5 +1,8 @@
 // app/shell/Page.tsx
 
+import { useEffect } from "react";
+import { useTitle } from "./TitleContext";
+
 export function Page({
   title,
   children,
@@ -7,10 +10,11 @@ export function Page({
   title: string;
   children: React.ReactNode;
 }) {
-  return (
-    <div>
-      <h1 style={{ fontSize: "var(--font-xl)" }}>{title}</h1>
-      <div style={{ marginTop: "var(--space-4)" }}>{children}</div>
-    </div>
-  );
+  const { setTitle } = useTitle();
+
+  useEffect(() => {
+    setTitle(title);
+  }, [title, setTitle]);
+
+  return <>{children}</>;
 }

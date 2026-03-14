@@ -1,6 +1,6 @@
 // features/finishing/ui/execution/ExecutionTable.tsx
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { Table } from "@shared/ui/components/table/Table/Table";
 import { TableHeaderSelect } from "@shared/ui/components/table/Table";
@@ -19,6 +19,12 @@ import type { ExecutionState } from "@shared/execution";
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 import { formatNumber } from "@shared/ui/format/formatNumber";
 import { getTauriCommandError } from "@shared/api/tauriError";
+
+import "./ExecutionTable.css";
+
+import { parseDecimalInput } from "@shared/parsing/decimalParser";
+
+
 
 /* ============================================================
    Step data
@@ -39,7 +45,7 @@ type Props = {
   onRegisterMeasurement(
     step: number,
     measurement: number
-  ): void;
+  ): Promise<void>;
 };
 
 /* ============================================================
@@ -62,8 +68,40 @@ export function FinishingExecutionTable({
   const [drafts, setDrafts] =
     useState<Record<number, string>>({});
 
-    const [errors, setErrors] =
-  useState<Record<number, string>>({});
+  const [errors, setErrors] =
+    useState<Record<number, string>>({});
+
+  /* ============================================================
+     Input refs (for autofocus)
+  ============================================================ */
+
+  const inputRefs =
+    useRef<Record<number, HTMLInputElement | null>>({});
+
+  useEffect(() => {
+
+    if (editingStep !== null) return;
+
+    const active = execution.steps.find(
+      s => s.status === "active"
+    );
+
+    if (!active) return;
+
+    const input = inputRefs.current[active.index];
+
+    input?.focus();
+
+  }, [execution, editingStep]);
+
+  useEffect(() => {
+    if (editingStep === null) return;
+
+    const input = inputRefs.current[editingStep];
+
+    input?.focus();
+  }, [editingStep]);
+
 
   /* ----------------------------------------------------------
      Draft helpers
@@ -90,31 +128,44 @@ export function FinishingExecutionTable({
 
   async function confirmEdit(step: number) {
 
-  const value = drafts[step];
+    const value = drafts[step];
 
-  if (!value) return;
+    if (!value) return;
 
-  try {
+    const { normalized, number } = parseDecimalInput(value);
 
-    await onRegisterMeasurement(
-      step,
-      Number(value)
-    );
+    if (number === null) {
+      setErrors(e => ({
+        ...e,
+        [step]: "Invalid number"
+      }));
+      return;
+    }
 
-    setEditingStep(null);
+    try {
 
-  } catch (error) {
-  const te = getTauriCommandError(error);
-  const firstError = te?.fieldErrors?.[0];
+      await onRegisterMeasurement(step, number);
 
-  if (!firstError) return;
+      setDrafts(d => ({
+        ...d,
+        [step]: normalized
+      }));
 
-  setErrors(e => ({
-    ...e,
-    [step]: firstError.message
-  }));
-}
-}
+      setEditingStep(null);
+
+    } catch (error) {
+
+      const te = getTauriCommandError(error);
+      const firstError = te?.fieldErrors?.[0];
+
+      if (!firstError) return;
+
+      setErrors(e => ({
+        ...e,
+        [step]: firstError.message
+      }));
+    }
+  }
 
   /* ----------------------------------------------------------
      Render
@@ -122,7 +173,7 @@ export function FinishingExecutionTable({
 
   return (
 
-    <Table.Root>
+    <Table.Root className="execution-table">
 
       {/* ===================================================== */}
       {/* Header                                                */}
@@ -136,7 +187,7 @@ export function FinishingExecutionTable({
             Step
           </Table.HeaderCell>
 
-          <Table.HeaderCell align="right">
+          <Table.HeaderCell align="center">
             Start Ø
           </Table.HeaderCell>
 
@@ -147,10 +198,10 @@ export function FinishingExecutionTable({
               { value: "deltaD", label: "ΔD" },
               { value: "ae", label: "ae" },
             ]}
-            align="right"
+            align="center"
           />
 
-          <Table.HeaderCell align="right">
+          <Table.HeaderCell align="center">
             Measurement
           </Table.HeaderCell>
 
@@ -236,43 +287,50 @@ export function FinishingExecutionTable({
               <Table.Cell align="right">
 
                 <ExecutionNumberField
-  state={isEditing ? "active" : step.status}
+                  ref={(el) => {
+                    if (el) {
+                      inputRefs.current[step.index] = el;
+                    } else {
+                      delete inputRefs.current[step.index];
+                    }
+                  }}
+                  state={isEditing ? "active" : step.status}
 
-  value={
-    isEditing || isActive
-      ? draft
-      : step.measurement.value
-  }
+                  value={
+                    isEditing || isActive
+                      ? draft
+                      : step.measurement.value
+                  }
 
-  placeholder={
-    step.measurement.value
-      ? undefined
-      : formatNumber(
-          step.data.expectedDiameter,
-          decimals
-        )
-  }
+                  placeholder={
+                    step.measurement.value
+                      ? undefined
+                      : formatNumber(
+                        step.data.expectedDiameter,
+                        decimals
+                      )
+                  }
 
-  error={errors[step.index]}
+                  error={errors[step.index]}
 
-  onChange={
-    isEditing || isActive
-      ? (v) => {
-          updateDraft(step.index, v);
+                  onChange={
+                    isEditing || isActive
+                      ? (v) => {
+                        updateDraft(step.index, v);
 
-          setErrors(e => {
-            const next = { ...e };
-            delete next[step.index];
-            return next;
-          });
-        }
-      : undefined
-  }
+                        setErrors(e => {
+                          const next = { ...e };
+                          delete next[step.index];
+                          return next;
+                        });
+                      }
+                      : undefined
+                  }
 
-  onSubmit={() =>
-    confirmEdit(step.index)
-  }
-/>
+                  onSubmit={() =>
+                    confirmEdit(step.index)
+                  }
+                />
 
               </Table.Cell>
 

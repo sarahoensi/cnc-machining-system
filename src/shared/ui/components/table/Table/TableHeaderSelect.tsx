@@ -1,6 +1,6 @@
-// shared/ui/components/data/Table/TableHeaderSelext.tsx
+// TableHeaderSelect.tsx
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { Table } from "./Table";
 import "./TableHeaderSelect.css";
 
@@ -22,24 +22,73 @@ export function TableHeaderSelect<T extends string>({
   options,
   align = "center",
 }: Props<T>) {
+
+  const [open, setOpen] = useState(false);
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const selected = options.find(o => o.value === value);
+
+  /* =========================================
+     Close on click outside
+  ========================================= */
+
+  useEffect(() => {
+
+    function handleClickOutside(event: MouseEvent) {
+
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+
+  }, []);
+
   return (
     <Table.HeaderCell align={align}>
-      <div className="ths-wrapper">
-        <select
-          className="ths-select"
-          value={value}
-          onChange={(e) =>
-            onChange(e.target.value as T)
-          }
+
+      <div
+        className="ths-wrapper"
+        ref={wrapperRef}
+      >
+
+        <button
+          className="ths-button"
+          onClick={() => setOpen(o => !o)}
         >
-          {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-        <span className="ths-caret" />
+          {selected?.label}
+          <span className="ths-caret" />
+        </button>
+
+        {open && (
+          <div className="ths-menu">
+            {options.map(opt => (
+              <button
+                key={opt.value}
+                className="ths-option"
+                onClick={() => {
+                  onChange(opt.value);
+                  setOpen(false);
+                }}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        )}
+
       </div>
+
     </Table.HeaderCell>
   );
 }

@@ -1,11 +1,7 @@
 // shared/ui/primitives/NumberInput/NumberInput.tsx
 
-import React, { useId } from "react";
+import React, { forwardRef, useId } from "react";
 import clsx from "clsx";
-import {
-  normalizeDecimalInput,
-  safeParseDecimal,
-} from "@shared/parsing/decimalParser";
 import "./NumberInput.css";
 
 type Props = {
@@ -20,19 +16,20 @@ type Props = {
   readonly?: boolean;
 
   autoFocus?: boolean;
-  inputRef?: React.Ref<HTMLInputElement>;
+
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
 
   placeholder?: string;
-
   className?: string;
 };
 
 const INPUT_REGEX = /^-?\d*([.,]\d*)?$/;
 
-export function NumberInput({
+export const NumberInput = forwardRef<HTMLInputElement, Props>(
+function NumberInput(
+{
   id,
   value,
   onChange,
@@ -40,13 +37,15 @@ export function NumberInput({
   disabled = false,
   readonly = false,
   autoFocus,
-  inputRef,
   onKeyDown,
   onFocus,
   onBlur,
   placeholder,
   className,
-}: Props) {
+},
+ref
+) {
+
 
   const generatedId = useId();
   const inputId = id ?? generatedId;
@@ -70,31 +69,15 @@ export function NumberInput({
     }
   }
 
-  function handleBlurInternal(
-    e: React.FocusEvent<HTMLInputElement>
-  ) {
+  function handleBlurInternal(e: React.FocusEvent<HTMLInputElement>) {
 
-    if (isDisabled || isReadOnly) {
-      onBlur?.(e);
-      return;
-    }
-
-    const raw = value;
-
-    if (!raw.trim()) {
-      onBlur?.(e);
-      return;
-    }
-
-    const normalized = normalizeDecimalInput(raw);
-    const parsed = safeParseDecimal(normalized);
-
-    if (parsed !== null) {
-      onChange(parsed.toString());
-    }
-
+  if (isDisabled || isReadOnly) {
     onBlur?.(e);
+    return;
   }
+
+  onBlur?.(e);
+}
 
   return (
     <div className={clsx("number-input", className)}>
@@ -102,7 +85,7 @@ export function NumberInput({
 
         <input
           id={inputId}
-          ref={inputRef}
+          ref={ref}
           type="text"
           inputMode="decimal"
           pattern="-?[0-9]*[.,]?[0-9]*"
@@ -132,4 +115,4 @@ export function NumberInput({
       </div>
     </div>
   );
-}
+});

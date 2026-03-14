@@ -16,10 +16,7 @@ import { parseTriangle } from "./domain/parseTriangle";
 import { solveTriangle } from "./api/solveTriangle";
 import { triangleFieldConfig } from "./ui/triangleFieldConfig";
 
-import {
-  CalculateButton,
-  ResetButton,
-} from "@shared/ui/components/primitives/Button/Button";
+
 import { useFormNavigation } from "@shared/ui";
 
 import {
@@ -29,15 +26,16 @@ import {
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 
-
+import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
+import { Page } from "@app/shell/Page";
 
 
 export function TrianglePage() {
 
   const [form, setForm] = useFeatureForm(
-  "triangle",
-  createInitialTriangleForm
-);
+    "triangle",
+    createInitialTriangleForm
+  );
 
   const navigation = useFormNavigation({
     keys: triangleFieldConfig.map(f => f.key),
@@ -92,6 +90,7 @@ export function TrianglePage() {
   ========================= */
 
   return (
+    <Page title="Triangle">
     <div className="app-content split">
 
       <div className="app-left">
@@ -113,7 +112,7 @@ export function TrianglePage() {
                 onFieldChange(f.key, value)
               }
 
-              inputRef={navigation.register(f.key)}
+              ref={navigation.register(f.key)}
               onKeyDown={navigation.handleKeyDown(f.key)}
 
 
@@ -121,16 +120,14 @@ export function TrianglePage() {
           );
         })}
 
-        <div style={{ marginTop: 16, display: "flex", gap: 12 }}>
 
-          <CalculateButton
-            onClick={onCalculate}
-            //disabled={form.status === "executing"}
-          />
 
-          <ResetButton onClick={onReset} />
+        <FormActions
+          onCalculate={onCalculate}
+          onReset={onReset}
+        />
 
-        </div>
+
 
       </div>
 
@@ -139,5 +136,7 @@ export function TrianglePage() {
       </div>
 
     </div>
+    </Page>
   );
+  
 }

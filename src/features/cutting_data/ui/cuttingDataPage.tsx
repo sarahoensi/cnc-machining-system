@@ -6,10 +6,7 @@ import {
 } from "@shared/form/engine/formEngine";
 
 import { FormNumberField } from "@shared/ui/components/form/FormNumberField/FormNumberField";
-import {
-  CalculateButton,
-  ResetButton,
-} from "@shared/ui/components/primitives/Button/Button";
+
 
 import { useFormNavigation } from "@shared/ui";
 
@@ -28,6 +25,8 @@ import {
 } from "../domain/cuttingDataConstraints";
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
+import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
+import { Page } from "@app/shell/Page";
 
 
 /* ============================================================
@@ -94,6 +93,7 @@ const [form, setForm] = useFeatureForm(
   ========================= */
 
   return (
+    <Page title="Cutting Data">
     <div className="app-content split">
 
       <div className="app-left">
@@ -113,19 +113,16 @@ const [form, setForm] = useFeatureForm(
               onChange={(value) =>
                 onFieldChange(f.key, value)
               }
-              inputRef={navigation.register(f.key)}
+              ref={navigation.register(f.key)}
               onKeyDown={navigation.handleKeyDown(f.key)}
             />
           );
         })}
 
-        <div style={{ marginTop: 16, display: "flex", gap: 12 }}>
-          <CalculateButton
-            onClick={onCalculate}
-            disabled={form.status === "executing"}
-          />
-          <ResetButton onClick={onReset} />
-        </div>
+          <FormActions
+  onCalculate={onCalculate}
+  onReset={onReset}
+/>
 
       </div>
 
@@ -134,5 +131,6 @@ const [form, setForm] = useFeatureForm(
       </div>
 
     </div>
+    </Page>
   );
 }

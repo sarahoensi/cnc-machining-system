@@ -1,4 +1,10 @@
-/* styles/tokens/semantic.css */ 
+/* styles/tokens/semantic.css
+=====================================================
+SEMANTIC TOKENS
+Describe UI meaning. Never hardcode values.
+Map to primitive tokens or color tokens.
+=====================================================
+*/
 
 :root {
 
@@ -59,6 +65,7 @@
    CONTROL SIZING
 ===================================================== */
 
+  --control-height-xsm: var(--size-control-xsm);
   --control-height-sm: var(--size-control-sm);
   --control-height-md: var(--size-control-md);
   --control-height-lg: var(--size-control-lg);
@@ -79,6 +86,10 @@
   --border-muted: var(--color-border-muted);
   --border-focus: var(--color-focus);
 
+  --border-error: var(--feedback-error);
+  --border-success: var(--feedback-success);
+  --border-warning: var(--feedback-warning);
+
 
 /* =====================================================
    CONTROL COLORS & STATES
@@ -95,6 +106,25 @@
 
   --control-text: var(--text-primary);
   --control-text-disabled: var(--text-muted);
+
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+  --input-bg: var(--surface-panel);
+  --input-bg-user: var(--color-user);
+  --input-bg-machine: var(--color-machine);
+  --input-bg-disabled: var(--color-disabled);
+  --input-bg-locked: var(--color-locked);
+  --input-bg-empty: var(--surface-page);
+
+  --input-border: var(--border-width-md);
+  --input-border-focus: var(--border-focus);
+  --input-border-error: var(--feedback-error);
+
+  --input-text: var(--text-primary);
+  --input-text-disabled: var(--text-muted);
 
 
 /* =====================================================
@@ -129,9 +159,34 @@
   --button-secondary-text: var(--text-primary);
 
   --button-danger-bg: var(--feedback-error);
-  --button-danger-text: var(--text-inverse);
+  --button-danger-text: var(--color-on-danger, var(--text-inverse));
 
   --button-icon-hover-bg: var(--surface-hover);
+  --button-focus-ring: var(--focus-ring-color);
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+  --sidebar-bg: var(--surface-panel);
+  --sidebar-border: var(--border-default);
+
+  --sidebar-item-bg: var(--surface-panel);
+  --sidebar-item-bg-hover: var(--surface-hover);
+  --sidebar-item-bg-active: var(--brand-primary-soft);
+
+  --sidebar-item-text: var(--text-primary);
+  --sidebar-item-text-active: var(--text-primary);
+
+
+/* =====================================================
+   TOPBAR
+===================================================== */
+
+  --topbar-bg: var(--surface-panel);
+  --topbar-border: var(--border-default);
+  --topbar-text: var(--text-primary);
 
 
 /* =====================================================
@@ -144,12 +199,11 @@
   --table-row-active: var(--surface-elevated);
   --table-border: var(--border-default);
 
-  /* =====================================================
-   TABLE CONTROL SIZING
-===================================================== */
+  --table-control-height: var(--size-control-sm);
 
---table-control-height: 32px;
-
+  --table-text-size: var(--font-size-sm);
+  --table-header-size: var(--font-size-sm);
+  --table-caption-size: var(--font-size-xs);
 
 
 /* =====================================================
@@ -177,11 +231,19 @@
 
 
 /* =====================================================
-   CONTEXT: TABLE
+   DIAGRAM
 ===================================================== */
 
-  --table-text-size: var(--font-size-sm);
-  --table-header-size: var(--font-size-sm);
-  --table-caption-size: var(--font-size-xs);
+  --diagram-material-fill: var(--surface-panel);
+  --diagram-part-stroke: var(--color-primary);
+  --diagram-part-stroke-muted: var(--border-default);
+
+  --diagram-active-stroke: var(--feedback-error);
+  --diagram-active-fill: var(--brand-primary-soft);
+
+  --diagram-disabled-opacity: var(--opacity-disabled);
+
+  --diagram-tool-fill: var(--surface-muted);
+  --diagram-tool-stroke: var(--border-strong);
 
 }

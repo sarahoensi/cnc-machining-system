@@ -7,7 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AppProviders } from "@app/providers/AppProviders";
 
 import "@styles/themes/index.css";
-import "@styles/index.css";
+import "@styles/tokens/index.css";
 
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
