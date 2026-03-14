@@ -22,12 +22,16 @@ export function FormActions({
 }: Props) {
   return (
     <div className="form-actions">
-      <CalculateButton
-        onClick={onCalculate}
-        disabled={disabled}
-      />
+      <div className="form-actions-primary">
+        <CalculateButton
+          onClick={onCalculate}
+          disabled={disabled}
+        />
+      </div>
 
-      <ResetButton onClick={onReset} />
+      <div className="form-actions-secondary">
+        <ResetButton onClick={onReset} />
+      </div>
 
       {children}
     </div>

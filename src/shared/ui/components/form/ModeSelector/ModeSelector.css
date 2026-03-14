@@ -12,6 +12,8 @@
 
   gap: var(--layout-section-gap);
   margin-top: var(--space-2);
+
+  min-width: 0;
 }
 
 /* Disabled / readonly */
@@ -19,6 +21,7 @@
 .radio-group.disabled,
 .radio-group.readonly {
   opacity: var(--opacity-disabled);
+  pointer-events: none;
 }
 
 
@@ -29,6 +32,7 @@
 .radio-option {
   display: inline-flex;
   align-items: center;
+  flex: 0 0 auto;
 
   gap: var(--space-2);
 
@@ -42,4 +46,5 @@
 .radio-option input[type="radio"] {
   margin: 0;
   cursor: pointer;
+  flex: 0 0 auto;
 }
