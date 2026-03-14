@@ -27,6 +27,7 @@ import {
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
+import { Page } from "@app/shell/Page";
 
 /* ============================================================
    Component
@@ -90,6 +91,7 @@ export function HelixPage() {
   ========================= */
 
   return (
+    <Page title="Helix">
     <div className="app-content split">
 
       <div className="app-left">
@@ -149,5 +151,6 @@ export function HelixPage() {
       </div>
 
     </div>
+    </Page>
   );
 }

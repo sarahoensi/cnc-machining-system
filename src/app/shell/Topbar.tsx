@@ -4,6 +4,7 @@ import { SettingsButton } from "@shared/ui/components/primitives/Button/Button";
 import { SettingsMenu } from "../settings/SettingsMenu";
 import "./Topbar.css";
 import { useRef, useState } from "react";
+import { useTitle } from "./TitleContext";
 
 
 interface Props {
@@ -13,6 +14,8 @@ interface Props {
 export function Topbar({ toggleSidebar }: Props) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const { title } = useTitle();
 
 
   return (
@@ -24,8 +27,9 @@ export function Topbar({ toggleSidebar }: Props) {
       </div>
 
       <div className="topbar-center">
-        <h1 className="topbar-title">Wingardium Tooliosa
-        </h1>
+        <h1 className="topbar-title">
+  {title || "Wingardium Tooliosa"}
+</h1>
       </div>
 
       <div className="topbar-right">

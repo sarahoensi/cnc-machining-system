@@ -26,6 +26,7 @@ import {
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
+import { Page } from "@app/shell/Page";
 
 
 /* ============================================================
@@ -92,6 +93,7 @@ const [form, setForm] = useFeatureForm(
   ========================= */
 
   return (
+    <Page title="Cutting Data">
     <div className="app-content split">
 
       <div className="app-left">
@@ -129,5 +131,6 @@ const [form, setForm] = useFeatureForm(
       </div>
 
     </div>
+    </Page>
   );
 }

@@ -24,6 +24,8 @@ import type { FinishingStepData } from "../domain/execution/mapExecution";
 import { PlanForm } from "./plan/PlanForm";
 import { FinishingExecutionTable } from "./execution/ExecutionTable";
 
+import { Page } from "@app/shell/Page";
+
 
 export function FinishingPage() {
 
@@ -33,11 +35,11 @@ export function FinishingPage() {
     );
 
     const [execution, setExecution] = useFeatureForm<
-  ExecutionState<FinishingStepData> | null
->(
-  "finishing-execution",
-  () => null
-);
+        ExecutionState<FinishingStepData> | null
+    >(
+        "finishing-execution",
+        () => null
+    );
 
     const formReadOnly = execution !== null;
 
@@ -152,6 +154,7 @@ export function FinishingPage() {
     ============================================================ */
 
     return (
+        <Page title="Finishing">
 
         <div className="app-content split">
 
@@ -193,6 +196,8 @@ export function FinishingPage() {
             </div>
 
         </div>
+
+        </Page>
 
     );
 }
