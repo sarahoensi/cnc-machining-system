@@ -6,16 +6,17 @@
 
 .nf-input .ni-input {
   width: 100%;
+  min-width: 0;
   height: var(--control-height-md);
 
   padding: 0 var(--control-padding-x-md);
-  padding-right: var(--space-8);
+  padding-right: calc(var(--space-6) + var(--space-3));
 
   font-size: var(--text-body-size);
   font-weight: var(--text-body-weight);
 
   border-radius: var(--control-radius);
-  border: var(--border-width-thin) solid var(--control-border);
+  border: var(--border-width-sm) solid var(--control-border);
 
   background: var(--control-bg);
   color: var(--control-text);

@@ -8,15 +8,16 @@
   justify-content: center;
   gap: var(--space-2);
 
+  min-width: 0;
+  min-height: var(--button-height);
+  padding: 0 var(--button-padding-x);
+
   font-family: inherit;
   font-weight: var(--font-weight-medium);
   font-size: var(--button-font-size);
 
-  min-height: var(--button-height);
-  padding: 0 var(--button-padding-x);
-
   border-radius: var(--control-radius);
-  border: var(--border-width-thin) solid transparent;
+  border: var(--border-width-sm) solid transparent;
 
   cursor: pointer;
   user-select: none;

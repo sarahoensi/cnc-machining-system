@@ -4,6 +4,8 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  min-width: 0;
 }
 
 .sidebar-nav {
@@ -13,6 +15,8 @@
 }
 
 .sidebar-link {
+  display: flex;
+  align-items: start;
   padding: var(--space-3) var(--space-6);
 
   color: var(--text-secondary);

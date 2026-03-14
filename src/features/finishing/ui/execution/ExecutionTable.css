@@ -1,53 +1,54 @@
 /* ExecutionTable.css */
 
-.execution-table {
-  table-layout: fixed;
-}
+/* =====================================================
+   COLUMN WIDTHS
+   Specific to Execution table
+===================================================== */
 
 .execution-table th:nth-child(1),
 .execution-table td:nth-child(1) {
-  width: 20px;     /* Step */
+  width: 3rem;        /* Step */
 }
 
 .execution-table th:nth-child(2),
 .execution-table td:nth-child(2) {
-  width: 90px;     /* Start Ø */
+  width: 7rem;        /* Start Ø */
 }
 
 .execution-table th:nth-child(3),
 .execution-table td:nth-child(3) {
-  width: 90px;     /* ΔD / ae */
+  width: 6rem;        /* ΔD / ae */
 }
 
 .execution-table th:nth-child(4),
 .execution-table td:nth-child(4) {
-  width: 100px;    /* Measurement */
+  width: 8rem;        /* Measurement */
 }
 
 .execution-table th:nth-child(5),
 .execution-table td:nth-child(5) {
-  width: 80px;    /* Actions */
+  width: 6rem;        /* Actions */
 }
 
 
-/* ============================================================
-   UI active row (controlled by React activeStep)
-   Independent of backend active step while editing
-============================================================ */
+
+/* =====================================================
+   ACTIVE ROW (UI STATE)
+===================================================== */
 
 .execution-table .ui-table-row.active td {
-  border-top: 2px solid var(--brand-primary);
-  border-bottom: 2px solid var(--brand-primary);
+  border-top: var(--border-width-md) solid var(--brand-primary);
+  border-bottom: var(--border-width-md) solid var(--brand-primary);
 }
 
 .execution-table .ui-table-row.active td:first-child {
-  border-left: 2px solid var(--brand-primary);
+  border-left: var(--border-width-md) solid var(--brand-primary);
   border-top-left-radius: var(--control-radius);
   border-bottom-left-radius: var(--control-radius);
 }
 
 .execution-table .ui-table-row.active td:last-child {
-  border-right: 2px solid var(--brand-primary);
+  border-right: var(--border-width-md) solid var(--brand-primary);
   border-top-right-radius: var(--control-radius);
   border-bottom-right-radius: var(--control-radius);
 }

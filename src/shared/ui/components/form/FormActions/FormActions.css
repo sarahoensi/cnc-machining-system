@@ -7,13 +7,14 @@
   margin-top: var(--space-5);
 }
 
-/* Beregn */
-.form-actions > :first-child {
+.form-actions-primary {
   width: 100%;
 }
 
-/* Nullstill */
-.form-actions > :nth-child(2) {
+.form-actions-primary .app-button {
+  width: 100%;
+}
+
+.form-actions-secondary {
   align-self: flex-end;
-  width: auto;
 }
