@@ -46,7 +46,7 @@
 .ui-table th,
 .ui-table td {
   vertical-align: middle;
-  overflow: hidden;
+  overflow: visible;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
