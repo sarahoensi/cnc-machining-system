@@ -13,7 +13,7 @@ const NAV_ITEMS = [
 
 export function Sidebar() {
   return (
-    <div className="sidebar">
+    <aside className="sidebar">
       <nav className="sidebar-nav">
         {NAV_ITEMS.map(item => (
           <NavLink
@@ -27,6 +27,6 @@ export function Sidebar() {
           </NavLink>
         ))}
       </nav>
-    </div>
+    </aside>
   );
 }

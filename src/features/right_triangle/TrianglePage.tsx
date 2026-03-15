@@ -27,10 +27,13 @@ import {
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
-import { Page } from "@app/shell/Page";
+import { usePageTitle } from "@app/providers/TitleContextProvider";
 
+import { FormFigureLayout } from "@shared/ui/layout/FormFigureLayout/FormFigureLayout";
 
 export function TrianglePage() {
+
+  usePageTitle("Triangle");
 
   const [form, setForm] = useFeatureForm(
     "triangle",
@@ -89,54 +92,44 @@ export function TrianglePage() {
      Render
   ========================= */
 
-  return (
-    <Page title="Triangle">
-    <div className="app-content split">
+  
+const formContent = (
+  <>
+    {triangleFieldConfig.map((f) => {
+      const fieldState = form.fields[f.key];
 
-      <div className="app-left">
-
-        {triangleFieldConfig.map((f) => {
-          const fieldState = form.fields[f.key];
-
-          return (
-            <FormNumberField
-              key={f.key}
-              label={f.label}
-              tooltip={f.tooltip}
-              unit={f.unit}
-              field={fieldState}
-              disabled={fieldState.locked}
-              error={fieldState.error}
-              autoFocus={f.autoFocus}
-              onChange={(value) =>
-                onFieldChange(f.key, value)
-              }
-
-              ref={navigation.register(f.key)}
-              onKeyDown={navigation.handleKeyDown(f.key)}
-
-
-            />
-          );
-        })}
-
-
-
-        <FormActions
-          onCalculate={onCalculate}
-          onReset={onReset}
+      return (
+        <FormNumberField
+          key={f.key}
+          label={f.label}
+          tooltip={f.tooltip}
+          unit={f.unit}
+          field={fieldState}
+          disabled={fieldState.locked}
+          error={fieldState.error}
+          autoFocus={f.autoFocus}
+          onChange={(value) =>
+            onFieldChange(f.key, value)
+          }
+          ref={navigation.register(f.key)}
+          onKeyDown={navigation.handleKeyDown(f.key)}
         />
+      );
+    })}
+
+    <FormActions
+      onCalculate={onCalculate}
+      onReset={onReset}
+    />
+  </>
+);
 
 
-
-      </div>
-
-      <div className="app-right">
-        {/* <TriangleFigure form={form} /> */}
-      </div>
-
-    </div>
-    </Page>
-  );
+  return (
+  <FormFigureLayout
+    form={formContent}
+    figure={null}
+  />
+);
   
 }

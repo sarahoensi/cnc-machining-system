@@ -24,10 +24,13 @@ import type { FinishingStepData } from "../domain/execution/mapExecution";
 import { PlanForm } from "./plan/PlanForm";
 import { FinishingExecutionTable } from "./execution/ExecutionTable";
 
-import { Page } from "@app/shell/Page";
+import { usePageTitle } from "@app/providers/TitleContextProvider";
 
+import { FormTableLayout } from "@shared/ui/layout/FormTableLayout/FormTableLayout";
 
 export function FinishingPage() {
+
+    usePageTitle("Finishing");
 
     const [form, setForm] = useFeatureForm(
         "finishing",
@@ -149,55 +152,39 @@ export function FinishingPage() {
         setForm(createInitialFinishingForm());
     }
 
+    const formContent = (
+  <PlanForm
+    form={form}
+    setForm={updateForm}
+    onGenerate={onGenerate}
+    onReset={onReset}
+    onEdit={() => {
+      if (!confirmExecutionReset()) return;
+      clearExecution();
+    }}
+    readOnly={formReadOnly}
+  />
+);
+
+const tableContent = execution ? (
+  <FinishingExecutionTable
+    execution={execution}
+    onRegisterMeasurement={onRegisterMeasurement}
+  />
+) : (
+  <p className="hint">
+    Ingen utførelse startet ennå
+  </p>
+);
+
     /* ============================================================
        Render
     ============================================================ */
 
     return (
-        <Page title="Finishing">
-
-        <div className="app-content split">
-
-            <div className="app-left">
-
-                <PlanForm
-                    form={form}
-                    setForm={updateForm}
-                    onGenerate={onGenerate}
-                    onReset={onReset}
-                    onEdit={() => {
-                        if (!confirmExecutionReset()) return;
-                        clearExecution();
-                    }}
-                    readOnly={formReadOnly}
-                />
-
-            </div>
-
-            <div className="app-right">
-
-                {execution ? (
-
-                    <FinishingExecutionTable
-                        execution={execution}
-                        onRegisterMeasurement={
-                            onRegisterMeasurement
-                        }
-                    />
-
-                ) : (
-
-                    <p className="hint">
-                        Ingen utførelse startet ennå
-                    </p>
-
-                )}
-
-            </div>
-
-        </div>
-
-        </Page>
-
-    );
+  <FormTableLayout
+    form={formContent}
+    table={tableContent}
+  />
+);
 }

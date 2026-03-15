@@ -1,0 +1,86 @@
+/* src/app/layout/AppShell.css */
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
+/* =========================
+   ROOT LAYOUT GRID
+========================= */
+
+.app-shell {
+  display: grid;
+
+  grid-template-columns: auto 1fr;
+  grid-template-rows: var(--topbar-height) 1fr;
+
+  grid-template-areas:
+    "topbar topbar"
+    "sidebar main";
+
+  height: 100%;
+  width: 100%;
+}
+
+/* =========================
+   AREAS
+========================= */
+
+.shell-topbar {
+  grid-area: topbar;
+  z-index: var(--z-topbar);
+}
+
+.shell-sidebar {
+  grid-area: sidebar;
+
+  width: var(--sidebar-width);
+
+  overflow: hidden;
+  background: var(--surface-panel);
+
+  border-right: var(--border-width-thin) solid var(--border-default);
+
+  transition: width var(--duration-slow) var(--easing-standard);
+}
+
+.shell-main {
+  grid-area: main;
+
+  overflow: auto;
+
+  display: flex;
+  flex-direction: column;
+
+  min-height: 0;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.shell-content {
+  padding: var(--layout-padding);
+  background: var(--surface-page);
+}
+
+.shell-footer {
+  border-top: var(--border-width-thin) solid var(--border-default);
+  padding: var(--space-3);
+  background: var(--surface-panel);
+}
+
+/* =========================
+   SIDEBAR COLLAPSE
+========================= */
+
+.sidebar-collapsed {
+  --sidebar-width: 0;
+}
+
+

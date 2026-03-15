@@ -26,14 +26,16 @@ import {
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
-import { Page } from "@app/shell/Page";
-
+import { usePageTitle } from "@app/providers/TitleContextProvider";
+import { FormFigureLayout } from "@shared/ui/layout/FormFigureLayout/FormFigureLayout";
 
 /* ============================================================
    Component
 ============================================================ */
 
 export function CuttingDataPage() {
+
+  usePageTitle("Cutting Data");
 
 const [form, setForm] = useFeatureForm(
   "cutting",
@@ -88,49 +90,45 @@ const [form, setForm] = useFeatureForm(
     setForm(createInitialCuttingDataForm());
   }
 
+
+  const formContent = (
+  <>
+    {cuttingDataFieldConfig.map((f) => {
+      const fieldState = form.fields[f.key];
+
+      return (
+        <FormNumberField
+          key={f.key}
+          label={f.label}
+          unit={f.unit}
+          field={fieldState}
+          disabled={fieldState.locked || f.readOnly}
+          error={fieldState.error}
+          autoFocus={f.autoFocus}
+          onChange={(value) =>
+            onFieldChange(f.key, value)
+          }
+          ref={navigation.register(f.key)}
+          onKeyDown={navigation.handleKeyDown(f.key)}
+        />
+      );
+    })}
+
+    <FormActions
+      onCalculate={onCalculate}
+      onReset={onReset}
+    />
+  </>
+);
+
   /* =========================
      Render
   ========================= */
 
-  return (
-    <Page title="Cutting Data">
-    <div className="app-content split">
-
-      <div className="app-left">
-
-        {cuttingDataFieldConfig.map((f) => {
-          const fieldState = form.fields[f.key];
-
-          return (
-            <FormNumberField
-              key={f.key}
-              label={f.label}
-              unit={f.unit}
-              field={fieldState}
-              disabled={fieldState.locked || f.readOnly}
-              error={fieldState.error}
-              autoFocus={f.autoFocus}
-              onChange={(value) =>
-                onFieldChange(f.key, value)
-              }
-              ref={navigation.register(f.key)}
-              onKeyDown={navigation.handleKeyDown(f.key)}
-            />
-          );
-        })}
-
-          <FormActions
-  onCalculate={onCalculate}
-  onReset={onReset}
-/>
-
-      </div>
-
-      <div className="app-right">
-        {/* Future cutting data visualization */}
-      </div>
-
-    </div>
-    </Page>
-  );
+return (
+  <FormFigureLayout
+    form={formContent}
+    figure={null}
+  />
+);
 }

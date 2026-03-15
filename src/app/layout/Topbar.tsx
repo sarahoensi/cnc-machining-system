@@ -4,7 +4,7 @@ import { SettingsButton } from "@shared/ui/components/primitives/Button/Button";
 import { SettingsMenu } from "../settings/SettingsMenu";
 import "./Topbar.css";
 import { useRef, useState } from "react";
-import { useTitle } from "./TitleContext";
+import { useTitle } from "../providers/TitleContextProvider";
 
 
 interface Props {
@@ -26,11 +26,9 @@ export function Topbar({ toggleSidebar }: Props) {
         </button>
       </div>
 
-      <div className="topbar-center">
         <h1 className="topbar-title">
-  {title || "Wingardium Tooliosa"}
-</h1>
-      </div>
+        {title || "Wingardium Tooliosa"}
+      </h1>
 
       <div className="topbar-right">
         <SettingsButton
