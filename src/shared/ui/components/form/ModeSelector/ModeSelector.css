@@ -48,3 +48,7 @@
   cursor: pointer;
   flex: 0 0 auto;
 }
+
+.radio-option input[type="radio"]:not(:checked) + * {
+  opacity: var(--opacity-disabled);
+}
