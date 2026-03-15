@@ -5,9 +5,9 @@
 ===================================================== */
 
 .execution-number-field {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
+    /* component spacing */
+  --exec-padding-x: var(--control-padding-x-sm);
+  --exec-unit-space: var(--space-6);
 }
 
 /* =====================================================
@@ -15,14 +15,14 @@
 ===================================================== */
 
 .execution-number-field .ni-input {
-  width: 100%;
-  min-width: 0;
+
   height: var(--control-height-sm);
+  font-variant-numeric: tabular-nums;
 
-  padding: 0 var(--control-padding-x-sm);
-  /* padding-right: calc(var(--space-6) + var(--space-3)); */
+  padding-left: var(--exec-padding-x);
+  padding-right: calc(var(--exec-padding-x) + var(--exec-unit-space));
 
-  font-size: var(--text-body-size);
+  font-size: var(--font-size-sm);
   font-weight: var(--text-body-weight);
 
   border-radius: var(--control-radius);
@@ -38,6 +38,14 @@
 .execution-number-field .ni-input:focus-visible {
   box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
   border-color: var(--control-border-focus);
+}
+
+/* =====================================================
+   UNIT POSITION
+===================================================== */
+
+.execution-number-field .ni-unit {
+  right: var(--exec-padding-x);
 }
 
 /* =====================================================
