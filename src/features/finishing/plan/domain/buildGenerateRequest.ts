@@ -1,7 +1,7 @@
 // features/finishing/domain/plan/buildFinishingRequest.ts
 
-import type { FinishingKey, FinishingExtras } from "./finishingForm";
 import type { GenerateFinishingPlanRequest } from "../../api/types";
+import { FinishingExtras, FinishingKey } from "./finishingForm";
 
 export function buildFinishingRequest(
   input: Partial<Record<FinishingKey, number>>,

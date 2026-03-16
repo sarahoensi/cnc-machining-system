@@ -6,7 +6,7 @@ import { PlaceholderPage } from "@app/PlaceholderPage";
 import { TrianglePage } from "@features/right_triangle/TrianglePage";
 import { HelixPage } from "@features/helix/ui/HelixPage";
 import  {CuttingDataPage} from "@features/cutting_data/ui/cuttingDataPage";
-import { FinishingPage } from "@features/finishing/ui/FinishingPage";
+import { FinishingPage } from "@features/finishing/page/FinishingPage";
 
 
 export function AppRoutes() {

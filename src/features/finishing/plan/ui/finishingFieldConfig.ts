@@ -1,6 +1,6 @@
 // features/finishing/ui/plan/finishingFieldConfig.ts
 
-import type { FinishingKey } from "../../domain/plan/finishingForm";
+import { FinishingKey } from "../domain/finishingForm";
 
 export type FinishingFieldConfig = {
   key: FinishingKey;

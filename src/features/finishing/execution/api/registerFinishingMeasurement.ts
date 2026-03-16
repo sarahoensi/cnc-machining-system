@@ -1,6 +1,6 @@
 // features/finishing/api/registerFinishingMeasurement.ts
 
-import { registerFinishingMeasurementApi } from "../../api/client";
+import { registerFinishingMeasurementApi } from "../../api/finishingApi";
 import {
   RegisterFinishingMeasurementRequest,
   FinishingExecutionResponse,

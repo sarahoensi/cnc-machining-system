@@ -13,18 +13,10 @@ import {
 
 import { useFormNavigation } from "@shared/ui";
 
-import {
-  FinishingKey,
-  createInitialFinishingForm,
-} from "../../domain/plan/finishingForm";
-
-import {
-  validFinishingInputSets,
-  mutuallyExclusiveFinishingPairs,
-} from "../../domain/plan/finishingConstraints";
-
 import { finishingFieldConfig } from "./finishingFieldConfig";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
+import { createInitialFinishingForm, FinishingKey } from "../domain/finishingForm";
+import { mutuallyExclusiveFinishingPairs, validFinishingInputSets } from "../domain/finishingConstraints";
 
 type Props = {
   form: ReturnType<typeof createInitialFinishingForm>;

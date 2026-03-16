@@ -1,10 +1,10 @@
 // features/finishing/api/generateFinishingPlan.ts
 
-import { generateFinishingPlanApi } from "../client";
-import { buildFinishingRequest } from "../../domain/plan/buildGenerateRequest";
+import { generateFinishingPlanApi } from "../../api/finishingApi";
 
-import type { FinishingKey, FinishingExtras } from "../../domain/plan/finishingForm";
-import type { FinishingExecutionResponse } from "../types";
+import type { FinishingExecutionResponse } from "../../api/types";
+import { buildFinishingRequest } from "../domain/buildGenerateRequest";
+import { FinishingExtras, FinishingKey } from "../domain/finishingForm";
 
 export async function generateFinishingPlan(
   input: Partial<Record<FinishingKey, number>>,
