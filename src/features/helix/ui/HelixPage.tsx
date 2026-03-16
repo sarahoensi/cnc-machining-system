@@ -93,60 +93,60 @@ export function HelixPage() {
   ========================= */
 
   const formContent = (
-  <>
-    <div style={{ marginBottom: 16 }}>
-      <ModeSelector
-        name="helix-mode"
-        label="Mode"
-        value={form.extras.mode}
-        onChange={(newMode) =>
-          setForm(prev =>
-            handleModeChange(prev, {
-              ...prev.extras,
-              mode: newMode,
-            })
-          )
-        }
-        options={[
-          { value: "Outer", label: "Outer" },
-          { value: "Inner", label: "Inner" },
-        ]}
-      />
-    </div>
-
-    {helixFieldConfig.map((f) => {
-      const fieldState = form.fields[f.key];
-
-      return (
-        <FormNumberField
-          key={f.key}
-          label={f.label}
-          unit={f.unit}
-          field={fieldState}
-          disabled={fieldState.locked || f.readOnly}
-          error={fieldState.error}
-          autoFocus={f.autoFocus}
-          onChange={(value) =>
-            onFieldChange(f.key, value)
+    <>
+      <div>
+        <ModeSelector
+          name="helix-mode"
+          label="Mode"
+          value={form.extras.mode}
+          onChange={(newMode) =>
+            setForm(prev =>
+              handleModeChange(prev, {
+                ...prev.extras,
+                mode: newMode,
+              })
+            )
           }
-          ref={navigation.register(f.key)}
-          onKeyDown={navigation.handleKeyDown(f.key)}
+          options={[
+            { value: "Outer", label: "Outer" },
+            { value: "Inner", label: "Inner" },
+          ]}
         />
-      );
-    })}
+      </div>
 
-    <FormActions
-      onCalculate={onCalculate}
-      onReset={onReset}
-    />
-  </>
-);
+      {helixFieldConfig.map((f) => {
+        const fieldState = form.fields[f.key];
+
+        return (
+          <FormNumberField
+            key={f.key}
+            label={f.label}
+            unit={f.unit}
+            field={fieldState}
+            disabled={fieldState.locked || f.readOnly}
+            error={fieldState.error}
+            autoFocus={f.autoFocus}
+            onChange={(value) =>
+              onFieldChange(f.key, value)
+            }
+            ref={navigation.register(f.key)}
+            onKeyDown={navigation.handleKeyDown(f.key)}
+          />
+        );
+      })}
+
+      <FormActions
+        onCalculate={onCalculate}
+        onReset={onReset}
+      />
+    </>
+  );
 
 
   return (
-  <FormFigureLayout
-    form={formContent}
-    figure={null}
-  />
-);
+    <FormFigureLayout
+      form={formContent}
+      figure={null}
+    />
+  );
 }
