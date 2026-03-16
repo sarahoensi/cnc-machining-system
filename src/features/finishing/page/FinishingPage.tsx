@@ -26,6 +26,21 @@ export function FinishingPage() {
     />
   );
 
+  const formSummary = (
+    {
+        mode: finishing.form.extras.mode,
+        startDiameter:
+          finishing.form.fields.start_diameter_mm.value,
+        targetDiameter:
+          finishing.form.fields.target_diameter_mm.value,
+        cuts: finishing.form.fields.cuts.value,
+        radialEngagement:
+          finishing.form.fields.radial_engagement_mm.value,
+      }
+
+
+  );
+
   if (!finishing.execution) {
     return (
       <FormFigureLayout
@@ -38,16 +53,7 @@ export function FinishingPage() {
   return (
     <ExecutionView
       execution={finishing.execution}
-      summary={{
-        mode: finishing.form.extras.mode,
-        startDiameter:
-          finishing.form.fields.start_diameter_mm.value,
-        targetDiameter:
-          finishing.form.fields.target_diameter_mm.value,
-        cuts: finishing.form.fields.cuts.value,
-        radialEngagement:
-          finishing.form.fields.radial_engagement_mm.value,
-      }}
+      summary={formSummary}
       onRegisterMeasurement={finishing.registerMeasurement}
       onEditPlan={finishing.editPlan}
     />
