@@ -37,8 +37,6 @@ export function FinishingPage() {
         radialEngagement:
           finishing.form.fields.radial_engagement_mm.value,
       }
-
-
   );
 
   if (!finishing.execution) {
@@ -56,6 +54,7 @@ export function FinishingPage() {
       summary={formSummary}
       onRegisterMeasurement={finishing.registerMeasurement}
       onEditPlan={finishing.editPlan}
+      onReset={finishing.reset}
     />
   );
 }

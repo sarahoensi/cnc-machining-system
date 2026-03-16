@@ -29,6 +29,7 @@ export function mapFinishingExecution(
         expectedDiameter: s.plannedEndMm,
       }
 
-    }))
+    })),
+    response.finished
   )
 }

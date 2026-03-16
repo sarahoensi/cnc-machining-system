@@ -48,16 +48,21 @@ export function useFinishingPageController() {
 
   function confirmExecutionReset(): boolean {
 
-    if (!executionHasMeasurements()) {
-      return true;
-    }
+  if (!execution) return true;
 
-    return window.confirm(
-      "Det finnes registrerte målinger.\n\n" +
-      "Hvis du endrer planen vil utførelsen bli slettet.\n\n" +
-      "Vil du fortsette?"
-    );
-  }
+  const finished =
+    execution.activeIndex === execution.steps.length;
+
+  if (finished) return true;
+
+  if (!executionHasMeasurements()) return true;
+
+  return window.confirm(
+    "Det finnes registrerte målinger.\n\n" +
+    "Hvis du endrer planen vil utførelsen bli slettet.\n\n" +
+    "Vil du fortsette?"
+  );
+}
 
   function clearExecution() {
     setExecution(null);

@@ -47,6 +47,7 @@ export function FinishingExecutionTable({
 }: Props) {
 
   const { decimals } = useDisplaySettings();
+  const finished = execution.finished;
 
   const [cutMode, setCutMode] =
     useState<"deltaD" | "ae">("deltaD");
@@ -60,6 +61,8 @@ export function FinishingExecutionTable({
     cancelEdit,
     confirmEdit,
   } = useExecutionEditing(onRegisterMeasurement);
+
+  
 
   /* ============================================================
      Input refs (for autofocus)
@@ -140,6 +143,9 @@ export function FinishingExecutionTable({
 
                 onStartEdit={startEdit}
                 onCancelEdit={cancelEdit}
+
+                finished={finished}
+                
               />
 
             );

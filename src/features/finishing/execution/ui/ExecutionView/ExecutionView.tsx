@@ -8,44 +8,61 @@ import { EditPlanButton } from "../EditPlanButton";
 import { FinishingExecutionTable } from "../ExecutionTable";
 
 import "./ExecutionView.css";
+import { ExecutionFinishedNotice } from "../ExecutionFinishedNotice/ExecutionFinishedNotice";
 
 type Props = {
-  execution: ExecutionState<FinishingStepData>;
+    execution: ExecutionState<FinishingStepData>;
 
-  summary: {
-    mode: "Inner" | "Outer";
-    startDiameter: string;
-    targetDiameter: string;
-    cuts?: string;
-    radialEngagement?: string;
-  };
+    summary: {
+        mode: "Inner" | "Outer";
+        startDiameter: string;
+        targetDiameter: string;
+        cuts?: string;
+        radialEngagement?: string;
+    };
 
-  onRegisterMeasurement(
-    step: number,
-    measurement: number
-  ): Promise<void>;
+    onRegisterMeasurement(
+        step: number,
+        measurement: number
+    ): Promise<void>;
 
-  onEditPlan(): void;
+    onEditPlan(): void;
+
+    onReset(): void;
 };
 
 export function ExecutionView({
-  execution,
-  summary,
-  onRegisterMeasurement,
-  onEditPlan,
+    execution,
+    summary,
+    onRegisterMeasurement,
+    onEditPlan,
+    onReset,
 }: Props) {
-  return (
-    <div className="execution-view">
 
-      <ExecutionPlanSummary {...summary} />
+    const finished =
+        execution.activeIndex === execution.steps.length;
 
-      <EditPlanButton onClick={onEditPlan} />
+    return (
+        <div className="execution-view">
 
-      <FinishingExecutionTable
-        execution={execution}
-        onRegisterMeasurement={onRegisterMeasurement}
-      />
+            <ExecutionPlanSummary {...summary} />
 
-    </div>
-  );
+            <EditPlanButton onClick={onEditPlan} />
+
+
+
+            <FinishingExecutionTable
+                execution={execution}
+                onRegisterMeasurement={onRegisterMeasurement}
+            />
+
+            {finished && (
+                <ExecutionFinishedNotice
+                    onCreateNewPlan={onReset}
+                />
+            )}
+
+
+        </div>
+    );
 }

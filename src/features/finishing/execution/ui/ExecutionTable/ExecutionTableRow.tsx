@@ -35,6 +35,8 @@ type Props = {
 
   onStartEdit(step: number, value: string): void;
   onCancelEdit(): void;
+
+  finished:boolean
 };
 
 export function ExecutionTableRow({
@@ -45,6 +47,7 @@ export function ExecutionTableRow({
   error,
   editingStep,
   inputRefs,
+  finished,
   onDraftChange,
   onConfirm,
   onStartEdit,
@@ -59,8 +62,9 @@ export function ExecutionTableRow({
   const isActive = step.status === "active";
 
   const isEditableCompleted =
-    step.status === "completed" &&
-    step.editable;
+  !finished &&
+  step.status === "completed" &&
+  step.editable;
 
   const isInputEditable = isEditing || isActive;
 
@@ -181,6 +185,7 @@ export function ExecutionTableRow({
           onConfirm={onConfirm}
           onStartEdit={onStartEdit}
           onCancelEdit={onCancelEdit}
+          finished={finished}
         />
 
       </Table.Cell>

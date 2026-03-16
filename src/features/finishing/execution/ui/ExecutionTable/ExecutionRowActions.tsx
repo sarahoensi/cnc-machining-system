@@ -13,6 +13,7 @@ type Props = {
   isEditing: boolean;
   isActive: boolean;
   isEditableCompleted: boolean;
+  finished: boolean;
 
   value: string;
 
@@ -30,10 +31,15 @@ export function ExecutionRowActions({
   isEditableCompleted,
   value,
   measurementValue,
+  finished,
   onConfirm,
   onStartEdit,
   onCancelEdit,
 }: Props) {
+
+  if (finished) {
+  return null
+}
 
   if (isEditing) {
     return (
