@@ -10,9 +10,8 @@
   flex-direction: row;
   align-items: center;
 
-  gap: var(--layout-section-gap);
-  margin-top: var(--space-2);
-
+  margin-top: var(--field-label-gap);
+  gap: var(--field-option-gap);
   min-width: 0;
 }
 

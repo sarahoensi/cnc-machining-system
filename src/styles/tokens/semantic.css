@@ -9,241 +9,169 @@ Map to primitive tokens or color tokens.
 :root {
 
 /* =====================================================
-   SURFACES
+SURFACES
 ===================================================== */
 
-  --surface-page: var(--color-surface);
-  --surface-panel: var(--color-surface-2);
-  --surface-elevated: var(--color-surface-elevated);
-  --surface-muted: var(--color-surface-muted);
-  --surface-hover: var(--color-surface-hover);
-
+--surface-page: var(--color-surface);
+--surface-panel: var(--color-surface-2);
+--surface-elevated: var(--color-surface-elevated);
+--surface-hover: var(--color-surface-hover);
+--surface-muted: var(--color-surface-muted);
 
 /* =====================================================
-   TEXT
+TEXT
 ===================================================== */
 
-  --text-primary: var(--color-text);
-  --text-secondary: var(--color-text-muted);
-  --text-muted: var(--color-text-muted);
-  --text-placeholder: var(--color-text-placeholder);
-  --text-inverse: var(--color-text-inverse);
-  --text-strong: var(--color-text-strong);
-
+--text-primary: var(--color-text);
+--text-secondary: var(--color-text-muted);
+--text-muted: var(--color-text-muted);
+--text-inverse: var(--color-text-inverse);
+--text-strong: var(--color-text-strong);
 
 /* =====================================================
-   TYPOGRAPHY (GLOBAL ROLES)
+TYPOGRAPHY ROLES
 ===================================================== */
 
-  --text-body-size: var(--font-size-md);
-  --text-body-weight: var(--font-weight-regular);
-  --text-body-line-height: var(--line-height-normal);
+--text-body-size: var(--font-size-md);
+--text-body-weight: var(--font-weight-regular);
 
-  --text-label-size: var(--font-size-md);
-  --text-label-weight: var(--font-weight-medium);
+--text-label-size: var(--font-size-sm);
+--text-label-weight: var(--font-weight-medium);
 
-  --text-caption-size: var(--font-size-xs);
-  --text-caption-weight: var(--font-weight-regular);
-
-  --heading-size: var(--font-size-lg);
-  --heading-weight: var(--font-weight-semibold);
-  --heading-line-height: var(--line-height-tight);
-
+--text-caption-size: var(--font-size-xs);
 
 /* =====================================================
-   LAYOUT ROLES
+LAYOUT
 ===================================================== */
 
-  --layout-padding: var(--space-6);
-  --layout-section-gap: var(--space-6);
+--layout-padding: var(--space-6);
+--layout-gap: var(--space-6);
 
-  --topbar-height: var(--size-topbar-height);
-  --sidebar-width: var(--size-sidebar-width);
-
+--topbar-height: var(--size-topbar-height);
+--sidebar-width: var(--size-sidebar-width);
 
 /* =====================================================
-   CONTROL SIZING
+NAVIGATION SPACING
 ===================================================== */
 
-  --control-height-xsm: var(--size-control-xsm);
-  --control-height-sm: var(--size-control-sm);
-  --control-height-md: var(--size-control-md);
-  --control-height-lg: var(--size-control-lg);
+--nav-item-padding-y: var(--space-3);
+--nav-item-padding-x: var(--space-6);
 
-  --control-padding-x-sm: var(--space-3);
-  --control-padding-x-md: var(--space-4);
-  --control-padding-x-lg: var(--space-6);
-
-  --control-radius: var(--radius-md);
-
+--nav-section-padding-y: var(--space-6);
 
 /* =====================================================
-   BORDER ROLES
+CONTROL SIZING
 ===================================================== */
 
-  --border-default: var(--color-border);
-  --border-strong: var(--color-border-strong);
-  --border-muted: var(--color-border-muted);
-  --border-focus: var(--color-focus);
+--control-height-sm: var(--size-control-sm);
+--control-height-md: var(--size-control-md);
+--control-height-lg: var(--size-control-lg);
 
-  --border-error: var(--feedback-error);
-  --border-success: var(--feedback-success);
-  --border-warning: var(--feedback-warning);
+--control-padding-x-sm: var(--space-3);
+--control-padding-x-md: var(--space-4);
+--control-padding-y-sm: var(--space-1);
+--control-padding-y-md: var(--space-2);
 
+--control-radius: var(--radius-md);
 
 /* =====================================================
-   CONTROL COLORS & STATES
+PANEL / SURFACE SPACING
 ===================================================== */
 
-  --control-bg: var(--surface-panel);
-  --control-bg-hover: var(--surface-hover);
-  --control-bg-disabled: var(--surface-muted);
-
-  --control-border: var(--border-default);
-  --control-border-strong: var(--border-strong);
-  --control-border-focus: var(--border-focus);
-  --control-border-error: var(--feedback-error);
-
-  --control-text: var(--text-primary);
-  --control-text-disabled: var(--text-muted);
-
+--panel-padding-sm: var(--space-3);
+--panel-padding: var(--space-4);
+--panel-padding-lg: var(--space-6);
 
 /* =====================================================
-   INPUTS
+BORDERS
 ===================================================== */
 
-  --input-bg: var(--surface-panel);
-  --input-bg-user: var(--color-user);
-  --input-bg-machine: var(--color-machine);
-  --input-bg-disabled: var(--color-disabled);
-  --input-bg-locked: var(--color-locked);
-  --input-bg-empty: var(--surface-page);
-
-  --input-border: var(--border-width-md);
-  --input-border-focus: var(--border-focus);
-  --input-border-error: var(--feedback-error);
-
-  --input-text: var(--text-primary);
-  --input-text-disabled: var(--text-muted);
-
+--border-default: var(--color-border);
+--border-strong: var(--color-border-strong);
+--border-focus: var(--color-focus);
 
 /* =====================================================
-   BRAND
+CONTROL COLORS
 ===================================================== */
 
-  --brand-primary: var(--color-primary);
-  --brand-primary-hover: var(--color-primary-hover);
-  --brand-primary-soft: var(--color-primary-soft);
-  --brand-on-primary: var(--color-on-primary);
+--control-bg: var(--surface-panel);
+--control-bg-hover: var(--surface-hover);
+--control-bg-disabled: var(--surface-muted);
 
+--control-text: var(--text-primary);
+--control-text-disabled: var(--text-muted);
 
 /* =====================================================
-   FEEDBACK / STATUS
+INPUT
 ===================================================== */
 
-  --feedback-error: var(--color-danger);
-  --feedback-success: var(--color-success);
-  --feedback-warning: var(--color-warning);
-  --feedback-info: var(--color-info);
-
+--input-bg: var(--surface-panel);
+--input-border: var(--border-default);
 
 /* =====================================================
-   BUTTON ROLES
+BRAND
 ===================================================== */
 
-  --button-primary-bg: var(--brand-primary);
-  --button-primary-bg-hover: var(--brand-primary-hover);
-  --button-primary-text: var(--brand-on-primary);
-
-  --button-secondary-bg: var(--surface-panel);
-  --button-secondary-text: var(--text-primary);
-
-  --button-danger-bg: var(--feedback-error);
-  --button-danger-text: var(--color-on-danger, var(--text-inverse));
-
-  --button-icon-hover-bg: var(--surface-hover);
-  --button-focus-ring: var(--focus-ring-color);
-
+--brand-primary: var(--color-primary);
+--brand-primary-hover: var(--color-primary-hover);
+--brand-on-primary: var(--color-on-primary);
 
 /* =====================================================
-   SIDEBAR
+FEEDBACK
 ===================================================== */
 
-  --sidebar-bg: var(--surface-panel);
-  --sidebar-border: var(--border-default);
-
-  --sidebar-item-bg: var(--surface-panel);
-  --sidebar-item-bg-hover: var(--surface-hover);
-  --sidebar-item-bg-active: var(--brand-primary-soft);
-
-  --sidebar-item-text: var(--text-primary);
-  --sidebar-item-text-active: var(--text-primary);
-
+--feedback-error: var(--color-danger);
+--feedback-success: var(--color-success);
+--feedback-warning: var(--color-warning);
 
 /* =====================================================
-   TOPBAR
+TABLE
 ===================================================== */
 
-  --topbar-bg: var(--surface-panel);
-  --topbar-border: var(--border-default);
-  --topbar-text: var(--text-primary);
-
+--table-bg: var(--surface-panel);
+--table-header-bg: var(--surface-muted);
+--table-border: var(--border-default);
+--table-row-hover: var(--surface-hover);
+--table-row-active: var(--surface-elevated);
 
 /* =====================================================
-   TABLE ROLES
+TABLE TYPOGRAPHY
 ===================================================== */
 
-  --table-bg: var(--surface-panel);
-  --table-header-bg: var(--surface-muted);
-  --table-row-hover: var(--surface-hover);
-  --table-row-active: var(--surface-elevated);
-  --table-border: var(--border-default);
-
-  --table-control-height: var(--size-control-sm);
-
-  --table-text-size: var(--font-size-sm);
-  --table-header-size: var(--font-size-sm);
-  --table-caption-size: var(--font-size-xs);
-
+--table-text-size: var(--font-size-sm);
+--table-header-size: var(--font-size-sm);
+--table-caption-size: var(--font-size-xs);
 
 /* =====================================================
-   OVERLAY / MODAL
+SIDEBAR
 ===================================================== */
 
-  --overlay-backdrop: var(--color-backdrop);
-  --overlay-surface: var(--surface-elevated);
-
+--sidebar-bg: var(--surface-panel);
+--sidebar-border: var(--border-default);
 
 /* =====================================================
-   FOCUS
+TOPBAR
 ===================================================== */
 
-  --focus-ring-color: var(--color-focus);
-
+--topbar-bg: var(--surface-panel);
+--topbar-border: var(--border-default);
 
 /* =====================================================
-   CONTEXT: FORM
+FOCUS
 ===================================================== */
 
-  --form-text-size: var(--font-size-md);
-  --form-label-size: var(--font-size-md);
-  --form-caption-size: var(--font-size-xs);
-
+--focus-ring-color: var(--color-focus);
 
 /* =====================================================
-   DIAGRAM
+FORM SPACING
 ===================================================== */
 
-  --diagram-material-fill: var(--surface-panel);
-  --diagram-part-stroke: var(--color-primary);
-  --diagram-part-stroke-muted: var(--border-default);
+--field-option-gap: var(--space-6);
+--field-gap: var(--space-2);
+--field-label-gap: var(--space-2);
 
-  --diagram-active-stroke: var(--feedback-error);
-  --diagram-active-fill: var(--brand-primary-soft);
-
-  --diagram-disabled-opacity: var(--opacity-disabled);
-
-  --diagram-tool-fill: var(--surface-muted);
-  --diagram-tool-stroke: var(--border-strong);
+--form-component-gap: var(--space-4);
+--form-actions-gap: var(--space-3);
+--form-actions-margin-top: var(--space-5);
 
 }

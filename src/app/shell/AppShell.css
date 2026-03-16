@@ -33,7 +33,7 @@ body {
 
 .shell-topbar {
   grid-area: topbar;
-  z-index: var(--z-topbar);
+  z-index: var(--z-sticky);
 }
 
 .shell-sidebar {
@@ -44,9 +44,9 @@ body {
   overflow: hidden;
   background: var(--surface-panel);
 
-  border-right: var(--border-width-thin) solid var(--border-default);
+  border-right: var(--border-width-sm) solid var(--border-default);
 
-  transition: width var(--duration-slow) var(--easing-standard);
+  transition: width var(--duration-medium) var(--easing-standard);
 }
 
 .shell-main {
@@ -70,8 +70,8 @@ body {
 }
 
 .shell-footer {
-  border-top: var(--border-width-thin) solid var(--border-default);
-  padding: var(--space-3);
+  border-top: var(--border-width-sm) solid var(--border-default);
+  padding: var(--layout-padding);
   background: var(--surface-page);
 }
 

@@ -11,13 +11,13 @@
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  padding: var(--layout-section-gap) 0;
+  padding: var(--nav-section-padding-y) 0;
 }
 
 .sidebar-link {
   display: flex;
   align-items: start;
-  padding: var(--space-3) var(--space-6);
+  padding: var(--nav-item-padding-y) var(--nav-item-padding-x);
 
   color: var(--text-secondary);
   text-decoration: none;

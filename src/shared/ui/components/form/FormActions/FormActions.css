@@ -3,8 +3,8 @@
 .form-actions {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  margin-top: var(--space-5);
+  gap: var(--form-actions-gap);
+  margin-top: var(--form-actions-margin-top);
 }
 
 .form-actions-primary {

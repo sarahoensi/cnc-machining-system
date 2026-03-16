@@ -6,7 +6,7 @@
 
 .execution-number-field {
     /* component spacing */
-  --exec-padding-x: var(--control-padding-x-sm);
+  --exec-input-padding-x: var(--table-control-padding-x);
   --exec-unit-space: var(--space-6);
 }
 
@@ -19,10 +19,10 @@
   height: var(--control-height-sm);
   font-variant-numeric: tabular-nums;
 
-  padding-left: var(--exec-padding-x);
-  padding-right: calc(var(--exec-padding-x) + var(--exec-unit-space));
+  padding-left: var(--exec-input-padding-x);
+  padding-right: calc(var(--exec-input-padding-x) + var(--exec-unit-space));
 
-  font-size: var(--font-size-sm);
+  font-size: var(--table-text-size);
   font-weight: var(--text-body-weight);
 
   border-radius: var(--control-radius);
@@ -64,7 +64,7 @@
 ===================================================== */
 
 .execution-number-error {
-  margin-top: var(--space-1);
+  margin-top: var(--field-error-gap);
 
   font-size: var(--form-caption-size);
   font-weight: var(--text-caption-weight);
