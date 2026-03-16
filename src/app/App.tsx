@@ -1,12 +1,12 @@
 // app/App.tsx
 
-import { AppLayout } from "@app/shell/AppLayout";
+import { AppShell } from "@app/shell/AppShell";
 import { AppRoutes } from "./routes";
 
 export default function App() {
   return (
-    <AppLayout>
+    <AppShell>
       <AppRoutes />
-    </AppLayout>
+    </AppShell>
   );
 }

@@ -21,6 +21,7 @@ export type ExecutionStep<T> = {
 export type ExecutionState<T> = {
   steps: ExecutionStep<T>[];
   activeIndex: number;
+  finished: boolean;
 };
 
 /* ============================================================
@@ -31,7 +32,8 @@ export function createExecutionState<T>(steps: {
   index: number;
   data: T;
   measurement?: number | null;
-}[]): ExecutionState<T> {
+}[],
+finished: boolean): ExecutionState<T> {
 
   const firstIncomplete =
     steps.findIndex(s => s.measurement == null);
@@ -80,6 +82,7 @@ export function createExecutionState<T>(steps: {
   return {
     steps: mappedSteps,
     activeIndex,
+    finished
   };
 }
 

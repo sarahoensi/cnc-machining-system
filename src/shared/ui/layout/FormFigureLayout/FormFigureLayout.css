@@ -1,0 +1,32 @@
+/* shared/ui/layout/FormFigureLayout/FormFigureLayout.css */
+
+.form-figure-layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(360px, 480px)
+    minmax(320px, 1fr);
+
+  gap: var(--space-8);
+
+  max-width: 1100px;      /* viktig */
+  margin: 0 auto;         /* sentrer layouten */
+
+  align-items: start;
+}
+
+.form-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.figure-panel {
+  min-width: 0;
+}
+
+@media (max-width: 50rem) {
+  .form-figure-layout {
+    grid-template-columns: 1fr;
+  }
+}

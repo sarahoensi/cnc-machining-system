@@ -1,7 +1,7 @@
 // app/shell/Page.tsx
 
 import { useEffect } from "react";
-import { useTitle } from "./TitleContext";
+import { useTitle } from "../providers/TitleContextProvider";
 
 export function Page({
   title,

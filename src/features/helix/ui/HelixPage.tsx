@@ -27,13 +27,15 @@ import {
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
-import { Page } from "@app/shell/Page";
-
+import { usePageTitle } from "@app/providers/TitleContextProvider";
+import { FormFigureLayout } from "@shared/ui/layout/FormFigureLayout/FormFigureLayout";
 /* ============================================================
    Component
 ============================================================ */
 
 export function HelixPage() {
+
+  usePageTitle("Helix");
 
   const [form, setForm] = useFeatureForm(
     "helix",
@@ -90,67 +92,61 @@ export function HelixPage() {
      Render
   ========================= */
 
-  return (
-    <Page title="Helix">
-    <div className="app-content split">
-
-      <div className="app-left">
-
-        {/* Mode toggle */}
-        <div style={{ marginBottom: 16 }}>
-          <ModeSelector
-            name="helix-mode"
-            label="Mode"
-            value={form.extras.mode}
-            onChange={(newMode) =>
-              setForm(prev =>
-                handleModeChange(prev, {
-                  ...prev.extras,
-                  mode: newMode,
-                })
-              )
-            }
-            options={[
-              { value: "Outer", label: "Outer" },
-              { value: "Inner", label: "Inner" },
-            ]}
-          />
-        </div>
-
-        {/* Fields */}
-        {helixFieldConfig.map((f) => {
-          const fieldState = form.fields[f.key];
-
-          return (
-            <FormNumberField
-              key={f.key}
-              label={f.label}
-              unit={f.unit}
-              field={fieldState}
-              disabled={fieldState.locked || f.readOnly}
-              error={fieldState.error}
-              autoFocus={f.autoFocus}
-              onChange={(value) =>
-                onFieldChange(f.key, value)
-              }
-              ref={navigation.register(f.key)}
-              onKeyDown={navigation.handleKeyDown(f.key)}
-            />
-          );
-        })}
-
-        <FormActions
-          onCalculate={onCalculate}
-          onReset={onReset}
+  const formContent = (
+    <>
+      <div>
+        <ModeSelector
+          name="helix-mode"
+          label="Mode"
+          value={form.extras.mode}
+          onChange={(newMode) =>
+            setForm(prev =>
+              handleModeChange(prev, {
+                ...prev.extras,
+                mode: newMode,
+              })
+            )
+          }
+          options={[
+            { value: "Outer", label: "Outer" },
+            { value: "Inner", label: "Inner" },
+          ]}
         />
-
       </div>
 
-      <div className="app-right">
-        {/* Future helix visualization */}
-      </div>
+      {helixFieldConfig.map((f) => {
+        const fieldState = form.fields[f.key];
 
-    </div>
-    </Page>
+        return (
+          <FormNumberField
+            key={f.key}
+            label={f.label}
+            unit={f.unit}
+            field={fieldState}
+            disabled={fieldState.locked || f.readOnly}
+            error={fieldState.error}
+            autoFocus={f.autoFocus}
+            onChange={(value) =>
+              onFieldChange(f.key, value)
+            }
+            ref={navigation.register(f.key)}
+            onKeyDown={navigation.handleKeyDown(f.key)}
+          />
+        );
+      })}
+
+      <FormActions
+        onCalculate={onCalculate}
+        onReset={onReset}
+      />
+    </>
+  );
+
+
+  return (
+    <FormFigureLayout
+      form={formContent}
+      figure={null}
+    />
   );
 }

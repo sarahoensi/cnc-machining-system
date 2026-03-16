@@ -1,0 +1,48 @@
+/* src/app/layout/Topbar.css */
+
+.topbar {
+  position: relative;
+  z-index: var(--z-sticky);
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+
+  height: var(--topbar-height);
+  padding: 0 var(--layout-padding);
+
+  background: var(--surface-panel);
+  border-bottom: var(--border-width-sm) solid var(--border-default);
+
+  color: var(--text-primary);
+}
+
+
+.topbar-title {
+  margin: 0;
+  justify-self: center;
+
+  font-size: var(--heading-size);
+  font-weight: var(--heading-weight);
+  line-height: var(--heading-line-height);
+
+  color: var(--text-primary);
+}
+
+.hamburger,
+.settings-button {
+  font-size: var(--size-icon-md);
+
+  background: none;
+  border: none;
+
+  cursor: pointer;
+  color: var(--text-primary);
+
+  transition: color var(--duration-fast) var(--easing-standard);
+}
+
+.hamburger:hover,
+.settings-button:hover {
+  color: var(--brand-primary);
+}

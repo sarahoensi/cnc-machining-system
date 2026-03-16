@@ -1,0 +1,16 @@
+/* ExecutionView.css */
+
+.execution-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  width: 100%;
+  max-width: 720px;
+}
+
+.execution-view-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

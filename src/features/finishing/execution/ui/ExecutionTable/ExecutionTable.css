@@ -1,0 +1,56 @@
+/* ExecutionTable.css */
+
+/* =====================================================
+   COLUMN WIDTHS
+   Specific to Execution table
+===================================================== */
+
+.execution-table th:nth-child(1),
+.execution-table td:nth-child(1) {
+  width: 3rem;        /* Step */
+}
+
+.execution-table th:nth-child(2),
+.execution-table td:nth-child(2) {
+  width: 7rem;        /* Start Ø */
+}
+
+.execution-table th:nth-child(3),
+.execution-table td:nth-child(3) {
+  width: 6rem;        /* ΔD / ae */
+}
+
+.execution-table th:nth-child(4),
+.execution-table td:nth-child(4) {
+  width: 8rem;        /* Measurement */
+}
+
+.execution-table th:nth-child(5),
+.execution-table td:nth-child(5) {
+  width: 6rem;        /* Actions */
+}
+
+
+
+/* =====================================================
+   ACTIVE ROW (UI STATE)
+===================================================== */
+
+.execution-table .ui-table-row.active td {
+  border-top: var(--border-width-md) solid var(--brand-primary);
+  border-bottom: var(--border-width-md) solid var(--brand-primary);
+}
+
+.execution-table .ui-table-row.active td:first-child {
+  border-left: var(--border-width-md) solid var(--brand-primary);
+  border-top-left-radius: var(--control-radius);
+  border-bottom-left-radius: var(--control-radius);
+}
+
+.execution-table .ui-table-row.active td:last-child {
+  border-right: var(--border-width-md) solid var(--brand-primary);
+  border-top-right-radius: var(--control-radius);
+  border-bottom-right-radius: var(--control-radius);
+}
+
+

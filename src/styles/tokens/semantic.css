@@ -39,7 +39,7 @@ Map to primitive tokens or color tokens.
   --text-body-weight: var(--font-weight-regular);
   --text-body-line-height: var(--line-height-normal);
 
-  --text-label-size: var(--font-size-sm);
+  --text-label-size: var(--font-size-md);
   --text-label-weight: var(--font-weight-medium);
 
   --text-caption-size: var(--font-size-xs);
@@ -54,7 +54,7 @@ Map to primitive tokens or color tokens.
    LAYOUT ROLES
 ===================================================== */
 
-  --layout-padding: var(--space-4);
+  --layout-padding: var(--space-6);
   --layout-section-gap: var(--space-6);
 
   --topbar-height: var(--size-topbar-height);
@@ -226,7 +226,7 @@ Map to primitive tokens or color tokens.
 ===================================================== */
 
   --form-text-size: var(--font-size-md);
-  --form-label-size: var(--font-size-lg);
+  --form-label-size: var(--font-size-md);
   --form-caption-size: var(--font-size-xs);
 
 
