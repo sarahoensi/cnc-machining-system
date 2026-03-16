@@ -26,7 +26,7 @@ import { FinishingExecutionTable } from "./execution/ExecutionTable";
 
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 
-import { FormTableLayout } from "@shared/ui/layout/FormTableLayout/FormTableLayout";
+import { FormFigureLayout } from "@shared/ui/layout/FormFigureLayout/FormFigureLayout";
 
 export function FinishingPage() {
 
@@ -170,6 +170,7 @@ const tableContent = execution ? (
   <FinishingExecutionTable
     execution={execution}
     onRegisterMeasurement={onRegisterMeasurement}
+    onEditPlan={() => clearExecution()}
   />
 ) : (
   <p className="hint">
@@ -181,10 +182,12 @@ const tableContent = execution ? (
        Render
     ============================================================ */
 
-    return (
-  <FormTableLayout
+    return execution ? (
+  tableContent
+) : (
+  <FormFigureLayout
     form={formContent}
-    table={tableContent}
+    figure={null}
   />
 );
 }

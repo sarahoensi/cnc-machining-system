@@ -46,6 +46,8 @@ type Props = {
     step: number,
     measurement: number
   ): Promise<void>;
+
+  onEditPlan: () => void;
 };
 
 /* ============================================================
@@ -55,6 +57,7 @@ type Props = {
 export function FinishingExecutionTable({
   execution,
   onRegisterMeasurement,
+  onEditPlan,
 }: Props) {
 
   const { decimals } = useDisplaySettings();
@@ -172,6 +175,12 @@ export function FinishingExecutionTable({
   ---------------------------------------------------------- */
 
   return (
+  <>
+    <div className="execution-header">
+      <EditButton onClick={onEditPlan}>
+  ← Edit plan
+</EditButton>
+    </div>
 
     <Table.Root className="execution-table">
 
@@ -180,7 +189,6 @@ export function FinishingExecutionTable({
       {/* ===================================================== */}
 
       <Table.Head>
-
         <Table.Row>
 
           <Table.HeaderCell>
@@ -208,7 +216,6 @@ export function FinishingExecutionTable({
           <Table.HeaderCell align="center" />
 
         </Table.Row>
-
       </Table.Head>
 
       {/* ===================================================== */}
@@ -255,7 +262,6 @@ export function FinishingExecutionTable({
               {/* Start diameter */}
 
               <Table.Cell align="right">
-
                 <ExecutionNumberField
                   state={step.status}
                   value={formatNumber(
@@ -264,13 +270,11 @@ export function FinishingExecutionTable({
                   )}
                   readonly
                 />
-
               </Table.Cell>
 
               {/* ΔD / ae */}
 
               <Table.Cell align="right">
-
                 <ExecutionNumberField
                   state={step.status}
                   value={formatNumber(
@@ -279,7 +283,6 @@ export function FinishingExecutionTable({
                   )}
                   readonly
                 />
-
               </Table.Cell>
 
               {/* Measurement */}
@@ -294,6 +297,7 @@ export function FinishingExecutionTable({
                       delete inputRefs.current[step.index];
                     }
                   }}
+
                   state={isEditing ? "active" : step.status}
 
                   value={
@@ -306,9 +310,9 @@ export function FinishingExecutionTable({
                     step.measurement.value
                       ? undefined
                       : formatNumber(
-                        step.data.expectedDiameter,
-                        decimals
-                      )
+                          step.data.expectedDiameter,
+                          decimals
+                        )
                   }
 
                   error={errors[step.index]}
@@ -316,14 +320,14 @@ export function FinishingExecutionTable({
                   onChange={
                     isEditing || isActive
                       ? (v) => {
-                        updateDraft(step.index, v);
+                          updateDraft(step.index, v);
 
-                        setErrors(e => {
-                          const next = { ...e };
-                          delete next[step.index];
-                          return next;
-                        });
-                      }
+                          setErrors(e => {
+                            const next = { ...e };
+                            delete next[step.index];
+                            return next;
+                          });
+                        }
                       : undefined
                   }
 
@@ -338,16 +342,11 @@ export function FinishingExecutionTable({
 
               <Table.Cell align="center">
 
-                {/* EDIT MODE */}
-
                 {isEditing && (
-
                   <>
                     <OkButton
                       onClick={() =>
-                        confirmEdit(
-                          step.index
-                        )
+                        confirmEdit(step.index)
                       }
                     />
 
@@ -355,29 +354,19 @@ export function FinishingExecutionTable({
                       onClick={cancelEdit}
                     />
                   </>
-
                 )}
 
-                {/* ACTIVE STEP */}
-
                 {!isEditing && isActive && (
-
                   <RegisterButton
                     disabled={!draft}
                     onClick={() =>
-                      confirmEdit(
-                        step.index
-                      )
+                      confirmEdit(step.index)
                     }
                   />
-
                 )}
-
-                {/* COMPLETED STEP */}
 
                 {!isEditing &&
                   isEditableCompleted && (
-
                     <EditButton
                       onClick={() =>
                         startEdit(
@@ -388,19 +377,17 @@ export function FinishingExecutionTable({
                     >
                       Edit
                     </EditButton>
-
                   )}
 
               </Table.Cell>
 
             </Table.Row>
-
           );
-
         })}
 
       </Table.Body>
 
     </Table.Root>
-  );
+  </>
+);
 }
