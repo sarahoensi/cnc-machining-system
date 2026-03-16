@@ -72,7 +72,7 @@ body {
 .shell-footer {
   border-top: var(--border-width-thin) solid var(--border-default);
   padding: var(--space-3);
-  background: var(--surface-panel);
+  background: var(--surface-page);
 }
 
 /* =========================

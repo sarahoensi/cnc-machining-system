@@ -2,7 +2,6 @@
 
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import { PlaceholderPage } from "@app/PlaceholderPage";
 import { TrianglePage } from "@features/right_triangle/TrianglePage";
 import { HelixPage } from "@features/helix/ui/HelixPage";
 import  {CuttingDataPage} from "@features/cutting_data/ui/cuttingDataPage";
@@ -27,9 +26,6 @@ export function AppRoutes() {
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/triangle" replace />} />
-
-      {/* Example placeholder */}
-      <Route path="/example" element={<PlaceholderPage title="Example" />} />
 
     </Routes>
   );

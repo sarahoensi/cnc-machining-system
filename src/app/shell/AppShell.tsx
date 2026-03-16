@@ -36,7 +36,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <footer className="shell-footer">
-          Footer
+          
         </footer>
       </main>
 
