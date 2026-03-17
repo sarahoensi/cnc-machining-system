@@ -53,6 +53,16 @@
   background: var(--control-bg-disabled);
   color: var(--control-text-disabled);
   cursor: not-allowed;
+}
+
+.nf-control.locked .ni-input {
+  background: var(--control-bg-disabled);
+  color: var(--control-text-disabled);
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+.nf-control.locked .ni-unit {
   opacity: var(--opacity-disabled);
 }
 

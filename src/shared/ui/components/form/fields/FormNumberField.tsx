@@ -66,6 +66,7 @@ ref
       htmlFor={id}
       className={`nf-input source-${field.source}`}
     >
+      <div className={field.locked ? "nf-control locked" : "nf-control"}>
       <NumberInput
         id={id}
         ref={ref}
@@ -80,6 +81,7 @@ ref
         onBlur={onBlur}
         tabIndex={tabIndex}
       />
+      </div>
     </Field>
   );
 });
