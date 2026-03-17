@@ -51,10 +51,12 @@ ref
   const isReadonly = readonly && !isDisabled;
 
   const displayValue =
-    field.source === "machine" &&
-    typeof field.machineValue === "number"
-      ? field.machineValue.toFixed(decimals)
-      : field.value ?? "";
+  field.source === "machine" &&
+  typeof field.machineValue === "number"
+    ? field.machineValue.toFixed(decimals)
+    : field.value ?? "";
+
+    const tabIndex = field.locked ? -1 : undefined;
 
   return (
     <Field
@@ -76,6 +78,7 @@ ref
         onKeyDown={onKeyDown}
         onFocus={onFocus}
         onBlur={onBlur}
+        tabIndex={tabIndex}
       />
     </Field>
   );
