@@ -49,6 +49,7 @@ export function ExecutionTableRow({
   editingStep,
   inputRefs,
   finished,
+
   onDraftChange,
   onConfirm,
   onStartEdit,
@@ -69,10 +70,6 @@ export function ExecutionTableRow({
 
   const isInputEditable =
     isEditing || (isActive && !finished);
-
-  /* ============================================================
-     Display values
-  ============================================================ */
 
   const deltaValue =
     cutMode === "deltaD"
@@ -95,6 +92,23 @@ export function ExecutionTableRow({
         step.data.expectedDiameter,
         decimals
       );
+
+  /* =========================
+     Ref registration
+  ========================= */
+
+  const registerRef = (el: HTMLInputElement | null) => {
+    const refs = inputRefs.current;
+    if (!refs) return;
+
+    if (el) {
+      refs[step.index] = el;
+    } else {
+      delete refs[step.index];
+    }
+  };
+
+
 
   /* ============================================================
      Render
@@ -132,30 +146,12 @@ export function ExecutionTableRow({
       {/* Measurement */}
 
       <Table.Cell align="right">
-        {step.status === "pending" ? null : isEditing ? (
+        {step.status === "pending" ? null : isInputEditable ? (
           <ExecutionInput
-            ref={(el) => {
-              const refs = inputRefs.current;
-              if (!refs) return;
-
-              if (el) {
-                refs[step.index] = el;
-              } else {
-                delete refs[step.index];
-              }
-            }}
+            ref={registerRef}
             value={displayValue}
             placeholder={placeholder}
             error={error}
-            autoFocus
-            onChange={(v) => onDraftChange(step.index, v)}
-            onSubmit={() => onConfirm(step.index)}
-          />
-        ) : isActive ? (
-          <ExecutionInput
-            value={displayValue}
-            placeholder={placeholder}
-            autoFocus
             onChange={(v) => onDraftChange(step.index, v)}
             onSubmit={() => onConfirm(step.index)}
           />

@@ -10,8 +10,6 @@ type Props = {
     unit?: string;
     error?: string;
 
-    autoFocus?: boolean;
-
     onChange: (value: string) => void;
     onSubmit?: () => void;
 };
@@ -25,7 +23,6 @@ export const ExecutionInput = forwardRef<
         placeholder,
         unit,
         error,
-        autoFocus,
         onChange,
         onSubmit,
     },
@@ -33,14 +30,12 @@ export const ExecutionInput = forwardRef<
 ) {
     return (
         <div className="exec-field exec-field--input">
-
             <div className="exec-control">
                 <NumberInput
                     ref={ref}
                     value={value}
                     placeholder={placeholder}
                     unit={unit}
-                    autoFocus={autoFocus}
                     onChange={onChange}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
