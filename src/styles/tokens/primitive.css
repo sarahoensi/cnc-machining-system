@@ -23,7 +23,7 @@ SIZING
 
 /* Layout */
 --size-topbar-height: 3.5rem;                 /* ~56px */
---size-sidebar-width: clamp(12rem, 16vw, 18rem);
+--size-sidebar-width: clamp(10rem, 14vw, 16rem);
 --size-settings-width: clamp(10rem, 14vw, 12rem);
 
 /* Inputs */
