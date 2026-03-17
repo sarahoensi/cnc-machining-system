@@ -147,6 +147,7 @@ export function ExecutionTableRow({
             value={displayValue}
             placeholder={placeholder}
             error={error}
+            autoFocus
             onChange={(v) => onDraftChange(step.index, v)}
             onSubmit={() => onConfirm(step.index)}
           />
@@ -154,6 +155,7 @@ export function ExecutionTableRow({
           <ExecutionInput
             value={displayValue}
             placeholder={placeholder}
+            autoFocus
             onChange={(v) => onDraftChange(step.index, v)}
             onSubmit={() => onConfirm(step.index)}
           />

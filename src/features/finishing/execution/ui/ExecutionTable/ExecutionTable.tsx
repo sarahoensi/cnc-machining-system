@@ -71,33 +71,30 @@ export function FinishingExecutionTable({
   const inputRefs =
     useRef<Record<number, HTMLInputElement | null>>({});
 
-  useEffect(() => {
+ useEffect(() => {
+  if (editingStep !== null) return;
 
-    if (editingStep !== null) return;
+  const active = execution.steps.find(
+    s => s.status === "active"
+  );
 
-    const active = execution.steps.find(
-      s => s.status === "active"
-    );
+  if (!active) return;
 
-    if (!active) return;
-
-    const input =
-      inputRefs.current[active.index];
-
+  requestAnimationFrame(() => {
+    const input = inputRefs.current[active.index];
     input?.focus();
+  });
 
-  }, [execution, editingStep]);
+}, [execution, editingStep]);
+ useEffect(() => {
+  if (editingStep === null) return;
 
-  useEffect(() => {
-
-    if (editingStep === null) return;
-
-    const input =
-      inputRefs.current[editingStep];
-
+  requestAnimationFrame(() => {
+    const input = inputRefs.current[editingStep];
     input?.focus();
+  });
 
-  }, [editingStep]);
+}, [editingStep]);
 
   /* ============================================================
      Render
