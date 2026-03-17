@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import { Table } from "./Table";
-import { LabelWithTooltip } from "../../primitives/LabelWithToolTip/LabelWithTooltip";
+import { TextWithTooltip } from "../../primitives/TextWithTooltip/TextWithTooltip";
 
 type Props = {
   label?: string;
@@ -20,8 +20,8 @@ export function TableHeader({
   return (
     <Table.HeaderCell align={align}>
       {label && (
-        <LabelWithTooltip
-          label={label}
+        <TextWithTooltip
+          text={label}
           tooltip={tooltip}
         />
       )}

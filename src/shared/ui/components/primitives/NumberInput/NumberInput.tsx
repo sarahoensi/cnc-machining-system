@@ -8,7 +8,7 @@ type Props = {
   id?: string;
 
   value: string;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
 
   unit?: string;
 
@@ -60,12 +60,12 @@ ref
     const raw = e.target.value;
 
     if (raw === "") {
-      onChange("");
+      onChange?.("");
       return;
     }
 
     if (INPUT_REGEX.test(raw)) {
-      onChange(raw);
+      onChange?.(raw);
     }
   }
 

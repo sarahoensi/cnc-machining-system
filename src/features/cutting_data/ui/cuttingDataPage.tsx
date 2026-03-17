@@ -5,7 +5,7 @@ import {
   handleCalculateAsync,
 } from "@shared/form/engine/formEngine";
 
-import { FormNumberField } from "@shared/ui/components/form/FormNumberField/FormNumberField";
+import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
 
 
 import { useFormNavigation } from "@shared/ui";
@@ -103,7 +103,6 @@ const [form, setForm] = useFeatureForm(
           unit={f.unit}
           field={fieldState}
           disabled={fieldState.locked || f.readOnly}
-          error={fieldState.error}
           autoFocus={f.autoFocus}
           onChange={(value) =>
             onFieldChange(f.key, value)

@@ -1,7 +1,8 @@
 // features/finishing/ui/execution/ExecutionTableRow.tsx
 
 import { Table } from "@shared/ui/components/table/Table/Table";
-import { ExecutionNumberField } from "@shared/ui/components/execution/ExecutionNumberField";
+import { ExecutionInput } from "@shared/ui/components/execution/ExecutionInput";
+import { ExecutionValue } from "@shared/ui/components/execution/ExecutionValue";
 import { RefObject } from "react";
 import { formatNumber } from "@shared/ui/format/formatNumber";
 
@@ -36,7 +37,7 @@ type Props = {
   onStartEdit(step: number, value: string): void;
   onCancelEdit(): void;
 
-  finished:boolean
+  finished: boolean
 };
 
 export function ExecutionTableRow({
@@ -62,11 +63,12 @@ export function ExecutionTableRow({
   const isActive = step.status === "active";
 
   const isEditableCompleted =
-  !finished &&
-  step.status === "completed" &&
-  step.editable;
+    !finished &&
+    step.status === "completed" &&
+    step.editable;
 
-  const isInputEditable = isEditing || isActive;
+  const isInputEditable =
+    isEditing || (isActive && !finished);
 
   /* ============================================================
      Display values
@@ -80,19 +82,19 @@ export function ExecutionTableRow({
   const measurementValue =
     step.measurement.value ?? "";
 
-  const draftValue = draft ?? "";
-
   const displayValue = isInputEditable
-    ? draftValue || measurementValue
+    ? draft !== undefined
+      ? draft
+      : measurementValue
     : measurementValue;
 
   const placeholder =
     measurementValue
       ? undefined
       : formatNumber(
-          step.data.expectedDiameter,
-          decimals
-        );
+        step.data.expectedDiameter,
+        decimals
+      );
 
   /* ============================================================
      Render
@@ -110,65 +112,54 @@ export function ExecutionTableRow({
       {/* Start diameter */}
 
       <Table.Cell align="right">
-        <ExecutionNumberField
-          state={step.status}
-          value={formatNumber(
-            step.data.startDiameter,
-            decimals
-          )}
-          readonly
-        />
+        {step.status === "pending" ? null : (
+          <ExecutionValue
+            value={formatNumber(step.data.startDiameter, decimals)}
+          />
+        )}
       </Table.Cell>
 
       {/* ΔD / ae */}
 
       <Table.Cell align="right">
-        <ExecutionNumberField
-          state={step.status}
-          value={formatNumber(
-            deltaValue,
-            decimals
-          )}
-          readonly
-        />
+        {step.status === "pending" ? null : (
+          <ExecutionValue
+            value={formatNumber(deltaValue, decimals)}
+          />
+        )}
       </Table.Cell>
 
       {/* Measurement */}
 
       <Table.Cell align="right">
+        {step.status === "pending" ? null : isEditing ? (
+          <ExecutionInput
+            ref={(el) => {
+              const refs = inputRefs.current;
+              if (!refs) return;
 
-        <ExecutionNumberField
-          ref={(el) => {
-            const refs = inputRefs.current;
-            if (!refs) return;
-
-            if (el) {
-              refs[step.index] = el;
-            } else {
-              delete refs[step.index];
-            }
-          }}
-
-          state={isEditing ? "active" : step.status}
-
-          value={displayValue}
-
-          placeholder={placeholder}
-
-          error={error}
-
-          onChange={
-            isInputEditable
-              ? (v) =>
-                  onDraftChange(step.index, v)
-              : undefined
-          }
-
-          onSubmit={() =>
-            onConfirm(step.index)
-          }
-        />
-
+              if (el) {
+                refs[step.index] = el;
+              } else {
+                delete refs[step.index];
+              }
+            }}
+            value={displayValue}
+            placeholder={placeholder}
+            error={error}
+            onChange={(v) => onDraftChange(step.index, v)}
+            onSubmit={() => onConfirm(step.index)}
+          />
+        ) : isActive ? (
+          <ExecutionInput
+            value={displayValue}
+            placeholder={placeholder}
+            onChange={(v) => onDraftChange(step.index, v)}
+            onSubmit={() => onConfirm(step.index)}
+          />
+        ) : (
+          <ExecutionValue value={measurementValue} />
+        )}
       </Table.Cell>
 
       {/* Actions */}

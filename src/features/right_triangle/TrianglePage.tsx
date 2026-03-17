@@ -5,7 +5,7 @@ import {
   handleCalculateAsync,
 } from "@shared/form/engine/formEngine";
 
-import { FormNumberField } from "@shared/ui/components/form/FormNumberField/FormNumberField";
+import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
 
 import {
   createInitialTriangleForm,
@@ -106,7 +106,6 @@ const formContent = (
           unit={f.unit}
           field={fieldState}
           disabled={fieldState.locked}
-          error={fieldState.error}
           autoFocus={f.autoFocus}
           onChange={(value) =>
             onFieldChange(f.key, value)

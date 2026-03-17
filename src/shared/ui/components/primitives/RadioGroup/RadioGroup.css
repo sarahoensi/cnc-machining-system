@@ -1,4 +1,4 @@
-/* shared/ui/components/form/ModeSelector/ModeSelector.css */
+/* shared/ui/primitives/RadioGroup/RadioGroup.css */
 
 
 /* =====================================================
@@ -7,19 +7,19 @@
 
 .radio-group {
   display: flex;
-  flex-direction: row;
   align-items: center;
-
   gap: var(--layout-section-gap);
-  margin-top: var(--space-2);
 
   min-width: 0;
 }
 
-/* Disabled / readonly */
 
-.radio-group.disabled,
-.radio-group.readonly {
+/* =====================================================
+   STATES
+===================================================== */
+
+.radio-group.is-disabled,
+.radio-group.is-readonly {
   opacity: var(--opacity-disabled);
   pointer-events: none;
 }
@@ -32,9 +32,9 @@
 .radio-option {
   display: inline-flex;
   align-items: center;
-  flex: 0 0 auto;
-
   gap: var(--space-2);
+
+  flex: 0 0 auto;
 
   font-size: var(--form-text-size);
   font-weight: var(--text-body-weight);
@@ -43,12 +43,22 @@
   cursor: pointer;
 }
 
-.radio-option input[type="radio"] {
+
+/* =====================================================
+   RADIO INPUT
+===================================================== */
+
+.radio-input {
   margin: 0;
   cursor: pointer;
   flex: 0 0 auto;
 }
 
-.radio-option input[type="radio"]:not(:checked) + * {
+
+/* =====================================================
+   UNCHECKED STYLE
+===================================================== */
+
+.radio-input:not(:checked) + * {
   opacity: var(--opacity-disabled);
 }

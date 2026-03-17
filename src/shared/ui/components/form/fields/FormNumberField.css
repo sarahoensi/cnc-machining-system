@@ -1,14 +1,16 @@
-/* FormNumberField.css */
-
 /* =====================================================
-   BASE FORM INPUT STYLE
+   FORM FIELD (context wrapper)
 ===================================================== */
 
 .nf-input {
-
+  /* spacing tokens */
   --nf-padding-x: 0.75em;
   --nf-unit-space: 2.5em;
 }
+
+/* =====================================================
+   INPUT STYLE (NumberInput override)
+===================================================== */
 
 .nf-input .ni-input {
 
@@ -16,7 +18,6 @@
   font-variant-numeric: tabular-nums;
 
   padding-block: 0.35em;
-
   padding-left: var(--nf-padding-x);
   padding-right: calc(var(--nf-padding-x) + var(--nf-unit-space));
 

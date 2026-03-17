@@ -1,23 +1,23 @@
-// shared/ui/components/primitives/LabelWithToolTip/LabelWithTooltip.tsx
+// shared/ui/components/primitives/TextWithTooltip/TextWithTooltip.tsx
 
-import TooltipIcon from "../../../../../assets/tooltip-icon.svg";
 import clsx from "clsx";
-import "./LabelWithTooltip.css";
+import TooltipIcon from "../../../../../assets/tooltip-icon.svg";
+import "./TextWithTooltip.css";
 
 type Props = {
-  label: string;
+  text: string;
   tooltip?: string;
   className?: string;
 };
 
-export function LabelWithTooltip({
-  label,
+export function TextWithTooltip({
+  text,
   tooltip,
   className,
 }: Props) {
   return (
-    <span className={clsx("label-with-tooltip", className)}>
-      <span className="label-text">{label}</span>
+    <span className={clsx("text-with-tooltip", className)}>
+      <span className="twt-text">{text}</span>
 
       {tooltip && (
         <span

@@ -1,8 +1,17 @@
 // shared/ui/components/Field/Field.tsx
 
+/**
+ * Field - Rammen rundt en input
+ * - label
+ * - control
+ * - error
+ * 
+ * Vet hvordan label vises, hvor input plasseres, hvor error vises
+ */
+
 import { ReactNode } from "react";
-import { LabelWithTooltip } from "../../primitives/LabelWithToolTip/LabelWithTooltip";
 import clsx from "clsx";
+import { TextWithTooltip } from "../../primitives/TextWithTooltip/TextWithTooltip";
 import "./Field.css";
 
 type Props = {
@@ -10,7 +19,6 @@ type Props = {
   tooltip?: string;
   error?: string;
   htmlFor?: string;
-  as?: "div" | "fieldset";
   children: ReactNode;
   className?: string;
 };
@@ -20,36 +28,33 @@ export function Field({
   tooltip,
   error,
   htmlFor,
-  as = "div",
   children,
   className,
 }: Props) {
-
-  const Component = as;
-
-  if (as === "fieldset") {
-    return (
-      <fieldset className={clsx("field", className, error && "has-error")}>
-        <legend className="field-label">
-          <LabelWithTooltip label={label} tooltip={tooltip} />
-        </legend>
-
-        <div className="field-control">{children}</div>
-
-        {error && <div className="field-error">{error}</div>}
-      </fieldset>
-    );
-  }
-
   return (
-    <Component className={clsx("field", className, error && "has-error")}>
+    <div
+      className={clsx(
+        "field",
+        className,
+        error && "has-error"
+      )}
+    >
       <label className="field-label" htmlFor={htmlFor}>
-        <LabelWithTooltip label={label} tooltip={tooltip} />
+        <TextWithTooltip
+          text={label}
+          tooltip={tooltip}
+        />
       </label>
 
-      <div className="field-control">{children}</div>
+      <div className="field-control">
+        {children}
+      </div>
 
-      {error && <div className="field-error">{error}</div>}
-    </Component>
+      {error && (
+        <div className="field-error">
+          {error}
+        </div>
+      )}
+    </div>
   );
 }
