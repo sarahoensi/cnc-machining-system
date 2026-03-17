@@ -1,5 +1,11 @@
 // shared/ui/components/form/FormActions/FormActions.tsx
 
+/**
+ * Form-level UI
+ * Vet hva som kan gjøres med hele formatet.
+ * Kjenner ikke enkeltfelter
+ */
+
 import {
   CalculateButton,
   ResetButton,
@@ -22,6 +28,7 @@ export function FormActions({
 }: Props) {
   return (
     <div className="form-actions">
+
       <div className="form-actions-primary">
         <CalculateButton
           onClick={onCalculate}
@@ -33,7 +40,12 @@ export function FormActions({
         <ResetButton onClick={onReset} />
       </div>
 
-      {children}
+      {children && (
+        <div className="form-actions-extra">
+          {children}
+        </div>
+      )}
+
     </div>
   );
 }

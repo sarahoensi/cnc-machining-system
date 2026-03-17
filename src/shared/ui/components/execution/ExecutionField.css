@@ -1,21 +1,31 @@
-/* ExecutionNumberField.css */
-
 /* =====================================================
-   EXECUTION FIELD
+   EXECUTION FIELD (base)
 ===================================================== */
 
-.execution-number-field {
-    /* component spacing */
+.exec-field {
+  /* spacing + sizing tokens */
   --exec-padding-x: var(--control-padding-x-sm);
   --exec-unit-space: var(--space-6);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
 /* =====================================================
-   INPUT STYLE
+   CONTROL WRAPPER
 ===================================================== */
 
-.execution-number-field .ni-input {
+.exec-control {
+  display: flex;
+  min-width: 0;
+}
 
+/* =====================================================
+   BASE INPUT STYLE (shared: input + value)
+===================================================== */
+
+.exec-field .ni-input {
   height: var(--control-height-sm);
   font-variant-numeric: tabular-nums;
 
@@ -34,28 +44,39 @@
   outline: none;
 }
 
+/* =====================================================
+   INPUT STATE (only interactive fields)
+===================================================== */
 
-.execution-number-field .ni-input:focus-visible {
+.exec-field--input .ni-input:focus-visible {
   box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
   border-color: var(--control-border-focus);
+}
+
+/* =====================================================
+   VALUE STATE (display-only)
+===================================================== */
+
+.exec-field--value .ni-input {
+  border-color: transparent;
+  pointer-events: none;
 }
 
 /* =====================================================
    UNIT POSITION
 ===================================================== */
 
-.execution-number-field .ni-unit {
+.exec-field .ni-unit {
   right: var(--exec-padding-x);
 }
 
 /* =====================================================
-   READONLY STATE
+   READONLY (fallback / safety)
 ===================================================== */
 
-.execution-number-field .ni-input.readonly {
+.exec-field .ni-input.readonly {
   border-color: transparent;
   cursor: default;
-
   pointer-events: none;
 }
 
@@ -63,12 +84,8 @@
    ERROR
 ===================================================== */
 
-.execution-number-error {
-  margin-top: var(--space-1);
-
+.exec-error {
   font-size: var(--form-caption-size);
   font-weight: var(--text-caption-weight);
-
   color: var(--feedback-error);
 }
-

@@ -1,6 +1,8 @@
 // features/finishing/ui/execution/ExecutionTable.tsx
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
+
+import {useExecutionFocus} from "./useExecutionFocus";
 
 import { Table } from "@shared/ui/components/table/Table/Table";
 import { TableHeaderSelect } from "@shared/ui/components/table/Table";
@@ -71,33 +73,14 @@ export function FinishingExecutionTable({
   const inputRefs =
     useRef<Record<number, HTMLInputElement | null>>({});
 
-  useEffect(() => {
+  const activeStep =
+    execution.steps.find(s => s.status === "active");
 
-    if (editingStep !== null) return;
-
-    const active = execution.steps.find(
-      s => s.status === "active"
-    );
-
-    if (!active) return;
-
-    const input =
-      inputRefs.current[active.index];
-
-    input?.focus();
-
-  }, [execution, editingStep]);
-
-  useEffect(() => {
-
-    if (editingStep === null) return;
-
-    const input =
-      inputRefs.current[editingStep];
-
-    input?.focus();
-
-  }, [editingStep]);
+  useExecutionFocus({
+    inputRefs,
+    activeIndex: activeStep?.index ?? null,
+    editingIndex: editingStep,
+  });
 
   /* ============================================================
      Render
@@ -126,24 +109,17 @@ export function FinishingExecutionTable({
 
               <ExecutionTableRow
                 key={step.index}
-
                 step={step}
                 cutMode={cutMode}
                 decimals={decimals}
-
                 draft={draft}
                 error={errors[step.index]}
-
                 editingStep={editingStep}
-
                 inputRefs={inputRefs}
-
                 onDraftChange={updateDraft}
                 onConfirm={confirmEdit}
-
                 onStartEdit={startEdit}
                 onCancelEdit={cancelEdit}
-
                 finished={finished}
                 
               />

@@ -5,8 +5,8 @@ import {
   handleModeChange,
 } from "@shared/form/engine/formEngine";
 
-import { FormNumberField } from "@shared/ui/components/form/FormNumberField/FormNumberField";
-import { ModeSelector } from "@shared/ui/components/form/ModeSelector/ModeSelector";
+import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
+import { FormModeField } from "@shared/ui/components/form/fields/FormModeField";
 import {
   EditButton,
 } from "@shared/ui/components/primitives/Button/Button";
@@ -60,8 +60,7 @@ export function PlanForm({
 
   return (
     <>
-      <ModeSelector
-        name="finishing-mode"
+      <FormModeField
         label="Mode"
         value={form.extras.mode}
         readonly={readOnly}
@@ -76,7 +75,6 @@ export function PlanForm({
         options={[
           { value: "Inner", label: "Inner" },
           { value: "Outer", label: "Outer" },
-
         ]}
       />
 
@@ -92,7 +90,6 @@ export function PlanForm({
             field={fieldState}
             disabled={fieldState.locked || f.readOnly}
             readonly={readOnly}
-            error={fieldState.error}
             autoFocus={f.autoFocus}
             onChange={(value) =>
               onFieldChange(f.key, value)
@@ -102,7 +99,6 @@ export function PlanForm({
           />
         );
       })}
-
 
       <FormActions
         onCalculate={onGenerate}

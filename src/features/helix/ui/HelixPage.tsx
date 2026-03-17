@@ -6,7 +6,7 @@ import {
   handleModeChange,
 } from "@shared/form/engine/formEngine";
 
-import { FormNumberField } from "@shared/ui/components/form/FormNumberField/FormNumberField";
+import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
 
 import { useFormNavigation } from "@shared/ui";
 
@@ -18,7 +18,7 @@ import {
 import { parseHelix } from "../domain/parseHelix";
 import { solveHelix } from "../api/solveHelix";
 import { helixFieldConfig } from "./helixFieldConfig";
-import { ModeSelector } from "@shared/ui/components/form/ModeSelector/ModeSelector";
+import { FormModeField } from "@shared/ui/components/form/fields/FormModeField";
 
 import {
   validHelixInputSets,
@@ -65,6 +65,19 @@ export function HelixPage() {
     );
   }
 
+    /* =========================
+     Mode change
+  ========================= */
+
+  function onModeChange(newMode: typeof form.extras.mode) {
+    setForm(prev =>
+      handleModeChange(prev, {
+        ...prev.extras,
+        mode: newMode,
+      })
+    );
+  }
+
   /* =========================
      Calculate
   ========================= */
@@ -94,25 +107,15 @@ export function HelixPage() {
 
   const formContent = (
     <>
-      <div>
-        <ModeSelector
-          name="helix-mode"
-          label="Mode"
-          value={form.extras.mode}
-          onChange={(newMode) =>
-            setForm(prev =>
-              handleModeChange(prev, {
-                ...prev.extras,
-                mode: newMode,
-              })
-            )
-          }
-          options={[
-            { value: "Outer", label: "Outer" },
-            { value: "Inner", label: "Inner" },
-          ]}
-        />
-      </div>
+      <FormModeField
+        label="Mode"
+        value={form.extras.mode}
+        onChange={onModeChange}
+        options={[
+          { value: "Outer", label: "Outer" },
+          { value: "Inner", label: "Inner" },
+        ]}
+      />
 
       {helixFieldConfig.map((f) => {
         const fieldState = form.fields[f.key];
@@ -124,7 +127,6 @@ export function HelixPage() {
             unit={f.unit}
             field={fieldState}
             disabled={fieldState.locked || f.readOnly}
-            error={fieldState.error}
             autoFocus={f.autoFocus}
             onChange={(value) =>
               onFieldChange(f.key, value)
@@ -141,7 +143,6 @@ export function HelixPage() {
       />
     </>
   );
-
 
   return (
     <FormFigureLayout

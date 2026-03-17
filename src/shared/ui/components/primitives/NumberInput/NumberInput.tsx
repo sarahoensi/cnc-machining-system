@@ -8,7 +8,7 @@ type Props = {
   id?: string;
 
   value: string;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
 
   unit?: string;
 
@@ -16,6 +16,7 @@ type Props = {
   readonly?: boolean;
 
   autoFocus?: boolean;
+  tabIndex?: number;
 
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
@@ -37,9 +38,9 @@ function NumberInput(
   disabled = false,
   readonly = false,
   autoFocus,
+  tabIndex,
   onKeyDown,
   onFocus,
-  onBlur,
   placeholder,
   className,
 },
@@ -55,29 +56,19 @@ ref
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 
-    if (isDisabled || isReadOnly) return;
 
     const raw = e.target.value;
 
     if (raw === "") {
-      onChange("");
+      onChange?.("");
       return;
     }
 
     if (INPUT_REGEX.test(raw)) {
-      onChange(raw);
+      onChange?.(raw);
     }
   }
 
-  function handleBlurInternal(e: React.FocusEvent<HTMLInputElement>) {
-
-  if (isDisabled || isReadOnly) {
-    onBlur?.(e);
-    return;
-  }
-
-  onBlur?.(e);
-}
 
   return (
     <div className={clsx("number-input", className)}>
@@ -90,14 +81,13 @@ ref
           inputMode="decimal"
           pattern="-?[0-9]*[.,]?[0-9]*"
           autoFocus={autoFocus}
-          value={isDisabled ? "" : value}
+          value={value}
           disabled={isDisabled}
           readOnly={isReadOnly}
-          tabIndex={isReadOnly ? -1 : undefined}
+          tabIndex={tabIndex}
           placeholder={placeholder}
           onChange={handleChange}
           onFocus={onFocus}
-          onBlur={handleBlurInternal}
           onKeyDown={onKeyDown}
           className={clsx(
             "ni-input",

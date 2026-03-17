@@ -1,4 +1,4 @@
-// shared/ui/components/form/formNumberField/FormNumberField.tsx
+// shared/ui/components/form/fields/FormNumberField.tsx
 
 import React, { forwardRef, useId } from "react";
 import { Field } from "../Field/Field";
@@ -14,7 +14,6 @@ type Props = {
   onChange: (value: string) => void;
 
   tooltip?: string;
-  error?: string;
   unit?: string;
 
   disabled?: boolean;
@@ -27,14 +26,11 @@ type Props = {
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
 };
 
-export const FormNumberField = forwardRef<
-HTMLInputElement,
-Props
->(function FormNumberField(
+export const FormNumberField = forwardRef<HTMLInputElement, Props>(
+function FormNumberField(
 {
   label,
   tooltip,
-  error,
   field,
   onChange,
   unit,
@@ -49,39 +45,43 @@ ref
 ) {
 
   const id = useId();
-
   const { decimals } = useDisplaySettings();
 
   const isDisabled = disabled || field.locked;
-  const isReadOnly = readonly && !isDisabled;
+  const isReadonly = readonly && !isDisabled;
 
   const displayValue =
-    field.source === "machine" &&
-    typeof field.machineValue === "number"
-      ? field.machineValue.toFixed(decimals)
-      : field.value ?? "";
+  field.source === "machine" &&
+  typeof field.machineValue === "number"
+    ? field.machineValue.toFixed(decimals)
+    : field.value ?? "";
+
+    const tabIndex = field.locked ? -1 : undefined;
 
   return (
     <Field
       label={label}
       tooltip={tooltip}
-      error={error}
+      error={field.error}
       htmlFor={id}
       className={`nf-input source-${field.source}`}
     >
+      <div className={field.locked ? "nf-control locked" : "nf-control"}>
       <NumberInput
         id={id}
+        ref={ref}
         value={displayValue}
         onChange={onChange}
         unit={unit}
         disabled={isDisabled}
-        readonly={isReadOnly}
+        readonly={isReadonly}
         autoFocus={autoFocus}
-        ref={ref}
         onKeyDown={onKeyDown}
         onFocus={onFocus}
         onBlur={onBlur}
+        tabIndex={tabIndex}
       />
+      </div>
     </Field>
   );
 });
