@@ -8,6 +8,10 @@
   --nf-unit-space: 2.5em;
 }
 
+.nf-input .ni-input-wrapper {
+  min-width: calc(10ch + var(--nf-unit-space) + (var(--nf-padding-x) * 2));
+}
+
 /* =====================================================
    INPUT STYLE (NumberInput override)
 ===================================================== */
