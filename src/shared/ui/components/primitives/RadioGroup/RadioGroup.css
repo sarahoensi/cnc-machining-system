@@ -16,14 +16,14 @@
 
 
 /* =====================================================
-   STATES
+   DISABLED STATE
 ===================================================== */
 
-.radio-group.is-disabled,
-.radio-group.is-readonly {
+.radio-group.is-disabled {
   opacity: var(--opacity-disabled);
   pointer-events: none;
 }
+
 
 
 /* =====================================================

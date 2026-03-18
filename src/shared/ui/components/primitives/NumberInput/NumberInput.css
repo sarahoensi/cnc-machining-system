@@ -56,3 +56,116 @@
   pointer-events: none;
   white-space: nowrap;
 }
+
+
+/* =========================================
+   FORM VARIANT
+========================================= */
+
+.ni-form .ni-input {
+  width: 100%;
+  min-width: 0;
+
+  font-size: var(--font-size-md);
+  font-variant-numeric: tabular-nums;
+
+  padding-block: 0.35em;
+  padding-left: 0.75em;
+  padding-right: calc(0.75em + 2.5em);
+
+  border-radius: 0.35em;
+  border: 0.0625em solid var(--control-border);
+
+  background: var(--control-bg);
+  color: var(--control-text);
+
+  outline: none;
+}
+
+.ni-form .ni-input:focus-visible {
+  box-shadow: 0 0 0 0.125em var(--focus-ring-color);
+  border-color: var(--control-border-focus);
+}
+
+.ni-form .ni-unit {
+  right: 0.75em;
+}
+
+/* Disabled */
+
+.ni-form.is-disabled .ni-input {
+  background: var(--control-bg-disabled);
+  color: var(--control-text-disabled);
+  cursor: not-allowed;
+}
+
+.ni-form.is-disabled .ni-unit {
+  opacity: var(--opacity-disabled);
+}
+
+/* Source states */
+
+.ni-form[data-source="user"] .ni-input {
+  background: var(--color-user);
+}
+
+.ni-form[data-source="machine"] .ni-input {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-strong);
+}
+
+/* =========================================
+   EXECUTION VARIANT
+========================================= */
+
+.ni-execution .ni-input {
+  height: var(--control-height-sm);
+
+  font-variant-numeric: tabular-nums;
+
+  padding-left: var(--control-padding-x-sm);
+  padding-right: calc(var(--control-padding-x-sm) + var(--space-6));
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--text-body-weight);
+
+  border-radius: var(--control-radius);
+  border: var(--border-width-sm) solid var(--control-border);
+
+  background: transparent;
+  color: var(--text-primary);
+
+  outline: none;
+}
+
+/* focus (kun interactive) */
+
+.ni-execution .ni-input:focus-visible {
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  border-color: var(--control-border-focus);
+}
+
+/* readonly / value mode */
+
+.ni-execution .ni-input.readonly {
+  border-color: transparent;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* unit */
+
+.ni-execution .ni-unit {
+  right: var(--control-padding-x-sm);
+}
+
+/* =========================================
+   EXECUTION DISPLAY MODE
+========================================= */
+
+.ni-execution.is-display-only .ni-input {
+  border-color: transparent;
+  cursor: default;
+  pointer-events: none;
+}

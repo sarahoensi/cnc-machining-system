@@ -1,0 +1,52 @@
+.ni-form .ni-input {
+  width: 100%;
+  min-width: 0;
+
+  font-size: var(--font-size-md);
+  font-variant-numeric: tabular-nums;
+
+  padding-block: 0.35em;
+  padding-left: 0.75em;
+  padding-right: calc(0.75em + 2.5em);
+
+  border-radius: 0.35em;
+  border: 0.0625em solid var(--control-border);
+
+  background: var(--control-bg);
+  color: var(--control-text);
+
+  outline: none;
+}
+
+.ni-form .ni-input:focus-visible {
+  box-shadow: 0 0 0 0.125em var(--focus-ring-color);
+  border-color: var(--control-border-focus);
+}
+
+.ni-form .ni-unit {
+  right: 0.75em;
+}
+
+/* Disabled */
+
+.ni-form.is-disabled .ni-input {
+  background: var(--control-bg-disabled);
+  color: var(--control-text-disabled);
+  cursor: not-allowed;
+}
+
+.ni-form.is-disabled .ni-unit {
+  opacity: var(--opacity-disabled);
+}
+
+/* Source states */
+
+.ni-form[data-source="user"] .ni-input {
+  background: var(--color-user);
+}
+
+.ni-form[data-source="machine"] .ni-input {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-strong);
+}

@@ -1,0 +1,48 @@
+.ni-execution .ni-input {
+  height: var(--control-height-sm);
+
+  font-variant-numeric: tabular-nums;
+
+  padding-left: var(--control-padding-x-sm);
+  padding-right: calc(var(--control-padding-x-sm) + var(--space-6));
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--text-body-weight);
+
+  border-radius: var(--control-radius);
+  border: var(--border-width-sm) solid var(--control-border);
+
+  background: transparent;
+  color: var(--text-primary);
+
+  outline: none;
+}
+
+/* focus */
+
+.ni-execution .ni-input:focus-visible {
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  border-color: var(--control-border-focus);
+}
+
+/* readonly */
+
+.ni-execution .ni-input.readonly {
+  border-color: transparent;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* unit */
+
+.ni-execution .ni-unit {
+  right: var(--control-padding-x-sm);
+}
+
+/* display mode */
+
+.ni-execution.is-display-only .ni-input {
+  border-color: transparent;
+  cursor: default;
+  pointer-events: none;
+}

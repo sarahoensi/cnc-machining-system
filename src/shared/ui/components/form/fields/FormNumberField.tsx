@@ -6,7 +6,7 @@ import { NumberInput } from "../../primitives/NumberInput/NumberInput";
 import type { FieldState } from "@shared/form/types/fields";
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 
-import "./FormNumberField.css";
+//import "./FormNumberField.css";
 
 type Props = {
   label: string;
@@ -23,7 +23,6 @@ type Props = {
 
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
-  onBlur?: React.FocusEventHandler<HTMLInputElement>;
 };
 
 export const FormNumberField = forwardRef<HTMLInputElement, Props>(
@@ -31,15 +30,15 @@ function FormNumberField(
 {
   label,
   tooltip,
-  field,
-  onChange,
+  field,  
   unit,
   disabled,
   readonly,
   autoFocus,
+
+  onChange,
   onKeyDown,
   onFocus,
-  onBlur,
 },
 ref
 ) {
@@ -64,10 +63,9 @@ ref
       tooltip={tooltip}
       error={field.error}
       htmlFor={id}
-      className={`nf-input source-${field.source}`}
     >
-      <div className={field.locked ? "nf-control locked" : "nf-control"}>
       <NumberInput
+        variant="form"
         id={id}
         ref={ref}
         value={displayValue}
@@ -78,10 +76,8 @@ ref
         autoFocus={autoFocus}
         onKeyDown={onKeyDown}
         onFocus={onFocus}
-        onBlur={onBlur}
         tabIndex={tabIndex}
       />
-      </div>
     </Field>
   );
 });

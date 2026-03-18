@@ -13,7 +13,6 @@ type Props<T extends string> = {
 
   tooltip?: string;
   disabled?: boolean;
-  readonly?: boolean;
 };
 
 export function FormModeField<T extends string>({
@@ -23,7 +22,6 @@ export function FormModeField<T extends string>({
   onChange,
   options,
   disabled,
-  readonly,
 }: Props<T>) {
 
   return (
@@ -37,7 +35,6 @@ export function FormModeField<T extends string>({
         onChange={onChange}
         options={options}
         disabled={disabled}
-        readonly={readonly}
       />
     </Field>
   );

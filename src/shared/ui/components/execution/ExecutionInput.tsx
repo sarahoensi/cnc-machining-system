@@ -29,29 +29,27 @@ export const ExecutionInput = forwardRef<
     ref
 ) {
     return (
-        <div className="exec-field exec-field--input">
-            <div className="exec-control">
-                <NumberInput
-                    ref={ref}
-                    value={value}
-                    placeholder={placeholder}
-                    unit={unit}
-                    onChange={onChange}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            e.preventDefault();
-                            onSubmit?.();
-                        }
-                    }}
-                />
-            </div>
+    <div className="exec-field">
+      <NumberInput
+        ref={ref}
+        value={value}
+        placeholder={placeholder}
+        unit={unit}
+        onChange={onChange}
+        variant="execution"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            onSubmit?.();
+          }
+        }}
+      />
 
-            {error && (
-                <div className="exec-error">
-                    {error}
-                </div>
-            )}
-
+      {error && (
+        <div className="exec-error">
+          {error}
         </div>
-    );
+      )}
+    </div>
+  );
 });
