@@ -99,3 +99,24 @@ border-top: var(--border-width-sm) solid var(--table-border);
   background: var(--table-header-bg);
 }
 
+
+/* =====================================================
+   ROW STATES
+===================================================== */
+
+.ui-table-row.is-active td {
+  border-top: var(--border-width-md) solid var(--brand-primary);
+  border-bottom: var(--border-width-md) solid var(--brand-primary);
+}
+
+.ui-table-row.is-active td:first-child {
+  border-left: var(--border-width-md) solid var(--brand-primary);
+  border-top-left-radius: var(--control-radius);
+  border-bottom-left-radius: var(--control-radius);
+}
+
+.ui-table-row.is-active td:last-child {
+  border-right: var(--border-width-md) solid var(--brand-primary);
+  border-top-right-radius: var(--control-radius);
+  border-bottom-right-radius: var(--control-radius);
+}

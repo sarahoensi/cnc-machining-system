@@ -54,8 +54,8 @@ function Row({
     <tr
       className={clsx(
         "ui-table-row",
-        isActive && "active",
-        isSelected && "selected",
+        isActive && "is-active",
+        isSelected && "is-selected",
         className
       )}
     >
