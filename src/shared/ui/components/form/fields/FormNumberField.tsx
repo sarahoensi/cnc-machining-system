@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useId } from "react";
 import { Field } from "../Field/Field";
-import { NumberInput } from "../../primitives/NumberInput/NumberInput";
+import { NumberInput } from "../../../primitives/NumberInput/NumberInput";
 import type { FieldState } from "@shared/form/types/fields";
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 

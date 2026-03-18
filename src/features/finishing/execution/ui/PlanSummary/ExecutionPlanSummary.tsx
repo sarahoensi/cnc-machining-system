@@ -1,42 +1,58 @@
-// features/finishing/execution/ui/PlanSummary/ExecutionPlanSummary.tsx
+// ExecutionPlanSummary.tsx
 
+import { Panel } from "@shared/ui/layout/container/Panel/Panel";
 import "./ExecutionPlanSummary.css";
 
 type Props = {
-  startDiameter: string
-  targetDiameter: string
-  mode: "Inner" | "Outer"
-}
+  startDiameter: string;
+  targetDiameter: string;
+  mode: "Inner" | "Outer";
+
+  onEdit(): void;
+};
 
 export function ExecutionPlanSummary({
   startDiameter,
   targetDiameter,
   mode,
+  onEdit,
 }: Props) {
 
   return (
-    <div className="execution-summary">
+    <Panel
+      title="Plan summary"
+      actions={
+        <button
+          type="button"
+          className="execution-edit-link"
+          onClick={onEdit}
+        >
+          ← Edit plan
+        </button>
+      }
+    >
+      <dl className="execution-summary">
 
-      <h3 className="execution-summary-title">
-        Plan summary
-      </h3>
-
-      <div className="execution-summary-grid">
-
-        <div>
-          <strong>Mode:</strong> {mode}
+        <div className="execution-summary-item">
+          <dt className="execution-summary-label">Mode</dt>
+          <dd className="execution-summary-value">{mode}</dd>
         </div>
 
-        <div>
-          <strong>Start Ø:</strong> {startDiameter} mm
+        <div className="execution-summary-item">
+          <dt className="execution-summary-label">Start Ø</dt>
+          <dd className="execution-summary-value">
+            {startDiameter} mm
+          </dd>
         </div>
 
-        <div>
-          <strong>Target Ø:</strong> {targetDiameter} mm
+        <div className="execution-summary-item">
+          <dt className="execution-summary-label">Target Ø</dt>
+          <dd className="execution-summary-value">
+            {targetDiameter} mm
+          </dd>
         </div>
 
-      </div>
-
-    </div>
-  )
+      </dl>
+    </Panel>
+  );
 }

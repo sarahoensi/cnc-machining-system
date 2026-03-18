@@ -9,7 +9,7 @@
 import {
   CalculateButton,
   ResetButton,
-} from "@shared/ui/components/primitives/Button/Button";
+} from "@shared/ui/primitives/Button/Button";
 
 import "./FormActions.css";
 

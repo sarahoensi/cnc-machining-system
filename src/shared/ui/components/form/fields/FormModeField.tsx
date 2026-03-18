@@ -1,7 +1,7 @@
 // shared/ui/components/form/fields/FormModeField.tsx
 
 import { Field } from "../Field/Field";
-import { RadioGroup, RadioOption } from "../../primitives/RadioGroup/RadioGroup";
+import { RadioGroup, RadioOption } from "../../../primitives/RadioGroup/RadioGroup";
 
 type Props<T extends string> = {
   label: string;

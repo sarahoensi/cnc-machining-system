@@ -9,7 +9,7 @@ import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberFie
 import { FormModeField } from "@shared/ui/components/form/fields/FormModeField";
 import {
   EditButton,
-} from "@shared/ui/components/primitives/Button/Button";
+} from "@shared/ui/primitives/Button/Button";
 
 import { useFormNavigation } from "@shared/ui";
 

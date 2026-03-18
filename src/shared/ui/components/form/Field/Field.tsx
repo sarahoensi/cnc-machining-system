@@ -11,7 +11,7 @@
 
 import { ReactNode } from "react";
 import clsx from "clsx";
-import { TextWithTooltip } from "../../primitives/TextWithTooltip/TextWithTooltip";
+import { TextWithTooltip } from "../../../primitives/TextWithTooltip/TextWithTooltip";
 import "./Field.css";
 
 type Props = {

@@ -1,6 +1,6 @@
 // shared/ui/components/execution/ExecutionValue.tsx
 
-import { NumberInput } from "@shared/ui/components/primitives/NumberInput/NumberInput";
+import { NumberInput } from "@shared/ui/primitives/NumberInput/NumberInput";
 import "./ExecutionField.css";
 
 type Props = {

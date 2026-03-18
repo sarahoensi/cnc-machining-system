@@ -1,6 +1,6 @@
 // src/app/layout/Topbar.tsx
 
-import { SettingsButton } from "@shared/ui/components/primitives/Button/Button";
+import { SettingsButton } from "@shared/ui/primitives/Button/Button";
 import { SettingsMenu } from "../settings/SettingsMenu";
 import "./Topbar.css";
 import { useRef, useState } from "react";

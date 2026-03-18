@@ -2,7 +2,7 @@
 
 import { forwardRef } from "react";
 import "./ExecutionField.css";
-import { NumberInput } from "@shared/ui/components/primitives/NumberInput/NumberInput";
+import { NumberInput } from "@shared/ui/primitives/NumberInput/NumberInput";
 
 type Props = {
     value: string;
