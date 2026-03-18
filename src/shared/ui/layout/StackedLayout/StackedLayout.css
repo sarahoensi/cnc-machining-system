@@ -1,0 +1,36 @@
+/* shared/ui/layout/StackedLayout/StackedLayout.css */
+
+.stacked-layout {
+  display: grid;
+
+  grid-template-areas:
+    "header"
+    "content"
+    "footer";
+
+  gap: var(--space-6);
+
+  width: 100%;
+}
+
+/* =========================
+   AREAS
+========================= */
+
+.sl-header {
+  grid-area: header;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sl-content {
+  grid-area: content;
+
+  min-width: 0;
+}
+
+.sl-footer {
+  grid-area: footer;
+}

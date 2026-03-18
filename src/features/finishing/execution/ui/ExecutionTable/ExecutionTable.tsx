@@ -155,11 +155,11 @@ function ExecutionHeader({
 
       <Table.Row>
 
-        <Table.HeaderCell>
+        <Table.HeaderCell align="left">
           Step
         </Table.HeaderCell>
 
-        <Table.HeaderCell align="center">
+        <Table.HeaderCell align="left">
           Start Ø
         </Table.HeaderCell>
 
@@ -170,10 +170,10 @@ function ExecutionHeader({
             { value: "deltaD", label: "ΔD" },
             { value: "ae", label: "ae" },
           ]}
-          align="center"
+          align="left"
         />
 
-        <Table.HeaderCell align="center">
+        <Table.HeaderCell align="left">
           Measurement
         </Table.HeaderCell>
 
