@@ -5,16 +5,12 @@ import "./ExecutionPlanSummary.css";
 type Props = {
   startDiameter: string
   targetDiameter: string
-  cuts?: string
-  radialEngagement?: string
   mode: "Inner" | "Outer"
 }
 
 export function ExecutionPlanSummary({
   startDiameter,
   targetDiameter,
-  cuts,
-  radialEngagement,
   mode,
 }: Props) {
 
@@ -38,18 +34,6 @@ export function ExecutionPlanSummary({
         <div>
           <strong>Target Ø:</strong> {targetDiameter} mm
         </div>
-
-        {cuts !== undefined && (
-          <div>
-            <strong>Cuts:</strong> {cuts}
-          </div>
-        )}
-
-        {radialEngagement !== undefined && (
-          <div>
-            <strong>Radial engagement:</strong> {radialEngagement} mm
-          </div>
-        )}
 
       </div>
 

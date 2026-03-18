@@ -3,8 +3,6 @@
 import { Field } from "../Field/Field";
 import { RadioGroup, RadioOption } from "../../primitives/RadioGroup/RadioGroup";
 
-import "./FormModeField.css";
-
 type Props<T extends string> = {
   label: string;
   value: T;

@@ -19,8 +19,6 @@ type Props = {
     mode: "Inner" | "Outer";
     startDiameter: string;
     targetDiameter: string;
-    cuts?: string;
-    radialEngagement?: string;
   };
 
   onRegisterMeasurement(

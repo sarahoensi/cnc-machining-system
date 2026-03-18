@@ -9,3 +9,25 @@
   font-weight: var(--text-caption-weight);
   color: var(--feedback-error);
 }
+
+.exec-display {
+  height: var(--control-height-sm);
+
+  display: flex;
+  align-items: center;
+
+  padding-left: var(--control-padding-x-sm);
+  padding-right: var(--control-padding-x-sm);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--text-body-weight);
+  font-variant-numeric: tabular-nums;
+
+  border-radius: var(--control-radius);
+  border: var(--border-width-sm) solid transparent;
+
+  color: var(--text-primary);
+  background: transparent;
+
+  min-width: 0;
+}
