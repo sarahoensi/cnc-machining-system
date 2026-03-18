@@ -20,39 +20,34 @@ export function ExecutionPlanSummary({
 
   return (
     <Panel
-      title="Plan summary"
-      actions={
-        <button
-          type="button"
-          className="execution-edit-link"
-          onClick={onEdit}
-        >
-          ← Edit plan
-        </button>
-      }
+  title="Plan summary"
+  actions={
+    <button
+      type="button"
+      className="execution-edit-link"
+      onClick={onEdit}
     >
-      <dl className="execution-summary">
+      Edit plan
+    </button>
+  }
+>
+ <div className="execution-summary">
 
-        <div className="execution-summary-item">
-          <dt className="execution-summary-label">Mode</dt>
-          <dd className="execution-summary-value">{mode}</dd>
-        </div>
+  <div className="execution-summary-mode">
+    <span className="label">Mode:</span> {mode}
+  </div>
 
-        <div className="execution-summary-item">
-          <dt className="execution-summary-label">Start Ø</dt>
-          <dd className="execution-summary-value">
-            {startDiameter} mm
-          </dd>
-        </div>
+  <div className="execution-summary-row">
+    <span className="execution-summary-item">
+      <span className="label">Start Ø:</span> {startDiameter}
+    </span>
 
-        <div className="execution-summary-item">
-          <dt className="execution-summary-label">Target Ø</dt>
-          <dd className="execution-summary-value">
-            {targetDiameter} mm
-          </dd>
-        </div>
+    <span className="execution-summary-item">
+      <span className="label">Target Ø:</span> {targetDiameter}
+    </span>
+  </div>
 
-      </dl>
-    </Panel>
+</div>
+</Panel>
   );
 }

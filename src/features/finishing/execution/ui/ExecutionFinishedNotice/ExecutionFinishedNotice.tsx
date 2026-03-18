@@ -1,6 +1,7 @@
 // ExecutionFinisheNotice.tsx
 
 import { Panel } from "@shared/ui/layout/container/Panel/Panel";
+import { Button } from "@shared/ui/primitives/Button/Button";
 
 type Props = {
   onCreateNewPlan(): void;
@@ -13,16 +14,12 @@ export function ExecutionFinishedNotice({
     <Panel
       title="Finishing complete"
       actions={
-        <button
-          type="button"
-          className="primary-button"
-          onClick={onCreateNewPlan}
-        >
+        <Button size="small" variant="primary" onClick={onCreateNewPlan}>
           Create new plan
-        </button>
+        </Button>
       }
     >
-      <p>
+      <p className="execution-finished-text">
         All measurements are registered.
       </p>
     </Panel>

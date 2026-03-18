@@ -1,19 +1,17 @@
 .ni-execution .ni-input {
-  height: var(--control-height-sm);
+width: 100%;
+  min-width: 0;
 
+  font-size: var(--font-size-md);
   font-variant-numeric: tabular-nums;
 
+  padding-block: 0.4em;
   padding-left: var(--control-padding-x-sm);
-  padding-right: calc(var(--control-padding-x-sm) + var(--space-6));
+  border-radius: 0.35em;
+  border: 0.0625em solid var(--control-border);
 
-  font-size: var(--font-size-sm);
-  font-weight: var(--text-body-weight);
-
-  border-radius: var(--control-radius);
-  border: var(--border-width-sm) solid var(--control-border);
-
-  background: transparent;
-  color: var(--text-primary);
+  background: var(--control-bg);
+  color: var(--control-text);
 
   outline: none;
 }

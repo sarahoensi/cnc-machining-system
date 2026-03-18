@@ -1,20 +1,41 @@
 /* ExecutionPlanSummary.css */
 
 .execution-summary {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-2);
 }
 
-.execution-summary-item {
+/* Mode */
+.execution-summary-mode {
+  display: inline-flex;
+  gap: var(--space-1);
+
+  font-size: var(--text-label-size);
+}
+
+/* Start + Target */
+.execution-summary-row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: var(--space-6);
+
+  font-size: var(--text-label-size);
 }
 
-.execution-summary-label {
+/* Label vs value */
+.execution-summary-item .label,
+.execution-summary-mode .label {
   color: var(--text-muted);
+  align-items: baseline;
 }
 
-.execution-summary-value {
-  font-weight: var(--text-label-weight);
+.execution-summary-item {
+  display: inline-flex;
+  gap: var(--space-1);
+
+  font-weight: var(--text-body-weight);
+}
+
+.execution-edit-link::before {
+  content: "← ";
 }
