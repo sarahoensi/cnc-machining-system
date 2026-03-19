@@ -32,6 +32,8 @@ import { usePageTitle } from "@app/providers/TitleContextProvider";
 import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 
+import { validateTriangleForm } from "./domain/validateTriangleForm";
+
 export function TrianglePage() {
 
   usePageTitle("Triangle");
@@ -75,7 +77,8 @@ export function TrianglePage() {
     const next = await handleCalculateAsync(
       form,
       parseTriangle,
-      solveTriangle
+      solveTriangle,
+      validateTriangleForm,
     );
 
     setForm(next);
