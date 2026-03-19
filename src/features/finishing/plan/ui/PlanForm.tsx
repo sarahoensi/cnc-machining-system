@@ -7,9 +7,6 @@ import {
 
 import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
 import { FormModeField } from "@shared/ui/components/form/fields/FormModeField";
-import {
-  EditButton,
-} from "@shared/ui/primitives/Button/Button";
 
 import { useFormNavigation } from "@shared/ui";
 
@@ -17,6 +14,7 @@ import { finishingFieldConfig } from "./finishingFieldConfig";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 import { createInitialFinishingForm, FinishingKey } from "../domain/finishingForm";
 import { mutuallyExclusiveFinishingPairs, validFinishingInputSets } from "../domain/finishingConstraints";
+import { FormError } from "@shared/ui/components/form/FormError/FormError";
 
 type Props = {
   form: ReturnType<typeof createInitialFinishingForm>;
@@ -32,7 +30,6 @@ export function PlanForm({
   setForm,
   onGenerate,
   onReset,
-  onEdit,
   readOnly,
 }: Props) {
 
@@ -57,13 +54,11 @@ export function PlanForm({
     );
   }
 
-
   return (
     <>
       <FormModeField
         label="Mode"
         value={form.extras.mode}
-        readonly={readOnly}
         onChange={(newMode) =>
           setForm((prev: any) =>
             handleModeChange(prev, {
@@ -100,16 +95,13 @@ export function PlanForm({
         );
       })}
 
+      <FormError error={form.formError} />
+
       <FormActions
         onCalculate={onGenerate}
         onReset={onReset}
-        disabled={readOnly}
       >
-        {readOnly && (
-          <EditButton onClick={onEdit}>
-            Edit plan
-          </EditButton>
-        )}
+        
       </FormActions>
     </>
   );

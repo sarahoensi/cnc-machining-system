@@ -30,6 +30,7 @@ import { FormActions } from "@shared/ui/components/form/FormActions/FormActions"
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 
 import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
+import { FormError } from "@shared/ui/components/form/FormError/FormError";
 
 export function TrianglePage() {
 
@@ -115,6 +116,8 @@ const formContent = (
         />
       );
     })}
+
+    <FormError error={form.formError} />
 
     <FormActions
       onCalculate={onCalculate}
