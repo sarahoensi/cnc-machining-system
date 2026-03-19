@@ -1,0 +1,71 @@
+.triangle-figure {
+  width: 100%;
+  max-width: 260px;
+}
+
+/* SVG base */
+
+.triangle-figure svg {
+  width: 100%;
+  height: auto;
+}
+
+
+/* =========================
+   EDGES
+========================= */
+
+.edge {
+  stroke: var(--border-default);
+  stroke-width: 2;
+  transition: all 0.2s ease;
+}
+
+.edge.is-active {
+  stroke: var(--brand-primary);
+  stroke-width: 3;
+}
+
+
+/* =========================
+   ANGLES
+========================= */
+
+.angle {
+  fill: none;
+  stroke: var(--border-muted);
+  stroke-width: 2;
+  transition: all 0.2s ease;
+}
+
+.angle.is-active {
+  stroke: var(--brand-primary);
+}
+
+
+/* =========================
+   LABELS
+========================= */
+
+.label {
+  font-size: 10px;
+  fill: var(--text-muted);
+  font-weight: var(--text-label-weight);
+
+  transition: all 0.2s ease;
+}
+
+.label.is-active {
+  fill: var(--brand-primary);
+}
+
+
+/* =========================
+   RIGHT ANGLE MARK
+========================= */
+
+.right-angle {
+  fill: none;
+  stroke: var(--border-muted);
+  stroke-width: 2;
+}

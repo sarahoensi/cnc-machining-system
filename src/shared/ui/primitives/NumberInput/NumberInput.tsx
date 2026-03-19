@@ -53,6 +53,7 @@ function NumberInput(
   tabIndex,
   onKeyDown,
   onFocus,
+  onBlur,
   placeholder,
   className,
 },
@@ -110,6 +111,7 @@ ref
           placeholder={placeholder}
           onChange={handleChange}
           onFocus={onFocus}
+          onBlur={onBlur}
           onKeyDown={onKeyDown}
           className="ni-input"
         />
