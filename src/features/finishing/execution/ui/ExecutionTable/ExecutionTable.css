@@ -1,7 +1,13 @@
 /* ExecutionTable.css */
 
-/* =====================================================
-   COLUMN WIDTHS
-   Specific to Execution table
-===================================================== */
+.execution-table {
+  --col-step: 4ch;
 
+  width: 100%;
+  table-layout: fixed;
+}
+
+.execution-table th:nth-child(1),
+.execution-table td:nth-child(1) {
+  width: var(--col-step);
+}
