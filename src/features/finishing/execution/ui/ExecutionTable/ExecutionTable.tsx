@@ -15,6 +15,7 @@ import { ExecutionTableRow } from "./ExecutionTableRow";
 import { useExecutionEditing } from "./useExecutionEditing";
 
 import "./ExecutionTable.css";
+import clsx from "clsx";
 
 /* ============================================================
    Step data
@@ -177,7 +178,12 @@ export function FinishingExecutionTable({
   ============================================================ */
 
   return (
-    <Table.Root className="execution-table">
+    <Table.Root
+  className={clsx(
+    "execution-table",
+    execution.finished && "is-finished"
+  )}
+>
 
       {header}
 
