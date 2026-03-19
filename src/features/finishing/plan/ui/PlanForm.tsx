@@ -16,6 +16,7 @@ import { createInitialFinishingForm, FinishingKey } from "../domain/finishingFor
 import { mutuallyExclusiveFinishingPairs, validFinishingInputSets } from "../domain/finishingConstraints";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
+import { finishingTooltips } from "./finishingPlanTooltip";
 
 type Props = {
   form: ReturnType<typeof createInitialFinishingForm>;
@@ -60,6 +61,7 @@ export function PlanForm({
       <div className="form-section">
         <FormModeField
           label="Mode"
+          tooltip={finishingTooltips.mode}
           value={form.extras.mode}
           onChange={(newMode) =>
             setForm((prev: any) =>
@@ -85,6 +87,7 @@ export function PlanForm({
               key={f.key}
               label={f.label}
               unit={f.unit}
+              tooltip={f.tooltip}
               field={fieldState}
               disabled={fieldState.locked || f.readOnly}
               readonly={readOnly}

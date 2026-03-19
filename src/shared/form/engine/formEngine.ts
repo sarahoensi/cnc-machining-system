@@ -274,13 +274,13 @@ export async function handleCalculateAsync<
 
   // 0️⃣ Frontend validation (form-level)
 if (validate) {
-  const error = validate(form.fields, form.extras);
+  const errors = validate(form.fields, form.extras);
 
-  if (error) {
+  if (errors && errors.length > 0) {
     return {
       ...form,
       status: "editing",
-      formError: error,
+      formError: errors, // 👈 nå array
     };
   }
 }

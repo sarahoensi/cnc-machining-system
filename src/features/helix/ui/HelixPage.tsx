@@ -32,6 +32,7 @@ import { usePageTitle } from "@app/providers/TitleContextProvider";
 import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
+import { helixTooltips } from "./helixTooltip";
 /* ============================================================
    Component
 ============================================================ */
@@ -114,6 +115,7 @@ export function HelixPage() {
     <div className="form-section">
       <FormModeField
         label="Mode"
+        tooltip={helixTooltips.mode}
         value={form.extras.mode}
         onChange={onModeChange}
         options={[
@@ -132,6 +134,7 @@ export function HelixPage() {
             key={f.key}
             label={f.label}
             unit={f.unit}
+            tooltip={f.tooltip}
             field={fieldState}
             disabled={fieldState.locked || f.readOnly}
             autoFocus={f.autoFocus}

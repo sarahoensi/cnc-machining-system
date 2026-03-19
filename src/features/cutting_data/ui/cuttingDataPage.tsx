@@ -105,6 +105,7 @@ const [form, setForm] = useFeatureForm(
           key={f.key}
           label={f.label}
           unit={f.unit}
+          tooltip={f.tooltip}
           field={fieldState}
           disabled={fieldState.locked || f.readOnly}
           autoFocus={f.autoFocus}
