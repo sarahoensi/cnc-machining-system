@@ -31,6 +31,8 @@ import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFi
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { validateCuttingDataForm } from "../domain/validateCuttingForm";
 
+import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
+
 /* ============================================================
    Component
 ============================================================ */
@@ -93,8 +95,7 @@ const [form, setForm] = useFeatureForm(
     setForm(createInitialCuttingDataForm());
   }
 
-
-  const formContent = (
+  const fields = (
   <>
     {cuttingDataFieldConfig.map((f) => {
       const fieldState = form.fields[f.key];
@@ -115,14 +116,27 @@ const [form, setForm] = useFeatureForm(
         />
       );
     })}
-
-    <FormError error={form.formError} />
-
-    <FormActions
-      onCalculate={onCalculate}
-      onReset={onReset}
-    />
   </>
+);
+
+const error = form.formError ? (
+  <FormError error={form.formError} />
+) : null;
+
+const actions = (
+  <FormActions
+    onCalculate={onCalculate}
+    onReset={onReset}
+  />
+);
+
+
+  const formContent = (
+  <FormLayout
+    fields={fields}
+    error={error}
+    actions={actions}
+  />
 );
 
   /* =========================
