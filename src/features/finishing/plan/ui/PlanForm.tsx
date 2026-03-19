@@ -15,6 +15,7 @@ import { FormActions } from "@shared/ui/components/form/FormActions/FormActions"
 import { createInitialFinishingForm, FinishingKey } from "../domain/finishingForm";
 import { mutuallyExclusiveFinishingPairs, validFinishingInputSets } from "../domain/finishingConstraints";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
+import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 
 type Props = {
   form: ReturnType<typeof createInitialFinishingForm>;
@@ -54,7 +55,7 @@ export function PlanForm({
     );
   }
 
-  return (
+  const fields = (
     <>
       <FormModeField
         label="Mode"
@@ -74,7 +75,6 @@ export function PlanForm({
       />
 
       {finishingFieldConfig.map((f) => {
-
         const fieldState = form.fields[f.key];
 
         return (
@@ -94,15 +94,25 @@ export function PlanForm({
           />
         );
       })}
-
-      <FormError error={form.formError} />
-
-      <FormActions
-        onCalculate={onGenerate}
-        onReset={onReset}
-      >
-        
-      </FormActions>
     </>
+  );
+
+  const error = form.formError ? (
+    <FormError error={form.formError} />
+  ) : null;
+
+  const actions = (
+    <FormActions
+      onCalculate={onGenerate}
+      onReset={onReset}
+    />
+  );
+
+  return (
+    <FormLayout
+      fields={fields}
+      error={error}
+      actions={actions}
+    />
   );
 }
