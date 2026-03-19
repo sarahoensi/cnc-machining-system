@@ -31,6 +31,7 @@ import { FormActions } from "@shared/ui/components/form/FormActions/FormActions"
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
+import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 /* ============================================================
    Component
 ============================================================ */
@@ -108,46 +109,58 @@ export function HelixPage() {
      Render
   ========================= */
 
-  const formContent = (
-    <>
-      <FormModeField
-        label="Mode"
-        value={form.extras.mode}
-        onChange={onModeChange}
-        options={[
-          { value: "Outer", label: "Outer" },
-          { value: "Inner", label: "Inner" },
-        ]}
-      />
+  const fields = (
+  <>
+    <FormModeField
+      label="Mode"
+      value={form.extras.mode}
+      onChange={onModeChange}
+      options={[
+        { value: "Outer", label: "Outer" },
+        { value: "Inner", label: "Inner" },
+      ]}
+    />
 
-      {helixFieldConfig.map((f) => {
-        const fieldState = form.fields[f.key];
+    {helixFieldConfig.map((f) => {
+      const fieldState = form.fields[f.key];
 
-        return (
-          <FormNumberField
-            key={f.key}
-            label={f.label}
-            unit={f.unit}
-            field={fieldState}
-            disabled={fieldState.locked || f.readOnly}
-            autoFocus={f.autoFocus}
-            onChange={(value) =>
-              onFieldChange(f.key, value)
-            }
-            ref={navigation.register(f.key)}
-            onKeyDown={navigation.handleKeyDown(f.key)}
-          />
-        );
-      })}
+      return (
+        <FormNumberField
+          key={f.key}
+          label={f.label}
+          unit={f.unit}
+          field={fieldState}
+          disabled={fieldState.locked || f.readOnly}
+          autoFocus={f.autoFocus}
+          onChange={(value) =>
+            onFieldChange(f.key, value)
+          }
+          ref={navigation.register(f.key)}
+          onKeyDown={navigation.handleKeyDown(f.key)}
+        />
+      );
+    })}
+  </>
+);
+const error = (
+  <FormError error={form.formError} />
+);
 
-      <FormError error={form.formError} />
+const actions = (
+  <FormActions
+    onCalculate={onCalculate}
+    onReset={onReset}
+  />
+);
 
-      <FormActions
-        onCalculate={onCalculate}
-        onReset={onReset}
-      />
-    </>
-  );
+const formContent = (
+  <FormLayout
+    fields={fields}
+    error={error}
+    actions={actions}
+  />
+);
+
 
   return (
     <FormFigureLayout
