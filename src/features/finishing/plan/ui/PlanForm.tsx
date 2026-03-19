@@ -57,43 +57,47 @@ export function PlanForm({
 
   const fields = (
     <>
-      <FormModeField
-        label="Mode"
-        value={form.extras.mode}
-        onChange={(newMode) =>
-          setForm((prev: any) =>
-            handleModeChange(prev, {
-              ...prev.extras,
-              mode: newMode,
-            })
-          )
-        }
-        options={[
-          { value: "Inner", label: "Inner" },
-          { value: "Outer", label: "Outer" },
-        ]}
-      />
+      <div className="form-section">
+        <FormModeField
+          label="Mode"
+          value={form.extras.mode}
+          onChange={(newMode) =>
+            setForm((prev: any) =>
+              handleModeChange(prev, {
+                ...prev.extras,
+                mode: newMode,
+              })
+            )
+          }
+          options={[
+            { value: "Inner", label: "Inner" },
+            { value: "Outer", label: "Outer" },
+          ]}
+        />
+      </div>
 
-      {finishingFieldConfig.map((f) => {
-        const fieldState = form.fields[f.key];
+      <div className="form-section">
+        {finishingFieldConfig.map((f) => {
+          const fieldState = form.fields[f.key];
 
-        return (
-          <FormNumberField
-            key={f.key}
-            label={f.label}
-            unit={f.unit}
-            field={fieldState}
-            disabled={fieldState.locked || f.readOnly}
-            readonly={readOnly}
-            autoFocus={f.autoFocus}
-            onChange={(value) =>
-              onFieldChange(f.key, value)
-            }
-            ref={navigation.register(f.key)}
-            onKeyDown={navigation.handleKeyDown(f.key)}
-          />
-        );
-      })}
+          return (
+            <FormNumberField
+              key={f.key}
+              label={f.label}
+              unit={f.unit}
+              field={fieldState}
+              disabled={fieldState.locked || f.readOnly}
+              readonly={readOnly}
+              autoFocus={f.autoFocus}
+              onChange={(value) =>
+                onFieldChange(f.key, value)
+              }
+              ref={navigation.register(f.key)}
+              onKeyDown={navigation.handleKeyDown(f.key)}
+            />
+          );
+        })}
+      </div>
     </>
   );
 
