@@ -396,11 +396,26 @@ export async function handleGenerateAsync<
   execute: (
     input: I,
     extras: E
-  ) => Promise<X>
+  ) => Promise<X>,
+  validate?: FormValidateFn<K, E>
 ): Promise<{
   form: FormState<K, E>;
   execution?: X;
 }> {
+   // 0️⃣ Frontend validation (form-level)
+  if (validate) {
+    const error = validate(form.fields, form.extras);
+
+    if (error) {
+      return {
+        form: {
+          ...form,
+          status: "editing",
+          formError: error,
+        },
+      };
+    }
+  }
 
   const parsed = parse(form.fields, form.extras);
 
@@ -425,15 +440,41 @@ export async function handleGenerateAsync<
 
     console.error(error);
 
-    const nextFields = applyFieldErrors(
-      form.fields,
-      error
-    );
+    const te = getTauriCommandError(error);
 
+    // ✅ Backend field errors
+    if (te?.fieldErrors) {
+      const nextFields = applyFieldErrors(
+        form.fields,
+        error
+      );
+
+      return {
+        form: {
+          ...form,
+          fields: nextFields,
+          formError: undefined,
+        }
+      };
+    }
+
+    // ✅ Frontend / domain errors
+    if (error instanceof Error) {
+      return {
+        form: {
+          ...form,
+          fields: cleanedFields,
+          formError: error.message,
+        }
+      };
+    }
+
+    // fallback
     return {
       form: {
         ...form,
-        fields: nextFields,
+        fields: cleanedFields,
+        formError: "Something went wrong",
       }
     };
   }
