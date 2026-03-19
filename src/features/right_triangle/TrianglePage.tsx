@@ -33,6 +33,7 @@ import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFi
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 
 import { validateTriangleForm } from "./domain/validateTriangleForm";
+import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 
 export function TrianglePage() {
 
@@ -96,8 +97,7 @@ export function TrianglePage() {
      Render
   ========================= */
 
-  
-const formContent = (
+  const fields = (
   <>
     {triangleFieldConfig.map((f) => {
       const fieldState = form.fields[f.key];
@@ -119,14 +119,26 @@ const formContent = (
         />
       );
     })}
-
-    <FormError error={form.formError} />
-
-    <FormActions
-      onCalculate={onCalculate}
-      onReset={onReset}
-    />
   </>
+);
+
+const error = form.formError ? (
+  <FormError error={form.formError} />
+) : null;
+
+const actions = (
+  <FormActions
+    onCalculate={onCalculate}
+    onReset={onReset}
+  />
+);
+  
+const formContent = (
+  <FormLayout
+    fields={fields}
+    error={error}
+    actions={actions}
+  />
 );
 
 
