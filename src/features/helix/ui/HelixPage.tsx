@@ -9,6 +9,7 @@ import {
 import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
 
 import { useFormNavigation } from "@shared/ui";
+import { validateHelixForm } from "../domain/validateHelixForm";
 
 import {
   createInitialHelixForm,
@@ -88,7 +89,8 @@ export function HelixPage() {
     const next = await handleCalculateAsync(
       form,
       parseHelix,
-      (input) => solveHelix(input, form.extras.mode)
+      (input) => solveHelix(input, form.extras.mode),
+      validateHelixForm,
     );
 
     setForm(next);
