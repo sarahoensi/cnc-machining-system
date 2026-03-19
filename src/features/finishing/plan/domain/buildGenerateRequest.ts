@@ -15,17 +15,14 @@ export function buildFinishingRequest(
     radial_engagement_mm,
   } = input;
 
-  if (start_diameter_mm == null || target_diameter_mm == null) {
-    throw new Error("Missing required diameters");
-  }
-
   if (cuts !== undefined) {
 
     return {
       type: "ByCuts",
       mode: extras.mode,
-      start_diameter_mm: start_diameter_mm,
-      target_diameter_mm: target_diameter_mm,
+      start_diameter_mm: start_diameter_mm!,
+      target_diameter_mm: target_diameter_mm!,
+
       cuts,
     };
 
@@ -36,12 +33,13 @@ export function buildFinishingRequest(
     return {
       type: "ByRadialEngagement",
       mode: extras.mode,
-      start_diameter_mm: start_diameter_mm,
-      target_diameter_mm: target_diameter_mm,
-      radial_engagement_mm: radial_engagement_mm,
+      start_diameter_mm: start_diameter_mm!,
+      target_diameter_mm: target_diameter_mm!,
+
+      radial_engagement_mm: radial_engagement_mm!,
     };
 
   }
 
-  throw new Error("Either cuts or radial engagement must be provided");
+  throw new Error("Invalid finishing request state");
 }

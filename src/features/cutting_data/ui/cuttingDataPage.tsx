@@ -28,6 +28,10 @@ import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
+import { FormError } from "@shared/ui/components/form/FormError/FormError";
+import { validateCuttingDataForm } from "../domain/validateCuttingForm";
+
+import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 
 /* ============================================================
    Component
@@ -76,7 +80,8 @@ const [form, setForm] = useFeatureForm(
     const next = await handleCalculateAsync(
       form,
       parseCuttingData,
-      (input) => solveCuttingData(input)
+      (input) => solveCuttingData(input),
+      validateCuttingDataForm,
     );
 
     setForm(next);
@@ -90,8 +95,7 @@ const [form, setForm] = useFeatureForm(
     setForm(createInitialCuttingDataForm());
   }
 
-
-  const formContent = (
+  const fields = (
   <>
     {cuttingDataFieldConfig.map((f) => {
       const fieldState = form.fields[f.key];
@@ -112,12 +116,27 @@ const [form, setForm] = useFeatureForm(
         />
       );
     })}
-
-    <FormActions
-      onCalculate={onCalculate}
-      onReset={onReset}
-    />
   </>
+);
+
+const error = form.formError ? (
+  <FormError error={form.formError} />
+) : null;
+
+const actions = (
+  <FormActions
+    onCalculate={onCalculate}
+    onReset={onReset}
+  />
+);
+
+
+  const formContent = (
+  <FormLayout
+    fields={fields}
+    error={error}
+    actions={actions}
+  />
 );
 
   /* =========================

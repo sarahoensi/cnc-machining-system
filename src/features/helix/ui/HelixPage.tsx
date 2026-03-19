@@ -9,6 +9,7 @@ import {
 import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
 
 import { useFormNavigation } from "@shared/ui";
+import { validateHelixForm } from "../domain/validateHelixForm";
 
 import {
   createInitialHelixForm,
@@ -29,6 +30,8 @@ import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
+import { FormError } from "@shared/ui/components/form/FormError/FormError";
+import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 /* ============================================================
    Component
 ============================================================ */
@@ -87,7 +90,8 @@ export function HelixPage() {
     const next = await handleCalculateAsync(
       form,
       parseHelix,
-      (input) => solveHelix(input, form.extras.mode)
+      (input) => solveHelix(input, form.extras.mode),
+      validateHelixForm,
     );
 
     setForm(next);
@@ -105,8 +109,9 @@ export function HelixPage() {
      Render
   ========================= */
 
-  const formContent = (
-    <>
+  const fields = (
+  <>
+    <div className="form-section">
       <FormModeField
         label="Mode"
         value={form.extras.mode}
@@ -116,7 +121,9 @@ export function HelixPage() {
           { value: "Inner", label: "Inner" },
         ]}
       />
+    </div>
 
+    <div className="form-section">
       {helixFieldConfig.map((f) => {
         const fieldState = form.fields[f.key];
 
@@ -136,13 +143,29 @@ export function HelixPage() {
           />
         );
       })}
+    </div>
+  </>
+);
 
-      <FormActions
-        onCalculate={onCalculate}
-        onReset={onReset}
-      />
-    </>
-  );
+const error = (
+  <FormError error={form.formError} />
+);
+
+const actions = (
+  <FormActions
+    onCalculate={onCalculate}
+    onReset={onReset}
+  />
+);
+
+const formContent = (
+  <FormLayout
+    fields={fields}
+    error={error}
+    actions={actions}
+  />
+);
+
 
   return (
     <FormFigureLayout

@@ -1,0 +1,44 @@
+/* shared/ui/layout/container/FormLayout/FormLayout.css */
+
+.form-layout {
+  display: grid;
+  gap: var(--space-4); /* hovedrytme mellom seksjoner */
+}
+
+
+/* =========================
+   FIELDS
+========================= */
+
+.form-fields {
+  display: grid;
+  gap: var(--space-3); /* litt tettere mellom inputs */
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+.form-error-block {
+  min-height: 1.2em; /* hindrer layout jump */
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.form-actions {
+  margin-top: var(--space-2); /* subtil separasjon */
+}
+
+
+.form-section {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.form-section + .form-section {
+  margin-top: var(--space-4);
+}

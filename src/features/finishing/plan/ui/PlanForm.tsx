@@ -7,9 +7,6 @@ import {
 
 import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
 import { FormModeField } from "@shared/ui/components/form/fields/FormModeField";
-import {
-  EditButton,
-} from "@shared/ui/primitives/Button/Button";
 
 import { useFormNavigation } from "@shared/ui";
 
@@ -17,6 +14,8 @@ import { finishingFieldConfig } from "./finishingFieldConfig";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 import { createInitialFinishingForm, FinishingKey } from "../domain/finishingForm";
 import { mutuallyExclusiveFinishingPairs, validFinishingInputSets } from "../domain/finishingConstraints";
+import { FormError } from "@shared/ui/components/form/FormError/FormError";
+import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 
 type Props = {
   form: ReturnType<typeof createInitialFinishingForm>;
@@ -32,7 +31,6 @@ export function PlanForm({
   setForm,
   onGenerate,
   onReset,
-  onEdit,
   readOnly,
 }: Props) {
 
@@ -57,60 +55,68 @@ export function PlanForm({
     );
   }
 
+  const fields = (
+    <>
+      <div className="form-section">
+        <FormModeField
+          label="Mode"
+          value={form.extras.mode}
+          onChange={(newMode) =>
+            setForm((prev: any) =>
+              handleModeChange(prev, {
+                ...prev.extras,
+                mode: newMode,
+              })
+            )
+          }
+          options={[
+            { value: "Inner", label: "Inner" },
+            { value: "Outer", label: "Outer" },
+          ]}
+        />
+      </div>
+
+      <div className="form-section">
+        {finishingFieldConfig.map((f) => {
+          const fieldState = form.fields[f.key];
+
+          return (
+            <FormNumberField
+              key={f.key}
+              label={f.label}
+              unit={f.unit}
+              field={fieldState}
+              disabled={fieldState.locked || f.readOnly}
+              readonly={readOnly}
+              autoFocus={f.autoFocus}
+              onChange={(value) =>
+                onFieldChange(f.key, value)
+              }
+              ref={navigation.register(f.key)}
+              onKeyDown={navigation.handleKeyDown(f.key)}
+            />
+          );
+        })}
+      </div>
+    </>
+  );
+
+  const error = form.formError ? (
+    <FormError error={form.formError} />
+  ) : null;
+
+  const actions = (
+    <FormActions
+      onCalculate={onGenerate}
+      onReset={onReset}
+    />
+  );
 
   return (
-    <>
-      <FormModeField
-        label="Mode"
-        value={form.extras.mode}
-        readonly={readOnly}
-        onChange={(newMode) =>
-          setForm((prev: any) =>
-            handleModeChange(prev, {
-              ...prev.extras,
-              mode: newMode,
-            })
-          )
-        }
-        options={[
-          { value: "Inner", label: "Inner" },
-          { value: "Outer", label: "Outer" },
-        ]}
-      />
-
-      {finishingFieldConfig.map((f) => {
-
-        const fieldState = form.fields[f.key];
-
-        return (
-          <FormNumberField
-            key={f.key}
-            label={f.label}
-            unit={f.unit}
-            field={fieldState}
-            disabled={fieldState.locked || f.readOnly}
-            readonly={readOnly}
-            autoFocus={f.autoFocus}
-            onChange={(value) =>
-              onFieldChange(f.key, value)
-            }
-            ref={navigation.register(f.key)}
-            onKeyDown={navigation.handleKeyDown(f.key)}
-          />
-        );
-      })}
-
-      <FormActions
-        onCalculate={onGenerate}
-        onReset={onReset}
-        disabled={readOnly}
-      >
-        {readOnly && (
-          <EditButton onClick={onEdit}>
-            Edit plan
-          </EditButton>
-        )}
-      </FormActions>
-    </>
+    <FormLayout
+      fields={fields}
+      error={error}
+      actions={actions}
+    />
   );
 }

@@ -11,4 +11,6 @@ export type FormStatus =
   status: FormStatus;
   fields: Record<K, FieldState>;
   extras: E;
+
+  formError?: string | string[];
 };
