@@ -10,6 +10,7 @@ import { getTauriCommandError } from "@shared/api/tauriError";
 import {
   parseDecimalInput
 } from "@shared/parsing/decimalParser";
+import { FormValidateFn } from "../types/validate";
 
 
 /* ============================================================
@@ -124,6 +125,7 @@ if (!didUserEdit(prev, normalized)) {
     status: "editing",
     fields: driven.fields,
     extras: form.extras,
+    formError: undefined,
   };
 }
 
@@ -267,7 +269,22 @@ export async function handleCalculateAsync<
     input: Partial<Record<K, number>>,
     extras: E
   ) => Promise<Partial<Record<K, number>>>,
+  validate?: FormValidateFn<K, E>,
 ): Promise<FormState<K, E>> {
+
+  // 0️⃣ Frontend validation (form-level)
+if (validate) {
+  const error = validate(form.fields, form.extras);
+
+  if (error) {
+    return {
+      ...form,
+      status: "editing",
+      formError: error,
+    };
+  }
+}
+
 
   // 1️⃣ Parse input
   const parsed = parse(form.fields, form.extras);
@@ -321,6 +338,7 @@ export async function handleCalculateAsync<
       status: "solved",
       fields: unlockAll(nextFields),
       extras: form.extras,
+      formError: undefined,
     };
 
   } catch (error) {
