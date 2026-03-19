@@ -1,3 +1,7 @@
+/* =====================================================
+   PANEL BASE
+===================================================== */
+
 .panel {
   display: grid;
 
@@ -13,37 +17,86 @@
   background: var(--surface-panel);
   border: var(--border-width-sm) solid var(--border-default);
   border-radius: var(--radius-md);
-  
 }
 
-/* ===================================================== */
+
+/* =====================================================
+   TITLE
+===================================================== */
 
 .panel-title {
   grid-area: title;
 
   font-size: var(--heading-size);
-  font-weight: var(--text-heading-weight);
-  color: var(--text-secondary);
+  font-weight: var(--heading-weight);
+  color: var(--text-primary);
 }
 
-/* ===================================================== */
+
+/* =====================================================
+   CONTENT
+===================================================== */
 
 .panel-content {
   grid-area: content;
-  color: var(--text-secondary);
+
   min-width: 0;
+  color: var(--text-secondary);
 }
 
-/* ===================================================== */
+
+/* =====================================================
+   ACTIONS
+===================================================== */
 
 .panel-actions {
   grid-area: actions;
 
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  color: var(--text-primary);
+  justify-content: flex-start;
+
   gap: var(--space-2);
 
   margin-top: var(--space-2);
+}
+
+
+/* =====================================================
+   VARIANT: SECONDARY
+   (used for contextual / lightweight info like summary)
+===================================================== */
+
+.panel-secondary {
+  background: transparent;
+  border: none;
+
+  padding: var(--space-2) 0;
+
+  border-bottom: var(--border-width-sm) solid var(--border-muted);
+  margin-bottom: var(--space-5);
+}
+
+
+/* Title – demoted */
+
+.panel-secondary .panel-title {
+  font-size: var(--text-label-size);
+  font-weight: var(--text-label-weight);
+  color: var(--text-muted);
+}
+
+
+/* Content – quieter */
+
+.panel-secondary .panel-content {
+  font-size: var(--text-label-size);
+  color: var(--text-secondary);
+}
+
+
+/* Actions – tighter */
+
+.panel-secondary .panel-actions {
+  margin-top: var(--space-1);
 }

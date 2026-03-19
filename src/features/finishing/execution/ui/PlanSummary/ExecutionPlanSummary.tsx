@@ -18,36 +18,42 @@ export function ExecutionPlanSummary({
   onEdit,
 }: Props) {
 
-  return (
+ return (
     <Panel
-  title="Plan summary"
-  actions={
-    <button
-      type="button"
-      className="execution-edit-link"
-      onClick={onEdit}
+      className="panel-secondary"
+      title="Plan summary"
+      actions={
+        <button
+          type="button"
+          className="execution-edit-link"
+          onClick={onEdit}
+        >
+          Edit plan
+        </button>
+      }
     >
-      Edit plan
-    </button>
-  }
->
- <div className="execution-summary">
+      <div className="execution-summary">
 
-  <div className="execution-summary-mode">
-    <span className="label">Mode:</span> {mode}
-  </div>
+        <div className="execution-summary-mode">
+          <span className="label">Mode:</span>
+          <span>{mode}</span>
+        </div>
 
-  <div className="execution-summary-row">
-    <span className="execution-summary-item">
-      <span className="label">Start Ø:</span> {startDiameter}
-    </span>
+        <div className="execution-summary-row">
 
-    <span className="execution-summary-item">
-      <span className="label">Target Ø:</span> {targetDiameter}
-    </span>
-  </div>
+          <span className="execution-summary-item">
+            <span className="label">Start Ø:</span>
+            <span>{startDiameter}</span>
+          </span>
 
-</div>
-</Panel>
+          <span className="execution-summary-item">
+            <span className="label">Target Ø:</span>
+            <span>{targetDiameter}</span>
+          </span>
+
+        </div>
+
+      </div>
+    </Panel>
   );
 }
