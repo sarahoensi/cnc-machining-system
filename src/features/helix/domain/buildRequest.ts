@@ -6,25 +6,22 @@ import type { SolveHelixRequest } from "../api/types";
 export function buildHelixRequest(
   input: Partial<Record<HelixKey, number>>,
   mode: "Inner" | "Outer"
-): SolveHelixRequest{
+): SolveHelixRequest {
 
   const {
-    diameter: diameter,
-    tool_diameter: tool_diameter,
-    pitch: pitch,
-    angle: angle,
+    diameter,
+    tool_diameter,
+    pitch,
+    angle,
   } = input;
-
-  if (!diameter || !tool_diameter)
-    throw new Error("Missing required values");
 
   if (pitch !== undefined) {
     return {
       type: "Pitch",
       mode,
-      diameter: diameter,
-      tool_diameter: tool_diameter,
-      pitch: pitch,
+      diameter: diameter!,
+      tool_diameter: tool_diameter!,
+      pitch,
     };
   }
 
@@ -32,11 +29,11 @@ export function buildHelixRequest(
     return {
       type: "Angle",
       mode,
-      diameter: diameter,
-      tool_diameter: tool_diameter,
-      angle: angle,
+      diameter: diameter!,
+      tool_diameter: tool_diameter!,
+      angle,
     };
   }
 
-  throw new Error("Either pitch or angle must be provided");
+  throw new Error("Invalid helix request state");
 }
