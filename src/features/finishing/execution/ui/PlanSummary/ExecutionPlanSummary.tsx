@@ -1,58 +1,53 @@
-// features/finishing/execution/ui/PlanSummary/ExecutionPlanSummary.tsx
+// ExecutionPlanSummary.tsx
 
+import { Panel } from "@shared/ui/layout/container/Panel/Panel";
 import "./ExecutionPlanSummary.css";
 
 type Props = {
-  startDiameter: string
-  targetDiameter: string
-  cuts?: string
-  radialEngagement?: string
-  mode: "Inner" | "Outer"
-}
+  startDiameter: string;
+  targetDiameter: string;
+  mode: "Inner" | "Outer";
+
+  onEdit(): void;
+};
 
 export function ExecutionPlanSummary({
   startDiameter,
   targetDiameter,
-  cuts,
-  radialEngagement,
   mode,
+  onEdit,
 }: Props) {
 
   return (
-    <div className="execution-summary">
+    <Panel
+  title="Plan summary"
+  actions={
+    <button
+      type="button"
+      className="execution-edit-link"
+      onClick={onEdit}
+    >
+      Edit plan
+    </button>
+  }
+>
+ <div className="execution-summary">
 
-      <h3 className="execution-summary-title">
-        Plan summary
-      </h3>
+  <div className="execution-summary-mode">
+    <span className="label">Mode:</span> {mode}
+  </div>
 
-      <div className="execution-summary-grid">
+  <div className="execution-summary-row">
+    <span className="execution-summary-item">
+      <span className="label">Start Ø:</span> {startDiameter}
+    </span>
 
-        <div>
-          <strong>Mode:</strong> {mode}
-        </div>
+    <span className="execution-summary-item">
+      <span className="label">Target Ø:</span> {targetDiameter}
+    </span>
+  </div>
 
-        <div>
-          <strong>Start Ø:</strong> {startDiameter} mm
-        </div>
-
-        <div>
-          <strong>Target Ø:</strong> {targetDiameter} mm
-        </div>
-
-        {cuts !== undefined && (
-          <div>
-            <strong>Cuts:</strong> {cuts}
-          </div>
-        )}
-
-        {radialEngagement !== undefined && (
-          <div>
-            <strong>Radial engagement:</strong> {radialEngagement} mm
-          </div>
-        )}
-
-      </div>
-
-    </div>
-  )
+</div>
+</Panel>
+  );
 }

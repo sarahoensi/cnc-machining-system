@@ -1,91 +1,33 @@
-/* =====================================================
-   EXECUTION FIELD (base)
-===================================================== */
-
 .exec-field {
-  /* spacing + sizing tokens */
-  --exec-padding-x: var(--control-padding-x-sm);
-  --exec-unit-space: var(--space-6);
-
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
 }
 
-/* =====================================================
-   CONTROL WRAPPER
-===================================================== */
-
-.exec-control {
-  display: flex;
-  min-width: 0;
-}
-
-/* =====================================================
-   BASE INPUT STYLE (shared: input + value)
-===================================================== */
-
-.exec-field .ni-input {
-  height: var(--control-height-sm);
-  font-variant-numeric: tabular-nums;
-
-  padding-left: var(--exec-padding-x);
-  padding-right: calc(var(--exec-padding-x) + var(--exec-unit-space));
-
-  font-size: var(--font-size-sm);
-  font-weight: var(--text-body-weight);
-
-  border-radius: var(--control-radius);
-  border: var(--border-width-sm) solid var(--control-border);
-
-  background: transparent;
-  color: var(--text-primary);
-
-  outline: none;
-}
-
-/* =====================================================
-   INPUT STATE (only interactive fields)
-===================================================== */
-
-.exec-field--input .ni-input:focus-visible {
-  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
-  border-color: var(--control-border-focus);
-}
-
-/* =====================================================
-   VALUE STATE (display-only)
-===================================================== */
-
-.exec-field--value .ni-input {
-  border-color: transparent;
-  pointer-events: none;
-}
-
-/* =====================================================
-   UNIT POSITION
-===================================================== */
-
-.exec-field .ni-unit {
-  right: var(--exec-padding-x);
-}
-
-/* =====================================================
-   READONLY (fallback / safety)
-===================================================== */
-
-.exec-field .ni-input.readonly {
-  border-color: transparent;
-  cursor: default;
-  pointer-events: none;
-}
-
-/* =====================================================
-   ERROR
-===================================================== */
-
 .exec-error {
   font-size: var(--form-caption-size);
   font-weight: var(--text-caption-weight);
   color: var(--feedback-error);
+}
+
+.exec-display {
+  height: var(--control-height-sm);
+
+  display: flex;
+  align-items: center;
+
+  padding-left: var(--control-padding-x-sm);
+  padding-right: var(--control-padding-x-sm);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--text-body-weight);
+  font-variant-numeric: tabular-nums;
+
+  border-radius: var(--control-radius);
+  border: var(--border-width-sm) solid transparent;
+
+  color: var(--text-primary);
+  background: transparent;
+
+  min-width: 0;
 }

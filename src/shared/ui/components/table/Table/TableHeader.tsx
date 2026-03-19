@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import { Table } from "./Table";
-import { TextWithTooltip } from "../../primitives/TextWithTooltip/TextWithTooltip";
+import { TextWithTooltip } from "../../../primitives/TextWithTooltip/TextWithTooltip";
 
 type Props = {
   label?: string;

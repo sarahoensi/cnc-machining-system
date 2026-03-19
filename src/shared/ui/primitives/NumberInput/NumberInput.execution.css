@@ -1,0 +1,46 @@
+.ni-execution .ni-input {
+width: 100%;
+  min-width: 0;
+
+  font-size: var(--font-size-md);
+  font-variant-numeric: tabular-nums;
+
+  padding-block: 0.4em;
+  padding-left: var(--control-padding-x-sm);
+  border-radius: 0.35em;
+  border: 0.0625em solid var(--control-border);
+
+  background: var(--control-bg);
+  color: var(--control-text);
+
+  outline: none;
+}
+
+/* focus */
+
+.ni-execution .ni-input:focus-visible {
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  border-color: var(--control-border-focus);
+}
+
+/* readonly */
+
+.ni-execution .ni-input.readonly {
+  border-color: transparent;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* unit */
+
+.ni-execution .ni-unit {
+  right: var(--control-padding-x-sm);
+}
+
+/* display mode */
+
+.ni-execution.is-display-only .ni-input {
+  border-color: transparent;
+  cursor: default;
+  pointer-events: none;
+}

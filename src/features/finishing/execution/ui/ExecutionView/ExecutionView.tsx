@@ -4,11 +4,11 @@ import type { ExecutionState } from "@shared/execution";
 import type { FinishingStepData } from "../../domain/mapExecution";
 
 import { ExecutionPlanSummary } from "../PlanSummary";
-import { EditPlanButton } from "../EditPlanButton";
+//import { EditPlanButton } from "../EditPlanButton";
 import { FinishingExecutionTable } from "../ExecutionTable";
 import { ExecutionFinishedNotice } from "../ExecutionFinishedNotice/ExecutionFinishedNotice";
 
-import { StackedLayout } from "@shared/ui/layout/StackedLayout/StackedLayout";
+import { StackedLayout } from "@shared/ui/layout/page/StackedLayout/StackedLayout";
 
 import "./ExecutionView.css";
 
@@ -19,8 +19,6 @@ type Props = {
     mode: "Inner" | "Outer";
     startDiameter: string;
     targetDiameter: string;
-    cuts?: string;
-    radialEngagement?: string;
   };
 
   onRegisterMeasurement(
@@ -47,12 +45,12 @@ export function ExecutionView({
     <StackedLayout
       className="execution-view"
 
-      header={
-        <>
-          <ExecutionPlanSummary {...summary} />
-          <EditPlanButton onClick={onEditPlan} />
-        </>
-      }
+     header={
+  <ExecutionPlanSummary
+    {...summary}
+    onEdit={onEditPlan}
+  />
+}
 
       content={
         <FinishingExecutionTable

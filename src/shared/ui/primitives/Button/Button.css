@@ -1,5 +1,5 @@
 /* =====================================================
-   BASE BUTTON
+   BASE BUTTON (kun struktur)
 ===================================================== */
 
 .app-button {
@@ -9,12 +9,9 @@
   gap: var(--space-2);
 
   min-width: 0;
-  min-height: var(--button-height);
-  padding: 0 var(--button-padding-x);
 
   font-family: inherit;
   font-weight: var(--font-weight-medium);
-  font-size: var(--button-font-size);
 
   border-radius: var(--control-radius);
   border: var(--border-width-sm) solid transparent;
@@ -35,75 +32,89 @@
    SIZE TOKENS
 ===================================================== */
 
-.app-button.small {
-  --button-height: var(--control-height-sm);
-  --button-padding-x: var(--control-padding-x-sm);
-  --button-font-size: var(--text-label-size);
+.size-small {
+  height: var(--control-height-xsm);
+  padding: 0 var(--control-padding-x-sm);
+  font-size: var(--text-label-size);
 }
 
-.app-button.medium {
-  --button-height: var(--control-height-md);
-  --button-padding-x: var(--control-padding-x-md);
-  --button-font-size: var(--form-text-size);
+.size-medium {
+  height: var(--control-height-md);
+  padding: 0 var(--control-padding-x-md);
+  font-size: var(--form-text-size);
 }
 
-.app-button.large {
-  --button-height: var(--control-height-lg);
-  --button-padding-x: var(--control-padding-x-lg);
-  --button-font-size: var(--heading-size);
+.size-large {
+  height: var(--control-height-lg);
+  padding: 0 var(--control-padding-x-lg);
+  font-size: var(--heading-size);
 }
 
-.app-button.icon {
-  --button-height: var(--control-height-md);
-  --button-padding-x: 0;
-
-  width: var(--button-height);
+.size-icon {
+  height: var(--control-height-md);
+  width: var(--control-height-md);
+  padding: 0;
 }
 
 /* =====================================================
    VARIANTS
 ===================================================== */
 
-.app-button.primary {
+.variant-primary {
   background: var(--brand-primary);
   color: var(--brand-on-primary);
 }
 
-.app-button.primary:hover:not(:disabled) {
+.variant-primary:hover:not(:disabled) {
   background: var(--brand-primary-hover);
 }
 
-.app-button.primary:active:not(:disabled) {
+.variant-primary:active:not(:disabled) {
   transform: translateY(1px);
 }
 
-.app-button.secondary {
+.variant-secondary {
   background: var(--surface-panel);
   color: var(--text-primary);
   border-color: var(--border-default);
 }
 
-.app-button.secondary:hover:not(:disabled) {
+.variant-secondary:hover:not(:disabled) {
   background: var(--surface-hover);
 }
 
-.app-button.danger {
+.variant-danger {
   background: var(--feedback-error);
   color: var(--text-inverse);
 }
 
-.app-button.danger:hover:not(:disabled) {
+.variant-danger:hover:not(:disabled) {
   opacity: var(--opacity-muted);
 }
 
-.app-button.icon {
+.variant-icon {
   background: transparent;
   border: none;
   color: var(--text-primary);
 }
 
-.app-button.icon:hover:not(:disabled) {
+.variant-icon:hover:not(:disabled) {
   background: var(--surface-hover);
+}
+
+.variant-link {
+  background: none;
+  border: none;
+  padding: 0;
+
+  height: auto;
+
+  color: var(--brand-primary);
+  font-size: var(--text-label-size);
+}
+
+.variant-link:hover {
+  text-decoration: underline;
 }
 
 /* =====================================================

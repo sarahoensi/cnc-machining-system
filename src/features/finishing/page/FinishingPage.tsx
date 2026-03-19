@@ -2,7 +2,7 @@
 
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 
-import { FormFigureLayout } from "@shared/ui/layout/FormFigureLayout/FormFigureLayout";
+import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
 
 import { PlanForm } from "../plan/ui/PlanForm";
 import { ExecutionView } from "../execution/ui/ExecutionView/ExecutionView";

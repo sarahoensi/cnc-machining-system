@@ -40,101 +40,6 @@ type Props = {
 };
 
 /* ============================================================
-   Component
-============================================================ */
-
-export function FinishingExecutionTable({
-  execution,
-  onRegisterMeasurement
-}: Props) {
-
-  const { decimals } = useDisplaySettings();
-  const finished = execution.finished;
-
-  const [cutMode, setCutMode] =
-    useState<"deltaD" | "ae">("deltaD");
-
-  const {
-    editingStep,
-    drafts,
-    errors,
-    updateDraft,
-    startEdit,
-    cancelEdit,
-    confirmEdit,
-  } = useExecutionEditing(onRegisterMeasurement);
-
-  
-
-  /* ============================================================
-     Input refs (for autofocus)
-  ============================================================ */
-
-  const inputRefs =
-    useRef<Record<number, HTMLInputElement | null>>({});
-
-  const activeStep =
-    execution.steps.find(s => s.status === "active");
-
-  useExecutionFocus({
-    inputRefs,
-    activeIndex: activeStep?.index ?? null,
-    editingIndex: editingStep,
-  });
-
-  /* ============================================================
-     Render
-  ============================================================ */
-
-  return (
-    <>
-
-      <Table.Root className="execution-table">
-
-        <ExecutionHeader
-          cutMode={cutMode}
-          onCutModeChange={setCutMode}
-        />
-
-        <Table.Body>
-
-          {execution.steps.map(step => {
-
-            const draft =
-              drafts[step.index] ??
-              step.measurement.value ??
-              "";
-
-            return (
-
-              <ExecutionTableRow
-                key={step.index}
-                step={step}
-                cutMode={cutMode}
-                decimals={decimals}
-                draft={draft}
-                error={errors[step.index]}
-                editingStep={editingStep}
-                inputRefs={inputRefs}
-                onDraftChange={updateDraft}
-                onConfirm={confirmEdit}
-                onStartEdit={startEdit}
-                onCancelEdit={cancelEdit}
-                finished={finished}
-                
-              />
-
-            );
-          })}
-
-        </Table.Body>
-
-      </Table.Root>
-    </>
-  );
-}
-
-/* ============================================================
    Header (internal component)
 ============================================================ */
 
@@ -184,3 +89,103 @@ function ExecutionHeader({
     </Table.Head>
   );
 }
+
+
+/* ============================================================
+   Main Component
+============================================================ */
+
+export function FinishingExecutionTable({
+  execution,
+  onRegisterMeasurement
+}: Props) {
+
+  const { decimals } = useDisplaySettings();
+  const finished = execution.finished;
+
+  const [cutMode, setCutMode] =
+    useState<"deltaD" | "ae">("deltaD");
+
+  const {
+    editingStep,
+    drafts,
+    errors,
+    updateDraft,
+    startEdit,
+    cancelEdit,
+    confirmEdit,
+  } = useExecutionEditing(onRegisterMeasurement);
+
+  
+
+  /* ============================================================
+     Input refs (for autofocus)
+  ============================================================ */
+
+  const inputRefs =
+    useRef<Record<number, HTMLInputElement | null>>({});
+
+  const activeStep =
+    execution.steps.find(s => s.status === "active");
+
+  useExecutionFocus({
+    inputRefs,
+    activeIndex: activeStep?.index ?? null,
+    editingIndex: editingStep,
+  });
+
+   /* ============================================================
+     Derived render parts
+  ============================================================ */
+
+  const header = (
+    <ExecutionHeader
+      cutMode={cutMode}
+      onCutModeChange={setCutMode}
+    />
+  );
+
+  const rows = execution.steps.map(step => {
+
+    const draft =
+      drafts[step.index] ??
+      step.measurement.value ??
+      "";
+
+    return (
+      <ExecutionTableRow
+        key={step.index}
+        step={step}
+        cutMode={cutMode}
+        decimals={decimals}
+        draft={draft}
+        error={errors[step.index]}
+        editingStep={editingStep}
+        inputRefs={inputRefs}
+        onDraftChange={updateDraft}
+        onConfirm={confirmEdit}
+        onStartEdit={startEdit}
+        onCancelEdit={cancelEdit}
+        finished={finished}
+      />
+    );
+  });
+
+
+  /* ============================================================
+     Render
+  ============================================================ */
+
+  return (
+    <Table.Root className="execution-table">
+
+      {header}
+
+      <Table.Body>
+        {rows}
+      </Table.Body>
+
+    </Table.Root>
+  );
+}
+

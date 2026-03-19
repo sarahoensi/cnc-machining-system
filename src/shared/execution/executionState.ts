@@ -101,3 +101,37 @@ export function isStepCompleted(step: ExecutionStep<any>) {
 export function isStepPending(step: ExecutionStep<any>) {
   return step.status === "pending";
 }
+
+/* ============================================================
+   Derived helpers (UI-safe, but domain-driven)
+============================================================ */
+
+export function isStepEditableCompleted<T>(
+  step: ExecutionStep<T>,
+  finished: boolean
+) {
+  return (
+    !finished &&
+    step.status === "completed" &&
+    step.editable
+  );
+}
+
+export function isStepInputEditable<T>(
+  step: ExecutionStep<T>,
+  finished: boolean,
+  isEditing: boolean
+) {
+  if (isEditing) return true;
+
+  return (
+    !finished &&
+    step.status === "active"
+  );
+}
+
+export function getStepMeasurementValue<T>(
+  step: ExecutionStep<T>
+) {
+  return step.measurement.value ?? "";
+}

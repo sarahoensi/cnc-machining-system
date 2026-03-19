@@ -2,9 +2,15 @@
 
 import React, { forwardRef, useId } from "react";
 import clsx from "clsx";
-import "./NumberInput.css";
+import "./NumberInput.base.css";
+import "./NumberInput.form.css";
+import "./NumberInput.execution.css";
+
+
 
 type Props = {
+  
+
   id?: string;
 
   value: string;
@@ -14,6 +20,9 @@ type Props = {
 
   disabled?: boolean;
   readonly?: boolean;
+  displayOnly?: boolean;
+
+  variant?: "default" | "form" | "execution";
 
   autoFocus?: boolean;
   tabIndex?: number;
@@ -31,12 +40,15 @@ const INPUT_REGEX = /^-?\d*([.,]\d*)?$/;
 export const NumberInput = forwardRef<HTMLInputElement, Props>(
 function NumberInput(
 {
+  
   id,
   value,
   onChange,
   unit,
   disabled = false,
   readonly = false,
+  displayOnly = false,
+  variant = "default",
   autoFocus,
   tabIndex,
   onKeyDown,
@@ -51,6 +63,7 @@ ref
   const generatedId = useId();
   const inputId = id ?? generatedId;
 
+  const isDisplayOnly = displayOnly;
   const isDisabled = disabled;
   const isReadOnly = readonly && !isDisabled;
 
@@ -71,7 +84,16 @@ ref
 
 
   return (
-    <div className={clsx("number-input", className)}>
+    <div
+      className={clsx(
+        "number-input",
+        `ni-${variant}`,
+        isDisabled && "is-disabled",
+        isReadOnly && "readonly",
+        isDisplayOnly && "is-display-only",
+        className
+      )}
+    >
       <div className="ni-input-wrapper">
 
         <input
@@ -89,11 +111,7 @@ ref
           onChange={handleChange}
           onFocus={onFocus}
           onKeyDown={onKeyDown}
-          className={clsx(
-            "ni-input",
-            isDisabled && "disabled",
-            isReadOnly && "readonly"
-          )}
+          className="ni-input"
         />
 
         {unit && (

@@ -29,7 +29,7 @@ import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 
-import { FormFigureLayout } from "@shared/ui/layout/FormFigureLayout/FormFigureLayout";
+import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
 
 export function TrianglePage() {
 

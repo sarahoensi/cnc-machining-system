@@ -17,8 +17,6 @@ type Props<T extends string> = {
   options: readonly RadioOption<T>[];
 
   disabled?: boolean;
-  readonly?: boolean;
-
   className?: string;
 };
 
@@ -28,15 +26,10 @@ export function RadioGroup<T extends string>({
   onChange,
   options,
   disabled = false,
-  readonly = false,
   className,
 }: Props<T>) {
-
-  const isDisabled = disabled;
-  const isReadonly = readonly && !isDisabled;
-
   function handleChange(optionValue: T) {
-    if (isDisabled || isReadonly) return;
+    if (disabled) return;
     onChange(optionValue);
   }
 
@@ -45,11 +38,10 @@ export function RadioGroup<T extends string>({
       className={clsx(
         "radio-group",
         className,
-        isDisabled && "is-disabled",
-        isReadonly && "is-readonly"
+        disabled && "is-disabled",
       )}
       role="radiogroup"
-      aria-disabled={isDisabled || isReadonly}
+      aria-disabled={disabled}
     >
       {options.map((option) => (
         <label
@@ -63,8 +55,7 @@ export function RadioGroup<T extends string>({
             value={option.value}
             checked={value === option.value}
             onChange={() => handleChange(option.value)}
-            disabled={isDisabled}
-            tabIndex={isReadonly ? -1 : undefined}
+            disabled={disabled}
           />
 
           <TextWithTooltip

@@ -5,7 +5,7 @@ import {
   OkButton,
   RegisterButton,
   EditButton,
-} from "@shared/ui/components/primitives/Button/Button";
+} from "@shared/ui/primitives/Button/Button";
 
 type Props = {
   stepIndex: number;
