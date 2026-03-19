@@ -29,6 +29,7 @@ import { FormActions } from "@shared/ui/components/form/FormActions/FormActions"
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
+import { validateCuttingDataForm } from "../domain/validateCuttingForm";
 
 /* ============================================================
    Component
@@ -77,7 +78,8 @@ const [form, setForm] = useFeatureForm(
     const next = await handleCalculateAsync(
       form,
       parseCuttingData,
-      (input) => solveCuttingData(input)
+      (input) => solveCuttingData(input),
+      validateCuttingDataForm,
     );
 
     setForm(next);
