@@ -345,16 +345,37 @@ if (validate) {
 
     console.error(error);
 
-    const nextFields = applyFieldErrors(
-      cleanedFields,
-      error
-    );
+  const te = getTauriCommandError(error);
+
+  // ✅ 1. Backend field errors
+  if (te?.fieldErrors) {
+    const nextFields = applyFieldErrors(cleanedFields, error);
 
     return {
       status: "editing",
       fields: nextFields,
       extras: form.extras,
+      formError: undefined,
     };
+  }
+
+  // ✅ 2. Vanlig frontend error
+  if (error instanceof Error) {
+    return {
+      status: "editing",
+      fields: cleanedFields,
+      extras: form.extras,
+      formError: error.message,
+    };
+  }
+
+  // fallback
+  return {
+    status: "editing",
+    fields: cleanedFields,
+    extras: form.extras,
+    formError: "Something went wrong",
+  };
   }
 }
 
