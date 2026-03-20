@@ -1,0 +1,105 @@
+/* =========================================
+   SVG BASE
+========================================= */
+
+.spiral-figure {
+  width: 100%;
+  height: auto;
+}
+
+
+/* =========================================
+   MATERIAL
+========================================= */
+
+
+
+.material{
+    fill: #d9d9d9
+}
+
+/* =========================================
+   HELIX
+========================================= */
+
+.helix-front {
+  fill: none;
+  stroke: #2a4dbf;
+  stroke-width: 2;
+  transition: all 0.2s ease;
+}
+
+.helix-back {
+  fill: none;
+  stroke: #2a4dbf;
+  stroke-width: 2;
+  opacity: 0.35;
+  stroke-dasharray: 4 4;
+}
+
+.helix-front.active {
+  stroke: var(--brand-primary);
+  stroke-width: 2.5;
+}
+
+
+/* =========================================
+   TOOL
+========================================= */
+
+.tool-body-flat {
+  fill: #d0d5dd;
+  stroke: var(--border-default);
+  stroke-width: 1.5;
+}
+
+.tool-cap-line {
+  stroke: var(--border-default);
+  stroke-width: 1.5;
+}
+
+.tool-tip {
+  fill: #d0d5dd;
+  stroke: var(--border-default);
+  stroke-width: 1.5;
+}
+
+/* aktiv state */
+.tool.active .tool-body-flat,
+.tool.active .tool-cap-line,
+.tool.active .tool-tip {
+  stroke: var(--brand-primary);
+}
+
+/* =========================================
+   DIMENSIONS (pitch + diameter)
+========================================= */
+
+.spiral-part {
+  stroke: var(--border-default);
+  stroke-width: 2;
+  fill: none;
+  transition: all 0.2s ease;
+}
+
+.spiral-part.active {
+  stroke: var(--brand-primary);
+  stroke-width: 2.5;
+}
+
+
+/* =========================================
+   SMALL VISUAL POLISH
+========================================= */
+
+/* gjør helixen litt "renere" */
+.helix-front,
+.helix-back {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* gjør linjer litt skarpere */
+.spiral-part {
+  stroke-linecap: square;
+}
