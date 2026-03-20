@@ -35,7 +35,7 @@ import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { validateTriangleForm } from "./domain/validateTriangleForm";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { useState } from "react";
-import { TriangleFigure } from "./ui/triangleFigure/triangleFigure";
+import { TriangleFigure } from "./ui/triangleFigure/TriangleFigure";
 
 export function TrianglePage() {
 
