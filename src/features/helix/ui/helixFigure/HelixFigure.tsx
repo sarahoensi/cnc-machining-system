@@ -6,6 +6,7 @@ import { buildHelixPath } from "./parts/HelixPath";
 import { buildInnerMaterialPath } from "./parts/InnerMaterialPath";
 import { buildOuterMaterialPath } from "./parts/OuterMaterialPath";
 import { buildDiameterPath } from "./parts/DiameterPath";
+import { buildPitchPath } from "./parts/PitchPath";
 
 /* --------------------------------------------- */
 /* TYPES */
@@ -66,7 +67,7 @@ const FIGURE = {
     },
 
     helix: {
-        turns: 4,
+        turns: 3,
         ry: 14,
     },
 
@@ -172,14 +173,23 @@ export function HelixFigure({
         radius: centerSection.radius,
         axisY: materialTopY,
         centerX: centerBottom.x,
-        offsetY: 5,
+        offsetY: 35,
     });
 
 
     // PITCH
+    const pitchX = centerBottom.x - rx - 10;
+    const turnIndex = 0.5;
+    const y1 = materialTopY + turnIndex * turnHeight;
+    const y2 = y1 + turnHeight;
 
-    const pitchX = 60;
-    const pitchOffsetY = 20;
+    const pitchPath = buildPitchPath({
+        x: pitchX,
+        y1,
+        y2,
+    });
+
+
 
     return (
         <svg viewBox={FIGURE.viewBox} className="spiral-figure" aria-hidden>
@@ -187,19 +197,19 @@ export function HelixFigure({
             <path d={materialD} className="material" />
 
             {/* DIAMETER */}
-            <path d={diameterPath} className="holeDiameter" />
+            <path d={diameterPath} className={part("holeDiameter")} />
 
             {/* HELIX BACK */}
             <path d={helixBack} className="helix-back" />
 
             {/* TOOL */}
-            <path d={toolPath} className="tool" />
+            <path d={toolPath} className={clsx("tool", isActive("tool") && "active")} />
 
             {/* HELIX FRONT */}
-            <path d={helixFront} className="helix-front" />
-
+            <path d={helixFront} className={"helix-front"} />
+            
             {/* PITCH */}
-           
+            <path d={pitchPath} className={part("pitch")} />
         </svg>
     );
 }

@@ -17,8 +17,8 @@ export function buildDiameterPath({
     const right = centerX + radius;
 
     const y = axisY - offsetY;
-    const topY = y - 2;
-    const bottomY = y + 2;
+    const topY = y - 4;
+    const bottomY = y + 4;
 
     return `
         M ${left} ${y}
