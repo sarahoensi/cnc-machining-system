@@ -1,6 +1,12 @@
 import clsx from "clsx";
 import "./HelixFigure.css";
 import type { HelixKey } from "../../domain/helixForm";
+import { buildToolPath } from "./parts/ToolPath";
+import { buildHelixPath } from "./parts/HelixPath";
+import { buildInnerMaterialPath } from "./parts/InnerMaterialPath";
+import { buildOuterMaterialPath } from "./parts/OuterMaterialPath";
+import { buildDiameterPath } from "./parts/DiameterPath";
+import { buildPitchPath } from "./parts/PitchPath";
 
 /* --------------------------------------------- */
 /* TYPES */
@@ -17,58 +23,18 @@ type VisualKey =
     | "tool"
     | "holeDiameter";
 
-type HelixSide = "front" | "back";
 
 /* --------------------------------------------- */
-/* CONFIG */
+/* MAP TO FIELDS
 /* --------------------------------------------- */
 
-const FIGURE = {
-    viewBox: "0 0 240 220",
-
-    center: {
-        x: 120,
-        topY: 30,
-        height: 160,
-    },
-
-    helix: {
-        turns: 4,
-        ry: 14,
-        rx: {
-            Inner: 46,
-            Outer: 60,
-        },
-    },
-
-    centerSection: {
-        x: 70,
-        width: 100,
-        offsetY: -20,
-    },
-
-    tool: {
-        radius: 8,
-        offsetTop: -10,
-        offsetBottom: -6,
-    },
-
-    material: {
-        leftX: 20,
-        rightX: 220,
-        baseHeight: 25,
-    },
-};
-
-/* --------------------------------------------- */
-/* FIELD MAPPING */
-/* --------------------------------------------- */
 
 const FIELD_TO_VISUAL: Partial<Record<HelixKey, VisualKey[]>> = {
     tool_diameter: ["tool"],
     pitch: ["pitch", "helix"],
     diameter: ["holeDiameter"],
 };
+
 
 function mapFieldToVisualKeys(
     field?: HelixKey | null
@@ -77,60 +43,43 @@ function mapFieldToVisualKeys(
     return FIELD_TO_VISUAL[field] ?? [];
 }
 
+
 /* --------------------------------------------- */
-/* HELIX PATH */
+/* CONFIG */
 /* --------------------------------------------- */
 
-function buildHelixPath({
-    cx,
-    topY,
-    height,
-    rx,
-    ry,
-    turns,
-    side,
-}: {
-    cx: number;
-    topY: number;
-    height: number;
-    rx: number;
-    ry: number;
-    turns: number;
-    side: HelixSide;
-}) {
-    const steps = 240;
-    let path = "";
-    let lastSide: HelixSide | null = null;
+const FIGURE = {
+    viewBox: `0 0 240 220`,
 
-    for (let i = 0; i <= steps; i++) {
-        const u = i / steps;
-        const t = u * turns * Math.PI * 2;
+    centerBottom: {
+        x: 240 / 2,
+        y: 210,
+    },
 
-        const x = Math.cos(t) * rx;
-        const y = Math.sin(t) * ry;
-        const z = u * height;
+    centerSection: {
+        radius: 50,
+        height: 140,
+    },
 
-        const px = cx + x;
-        const py = topY + z + y * 0.5;
+    materialBase: {
+        baseWidth: 200,
+        baseHeight: 25,
+    },
 
-        const currentSide =
-            Math.sin(t) > 0 ? "front" : "back";
+    helix: {
+        turns: 3,
+        ry: 14,
+    },
 
-        if (currentSide === side) {
-            const cmd =
-                path === "" || lastSide !== side
-                    ? `M ${px} ${py}`
-                    : `L ${px} ${py}`;
+    tool: {
+        toolRadius: 8,
+        toolHeight: 160,
+        offsetX: 10,
+        offsetY: 6,
+    },
 
-            path += cmd;
-        }
 
-        lastSide = currentSide;
-    }
-
-    return path;
-}
-
+};
 /* --------------------------------------------- */
 /* COMPONENT */
 /* --------------------------------------------- */
@@ -155,213 +104,112 @@ export function HelixFigure({
     /* ----------------------------------------- */
 
     const {
-        center,
+        centerBottom,
         helix,
         centerSection,
         tool,
-        material,
+        materialBase,
     } = FIGURE;
 
-    const rx = helix.rx[mode];
-    const turnHeight = center.height / helix.turns;
-
-    const sectionY = center.topY + centerSection.offsetY;
-
-    const toolX =
+    const toolCenterX =
         mode === "Inner"
-            ? center.x + rx - 4
-            : center.x + rx + tool.radius - 2;
+            ? centerBottom.x + centerSection.radius - tool.offsetX - tool.toolRadius
+            : centerBottom.x + centerSection.radius + tool.offsetX + tool.toolRadius;
 
-    const toolTopY = center.topY + tool.offsetTop;
-    const toolBottomY =
-        center.topY + center.height + tool.offsetBottom;
+    const toolBottomY = centerBottom.y - materialBase.baseHeight - tool.offsetY;
 
-    const centerLeft = centerSection.x;
-    const centerRight =
-        centerSection.x + centerSection.width;
+    const rx = toolCenterX - centerBottom.x;
+
+    const turnHeight = centerSection.height / helix.turns;
+
+    const materialTopY = centerBottom.y - materialBase.baseHeight - centerSection.height;
 
     /* ----------------------------------------- */
-    /* PATHS */
+    /* BUILD PATHS
     /* ----------------------------------------- */
 
-    const helixBack = buildHelixPath({
-        cx: center.x,
-        topY: center.topY,
-        height: center.height,
+    // TOOLPATH
+
+    const toolPath = buildToolPath({
+        toolCenterX,
+        toolBottomY,
+        toolRadius: tool.toolRadius,
+        toolHeight: tool.toolHeight,
+    })
+
+    // MATERIAL
+
+    const materialPath =
+        mode === "Inner"
+            ? buildInnerMaterialPath
+            : buildOuterMaterialPath;
+
+    const materialD = materialPath({
+        centerBottom,
+
+        baseWidth: materialBase.baseWidth,
+        baseHeight: materialBase.baseHeight,
+
+        materialTopY,
+        centerRadius: centerSection.radius,
+    });
+
+    // HELIX
+    const helixArgs = {
+        cx: centerBottom.x,
+        topY: materialTopY,
+        height: centerSection.height,
         rx,
         ry: helix.ry,
         turns: helix.turns,
-        side: "back",
+    };
+
+    const helixBack = buildHelixPath({ ...helixArgs, side: "back" });
+    const helixFront = buildHelixPath({ ...helixArgs, side: "front" });
+
+    // DIAMETER
+
+    const diameterPath = buildDiameterPath({
+        radius: centerSection.radius,
+        axisY: materialTopY,
+        centerX: centerBottom.x,
+        offsetY: 35,
     });
 
-    const helixFront = buildHelixPath({
-        cx: center.x,
-        topY: center.topY,
-        height: center.height,
-        rx,
-        ry: helix.ry,
-        turns: helix.turns,
-        side: "front",
+
+    // PITCH
+    const pitchX = centerBottom.x - rx - 10;
+    const turnIndex = 0.5;
+    const y1 = materialTopY + turnIndex * turnHeight;
+    const y2 = y1 + turnHeight;
+
+    const pitchPath = buildPitchPath({
+        x: pitchX,
+        y1,
+        y2,
     });
 
-    /* ----------------------------------------- */
-    /* RENDER */
-    /* ----------------------------------------- */
+
 
     return (
-        <svg
-            viewBox={FIGURE.viewBox}
-            className="spiral-figure"
-            aria-hidden
-        >
-            {/* ---------------- MATERIAL ---------------- */}
+        <svg viewBox={FIGURE.viewBox} className="spiral-figure" aria-hidden>
+            {/* MATERIAL */}
+            <path d={materialD} className="material" />
 
-            <rect
-                x={material.leftX}
-                y={center.topY + center.height}
-                width={material.rightX - material.leftX}
-                height={material.baseHeight}
-                className="material"
-            />
+            {/* DIAMETER */}
+            <path d={diameterPath} className={part("holeDiameter")} />
 
-            {mode === "Inner" && (
-                <>
-                    <rect
-                        x={material.leftX}
-                        y={center.topY}
-                        width={centerLeft - material.leftX}
-                        height={center.height}
-                        className="material"
-                    />
-
-                    <rect
-                        x={centerRight}
-                        y={center.topY}
-                        width={
-                            material.rightX - centerRight
-                        }
-                        height={center.height}
-                        className="material"
-                    />
-                </>
-            )}
-
-            {mode === "Outer" && (
-                <rect
-                    x={centerLeft}
-                    y={center.topY}
-                    width={centerRight - centerLeft}
-                    height={center.height}
-                    className="material"
-                />
-            )}
-
-            {/* ---------------- DIAMETER ---------------- */}
-
-            <line
-                x1={centerSection.x}
-                y1={sectionY}
-                x2={
-                    centerSection.x +
-                    centerSection.width
-                }
-                y2={sectionY}
-                className={part("holeDiameter")}
-            />
-
-            <line
-                x1={centerSection.x}
-                y1={sectionY - 4}
-                x2={centerSection.x}
-                y2={sectionY + 4}
-                className={part("holeDiameter")}
-            />
-
-            <line
-                x1={
-                    centerSection.x +
-                    centerSection.width
-                }
-                y1={sectionY - 4}
-                x2={
-                    centerSection.x +
-                    centerSection.width
-                }
-                y2={sectionY + 4}
-                className={part("holeDiameter")}
-            />
-
-            {/* ---------------- HELIX BACK ---------------- */}
-
+            {/* HELIX BACK */}
             <path d={helixBack} className="helix-back" />
 
-            {/* ---------------- TOOL ---------------- */}
+            {/* TOOL */}
+            <path d={toolPath} className={clsx("tool", isActive("tool") && "active")} />
 
-            <g
-                className={clsx(
-                    "tool",
-                    isActive("tool") && "active"
-                )}
-            >
-                <rect
-                    x={toolX - tool.radius}
-                    y={toolTopY}
-                    width={tool.radius * 2}
-                    height={toolBottomY - toolTopY}
-                    className="tool-body-flat"
-                />
-
-                <line
-                    x1={toolX - tool.radius}
-                    y1={toolTopY}
-                    x2={toolX + tool.radius}
-                    y2={toolTopY}
-                    className="tool-cap-line"
-                />
-
-                <path
-                    d={`M ${toolX - tool.radius} ${toolBottomY}
-                       L ${toolX} ${toolBottomY + 4}
-                       L ${toolX + tool.radius} ${toolBottomY}`}
-                    className="tool-tip"
-                />
-            </g>
-
-            {/* ---------------- HELIX FRONT ---------------- */}
-
-            <path
-                d={helixFront}
-                className={clsx(
-                    "helix-front",
-                    isActive("helix") && "active"
-                )}
-            />
-
-            {/* ---------------- PITCH ---------------- */}
-
-            <line
-                x1="60"
-                y1={center.topY + 20}
-                x2="60"
-                y2={center.topY + 20 + turnHeight}
-                className={part("pitch")}
-            />
-
-            <line
-                x1="56"
-                y1={center.topY + 20}
-                x2="64"
-                y2={center.topY + 20}
-                className={part("pitch")}
-            />
-
-            <line
-                x1="56"
-                y1={center.topY + 20 + turnHeight}
-                x2="64"
-                y2={center.topY + 20 + turnHeight}
-                className={part("pitch")}
-            />
+            {/* HELIX FRONT */}
+            <path d={helixFront} className={"helix-front"} />
+            
+            {/* PITCH */}
+            <path d={pitchPath} className={part("pitch")} />
         </svg>
     );
 }
