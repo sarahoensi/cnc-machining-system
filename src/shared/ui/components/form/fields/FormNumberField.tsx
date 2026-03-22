@@ -5,6 +5,7 @@ import { Field } from "../Field/Field";
 import { NumberInput } from "../../../primitives/NumberInput/NumberInput";
 import type { FieldState } from "@shared/form/types/fields";
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
+import clsx from "clsx";
 
 //import "./FormNumberField.css";
 
@@ -57,6 +58,13 @@ ref
 
     const tabIndex = field.locked ? -1 : undefined;
 
+     const appearance =
+    field.source === "machine"
+      ? "ni-machine"
+      : field.source === "user"
+      ? "ni-user"
+      : undefined;
+
   return (
     <Field
       label={label}
@@ -65,7 +73,6 @@ ref
       htmlFor={id}
     >
       <NumberInput
-        variant="form"
         id={id}
         ref={ref}
         value={displayValue}
@@ -77,6 +84,7 @@ ref
         onKeyDown={onKeyDown}
         onFocus={onFocus}
         tabIndex={tabIndex}
+        className={clsx("ni-form", appearance)}
       />
     </Field>
   );

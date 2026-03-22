@@ -41,11 +41,11 @@
 
 /* Source states */
 
-.ni-form[data-source="user"] .ni-input {
+.ni-form.ni-user .ni-input {
   background: var(--color-user);
 }
 
-.ni-form[data-source="machine"] .ni-input {
+.ni-form.ni-machine .ni-input {
   background: transparent;
   border-color: transparent;
   color: var(--text-strong);

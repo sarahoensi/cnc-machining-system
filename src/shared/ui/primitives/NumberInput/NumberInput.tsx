@@ -22,8 +22,6 @@ type Props = {
   readonly?: boolean;
   displayOnly?: boolean;
 
-  variant?: "default" | "form" | "execution";
-
   autoFocus?: boolean;
   tabIndex?: number;
 
@@ -48,7 +46,6 @@ function NumberInput(
   disabled = false,
   readonly = false,
   displayOnly = false,
-  variant = "default",
   autoFocus,
   tabIndex,
   onKeyDown,
@@ -87,7 +84,6 @@ ref
     <div
       className={clsx(
         "number-input",
-        `ni-${variant}`,
         isDisabled && "is-disabled",
         isReadOnly && "readonly",
         isDisplayOnly && "is-display-only",

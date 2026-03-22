@@ -36,7 +36,7 @@ export const ExecutionInput = forwardRef<
         placeholder={placeholder}
         unit={unit}
         onChange={onChange}
-        variant="execution"
+        className="ni-execution"
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
