@@ -9,7 +9,6 @@ import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberFie
 import { useFormNavigation } from "@shared/ui";
 
 import {
-  createInitialCuttingDataForm,
   CuttingDataKey,
 } from "../domain/cuttingDataForm";
 
@@ -22,7 +21,6 @@ import {
   validCuttingDataInputSets,
 } from "../domain/cuttingDataConstraints";
 
-import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
@@ -30,18 +28,19 @@ import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { validateCuttingDataForm } from "../domain/validateCuttingForm";
 
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
-import { useState } from "react";
-import { CuttingHistoryPanel } from "./CuttingHistoryPanel";
+import { CuttingHistoryPanel } from "./history/CuttingHistoryPanel";
+import { useCuttingPageController } from "./useCuttingPageController";
 
 /* ============================================================
    Types
 ============================================================ */
-
+/*
 type SavedEntry = {
   id: string;
   form: ReturnType<typeof createInitialCuttingDataForm>;
   createdAt: number;
 };
+*/
 
 /* ============================================================
    Component
@@ -51,19 +50,22 @@ export function CuttingDataPage() {
 
   usePageTitle("Cutting Data");
 
-const [form, setForm] = useFeatureForm(
-  "cutting",
-  createInitialCuttingDataForm
-);
-
-const [history, setHistory] = useState<SavedEntry[]>([]);
+ const {
+    form,
+    setForm,
+    history,
+    save,
+    load,
+    remove,
+    clear,
+    resetForm,
+  } = useCuttingPageController();
 
   const navigation = useFormNavigation({
-    keys: cuttingDataFieldConfig.map(f => f.key),
+    keys: cuttingDataFieldConfig.map((f) => f.key),
     autoFocusOnMount: true,
     onSubmit: onCalculate,
   });
-
   /* =========================
      Field change
   ========================= */
@@ -99,44 +101,6 @@ const [history, setHistory] = useState<SavedEntry[]>([]);
     setForm(next);
   }
 
-  /* =========================
-     Save / Load / Delete
-  ========================= */
-
-  function onSave() {
-    if (form.status !== "solved") return;
-
-    setHistory((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        form: structuredClone(form),
-        createdAt: Date.now(),
-      },
-      
-    ]);
-  }
-
-  function onLoad(entry: SavedEntry) {
-    const cloned = structuredClone(entry.form);
-
-    setForm({
-      ...cloned,
-      status: "solved", // sikrer konsistens
-    });
-  }
-
-  function onDelete(id: string) {
-    setHistory((prev) => prev.filter((e) => e.id !== id));
-  }
-
-  function onClearHistory() {
-    setHistory([]);
-  }
-
-  function onReset() {
-    setForm(createInitialCuttingDataForm());
-  }
 
   /* =========================
      Fields
@@ -175,40 +139,37 @@ const error = form.formError ? (
   <FormError error={form.formError} />
 ) : null;
 
-const actions = (
-  <FormActions
-    onCalculate={onCalculate}
-    onReset={onReset}
-  />
-    
-);
 
+ const actions = (
+    <FormActions
+      onCalculate={onCalculate}
+      onReset={resetForm}
+    />
+  );
 
-
-
-const saveButton =
-  form.status === "solved" ? (
-    <div className="form-save-row">
-      <button onClick={onSave}>
-        Save result
-      </button>
-    </div>
-  ) : null;
+  const saveButton =
+    form.status === "solved" ? (
+      <div className="form-save-row">
+        <button onClick={save}>
+          Save result
+        </button>
+      </div>
+    ) : null;
 
   const formContent = (
-  <div className="cutting-form">
-    <FormLayout
-      fields={
-        <>
-          {fields}
-          {saveButton}   {/* ← HER */}
-        </>
-      }
-      error={error}
-      actions={actions}
-    />
-  </div>
-);
+    <div className="cutting-form">
+      <FormLayout
+        fields={
+          <>
+            {fields}
+            {saveButton}
+          </>
+        }
+        error={error}
+        actions={actions}
+      />
+    </div>
+  );
 
   /* =========================
      Render
@@ -216,13 +177,13 @@ const saveButton =
 
 return (
   <FormFigureLayout
-    form={formContent}
-   figure={
+      form={formContent}
+      figure={
         <CuttingHistoryPanel
           history={history}
-          onLoad={onLoad}
-          onDelete={onDelete}
-          onClear={onClearHistory}
+          onLoad={load}
+          onDelete={remove}
+          onClear={clear}
         />
       }
   />

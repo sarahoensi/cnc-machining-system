@@ -4,7 +4,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import { TrianglePage } from "@features/right_triangle/TrianglePage";
 import { HelixPage } from "@features/helix/ui/HelixPage";
-import  {CuttingDataPage} from "@features/cutting_data/ui/cuttingDataPage";
+import  {CuttingDataPage} from "@features/cuttingData/ui/cuttingDataPage";
 import { FinishingPage } from "@features/finishing/page/FinishingPage";
 
 
