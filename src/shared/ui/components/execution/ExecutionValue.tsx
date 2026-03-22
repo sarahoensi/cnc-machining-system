@@ -17,7 +17,7 @@ export function ExecutionValue({
       <NumberInput
         value={value ?? ""}
         unit={unit}
-        variant="execution"
+        className="ni-execution"
         displayOnly
       />
     </div>

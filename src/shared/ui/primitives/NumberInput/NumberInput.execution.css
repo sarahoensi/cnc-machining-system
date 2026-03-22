@@ -25,7 +25,7 @@ width: 100%;
 
 /* readonly */
 
-.ni-execution .ni-input.readonly {
+.ni-execution.readonly  .ni-input{
   border-color: transparent;
   cursor: default;
   pointer-events: none;
