@@ -29,13 +29,6 @@ export const cuttingDataFieldConfig: CuttingDataFieldConfig[] = [
     tooltip: cuttingDataTooltips.teeth,
   },
   {
-    key: "cutting_speed",
-    label: "Cutting speed Vc",
-    shortLabel: "Vc",
-    tooltip: cuttingDataTooltips.cutting_speed,
-    unit: "m/min",
-  },
-  {
     key: "rpm",
     label: "Rotations n",
     shortLabel: "n",
@@ -43,6 +36,15 @@ export const cuttingDataFieldConfig: CuttingDataFieldConfig[] = [
     unit: "rpm",
   },
 
+  {
+    key: "cutting_speed",
+    label: "Cutting speed Vc",
+    shortLabel: "Vc",
+    tooltip: cuttingDataTooltips.cutting_speed,
+    unit: "m/min",
+  },
+  
+  
   
   {
     key: "feed_rate",
