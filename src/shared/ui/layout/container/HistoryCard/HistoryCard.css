@@ -1,0 +1,36 @@
+.history-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding: 12px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: var(--surface-raised, #fff);
+
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+  cursor: pointer;
+}
+
+.history-card-content {
+  display: grid;
+  grid-template-columns: repeat(2, auto); /* ← viktig */
+  gap: 6px 16px;
+
+  flex: 1; /* ← viktig */
+}
+
+.history-card-item {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+
+  font-variant-numeric: tabular-nums;
+}
+.history-card-delete {
+  margin-left: 8px;
+  flex-shrink: 0;
+}

@@ -6,8 +6,6 @@ import {
 } from "@shared/form/engine/formEngine";
 
 import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
-
-
 import { useFormNavigation } from "@shared/ui";
 
 import {
@@ -32,6 +30,18 @@ import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { validateCuttingDataForm } from "../domain/validateCuttingForm";
 
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
+import { useState } from "react";
+import { CuttingHistoryPanel } from "./CuttingHistoryPanel";
+
+/* ============================================================
+   Types
+============================================================ */
+
+type SavedEntry = {
+  id: string;
+  form: ReturnType<typeof createInitialCuttingDataForm>;
+  createdAt: number;
+};
 
 /* ============================================================
    Component
@@ -45,6 +55,8 @@ const [form, setForm] = useFeatureForm(
   "cutting",
   createInitialCuttingDataForm
 );
+
+const [history, setHistory] = useState<SavedEntry[]>([]);
 
   const navigation = useFormNavigation({
     keys: cuttingDataFieldConfig.map(f => f.key),
@@ -88,37 +100,77 @@ const [form, setForm] = useFeatureForm(
   }
 
   /* =========================
-     Reset
+     Save / Load / Delete
   ========================= */
+
+  function onSave() {
+    if (form.status !== "solved") return;
+
+    setHistory((prev) => [
+      ...prev,
+      {
+        id: crypto.randomUUID(),
+        form: structuredClone(form),
+        createdAt: Date.now(),
+      },
+      
+    ]);
+  }
+
+  function onLoad(entry: SavedEntry) {
+    const cloned = structuredClone(entry.form);
+
+    setForm({
+      ...cloned,
+      status: "solved", // sikrer konsistens
+    });
+  }
+
+  function onDelete(id: string) {
+    setHistory((prev) => prev.filter((e) => e.id !== id));
+  }
+
+  function onClearHistory() {
+    setHistory([]);
+  }
 
   function onReset() {
     setForm(createInitialCuttingDataForm());
+    onClearHistory();
   }
 
-  const fields = (
-  <>
-    {cuttingDataFieldConfig.map((f) => {
-      const fieldState = form.fields[f.key];
+  /* =========================
+     Fields
+  ========================= */
 
-      return (
-        <FormNumberField
-          key={f.key}
-          label={f.label}
-          unit={f.unit}
-          tooltip={f.tooltip}
-          field={fieldState}
-          disabled={fieldState.locked || f.readOnly}
-          autoFocus={f.autoFocus}
-          onChange={(value) =>
-            onFieldChange(f.key, value)
-          }
-          ref={navigation.register(f.key)}
-          onKeyDown={navigation.handleKeyDown(f.key)}
-        />
-      );
-    })}
-  </>
-);
+  const fields = (
+    <>
+      {cuttingDataFieldConfig.map((f) => {
+        const fieldState = form.fields[f.key];
+
+        return (
+          <FormNumberField
+            key={f.key}
+            label={f.label}
+            unit={f.unit}
+            tooltip={f.tooltip}
+            field={fieldState}
+            disabled={fieldState.locked || f.readOnly}
+            autoFocus={f.autoFocus}
+            onChange={(value) => onFieldChange(f.key, value)}
+            ref={navigation.register(f.key)}
+            onKeyDown={navigation.handleKeyDown(f.key)}
+          />
+        );
+      })}
+    </>
+  );
+
+
+  /* =========================
+     UI blocks
+  ========================= */
+
 
 const error = form.formError ? (
   <FormError error={form.formError} />
@@ -128,7 +180,13 @@ const actions = (
   <FormActions
     onCalculate={onCalculate}
     onReset={onReset}
-  />
+  >
+    {form.status === "solved" && (
+      <button onClick={onSave}>
+        Save result
+      </button>
+    )}
+  </FormActions>
 );
 
 
@@ -140,6 +198,7 @@ const actions = (
   />
 );
 
+
   /* =========================
      Render
   ========================= */
@@ -147,7 +206,14 @@ const actions = (
 return (
   <FormFigureLayout
     form={formContent}
-    figure={null}
+   figure={
+        <CuttingHistoryPanel
+          history={history}
+          onLoad={onLoad}
+          onDelete={onDelete}
+          onClear={onClearHistory}
+        />
+      }
   />
 );
 }

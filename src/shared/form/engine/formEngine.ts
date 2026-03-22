@@ -479,3 +479,22 @@ export async function handleGenerateAsync<
     };
   }
 }
+
+
+// formSnapshot
+
+export function extractFormSnapshot<K extends string>(
+  fields: Record<K, FieldState>
+) {
+  const input: Partial<Record<K, string>> = {};
+  const result: Partial<Record<K, string>> = {};
+
+  for (const key in fields) {
+    const f = fields[key];
+
+    if (f.source === "user") input[key] = f.value;
+    if (f.source === "machine") result[key] = f.value;
+  }
+
+  return { input, result };
+}
