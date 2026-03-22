@@ -148,6 +148,26 @@ Describe UI meaning. Never hardcode values.
   --input-text: var(--text-primary);
   --input-text-disabled: var(--text-muted);
 
+  --input-caret: var(--brand-primary);
+
+  /* INPUT – sizing & spacing */
+
+--input-padding-x: var(--control-padding-x-sm);
+--input-padding-y: 0.4em;
+
+--input-radius: var(--control-radius);
+--input-border-width: var(--border-width-sm);
+
+/* UNIT */
+
+--input-unit-gap: var(--space-2);
+--input-unit-color: var(--text-muted);
+
+/* FORM VARIANT */
+
+--input-padding-x-form: var(--space-3);
+--input-padding-y-form: 0.35em;
+
 
 /* =====================================================
    BUTTONS
