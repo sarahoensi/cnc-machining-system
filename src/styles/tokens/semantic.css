@@ -2,7 +2,6 @@
 =====================================================
 SEMANTIC TOKENS
 Describe UI meaning. Never hardcode values.
-Map to primitive tokens or color tokens.
 =====================================================
 */
 
@@ -30,9 +29,11 @@ Map to primitive tokens or color tokens.
   --text-inverse: var(--color-text-inverse);
   --text-strong: var(--color-text-strong);
 
+  --text-interactive-hover: var(--color-primary);
+
 
 /* =====================================================
-   TYPOGRAPHY (GLOBAL ROLES)
+   TYPOGRAPHY (ROLES)
 ===================================================== */
 
   --text-body-size: var(--font-size-md);
@@ -51,7 +52,7 @@ Map to primitive tokens or color tokens.
 
 
 /* =====================================================
-   LAYOUT ROLES
+   LAYOUT
 ===================================================== */
 
   --layout-padding: var(--space-6);
@@ -62,23 +63,7 @@ Map to primitive tokens or color tokens.
 
 
 /* =====================================================
-   CONTROL SIZING
-===================================================== */
-
-  --control-height-xsm: var(--size-control-xsm);
-  --control-height-sm: var(--size-control-sm);
-  --control-height-md: var(--size-control-md);
-  --control-height-lg: var(--size-control-lg);
-
-  --control-padding-x-sm: var(--space-3);
-  --control-padding-x-md: var(--space-4);
-  --control-padding-x-lg: var(--space-6);
-
-  --control-radius: var(--radius-md);
-
-
-/* =====================================================
-   BORDER ROLES
+   BORDERS
 ===================================================== */
 
   --border-default: var(--color-border);
@@ -86,45 +71,9 @@ Map to primitive tokens or color tokens.
   --border-muted: var(--color-border-muted);
   --border-focus: var(--color-focus);
 
-  --border-error: var(--feedback-error);
-  --border-success: var(--feedback-success);
-  --border-warning: var(--feedback-warning);
-
-
-/* =====================================================
-   CONTROL COLORS & STATES
-===================================================== */
-
-  --control-bg: var(--surface-panel);
-  --control-bg-hover: var(--surface-hover);
-  --control-bg-disabled: var(--surface-muted);
-
-  --control-border: var(--border-default);
-  --control-border-strong: var(--border-strong);
-  --control-border-focus: var(--border-focus);
-  --control-border-error: var(--feedback-error);
-
-  --control-text: var(--text-primary);
-  --control-text-disabled: var(--text-muted);
-
-
-/* =====================================================
-   INPUTS
-===================================================== */
-
-  --input-bg: var(--surface-panel);
-  --input-bg-user: var(--color-user);
-  --input-bg-machine: var(--color-machine);
-  --input-bg-disabled: var(--color-disabled);
-  --input-bg-locked: var(--color-locked);
-  --input-bg-empty: var(--surface-page);
-
-  --input-border: var(--border-width-md);
-  --input-border-focus: var(--border-focus);
-  --input-border-error: var(--feedback-error);
-
-  --input-text: var(--text-primary);
-  --input-text-disabled: var(--text-muted);
+  --border-error: var(--color-danger);
+  --border-success: var(--color-success);
+  --border-warning: var(--color-warning);
 
 
 /* =====================================================
@@ -138,7 +87,7 @@ Map to primitive tokens or color tokens.
 
 
 /* =====================================================
-   FEEDBACK / STATUS
+   FEEDBACK
 ===================================================== */
 
   --feedback-error: var(--color-danger);
@@ -148,7 +97,60 @@ Map to primitive tokens or color tokens.
 
 
 /* =====================================================
-   BUTTON ROLES
+   FOCUS
+===================================================== */
+
+  --focus-ring-color: var(--color-focus);
+
+
+/* =====================================================
+   CONTROLS (shared UI patterns)
+===================================================== */
+
+  /* sizing */
+  --control-height-xsm: var(--size-control-xsm);
+  --control-height-sm: var(--size-control-sm);
+  --control-height-md: var(--size-control-md);
+  --control-height-lg: var(--size-control-lg);
+
+  --control-padding-x-sm: var(--space-3);
+  --control-padding-x-md: var(--space-4);
+  --control-padding-x-lg: var(--space-6);
+
+  --control-radius: var(--radius-md);
+
+  /* colors */
+  --control-bg: var(--surface-panel);
+  --control-bg-hover: var(--surface-hover);
+  --control-bg-disabled: var(--surface-muted);
+
+  --control-border-color: var(--border-default);
+  --control-border-color-strong: var(--border-strong);
+  --control-border-color-focus: var(--border-focus);
+  --control-border-color-error: var(--feedback-error);
+
+  --control-text: var(--text-primary);
+  --control-text-disabled: var(--text-muted);
+
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+  --input-bg: var(--surface-panel);
+  --input-bg-disabled: var(--surface-muted);
+  --input-bg-empty: var(--surface-page);
+
+  --input-border-color: var(--border-default);
+  --input-border-color-focus: var(--border-focus);
+  --input-border-color-error: var(--feedback-error);
+
+  --input-text: var(--text-primary);
+  --input-text-disabled: var(--text-muted);
+
+
+/* =====================================================
+   BUTTONS
 ===================================================== */
 
   --button-primary-bg: var(--brand-primary);
@@ -159,14 +161,30 @@ Map to primitive tokens or color tokens.
   --button-secondary-text: var(--text-primary);
 
   --button-danger-bg: var(--feedback-error);
-  --button-danger-text: var(--color-on-danger, var(--text-inverse));
+  --button-danger-text: var(--text-inverse);
 
   --button-icon-hover-bg: var(--surface-hover);
-  --button-focus-ring: var(--focus-ring-color);
 
 
 /* =====================================================
-   SIDEBAR
+   OVERLAY / MODAL
+===================================================== */
+
+  --overlay-backdrop: var(--color-backdrop);
+  --overlay-surface: var(--surface-elevated);
+
+
+/* =====================================================
+   FORM CONTEXT
+===================================================== */
+
+  --form-text-size: var(--font-size-md);
+  --form-label-size: var(--font-size-md);
+  --form-caption-size: var(--font-size-xs);
+
+
+/* =====================================================
+   FEATURE: SIDEBAR
 ===================================================== */
 
   --sidebar-bg: var(--surface-panel);
@@ -181,7 +199,7 @@ Map to primitive tokens or color tokens.
 
 
 /* =====================================================
-   TOPBAR
+   FEATURE: TOPBAR
 ===================================================== */
 
   --topbar-bg: var(--surface-panel);
@@ -190,7 +208,7 @@ Map to primitive tokens or color tokens.
 
 
 /* =====================================================
-   TABLE ROLES
+   FEATURE: TABLE
 ===================================================== */
 
   --table-bg: var(--surface-panel);
@@ -199,43 +217,17 @@ Map to primitive tokens or color tokens.
   --table-row-active: var(--surface-elevated);
   --table-border: var(--border-default);
 
-  --table-control-height: var(--size-control-sm);
-
   --table-text-size: var(--font-size-sm);
   --table-header-size: var(--font-size-sm);
   --table-caption-size: var(--font-size-xs);
 
 
 /* =====================================================
-   OVERLAY / MODAL
-===================================================== */
-
-  --overlay-backdrop: var(--color-backdrop);
-  --overlay-surface: var(--surface-elevated);
-
-
-/* =====================================================
-   FOCUS
-===================================================== */
-
-  --focus-ring-color: var(--color-focus);
-
-
-/* =====================================================
-   CONTEXT: FORM
-===================================================== */
-
-  --form-text-size: var(--font-size-md);
-  --form-label-size: var(--font-size-md);
-  --form-caption-size: var(--font-size-xs);
-
-
-/* =====================================================
-   DIAGRAM
+   FEATURE: DIAGRAM
 ===================================================== */
 
   --diagram-material-fill: var(--surface-panel);
-  --diagram-part-stroke: var(--color-primary);
+  --diagram-part-stroke: var(--brand-primary);
   --diagram-part-stroke-muted: var(--border-default);
 
   --diagram-active-stroke: var(--feedback-error);
