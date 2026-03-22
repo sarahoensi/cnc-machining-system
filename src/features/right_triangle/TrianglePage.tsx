@@ -34,6 +34,8 @@ import { FormError } from "@shared/ui/components/form/FormError/FormError";
 
 import { validateTriangleForm } from "./domain/validateTriangleForm";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
+import { useState } from "react";
+import { TriangleFigure } from "./ui/triangleFigure/TriangleFigure";
 
 export function TrianglePage() {
 
@@ -43,6 +45,8 @@ export function TrianglePage() {
     "triangle",
     createInitialTriangleForm
   );
+
+  const [activeField, setActiveField] = useState<TriangleKey | null>(null);
 
   const navigation = useFormNavigation({
     keys: triangleFieldConfig.map(f => f.key),
@@ -116,6 +120,8 @@ export function TrianglePage() {
           }
           ref={navigation.register(f.key)}
           onKeyDown={navigation.handleKeyDown(f.key)}
+          onFocus={() => setActiveField(f.key)}
+          onBlur={() => setActiveField(null)}
         />
       );
     })}
@@ -142,11 +148,14 @@ const formContent = (
 );
 
 
+
   return (
   <FormFigureLayout
-    form={formContent}
-    figure={null}
-  />
+  form={formContent}
+  figure={
+    <TriangleFigure activeField={activeField} />
+  }
+/>
 );
   
 }

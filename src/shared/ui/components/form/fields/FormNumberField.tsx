@@ -24,6 +24,7 @@ type Props = {
 
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
 };
 
 export const FormNumberField = forwardRef<HTMLInputElement, Props>(
@@ -40,6 +41,7 @@ function FormNumberField(
   onChange,
   onKeyDown,
   onFocus,
+  onBlur,
 },
 ref
 ) {
@@ -83,6 +85,7 @@ ref
         autoFocus={autoFocus}
         onKeyDown={onKeyDown}
         onFocus={onFocus}
+        onBlur={onBlur}
         tabIndex={tabIndex}
         className={clsx("ni-form", appearance)}
       />

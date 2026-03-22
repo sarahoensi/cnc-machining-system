@@ -33,6 +33,8 @@ import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFi
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { helixTooltips } from "./helixTooltip";
+import { HelixFigure } from "./helixFigure/HelixFigure";
+import { useState } from "react";
 /* ============================================================
    Component
 ============================================================ */
@@ -45,6 +47,8 @@ export function HelixPage() {
     "helix",
     createInitialHelixForm
   );
+
+  const [activeField, setActiveField] = useState<HelixKey | null>(null);
 
   const navigation = useFormNavigation({
     keys: helixFieldConfig.map(f => f.key),
@@ -143,6 +147,8 @@ export function HelixPage() {
             }
             ref={navigation.register(f.key)}
             onKeyDown={navigation.handleKeyDown(f.key)}
+            onFocus={() => setActiveField(f.key)}
+          onBlur={() => setActiveField(null)}
           />
         );
       })}
@@ -171,9 +177,14 @@ const formContent = (
 
 
   return (
-    <FormFigureLayout
-      form={formContent}
-      figure={null}
-    />
-  );
+  <FormFigureLayout
+    form={formContent}
+    figure={
+      <HelixFigure
+        mode={form.extras.mode}
+        activeField={activeField}
+      />
+    }
+  />
+);
 }
