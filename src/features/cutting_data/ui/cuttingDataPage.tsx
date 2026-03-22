@@ -136,7 +136,6 @@ const [history, setHistory] = useState<SavedEntry[]>([]);
 
   function onReset() {
     setForm(createInitialCuttingDataForm());
-    onClearHistory();
   }
 
   /* =========================
@@ -180,24 +179,36 @@ const actions = (
   <FormActions
     onCalculate={onCalculate}
     onReset={onReset}
-  >
-    {form.status === "solved" && (
+  />
+    
+);
+
+
+
+
+const saveButton =
+  form.status === "solved" ? (
+    <div className="form-save-row">
       <button onClick={onSave}>
         Save result
       </button>
-    )}
-  </FormActions>
-);
-
+    </div>
+  ) : null;
 
   const formContent = (
-  <FormLayout
-    fields={fields}
-    error={error}
-    actions={actions}
-  />
+  <div className="cutting-form">
+    <FormLayout
+      fields={
+        <>
+          {fields}
+          {saveButton}   {/* ← HER */}
+        </>
+      }
+      error={error}
+      actions={actions}
+    />
+  </div>
 );
-
 
   /* =========================
      Render
