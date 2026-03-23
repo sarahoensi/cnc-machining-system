@@ -286,6 +286,8 @@ Describe UI meaning. Never hardcode values.
   --sidebar-item-text: var(--text-primary);
   --sidebar-item-text-active: var(--state-active-text);
 
+  --sidebar-text-size: var(--font-size-lg);
+
 
 /* =====================================================
    FEATURE: TOPBAR
