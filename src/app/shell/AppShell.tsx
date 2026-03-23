@@ -2,6 +2,7 @@ import { Sidebar } from "@app/layout/Sidebar";
 import { Topbar } from "@app/layout/Topbar";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
+import "./AppShell.css";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
