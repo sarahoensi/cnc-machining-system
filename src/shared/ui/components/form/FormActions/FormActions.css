@@ -18,12 +18,6 @@
 
 /* SECONDARY + EXTRA */
 
-.form-actions-secondary,
-.form-actions-extra {
-  display: flex;
-  justify-content: flex-end;
-}
-
 .form-actions-secondary {
   display: flex;
   justify-content: flex-end;
