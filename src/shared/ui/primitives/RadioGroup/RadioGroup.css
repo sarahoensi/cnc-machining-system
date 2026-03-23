@@ -8,9 +8,7 @@
 .radio-group {
   display: flex;
   align-items: center;
-  gap: var(--layout-section-gap);
-
- margin-top: -0.2em;
+  gap: var(--space-4);
 
 }
 
@@ -20,9 +18,10 @@
 ===================================================== */
 
 .radio-group.is-disabled {
-  opacity: var(--opacity-disabled);
+  opacity: var(--opacity-muted);
   pointer-events: none;
 }
+
 
 
 
@@ -59,7 +58,15 @@
 /* =====================================================
    UNCHECKED STYLE
 ===================================================== */
-
+/*
 .radio-input:not(:checked) + * {
   opacity: var(--opacity-disabled);
+}*/
+
+.radio-option {
+  opacity: var(--opacity-muted);
+}
+
+.radio-option:has(.radio-input:checked) {
+  opacity: 1;
 }
