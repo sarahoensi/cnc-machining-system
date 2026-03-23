@@ -96,7 +96,7 @@ export function HelixFigure({
     const part = (key: VisualKey) =>
         clsx(
             "spiral-part",
-            isActive(key) && "active"
+            isActive(key) && "is-active"
         );
 
     /* ----------------------------------------- */

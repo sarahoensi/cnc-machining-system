@@ -278,7 +278,12 @@ Describe UI meaning. Never hardcode values.
   --diagram-stroke-width: 2;
 --diagram-stroke-width-active: 3;
 
+--diagram-backface-opacity: 0.35;
+--diagram-dash-pattern: 4 4;
+
   --tooltip-icon-size: var(--size-icon-sm);
+
+
 
 
 /* LAYOUT: STACKED */
