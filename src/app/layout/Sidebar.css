@@ -22,7 +22,7 @@
   color: var(--sidebar-item-text);
   text-decoration: none;
 
-  font-size: var(--text-body-size);
+  font-size: var(--sidebar-text-size);
   font-weight: var(--text-body-weight);
 
   transition: background var(--duration-fast) var(--easing-standard),
