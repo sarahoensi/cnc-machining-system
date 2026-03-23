@@ -1,36 +1,47 @@
 .history-card {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
+  justify-content: space-between;
 
-  padding: 12px;
+  padding: var(--panel-padding);
 
-  border: 1px solid var(--border);
-  border-radius: 10px;
-
-  background: var(--surface-raised, #fff);
-
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  background: var(--panel-bg);
+  border: var(--panel-border-width) solid var(--panel-border-color);
+  border-radius: var(--panel-radius);
 
   cursor: pointer;
 }
 
 .history-card-content {
   display: grid;
-  grid-template-columns: repeat(2, auto); /* ← viktig */
-  gap: 6px 16px;
+  grid-template-columns: repeat(var(--history-card-columns, 2), 1fr);
+  gap: var(--space-2) var(--space-4);
 
-  flex: 1; /* ← viktig */
+  flex: 1;
 }
 
 .history-card-item {
   display: flex;
-  gap: 6px;
   align-items: baseline;
+  gap: var(--space-2);
 
   font-variant-numeric: tabular-nums;
 }
+
 .history-card-delete {
-  margin-left: 8px;
+  margin-left: var(--space-2);
   flex-shrink: 0;
+}
+
+.hc-label {
+  color: var(--text-muted);
+  font-size: var(--text-caption-size);
+}
+
+.hc-value {
+  color: var(--text-primary);
+}
+
+.hc-unit {
+  color: var(--text-secondary);
 }

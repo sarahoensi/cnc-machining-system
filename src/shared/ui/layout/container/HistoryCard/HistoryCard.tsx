@@ -26,9 +26,9 @@ export function HistoryCard({
       <div
         className="history-card-content"
         style={{
-          gridTemplateColumns: `repeat(${columns}, 1fr)`,
-        }}
-      >
+    ["--history-card-columns" as any]: columns,
+  }}
+>
         {items.map((item, i) => (
           <div key={i} className="history-card-item">
             <span className="hc-label">{item.label}</span>
