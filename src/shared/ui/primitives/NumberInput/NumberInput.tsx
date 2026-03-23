@@ -9,8 +9,6 @@ import "./NumberInput.execution.css";
 
 
 type Props = {
-  
-
   id?: string;
 
   value: string;
@@ -99,6 +97,10 @@ ref
           type="text"
           inputMode="decimal"
           pattern="-?[0-9]*[.,]?[0-9]*"
+
+          autoComplete="off"
+          name={`ni-${inputId}`}
+
           autoFocus={autoFocus}
           value={value}
           disabled={isDisabled}
