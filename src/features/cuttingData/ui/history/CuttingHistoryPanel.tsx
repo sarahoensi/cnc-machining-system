@@ -1,6 +1,6 @@
 // features/cuttingData/ui/CuttingHistoryPanel.tsx
 
-import { cuttingDataFieldConfig } from "./cuttingDataFieldConfig";
+import { cuttingDataFieldConfig } from "../cuttingDataFieldConfig";
 import { formatNumber } from "@shared/ui/format/formatNumber";
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 import { HistoryCard } from "@shared/ui/layout/container/HistoryCard/HistoryCard";
