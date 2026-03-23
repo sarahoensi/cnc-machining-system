@@ -1,11 +1,10 @@
-// features/cuttingData/ui/CuttingHistoryPanel.tsx
-
 import { cuttingDataFieldConfig } from "./cuttingDataFieldConfig";
 import { formatNumber } from "@shared/ui/format/formatNumber";
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 import { HistoryCard } from "@shared/ui/layout/container/HistoryCard/HistoryCard";
+import { Button } from "@shared/ui/primitives/Button/Button";
 
-import "./CuttingHistoryPanel.css"
+import "./CuttingHistoryPanel.css";
 
 type Props = {
   history: any[];
@@ -24,7 +23,10 @@ export function CuttingHistoryPanel({
 
   return (
     <div className="cutting-history">
-      <h3>Saved results</h3>
+
+      <h3 className="cutting-history-title">
+        Saved results
+      </h3>
 
       {history.length === 0 && (
         <div className="cutting-history-empty">
@@ -32,57 +34,63 @@ export function CuttingHistoryPanel({
         </div>
       )}
 
-      {history.map((entry) => {
-        const items = cuttingDataFieldConfig
-          .map((config) => {
-            const field = entry.form.fields[config.key];
-            if (!field) return null;
+      {history.length > 0 && (
+        <div className="cutting-history-list">
+          {history.map((entry) => {
+            const items = buildItems(entry, decimals);
 
-            const rawValue =
-              field.machineValue ?? field.value;
+            return (
+              <HistoryCard
+                key={entry.id}
+                items={items}
+                columns={2}
+                onClick={() => onLoad(entry)}
+                onDelete={() => onDelete(entry.id)}
+              />
+            );
+          })}
+        </div>
+      )}
 
-            if (rawValue == null) return null;
+      {history.length > 0 && (
+        <Button variant="link" onClick={onClear}>
+          Clear all results
+        </Button>
+      )}
 
-            const num =
-              typeof rawValue === "number"
-                ? rawValue
-                : Number(rawValue);
-
-            if (isNaN(num)) return null;
-
-            return {
-              label:
-                config.shortLabel ?? config.label,
-              value: formatNumber(num, decimals),
-              unit: config.unit,
-            };
-          })
-          .filter(Boolean) as {
-          label: string;
-          value: string;
-          unit?: string;
-        }[];
-
-        return (
-          <HistoryCard
-            key={entry.id}
-            items={items}
-            columns={2} // ← enkelt å endre til 3 senere
-            onClick={() => onLoad(entry)}
-            onDelete={() => onDelete(entry.id)}
-          />
-        );
-      })}
-
-       {/* Clear all button */}
-    {history.length > 0 && (
-      <button
-        className="cutting-history-clear"
-        onClick={onClear}
-      >
-        Clear all results
-      </button>
-    )}
     </div>
   );
+}
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function buildItems(entry: any, decimals: number) {
+  return cuttingDataFieldConfig
+    .map((config) => {
+      const field = entry.form.fields[config.key];
+      if (!field) return null;
+
+      const rawValue = field.machineValue ?? field.value;
+      if (rawValue == null) return null;
+
+      const num =
+        typeof rawValue === "number"
+          ? rawValue
+          : Number(rawValue);
+
+      if (isNaN(num)) return null;
+
+      return {
+        label: config.shortLabel ?? config.label,
+        value: formatNumber(num, decimals),
+        unit: config.unit,
+      };
+    })
+    .filter(Boolean) as {
+      label: string;
+      value: string;
+      unit?: string;
+    }[];
 }
