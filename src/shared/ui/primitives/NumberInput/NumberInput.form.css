@@ -2,7 +2,7 @@
   width: 100%;
   min-width: 0;
 
-  font-size: var(--text-body-size);
+  font-size: var(--form-text-size);
   font-variant-numeric: tabular-nums;
 
   padding-block: var(--input-padding-y-form);
