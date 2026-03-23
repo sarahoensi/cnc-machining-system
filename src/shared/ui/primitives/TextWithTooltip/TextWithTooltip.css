@@ -26,19 +26,23 @@
   align-items: center;
   justify-content: center;
 
-  width: var(--size-icon-sm);
-  height: var(--size-icon-sm);
+  width: var(--tooltip-icon-size);
+  height: var(--tooltip-icon-size);
 
   flex: 0 0 auto;
 
-  opacity: var(--opacity-muted);
+  opacity: 1;
   color: var(--text-muted);
 
-  cursor: help;
+  cursor: pointer;
 }
 
 .tooltip-icon img {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+.tooltip-icon:hover {
+  color: var(--text-primary);
 }
