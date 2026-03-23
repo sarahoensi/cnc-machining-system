@@ -310,6 +310,7 @@ Describe UI meaning. Never hardcode values.
   --diagram-disabled-opacity: var(--state-disabled-opacity);
 
   --diagram-fill: var(--text-primary);
+  --diagram-dash-pattern: 4 4;
 
 /* =====================================================
    LAYOUT PATTERNS
