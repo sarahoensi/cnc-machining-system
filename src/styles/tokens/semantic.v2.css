@@ -312,6 +312,8 @@ Describe UI meaning. Never hardcode values.
   --diagram-fill: var(--text-primary);
   --diagram-dash-pattern: 4 4;
 
+  --diagram-label-size: var(--font-size-xs);
+
 /* =====================================================
    LAYOUT PATTERNS
 ===================================================== */
@@ -342,6 +344,7 @@ Describe UI meaning. Never hardcode values.
 
 
 
---history-item-text-size: var(--font-size-lg)
+--history-item-text-size: var(--font-size-lg);
+--history-item-padding: var(--space-3);
 
 }

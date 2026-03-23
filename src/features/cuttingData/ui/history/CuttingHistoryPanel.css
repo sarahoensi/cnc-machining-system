@@ -6,6 +6,8 @@
 }
 
 .cutting-history-title {
+  margin: 0;
+
   font-size: var(--heading-size);
   font-weight: var(--heading-weight);
   color: var(--cutting-history-title-color, var(--text-primary));

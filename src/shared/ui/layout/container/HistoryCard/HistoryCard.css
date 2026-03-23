@@ -3,7 +3,7 @@
   align-items: flex-start;
   justify-content: space-between;
 
-  padding: var(--panel-padding);
+  padding: var(--history-item-padding);
 
   background: var(--panel-bg);
   border: var(--panel-border-width) solid var(--panel-border-color);
@@ -15,7 +15,7 @@
 .history-card-content {
   display: grid;
   grid-template-columns: repeat(var(--history-card-columns, 2), 1fr);
-  gap: var(--space-2) var(--space-4);
+  gap: var(--space-2) var(--space-3);
 
   flex: 1;
 }
