@@ -76,7 +76,7 @@
 .variant-secondary {
   background: var(--button-secondary-bg);
   color: var(--button-secondary-text);
-  border-color: var(--control-border-color);
+  border-color: var(--border-default);
 }
 
 .variant-secondary:hover:not(:disabled) {
@@ -86,6 +86,7 @@
 .variant-danger {
   background: var(--button-danger-bg);
   color: var(--button-danger-text);
+  border-color: var(--border-default);
 }
 
 .variant-danger:hover:not(:disabled) {
@@ -95,7 +96,7 @@
 .variant-icon {
   background: transparent;
   border: none;
-  color: var(--interactive-neutral-text);
+  color: var(--text-primary);
 }
 
 .variant-icon:hover:not(:disabled) {
@@ -107,6 +108,9 @@
   border: none;
   padding: 0;
   height: auto;
+
+  font-size: var(--form-text-size);
+
 
   color: var(--button-link-text);
 }
