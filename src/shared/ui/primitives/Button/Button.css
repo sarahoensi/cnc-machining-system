@@ -76,7 +76,7 @@
 .variant-secondary {
   background: var(--button-secondary-bg);
   color: var(--button-secondary-text);
-  border-color: var(--border-default);
+  border-color: var(--control-border-color);
 }
 
 .variant-secondary:hover:not(:disabled) {
@@ -95,11 +95,11 @@
 .variant-icon {
   background: transparent;
   border: none;
-  color: var(--text-primary);
+  color: var(--interactive-neutral-text);
 }
 
 .variant-icon:hover:not(:disabled) {
-  background: var(--surface-hover);
+  background: var(--state-hover-bg);
 }
 
 .variant-link {
@@ -130,7 +130,7 @@
 }
 
 .app-button:disabled {
-  opacity: var(--opacity-disabled);
+  opacity: var(--state-disabled-opacity);
   cursor: not-allowed;
   pointer-events: none;
 }

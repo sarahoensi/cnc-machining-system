@@ -12,7 +12,7 @@
   min-width: var(--size-settings-width);
   padding: var(--space-1);
 
-  background: var(--surface-panel);
+  background: var(--overlay-surface);
   border: var(--border-width-thin) solid var(--border-default);
   border-radius: var(--radius-md);
 
@@ -46,7 +46,7 @@
 
   cursor: pointer;
 
-  color: var(--text-primary);
+  color: var(--interactive-neutral-text);
 
   font-size: var(--text-body-size);
   font-weight: var(--text-body-weight);
@@ -72,7 +72,7 @@
   min-width: var(--size-settings-width);
   padding: var(--space-3) 0;
 
-  background: var(--surface-panel);
+  background: var(--overlay-surface);
   border: var(--border-width-thin) solid var(--border-default);
   border-radius: var(--radius-md);
 
@@ -123,7 +123,7 @@
   font-size: var(--text-label-size);
   font-weight: var(--text-label-weight);
 
-  color: var(--text-primary);
+  color: var(--interactive-neutral-text);
   cursor: pointer;
 
   transition: background var(--duration-fast) var(--easing-standard),
@@ -131,11 +131,11 @@
 }
 
 .settings-button:hover {
-  background: var(--surface-hover);
+  background: var(--state-hover-bg);
 }
 
 .settings-button.active {
-  background: var(--brand-primary-soft);
-  color: var(--text-primary);
+  background: var(--state-active-bg);
+  color: var(--interactive-neutral-text);
   font-weight: var(--font-weight-semibold);
 }

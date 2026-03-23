@@ -53,7 +53,7 @@ Describe UI meaning. Never hardcode values.
 
 
 /* =====================================================
-   FOUNDATION: FEEDBACK / STATE
+   FOUNDATION: FEEDBACK
 ===================================================== */
 
   --feedback-error: var(--color-danger);
@@ -61,17 +61,46 @@ Describe UI meaning. Never hardcode values.
   --feedback-warning: var(--color-warning);
   --feedback-info: var(--color-info);
 
+
+/* =====================================================
+   STATE (GLOBAL UI STATES)
+===================================================== */
+
+  --state-hover-bg: var(--surface-hover);
+  --state-hover-border: var(--border-default);
+
   --state-active-bg: var(--brand-primary-soft);
   --state-active-border: var(--brand-primary);
   --state-active-text: var(--text-primary);
 
-  --border-error: var(--feedback-error);
-  --border-success: var(--feedback-success);
-  --border-warning: var(--feedback-warning);
+  --state-disabled-bg: var(--surface-muted);
+  --state-disabled-text: var(--text-muted);
+  --state-disabled-opacity: var(--opacity-disabled);
+
+  --state-error: var(--feedback-error);
+  --state-success: var(--feedback-success);
+  --state-warning: var(--feedback-warning);
 
 
 /* =====================================================
-   FOUNDATION: FOCUS
+   ROLE: INTERACTIONS (MID-LAYER 🔥)
+===================================================== */
+
+  --interactive-primary-bg: var(--brand-primary);
+  --interactive-primary-bg-hover: var(--brand-primary-hover);
+  --interactive-primary-text: var(--brand-on-primary);
+
+  --interactive-danger-bg: var(--feedback-error);
+  --interactive-danger-bg-hover: var(--state-hover-bg);
+  --interactive-danger-text: var(--text-inverse);
+
+  --interactive-neutral-bg: var(--surface-panel);
+  --interactive-neutral-bg-hover: var(--state-hover-bg);
+  --interactive-neutral-text: var(--text-primary);
+
+
+/* =====================================================
+   FOCUS
 ===================================================== */
 
   --focus-ring-color: var(--color-focus);
@@ -97,116 +126,7 @@ Describe UI meaning. Never hardcode values.
 
 
 /* =====================================================
-   LAYOUT (GLOBAL)
-===================================================== */
-
-  --layout-padding: var(--space-6);
-  --layout-section-gap: var(--space-6);
-
-  --topbar-height: var(--size-topbar-height);
-  --sidebar-width: var(--size-sidebar-width);
-
-
-/* =====================================================
-   CONTROLS (BASE COMPONENT)
-===================================================== */
-
-  /* sizing */
-  --control-height-xsm: var(--size-control-xsm);
-  --control-height-sm: var(--size-control-sm);
-  --control-height-md: var(--size-control-md);
-  --control-height-lg: var(--size-control-lg);
-
-  --control-padding-x-sm: var(--space-3);
-  --control-padding-x-md: var(--space-4);
-  --control-padding-x-lg: var(--space-6);
-
-  --control-radius: var(--radius-md);
-
-  /* colors */
-  --control-bg: var(--surface-panel);
-  --control-bg-hover: var(--surface-hover);
-  --control-bg-disabled: var(--surface-muted);
-
-  --control-border-color: var(--border-default);
-  --control-border-color-strong: var(--border-strong);
-  --control-border-color-focus: var(--border-focus);
-  --control-border-color-error: var(--feedback-error);
-
-  --control-text: var(--text-primary);
-  --control-text-disabled: var(--text-muted);
-
-
-/* =====================================================
-   INPUTS
-===================================================== */
-
-  --input-bg: var(--surface-panel);
-  --input-bg-disabled: var(--surface-muted);
-  --input-bg-empty: var(--surface-page);
-  --input-bg-user: var(--color-user);
-
-  --input-border-color: var(--border-default);
-  --input-border-color-focus: var(--border-focus);
-  --input-border-color-error: var(--feedback-error);
-
-  --input-text: var(--text-primary);
-  --input-text-disabled: var(--text-muted);
-
-  --input-caret: var(--brand-primary);
-
-  /* sizing */
-  --input-padding-x: var(--control-padding-x-sm);
-  --input-padding-y: 0.4em;
-
-  --input-radius: var(--control-radius);
-  --input-border-width: var(--border-width-sm);
-
-  /* unit */
-  --input-unit-gap: var(--space-2);
-  --input-unit-color: var(--text-muted);
-
-  /* form variant */
-  --input-padding-x-form: var(--space-3);
-  --input-padding-y-form: 0.35em;
-
-
-/* =====================================================
-   BUTTONS
-===================================================== */
-
-  --button-primary-bg: var(--brand-primary);
-  --button-primary-bg-hover: var(--brand-primary-hover);
-  --button-primary-text: var(--brand-on-primary);
-
-  --button-secondary-bg: var(--surface-panel);
-  --button-secondary-bg-hover: var(--surface-hover);
-  --button-secondary-text: var(--text-primary);
-
-  --button-danger-bg: var(--feedback-error);
-  --button-danger-bg-hover: var(--surface-hover);
-  --button-danger-text: var(--text-inverse);
-
-  --button-bg-disabled: var(--surface-muted);
-  --button-text-disabled: var(--text-muted);
-
-  --button-icon-hover-bg: var(--surface-hover);
-
-  --button-link-text: var(--brand-primary);
-  --button-link-text-hover: var(--brand-primary-hover);
-  --button-link-text-disabled: var(--text-muted);
-
-
-/* =====================================================
-   OVERLAY / MODAL
-===================================================== */
-
-  --overlay-backdrop: var(--color-backdrop);
-  --overlay-surface: var(--surface-elevated);
-
-
-/* =====================================================
-   FORM SIZES
+   TYPOGRAPHY: FORM (CONTEXT)
 ===================================================== */
 
   --form-text-size: var(--font-size-lg);
@@ -222,14 +142,145 @@ Describe UI meaning. Never hardcode values.
 
 
 /* =====================================================
+   LAYOUT (GLOBAL)
+===================================================== */
+
+  --layout-padding: var(--space-6);
+  --layout-section-gap: var(--space-6);
+
+  --topbar-height: var(--size-topbar-height);
+  --sidebar-width: var(--size-sidebar-width);
+
+
+/* =====================================================
+   LAYOUT PATTERNS
+===================================================== */
+
+  --panel-gap: var(--space-4);
+  --panel-padding: var(--space-4);
+  --panel-radius: var(--radius-md);
+
+  --panel-bg: var(--surface-panel);
+  --panel-border-color: var(--border-default);
+  --panel-border-width: var(--border-width-sm);
+
+
+/* =====================================================
+   CONTROLS (BASE COMPONENT)
+===================================================== */
+
+  --control-height-xsm: var(--size-control-xsm);
+  --control-height-sm: var(--size-control-sm);
+  --control-height-md: var(--size-control-md);
+  --control-height-lg: var(--size-control-lg);
+
+  --control-padding-x-sm: var(--space-3);
+  --control-padding-x-md: var(--space-4);
+  --control-padding-x-lg: var(--space-6);
+
+  --control-radius: var(--radius-md);
+
+  --control-bg: var(--interactive-neutral-bg);
+  --control-bg-hover: var(--interactive-neutral-bg-hover);
+  --control-bg-disabled: var(--state-disabled-bg);
+
+  --control-border-color: var(--border-default);
+  --control-border-color-focus: var(--border-focus);
+  --control-border-color-error: var(--state-error);
+
+  --control-text: var(--interactive-neutral-text);
+  --control-text-disabled: var(--state-disabled-text);
+
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+  --input-bg: var(--control-bg);
+  --input-bg-disabled: var(--state-disabled-bg);
+  --input-bg-empty: var(--surface-page);
+  --input-bg-user: var(--color-user);
+
+  --input-border-color: var(--control-border-color);
+  --input-border-color-focus: var(--control-border-color-focus);
+  --input-border-color-error: var(--state-error);
+
+  --input-text: var(--control-text);
+  --input-text-disabled: var(--state-disabled-text);
+
+  --input-caret: var(--interactive-primary-bg);
+
+  --input-padding-x: var(--control-padding-x-sm);
+  --input-padding-y: 0.4em;
+
+  --input-radius: var(--control-radius);
+  --input-border-width: var(--border-width-sm);
+
+  --input-unit-gap: var(--space-2);
+  --input-unit-color: var(--text-muted);
+
+  --input-padding-x-form: var(--space-3);
+  --input-padding-y-form: 0.35em;
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+  --button-primary-bg: var(--interactive-primary-bg);
+  --button-primary-bg-hover: var(--interactive-primary-bg-hover);
+  --button-primary-text: var(--interactive-primary-text);
+
+  --button-secondary-bg: var(--interactive-neutral-bg);
+  --button-secondary-bg-hover: var(--interactive-neutral-bg-hover);
+  --button-secondary-text: var(--interactive-neutral-text);
+
+  --button-danger-bg: var(--interactive-danger-bg);
+  --button-danger-bg-hover: var(--interactive-danger-bg-hover);
+  --button-danger-text: var(--interactive-danger-text);
+
+  --button-bg-disabled: var(--state-disabled-bg);
+  --button-text-disabled: var(--state-disabled-text);
+
+  --button-icon-hover-bg: var(--state-hover-bg);
+
+  --button-link-text: var(--interactive-primary-bg);
+  --button-link-text-hover: var(--interactive-primary-bg-hover);
+  --button-link-text-disabled: var(--state-disabled-text);
+
+
+/* =====================================================
+   OVERLAY / MODAL
+===================================================== */
+
+  --overlay-backdrop: var(--color-backdrop);
+  --overlay-surface: var(--surface-elevated);
+
+
+/* =====================================================
+   FEATURE: TABLE
+===================================================== */
+
+  --table-bg: var(--surface-panel);
+  --table-header-bg: var(--surface-muted);
+  --table-row-hover: var(--state-hover-bg);
+  --table-row-active: var(--state-active-bg);
+  --table-border: var(--border-default);
+
+  --table-text-size: var(--font-size-lg);
+  --table-header-size: var(--font-size-lg);
+  --table-caption-size: var(--font-size-xs);
+
+
+/* =====================================================
    FEATURE: SIDEBAR
 ===================================================== */
 
   --sidebar-bg: var(--surface-panel);
   --sidebar-border: var(--border-default);
 
-  --sidebar-item-bg: var(--surface-panel);
-  --sidebar-item-bg-hover: var(--surface-hover);
+  --sidebar-item-bg: var(--interactive-neutral-bg);
+  --sidebar-item-bg-hover: var(--state-hover-bg);
   --sidebar-item-bg-active: var(--state-active-bg);
 
   --sidebar-item-text: var(--text-primary);
@@ -246,112 +297,50 @@ Describe UI meaning. Never hardcode values.
 
 
 /* =====================================================
-   FEATURE: TABLE
-===================================================== */
-
-  --table-bg: var(--surface-panel);
-  --table-header-bg: var(--surface-muted);
-  --table-row-hover: var(--surface-hover);
-  --table-row-active: var(--state-active-bg);
-  --table-border: var(--border-default);
-
-  --table-text-size: var(--font-size-md);
-  --table-header-size: var(--font-size-lg);
-  --table-caption-size: var(--font-size-xs);
-
-
-/* =====================================================
    FEATURE: DIAGRAM
 ===================================================== */
 
   --diagram-material-fill: var(--surface-panel);
-  --diagram-part-stroke: var(--brand-primary);
+  --diagram-part-stroke: var(--interactive-primary-bg);
   --diagram-part-stroke-muted: var(--border-default);
 
-  --diagram-active-stroke: var(--feedback-error);
+  --diagram-active-stroke: var(--state-error);
   --diagram-active-fill: var(--state-active-bg);
 
-  --diagram-disabled-opacity: var(--opacity-disabled);
+  --diagram-disabled-opacity: var(--state-disabled-opacity);
 
-  --diagram-tool-fill: var(--surface-muted);
-  --diagram-tool-stroke: var(--border-strong);
-
-  --diagram-label-size: var(--text-caption-size);
-
-  --diagram-stroke-width: 2;
-  --diagram-stroke-width-active: 3;
-
-  --diagram-backface-opacity: 0.35;
-  --diagram-dash-pattern: 4 4;
-
-  --tooltip-icon-size: var(--size-icon-sm);
-
+  --diagram-fill: var(--text-primary);
 
 /* =====================================================
    LAYOUT PATTERNS
 ===================================================== */
 
-  --stack-gap: var(--space-6);
-  --stack-header-gap: var(--space-2);
+--layout-form-width: 200px;
+--layout-form-figure-gap: var(--space-8);
+--layout-content-max-width: 1100px;
 
-  --layout-form-width: 200px;
-  --layout-form-figure-gap: var(--space-8);
-  --layout-content-max-width: 1100px;
+/* =====================================================
+   LAYOUT PATTERNS
+===================================================== */
 
-  --panel-gap: var(--space-4);
-  --panel-padding: var(--space-4);
-  --panel-radius: var(--radius-md);
-
-  --panel-bg: var(--surface-panel);
-  --panel-border-color: var(--border-default);
-  --panel-border-width: var(--border-width-sm);
-
+--stack-gap: var(--space-6);
+--stack-header-gap: var(--space-2);
 
 /* =====================================================
    FORM LAYOUT
 ===================================================== */
 
-  --form-gap: var(--space-4);
-  --form-fields-gap: var(--space-3);
-  --form-actions-gap: var(--space-2);
-  --form-error-min-height: 1.2em;
-  --form-section-gap: var(--space-4);
-  --form-section-spacing: var(--space-4);
+--form-gap: var(--space-4);
+--form-fields-gap: var(--space-3);
+--form-actions-gap: var(--space-2);
+
+--form-error-min-height: 1.2em;
+
+--form-section-gap: var(--space-4);
+--form-section-spacing: var(--space-4);
 
 
-/* =====================================================
-   EXECUTION
-===================================================== */
 
-  --execution-gap: var(--space-1);
-
-  --execution-text-size: var(--form-text-size);
-  --execution-caption-size: var(--form-caption-size);
-
-  --execution-padding-x: var(--control-padding-x-sm);
-  --execution-height: var(--control-height-sm);
-
-  --execution-bg: transparent;
-  --execution-border-color: transparent;
-
-  --execution-error-color: var(--feedback-error);
-
-  --field-display-gap: var(--space-2);
-  --field-display-value-weight: var(--font-weight-medium);
-
-
-/* =====================================================
-   HISTORY CARD
-===================================================== */
-
-  --history-card-columns: 2;
-
-  --history-item-text-size: var(--font-size-lg);
-
-  --history-item-label-color: var(--text-muted);
-  --history-item-value-color: var(--text-primary);
-  --history-item-value-weight: var(--font-weight-medium);
-
-  --history-item-unit-color: var(--text-muted);
+--history-item-text-size: var(--font-size-lg)
 
 }

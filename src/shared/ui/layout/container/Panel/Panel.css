@@ -22,7 +22,8 @@
 .panel-title {
   font-size: var(--panel-title-size, var(--heading-size));
   font-weight: var(--panel-title-weight, var(--heading-weight));
-  color: var(--text-primary);
+
+  color: var(--panel-title-color, var(--text-primary));
 }
 
 
@@ -32,7 +33,8 @@
 
 .panel-content {
   min-width: 0;
-  color: var(--text-secondary);
+
+  color: var(--panel-content-color, var(--text-secondary));
 }
 
 
@@ -50,7 +52,6 @@
 
 /* =====================================================
    VARIANT: SECONDARY
-   (used for contextual / lightweight info like summary)
 ===================================================== */
 
 .panel-secondary {
@@ -58,13 +59,15 @@
   border: none;
 
   padding: var(--panel-secondary-padding, var(--space-2) 0);
-  border-bottom: var(--panel-border-width) solid var(--border-muted);
+
+  border-bottom: var(--panel-border-width) solid var(--panel-border-color);
 }
 
 .panel-secondary .panel-title {
   font-size: var(--text-label-size);
   font-weight: var(--text-label-weight);
-  color: var(--text-muted);
+
+  color: var(--panel-title-secondary-color, var(--text-muted));
 }
 
 .panel-secondary .panel-content {

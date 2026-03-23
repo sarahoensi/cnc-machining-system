@@ -35,16 +35,16 @@
 }
 
 .hc-label {
-  color: var(--history-item-label-color);
+  color: var(--history-item-label-color, var(--text-muted));
   font-size: inherit;
 }
 
 .hc-value {
-  color: var(--history-item-value-color);
+  color: var(--history-item-value-color, var(--text-primary));
   font-weight: var(--history-item-value-weight);
 }
 
 .hc-unit {
-  color: var(--history-item-unit-color);
+  color: var(--history-item-unit-color, var(--text-muted));
   margin-left: var(--space-1);
 }

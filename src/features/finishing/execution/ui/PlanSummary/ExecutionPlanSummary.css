@@ -7,10 +7,10 @@
 .execution-summary {
   display: flex;
   flex-direction: column;
-  gap: var(--form-fields-gap, var(--space-2));
+  gap: var(--form-fields-gap);
 }
 
 .execution-summary-row {
   display: flex;
-  gap: var(--space-4);
+  gap: var(--execution-row-gap, var(--space-4));
 }

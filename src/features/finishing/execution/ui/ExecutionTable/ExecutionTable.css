@@ -13,7 +13,7 @@
 }
 .execution-table.is-finished {
   --table-border: var(--border-muted);
-  --text-primary: var(--text-secondary);
+  --table-text-color: var(--text-secondary);
 }
 .execution-table.is-finished tbody tr {
   opacity: 0.8;

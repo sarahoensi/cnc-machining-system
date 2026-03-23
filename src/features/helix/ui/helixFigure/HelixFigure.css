@@ -45,8 +45,8 @@
 }
 
 .helix-front.is-active {
-  stroke: var(--diagram-active-stroke);
-  stroke-width: var(--diagram-stroke-width-strong);
+  stroke: var(--diagram-active-stroke, var(--state-active-border));
+  stroke-width: var(--diagram-stroke-width-active);
 }
 
 
@@ -55,8 +55,8 @@
 ========================================= */
 
 .tool {
-  fill: var(--diagram-tool-fill);
-  stroke: var(--diagram-tool-stroke);
+  fill: var(--diagram-material-fill);
+  stroke: var(--diagram-part-stroke);
   stroke-width: var(--diagram-stroke-width);
 
   transition:
@@ -65,8 +65,8 @@
 }
 
 .tool.is-active {
-  stroke: var(--diagram-active-stroke);
-  stroke-width: var(--diagram-stroke-width-strong);
+  stroke: var(--diagram-active-stroke, var(--state-active-border));
+  stroke-width: var(--diagram-stroke-width-active);
 }
 
 
@@ -85,8 +85,8 @@
 }
 
 .spiral-part.is-active {
-  stroke: var(--diagram-active-stroke);
-  stroke-width:var(--diagram-stroke-width);
+  stroke: var(--diagram-active-stroke, var(--state-active-border));
+  stroke-width: var(--diagram-stroke-width);
 }
 
 

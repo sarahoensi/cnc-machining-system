@@ -74,6 +74,7 @@
 .ui-table-header-cell {
   font-size: var(--table-header-size);
   font-weight: var(--text-label-weight);
+
   color: var(--text-primary);
 
   background: var(--table-header-bg);
@@ -104,19 +105,20 @@ border-top: var(--border-width-sm) solid var(--table-border);
    ROW STATES
 ===================================================== */
 
+
 .ui-table-row.is-active td {
-  border-top: var(--border-width-md) solid var(--brand-primary);
-  border-bottom: var(--border-width-md) solid var(--brand-primary);
+  border-top: var(--border-width-md) solid var(--state-active-border);
+  border-bottom: var(--border-width-md) solid var(--state-active-border);
 }
 
 .ui-table-row.is-active td:first-child {
-  border-left: var(--border-width-md) solid var(--brand-primary);
+  border-left: var(--border-width-md) solid var(--state-active-border);
   border-top-left-radius: var(--control-radius);
   border-bottom-left-radius: var(--control-radius);
 }
 
 .ui-table-row.is-active td:last-child {
-  border-right: var(--border-width-md) solid var(--brand-primary);
+  border-right: var(--border-width-md) solid var(--state-active-border);
   border-top-right-radius: var(--control-radius);
   border-bottom-right-radius: var(--control-radius);
 }

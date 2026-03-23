@@ -25,7 +25,7 @@
 }
 
 .edge.is-active {
-  stroke: var(--diagram-active-stroke);
+  stroke: var(--diagram-active-stroke, var(--state-active-border));
   stroke-width: var(--diagram-stroke-width-active);
 }
 
@@ -43,7 +43,7 @@
 }
 
 .angle.is-active {
-  stroke: var(--diagram-active-stroke);
+  stroke: var(--diagram-active-stroke, var(--state-active-border));
 }
 
 
@@ -60,7 +60,8 @@
 }
 
 .label.is-active {
-  fill: var(--diagram-active-stroke);
+  fill: var(--diagram-active-stroke, var(--state-active-border));
+
 }
 
 

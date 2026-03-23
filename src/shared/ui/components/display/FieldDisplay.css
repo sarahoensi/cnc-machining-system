@@ -10,19 +10,19 @@
 /* Label */
 .field-display-label {
 
-  color: var(--text-muted);
+  color: var(--field-display-label-color, var(--text-muted));
   white-space: nowrap;
 }
 
 /* Value */
 .field-display-value {
-  color: var(--text-primary);
+  color: var(--field-display-value-color, var(--text-primary));
   font-weight: var(--field-display-value-weight, var(--font-weight-medium));
 }
 
 /* Unit */
 .field-display-unit {
-  color: var(--text-muted);
+  color: var(--field-display-unit-color, var(--text-muted));
   font-weight: var(--font-weight-regular);
   margin-left: var(--space-1);
 }
@@ -36,6 +36,6 @@
 /* Highlight */
 
 .field-display.highlight .field-display-value {
-  color: var(--brand-primary);
+  color: var(--field-display-highlight-color, var(--state-active-border));
   font-weight: var(--font-weight-semibold);
 }

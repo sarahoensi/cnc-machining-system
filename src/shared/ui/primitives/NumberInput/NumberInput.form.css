@@ -14,7 +14,7 @@
   border-radius: var(--input-radius);
   border: var(--input-border-width) solid var(--input-border-color);
 
-  background: var(--control-bg);
+  background: var(--input-bg);
   color: var(--control-text);
 
   outline: none;
@@ -33,13 +33,13 @@
 /* Disabled */
 
 .ni-form.is-disabled .ni-input {
-  background: var(--control-bg-disabled);
-  color: var(--control-text-disabled);
+  background: var(--input-bg-disabled);
+  color: var(--input-text-disabled);
   cursor: not-allowed;
 }
 
 .ni-form.is-disabled .ni-unit {
-  opacity: var(--opacity-disabled);
+  opacity: var(--state-disabled-opacity);
 }
 
 /* Source states */

@@ -7,7 +7,7 @@
 .exec-error {
   font-size: var(--execution-caption-size);
   font-weight: var(--text-caption-weight);
-  color: var(--execution-error-color);
+  color: var(--execution-error-color, var(--state-error));
 }
 
 .exec-display {
@@ -22,11 +22,8 @@
   font-weight: var(--text-body-weight);
   font-variant-numeric: tabular-nums;
 
-  border-radius: var(--control-radius);
-  border: var(--border-width-sm) solid var(--execution-border-color);
 
-  color: var(--text-primary);
-  background: var(--execution-bg);
+
 
   min-width: 0;
 }

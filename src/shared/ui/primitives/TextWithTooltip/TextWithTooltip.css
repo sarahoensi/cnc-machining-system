@@ -26,8 +26,8 @@
   align-items: center;
   justify-content: center;
 
-  width: var(--tooltip-icon-size);
-  height: var(--tooltip-icon-size);
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
 
   flex: 0 0 auto;
 
@@ -44,5 +44,5 @@
 }
 
 .tooltip-icon:hover {
-  color: var(--text-primary);
+  color: var(--text-interactive-hover);
 }

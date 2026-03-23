@@ -1,5 +1,5 @@
 .ni-execution .ni-input {
-  font-size: var(--table-text-size);
+  font-size: var(--exec-text-size);
   font-variant-numeric: tabular-nums;
 
   padding-block: var(--input-padding-y);

@@ -45,9 +45,9 @@ body {
   width: var(--sidebar-width);
 
   overflow: hidden;
-  background: var(--surface-panel);
+  background: var(--sidebar-bg);
 
-  border-right: var(--border-width-thin) solid var(--border-default);
+  border-right: var(--border-width-thin) solid var(--sidebar-border);
 
   transition: width var(--duration-slow) var(--easing-standard);
 }

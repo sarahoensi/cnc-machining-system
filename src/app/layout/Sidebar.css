@@ -19,7 +19,7 @@
   align-items: start;
   padding: var(--space-3) var(--space-6);
 
-  color: var(--text-secondary);
+  color: var(--sidebar-item-text);
   text-decoration: none;
 
   font-size: var(--text-body-size);
@@ -30,12 +30,12 @@
 }
 
 .sidebar-link:hover {
-  background: var(--surface-hover);
+  background: var(--sidebar-item-bg-hover);
   color: var(--text-primary);
 }
 
 .sidebar-link.active {
-  background: var(--brand-primary-soft);
-  color: var(--text-primary);
+  background: var(--sidebar-item-bg-active);
+  color: var(--sidebar-item-text-active);
   font-weight: var(--font-weight-semibold);
 }

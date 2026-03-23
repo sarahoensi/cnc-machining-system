@@ -18,7 +18,7 @@
 ===================================================== */
 
 .radio-group.is-disabled {
-  opacity: var(--opacity-muted);
+  opacity: var(--state-disabled-opacity);
   pointer-events: none;
 }
 
@@ -39,8 +39,10 @@
   font-size: var(--form-text-size);
   font-weight: var(--text-body-weight);
 
-  color: var(--text-primary);
+  color: var(--interactive-neutral-text);
   cursor: pointer;
+
+  opacity: var(--opacity-muted);
 }
 
 
@@ -58,14 +60,7 @@
 /* =====================================================
    UNCHECKED STYLE
 ===================================================== */
-/*
-.radio-input:not(:checked) + * {
-  opacity: var(--opacity-disabled);
-}*/
 
-.radio-option {
-  opacity: var(--opacity-muted);
-}
 
 .radio-option:has(.radio-input:checked) {
   opacity: 1;

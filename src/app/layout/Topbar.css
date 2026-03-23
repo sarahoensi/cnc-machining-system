@@ -13,8 +13,8 @@
 
   padding: 0 var(--layout-padding);
 
-  background: var(--surface-panel);
-  border-bottom: var(--border-width-sm) solid var(--border-default);
+  background: var(--topbar-bg);
+  border-bottom: var(--border-width-sm) solid var(--topbar-border);
 
   color: var(--text-primary);
 }
@@ -46,5 +46,5 @@
 
 .hamburger:hover,
 .settings-button:hover {
-  color: var(--brand-primary);
+  color: var(--text-interactive-hover);
 }
