@@ -40,7 +40,7 @@ Describe UI meaning. Never hardcode values.
   --text-body-weight: var(--font-weight-regular);
   --text-body-line-height: var(--line-height-normal);
 
-  --text-label-size: var(--font-size-md);
+  --text-label-size: var(--font-size-lg);
   --text-label-weight: var(--font-weight-medium);
 
   --text-caption-size: var(--font-size-xs);
@@ -140,6 +140,7 @@ Describe UI meaning. Never hardcode values.
   --input-bg: var(--surface-panel);
   --input-bg-disabled: var(--surface-muted);
   --input-bg-empty: var(--surface-page);
+  --input-bg-user: var(--color-user);
 
   --input-border-color: var(--border-default);
   --input-border-color-focus: var(--border-focus);
@@ -205,9 +206,10 @@ Describe UI meaning. Never hardcode values.
 ===================================================== */
 
 /* default */
---form-text-size: var(--font-size-md);
---form-label-size: var(--font-size-md);
+--form-text-size: var(--font-size-lg);
+--form-label-size: var(--font-size-lg);
 --form-caption-size: var(--font-size-xs);
+--form-unit-size: var(--font-size-md);
 
 /* compact */
 --form-sm-text-size: var(--font-size-sm);
@@ -252,8 +254,8 @@ Describe UI meaning. Never hardcode values.
   --table-row-active: var(--surface-elevated);
   --table-border: var(--border-default);
 
-  --table-text-size: var(--font-size-sm);
-  --table-header-size: var(--font-size-sm);
+  --table-text-size: var(--font-size-md);
+  --table-header-size: var(--font-size-lg);
   --table-caption-size: var(--font-size-xs);
 
 
@@ -345,7 +347,7 @@ Describe UI meaning. Never hardcode values.
    HISTORY CARD
 ===================================================== */
 
---history-item-text-size: var(--form-text-size);
+--history-item-text-size: var(--font-size-lg);
 
 --history-item-label-color: var(--text-muted);
 --history-item-value-color: var(--text-primary);

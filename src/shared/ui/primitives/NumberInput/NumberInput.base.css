@@ -28,7 +28,7 @@
 
   font-size: inherit;
   font-weight: inherit;
-  color: var(--input-unit-color);
+  color: var(--color-text-soft);
 
   pointer-events: none;
   white-space: nowrap;

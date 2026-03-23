@@ -14,3 +14,7 @@
   display: flex;
   gap: var(--space-4);
 }
+
+.panel-secondary .title{
+  font-size: larger;
+}

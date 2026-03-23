@@ -76,6 +76,8 @@ body {
   border-top: var(--border-width-thin) solid var(--border-default);
   padding: var(--space-3);
   background: var(--surface-page);
+  flex: 1;
+
 }
 
 /* =========================

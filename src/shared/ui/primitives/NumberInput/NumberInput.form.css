@@ -27,6 +27,7 @@
 
 .ni-form .ni-unit {
   right: var(--input-padding-x-form);
+  font-size: var(--form-unit-size);
 }
 
 /* Disabled */
