@@ -1,4 +1,5 @@
 // shared/ui/components/display/FieldDisplay.tsx
+import clsx from "clsx";
 import "./FieldDisplay.css";
 
 type Props = {
@@ -17,12 +18,12 @@ export function FieldDisplay({
   align = "right",
 }: Props) {
   return (
-    <div
-      className={[
+   <div
+      className={clsx(
         "field-display",
-        highlight ? "highlight" : "",
-        align === "left" ? "align-left" : "",
-      ].join(" ")}
+        highlight && "highlight",
+        align === "left" && "align-left"
+      )}
     >
       <span className="field-display-label">
         {label}
@@ -30,8 +31,11 @@ export function FieldDisplay({
 
       <span className="field-display-value">
         {value}
+
         {unit && (
-          <span className="unit"> {unit}</span>
+          <span className="field-display-unit">
+            {unit}
+          </span>
         )}
       </span>
     </div>
