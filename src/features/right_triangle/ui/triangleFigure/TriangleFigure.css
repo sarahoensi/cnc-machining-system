@@ -1,6 +1,6 @@
 .triangle-figure {
   width: 100%;
-  max-width: 260px;
+  max-width: var(--figure-max-width);
 }
 
 /* SVG base */
