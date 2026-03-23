@@ -302,5 +302,16 @@ Describe UI meaning. Never hardcode values.
 
 /* Historycard */
 --history-card-columns: 2;
+
+
+/* FORM LAYOUT */
+
+--form-gap: var(--space-4);
+--form-fields-gap: var(--space-3);
+--form-actions-gap: var(--space-2);
+--form-error-min-height: 1.2em;
+--form-section-gap: var(--space-3);
+--form-section-spacing: var(--space-4);
+
 }
 
