@@ -1,6 +1,8 @@
 // ExecutionPlanSummary.tsx
 
 import { Panel } from "@shared/ui/layout/container/Panel/Panel";
+import { FieldDisplay } from "@shared/ui/components/display/FieldDisplay";
+import { Button } from "@shared/ui/primitives/Button/Button";
 import "./ExecutionPlanSummary.css";
 
 type Props = {
@@ -17,40 +19,23 @@ export function ExecutionPlanSummary({
   mode,
   onEdit,
 }: Props) {
-
- return (
+  return (
     <Panel
       className="panel-secondary"
       title="Plan summary"
       actions={
-        <button
-          type="button"
-          className="execution-edit-link"
-          onClick={onEdit}
-        >
-          Edit plan
-        </button>
+        <Button variant="link" onClick={onEdit}>
+          ← Edit plan
+        </Button>
       }
     >
       <div className="execution-summary">
 
-        <div className="execution-summary-mode">
-          <span className="label">Mode:</span>
-          <span>{mode}</span>
-        </div>
+        <FieldDisplay label="Mode:" value={mode} align="left" />
 
         <div className="execution-summary-row">
-
-          <span className="execution-summary-item">
-            <span className="label">Start Ø:</span>
-            <span>{startDiameter}</span>
-          </span>
-
-          <span className="execution-summary-item">
-            <span className="label">Target Ø:</span>
-            <span>{targetDiameter}</span>
-          </span>
-
+          <FieldDisplay label="Start Ø:" value={startDiameter} />
+          <FieldDisplay label="Target Ø:" value={targetDiameter} />
         </div>
 
       </div>
