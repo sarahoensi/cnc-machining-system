@@ -1,0 +1,25 @@
+/* =====================================================
+   FORM ERROR
+===================================================== */
+
+.form-error {
+  font-size: var(--text-body-size);
+  font-weight: var(--text-caption-weight);
+
+  color: var(--text-primary);
+
+  padding: var(--space-2) var(--space-3);
+
+  background: var(--surface-muted);
+  border: var(--border-width-sm) solid var(--feedback-error);
+  border-radius: var(--radius-sm);
+}
+
+.form-error ul {
+  margin: 0;              /* 🔥 fjerner ekstra topp/bunn spacing */
+  padding-left: var(--space-3); /* kontroller indent selv */
+}
+
+.form-error li {
+  margin: 0;              /* fjerner ekstra spacing */
+}

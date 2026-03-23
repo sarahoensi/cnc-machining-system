@@ -1,5 +1,7 @@
 //
 
+import "./FormError.css";
+
 export function FormError({
   error,
 }: {
