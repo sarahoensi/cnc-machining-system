@@ -187,6 +187,10 @@ Describe UI meaning. Never hardcode values.
 
   --button-icon-hover-bg: var(--surface-hover);
 
+  --button-link-text: var(--brand-primary);
+--button-link-text-hover: var(--brand-primary-hover);
+--button-link-text-disabled: var(--text-muted);
+
 
 /* =====================================================
    OVERLAY / MODAL
@@ -272,6 +276,18 @@ Describe UI meaning. Never hardcode values.
 
 
   --tooltip-icon-size: var(--size-icon-sm);
+
+
+/* LAYOUT: STACKED */
+
+--stack-gap: var(--space-6);
+--stack-header-gap: var(--space-2);
+
+/* LAYOUT: FORM + FIGURE */
+
+--layout-form-width: 200px;
+--layout-form-figure-gap: var(--space-8);
+--layout-content-max-width: 1100px;
 
 
 }
