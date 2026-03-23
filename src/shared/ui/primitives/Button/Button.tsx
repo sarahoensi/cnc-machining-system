@@ -71,7 +71,15 @@ type NativeButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 export const CalculateButton = forwardRef<HTMLButtonElement, NativeButtonProps>(
   (props, ref) => (
     <Button ref={ref} variant="primary" size="large" {...props}>
-      Beregn
+      Calculate
+    </Button>
+  )
+);
+
+export const GenerateButton = forwardRef<HTMLButtonElement, NativeButtonProps>(
+  (props, ref) => (
+    <Button ref={ref} variant="primary" size="large" {...props}>
+      Generate
     </Button>
   )
 );
@@ -79,7 +87,7 @@ export const CalculateButton = forwardRef<HTMLButtonElement, NativeButtonProps>(
 export const ResetButton = forwardRef<HTMLButtonElement, NativeButtonProps>(
   (props, ref) => (
     <Button ref={ref} variant="danger" size="medium" {...props}>
-      Nullstill
+      Clear form
     </Button>
   )
 );
@@ -111,7 +119,7 @@ export const OkButton = forwardRef<HTMLButtonElement, NativeButtonProps>(
 export const CancelButton = forwardRef<HTMLButtonElement, NativeButtonProps>(
   (props, ref) => (
     <Button ref={ref} variant="secondary" size="small" {...props}>
-      Avbryt
+      Cancel
     </Button>
   )
 );
