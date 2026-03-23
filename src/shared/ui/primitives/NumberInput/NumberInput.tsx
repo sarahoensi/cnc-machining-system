@@ -64,19 +64,27 @@ ref
   const isReadOnly = readonly && !isDisabled;
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  let raw = e.target.value;
 
-
-    const raw = e.target.value;
-
-    if (raw === "") {
-      onChange?.("");
-      return;
-    }
-
-    if (INPUT_REGEX.test(raw)) {
-      onChange?.(raw);
-    }
+  if (raw === "") {
+    onChange?.("");
+    return;
   }
+
+  if (!INPUT_REGEX.test(raw)) {
+    return;
+  }
+
+  if (raw.startsWith(".")) {
+    raw = "0" + raw;
+  }
+
+  if (raw.startsWith("-.")) {
+    raw = "-0" + raw.slice(1);
+  }
+
+  onChange?.(raw);
+}
 
 
   return (
