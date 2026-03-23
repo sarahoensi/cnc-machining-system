@@ -1,37 +1,105 @@
 [data-theme="dark"] {
-  --color-surface: #0b1220;
-  --color-surface-2: #0f172a;
-  --color-surface-elevated: #111c33;
-  --color-surface-hover: #162341;
-  --color-surface-muted: #0f1a31;
 
-  --color-text: #e5e7eb;
+  /* =====================================================
+     BASE SCALE (DARK BLUE / SLATE)
+  ===================================================== */
+
+  --color-night-50: #0b1220;
+  --color-night-100: #0f172a;
+  --color-night-200: #111c33;
+  --color-night-300: #162341;
+  --color-night-400: #1d2b4d;
+  --color-night-500: #223152;
+  --color-night-600: #2f436b;
+  --color-night-700: #3b82f6; /* bridge to brand */
+  --color-night-800: #60a5fa;
+  --color-night-900: #93c5fd;
+  --color-night-950: #e5e7eb;
+
+
+  /* =====================================================
+     SURFACES
+  ===================================================== */
+
+  --color-surface: var(--color-night-50);
+  --color-surface-2: var(--color-night-100);
+  --color-surface-elevated: var(--color-night-200);
+  --color-surface-hover: var(--color-night-300);
+  --color-surface-muted: var(--color-night-100);
+
+
+  /* =====================================================
+     TEXT
+  ===================================================== */
+
+  --color-text: var(--color-night-950);
   --color-text-strong: #ffffff;
-  --color-text-muted: #9ca3af;
-  --color-text-placeholder: #6b7280;
-  --color-text-inverse: #0b1220;
+  --color-text-muted: var(--color-night-900);
+  --color-text-placeholder: var(--color-night-700);
+  --color-text-inverse: var(--color-night-50);
 
-  --color-border: #223152;
-  --color-border-strong: #2f436b;
-  --color-border-muted: #162341;
+
+  /* =====================================================
+     BORDERS
+  ===================================================== */
+
+  --color-border: var(--color-night-500);
+  --color-border-strong: var(--color-night-600);
+  --color-border-muted: var(--color-night-300);
+
+
+  /* =====================================================
+     BRAND / PRIMARY
+  ===================================================== */
 
   --color-primary: #60a5fa;
   --color-primary-hover: #3b82f6;
   --color-primary-soft: rgba(96, 165, 250, 0.18);
   --color-on-primary: #0b1220;
 
+
+  /* =====================================================
+     BRAND / SECONDARY
+  ===================================================== */
+
+  --color-secondary: var(--color-night-300);
+  --color-secondary-hover: var(--color-night-400);
+  --color-secondary-soft: rgba(96, 165, 250, 0.10);
+  --color-on-secondary: var(--color-night-950);
+
+
+  /* =====================================================
+     FOCUS
+  ===================================================== */
+
   --color-focus: rgba(96, 165, 250, 0.35);
+
+
+  /* =====================================================
+     STATUS
+  ===================================================== */
 
   --color-danger: #f87171;
   --color-on-danger: #0b1220;
+
   --color-success: #4ade80;
   --color-warning: #fbbf24;
   --color-info: #38bdf8;
+
+
+  /* =====================================================
+     STATE / INPUTS
+  ===================================================== */
 
   --color-user: rgba(96, 165, 250, 0.14);
   --color-machine: rgba(255, 255, 255, 0.06);
   --color-disabled: rgba(255, 255, 255, 0.06);
   --color-locked: rgba(251, 191, 36, 0.14);
+
+
+  /* =====================================================
+     OVERLAY
+  ===================================================== */
 
   --color-backdrop: rgba(0, 0, 0, 0.6);
 }

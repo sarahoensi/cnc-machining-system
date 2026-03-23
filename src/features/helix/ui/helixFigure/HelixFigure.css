@@ -14,7 +14,7 @@
 ========================================= */
 
 .material {
-  fill: var(--diagram-material-fill);
+  fill: var(--diagram-fill-muted);
   stroke: var(--diagram-part-stroke);
   stroke-width: var(--diagram-stroke-width);
 }
@@ -55,7 +55,7 @@
 ========================================= */
 
 .tool {
-  fill: var(--diagram-material-fill);
+  fill: var(--diagram-fill);
   stroke: var(--diagram-part-stroke);
   stroke-width: var(--diagram-stroke-width);
 
@@ -86,7 +86,7 @@
 
 .spiral-part.is-active {
   stroke: var(--diagram-active-stroke, var(--state-active-border));
-  stroke-width: var(--diagram-stroke-width);
+  stroke-width: var(--diagram-stroke-width-active);
 }
 
 
@@ -95,6 +95,8 @@
 .holeDiameter {
   stroke: var(--diagram-part-stroke);
 }
+
+
 
 .pitch {
   stroke: var(--diagram-part-stroke);

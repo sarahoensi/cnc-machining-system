@@ -314,18 +314,22 @@ Describe UI meaning. Never hardcode values.
 ===================================================== */
 
   --diagram-material-fill: var(--surface-panel);
-  --diagram-part-stroke: var(--interactive-primary-bg);
+  --diagram-part-stroke: var(--color-primary);
   --diagram-part-stroke-muted: var(--border-default);
 
-  --diagram-active-stroke: var(--state-error);
+  --diagram-active-stroke: var(--color-primary-hover);
   --diagram-active-fill: var(--state-active-bg);
 
   --diagram-disabled-opacity: var(--state-disabled-opacity);
 
-  --diagram-fill: var(--text-primary);
+  --diagram-fill: var(--color-primary-soft);
+--diagram-fill-muted: var(--surface-muted);
   --diagram-dash-pattern: 4 4;
 
   --diagram-label-size: var(--font-size-xs);
+
+  --diagram-stroke-width: var(--border-width-xs);
+  --diagram-stroke-width-active: var(--border-width-lg);
 
 /* =====================================================
    LAYOUT PATTERNS
