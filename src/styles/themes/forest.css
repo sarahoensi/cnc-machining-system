@@ -1,37 +1,95 @@
 [data-theme="forest"] {
-  --color-surface: #f0fdf4;
+
+  /* =====================================================
+     ONYX SCALE (SOURCE OF TRUTH)
+  ===================================================== */
+
+  --color-onyx-50: #f0f5f0;
+  --color-onyx-100: #e0ebe0;
+  --color-onyx-200: #c2d6c2;
+  --color-onyx-300: #a3c2a3;
+  --color-onyx-400: #85ad85;
+  --color-onyx-500: #669966;
+  --color-onyx-600: #527a52;
+  --color-onyx-700: #3d5c3d;
+  --color-onyx-800: #293d29;
+  --color-onyx-900: #141f14;
+  --color-onyx-950: #0e150e;
+
+
+  /* =====================================================
+     SURFACES
+  ===================================================== */
+
+  --color-surface: var(--color-onyx-50);
   --color-surface-2: #ffffff;
   --color-surface-elevated: #ffffff;
-  --color-surface-hover: #dcfce7;
-  --color-surface-muted: #d1fae5;
+  --color-surface-hover: var(--color-onyx-100);
+  --color-surface-muted: var(--color-onyx-100);
 
-  --color-text: #064e3b;
-  --color-text-strong: #043a2c;
-  --color-text-muted: #065f46;
-  --color-text-placeholder: #10b981;
+
+  /* =====================================================
+     TEXT
+  ===================================================== */
+
+  --color-text: var(--color-onyx-900);
+  --color-text-strong: var(--color-onyx-950);
+  --color-text-muted: var(--color-onyx-600);
+  --color-text-placeholder: var(--color-onyx-400);
   --color-text-inverse: #ffffff;
 
-  --color-border: #bbf7d0;
-  --color-border-strong: #86efac;
-  --color-border-muted: #e7fff0;
 
-  --color-primary: #16a34a;
-  --color-primary-hover: #15803d;
-  --color-primary-soft: rgba(22, 163, 74, 0.18);
+  /* =====================================================
+     BORDERS
+  ===================================================== */
+
+  --color-border: var(--color-onyx-200);
+  --color-border-strong: var(--color-onyx-300);
+  --color-border-muted: var(--color-onyx-100);
+
+
+  /* =====================================================
+     BRAND / PRIMARY
+  ===================================================== */
+
+  --color-primary: var(--color-onyx-500);
+  --color-primary-hover: var(--color-onyx-600);
+  --color-primary-soft: rgba(102, 153, 102, 0.18); /* 500 */
   --color-on-primary: #ffffff;
 
-  --color-focus: rgba(22, 163, 74, 0.35);
 
-  --color-danger: #dc2626;
+  /* =====================================================
+     FOCUS
+  ===================================================== */
+
+  --color-focus: rgba(102, 153, 102, 0.35);
+
+
+  /* =====================================================
+     STATUS
+  ===================================================== */
+
+  --color-danger: var(--color-onyx-700); /* evt. behold rød */
   --color-on-danger: #ffffff;
-  --color-success: #16a34a;
-  --color-warning: #f59e0b;
-  --color-info: #0ea5e9;
 
-  --color-user: rgba(22, 163, 74, 0.12);
-  --color-machine: rgba(6, 78, 59, 0.06);
-  --color-disabled: rgba(6, 78, 59, 0.06);
-  --color-locked: rgba(245, 158, 11, 0.14);
+  --color-success: var(--color-onyx-600);
+  --color-warning: var(--color-onyx-400);
+  --color-info: var(--color-onyx-300);
 
-  --color-backdrop: rgba(2, 6, 23, 0.5);
+
+  /* =====================================================
+     STATE / INPUTS
+  ===================================================== */
+
+  --color-user: rgba(102, 153, 102, 0.12);
+  --color-machine: rgba(20, 31, 20, 0.06);  /* 900 */
+  --color-disabled: rgba(20, 31, 20, 0.06);
+  --color-locked: rgba(133, 173, 133, 0.14);
+
+
+  /* =====================================================
+     OVERLAY
+  ===================================================== */
+
+  --color-backdrop: rgba(14, 21, 14, 0.5);
 }
