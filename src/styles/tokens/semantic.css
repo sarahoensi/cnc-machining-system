@@ -178,9 +178,11 @@ Describe UI meaning. Never hardcode values.
   --button-primary-text: var(--brand-on-primary);
 
   --button-secondary-bg: var(--surface-panel);
+  --button-secondary-bg-hover: var(--surface-hover);
   --button-secondary-text: var(--text-primary);
 
   --button-danger-bg: var(--feedback-error);
+  --button-danger-bg-hover: var(--surface-hover);
   --button-danger-text: var(--text-inverse);
 
   --button-icon-hover-bg: var(--surface-hover);
@@ -271,6 +273,6 @@ Describe UI meaning. Never hardcode values.
 
   --tooltip-icon-size: var(--size-icon-sm);
 
-  
+
 }
 
