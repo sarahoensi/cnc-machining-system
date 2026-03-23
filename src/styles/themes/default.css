@@ -3,83 +3,106 @@
 :root,
 [data-theme="default"] {
 
-  /* =========================
-     BASE PALETTE
-     ========================= */
+  /* =====================================================
+     IMPERIAL BLUE SCALE (SOURCE OF TRUTH)
+  ===================================================== */
 
-  --neutral-1: #f7ede2; /* main background */
-  --neutral-2: #f5cac3; /* soft surface */
-  --neutral-3: #e6b8b1; /* border stronger */
-  --neutral-4: #fffaf7; /* elevated (almost white) */
-  --neutral-5: #f2e4da; /* hover */
-
-  --dark-1: #2f3e46; /* main text */
-  --dark-2: #3a5a40; /* success */
-  --dark-3: #84a59d; /* primary */
-
-  --accent-1: #f28482; /* main accent (danger) */
-  --accent-2: #f6bd60; /* warning */
-  --accent-3: #f5cac3; /* soft accent */
-
-  --soft-1: #84a59d; /* info (same as primary) */
-  --soft-2: #a3b18a;
-  --soft-3: #f5cac3;
-  --soft-4: #fdfaf6;
-  --soft-5: #f9f6f2;
+  --color-imperial-blue-50: #e8eefd;
+  --color-imperial-blue-100: #d1ddfa;
+  --color-imperial-blue-200: #a2bbf6;
+  --color-imperial-blue-300: #7499f1;
+  --color-imperial-blue-400: #4578ed;
+  --color-imperial-blue-500: #1756e8;
+  --color-imperial-blue-600: #1245ba;
+  --color-imperial-blue-700: #0e338b;
+  --color-imperial-blue-800: #09225d;
+  --color-imperial-blue-900: #05112e;
+  --color-imperial-blue-950: #030c20;
 
 
-  /* =========================
-     SEMANTIC TOKENS
-     ========================= */
+  /* =====================================================
+     SURFACES
+  ===================================================== */
 
-  /* Surfaces */
-  --color-surface: var(--soft-4);
+  --color-surface: var(--color-imperial-blue-50);
   --color-surface-2: #ffffff;
-  --color-surface-3: var(--accent-3);
-  --color-surface-elevated: var(--neutral-4);
-  --color-surface-hover: var(--neutral-5);
-  --color-surface-muted: var(--neutral-2);
+  --color-surface-3: var(--color-imperial-blue-100);
+  --color-surface-elevated: #ffffff;
+  --color-surface-hover: var(--color-imperial-blue-100);
+  --color-surface-muted: var(--color-imperial-blue-100);
 
-  /* Text */
-  --color-text: var(--dark-1);
-  --color-text-strong: #1b1f23;
-  --color-text-muted: #6b7280;
-  --color-text-placeholder: #9ca3af;
+
+  /* =====================================================
+     TEXT
+  ===================================================== */
+
+  --color-text: var(--color-imperial-blue-900);
+  --color-text-strong: var(--color-imperial-blue-950);
+  --color-text-muted: var(--color-imperial-blue-600);
+  --color-text-placeholder: var(--color-imperial-blue-400);
   --color-text-inverse: #ffffff;
 
-  /* Borders */
-  --color-border: var(--neutral-2);
-  --color-border-strong: var(--neutral-3);
-  --color-border-muted: rgba(47, 62, 70, 0.08);
 
-  /* Brand / primary */
-  --color-primary: var(--dark-3);
-  --color-primary-hover: #6f948d;
-  --color-primary-soft: rgba(132, 165, 157, 0.18);
+  /* =====================================================
+     BORDERS
+  ===================================================== */
+
+  --color-border: var(--color-imperial-blue-200);
+  --color-border-strong: var(--color-imperial-blue-300);
+  --color-border-muted: var(--color-imperial-blue-100);
+
+
+  /* =====================================================
+     BRAND / PRIMARY
+  ===================================================== */
+
+  --color-primary: var(--color-imperial-blue-500);
+  --color-primary-hover: var(--color-imperial-blue-600);
+  --color-primary-soft: rgba(23, 86, 232, 0.18); /* 500 */
   --color-on-primary: #ffffff;
 
-  /* Accent */
-  --color-accent: var(--accent-1);
-  --color-accent-hover: #e06d6b;
-  --color-accent-soft: rgba(242, 132, 130, 0.18);
 
-  /* Focus */
-  --color-focus: rgba(132, 165, 157, 0.35);
+  /* =====================================================
+     ACCENT (valgfri – holdt litt varmere for kontrast)
+  ===================================================== */
 
-  /* Status */
-  --color-danger: var(--accent-1);
+  --color-accent: var(--color-imperial-blue-300);
+  --color-accent-hover: var(--color-imperial-blue-400);
+  --color-accent-soft: rgba(116, 153, 241, 0.18);
+
+
+  /* =====================================================
+     FOCUS
+  ===================================================== */
+
+  --color-focus: rgba(23, 86, 232, 0.35);
+
+
+  /* =====================================================
+     STATUS
+  ===================================================== */
+
+  --color-danger: var(--color-imperial-blue-600); /* evt. behold rød hvis ønskelig */
   --color-on-danger: #ffffff;
 
-  --color-success: var(--dark-2);
-  --color-warning: var(--accent-2);
-  --color-info: var(--soft-1);
+  --color-success: var(--color-imperial-blue-700);
+  --color-warning: var(--color-imperial-blue-400);
+  --color-info: var(--color-imperial-blue-300);
 
-  /* Inputs */
-  --color-user: rgba(132, 165, 157, 0.12);
-  --color-machine: rgba(47, 62, 70, 0.06);
-  --color-disabled: rgba(47, 62, 70, 0.08);
-  --color-locked: rgba(246, 189, 96, 0.18);
 
-  /* Overlay */
-  --color-backdrop: rgba(47, 62, 70, 0.45);
+  /* =====================================================
+     STATE / INPUTS
+  ===================================================== */
+
+  --color-user: rgba(23, 86, 232, 0.12);
+  --color-machine: rgba(5, 17, 46, 0.06);  /* 900 */
+  --color-disabled: rgba(5, 17, 46, 0.08);
+  --color-locked: rgba(116, 153, 241, 0.18);
+
+
+  /* =====================================================
+     OVERLAY
+  ===================================================== */
+
+  --color-backdrop: rgba(3, 12, 32, 0.45);
 }
