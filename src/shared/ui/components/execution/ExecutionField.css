@@ -1,33 +1,29 @@
 .exec-field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--execution-gap);
 }
 
 .exec-error {
-  font-size: var(--form-caption-size);
+  font-size: var(--execution-caption-size);
   font-weight: var(--text-caption-weight);
-  color: var(--feedback-error);
+  color: var(--execution-error-color, var(--state-error));
 }
 
 .exec-display {
-  height: var(--control-height-sm);
+  height: var(--execution-height);
 
   display: flex;
   align-items: center;
 
-  padding-left: var(--control-padding-x-sm);
-  padding-right: var(--control-padding-x-sm);
+  padding-inline: var(--execution-padding-x);
 
-  font-size: var(--font-size-sm);
+  font-size: var(--execution-text-size);
   font-weight: var(--text-body-weight);
   font-variant-numeric: tabular-nums;
 
-  border-radius: var(--control-radius);
-  border: var(--border-width-sm) solid transparent;
 
-  color: var(--text-primary);
-  background: transparent;
+
 
   min-width: 0;
 }

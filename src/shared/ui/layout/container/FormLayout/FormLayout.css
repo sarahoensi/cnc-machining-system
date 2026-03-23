@@ -1,44 +1,48 @@
 /* shared/ui/layout/container/FormLayout/FormLayout.css */
 
 .form-layout {
-  display: grid;
-  gap: var(--space-4); /* hovedrytme mellom seksjoner */
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-gap);
 }
-
 
 /* =========================
    FIELDS
 ========================= */
 
 .form-fields {
-  display: grid;
-  gap: var(--space-3); /* litt tettere mellom inputs */
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-fields-gap);
 }
-
 
 /* =========================
    ERROR
 ========================= */
 
 .form-error-block {
-  min-height: 1.2em; /* hindrer layout jump */
+  min-height: var(--form-error-min-height);
 }
-
 
 /* =========================
    ACTIONS
 ========================= */
 
 .form-actions {
-  margin-top: var(--space-2); /* subtil separasjon */
+  display: flex;
+  gap: var(--form-actions-gap);
 }
 
+/* =========================
+   SECTION
+========================= */
 
 .form-section {
-  display: grid;
-  gap: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-section-gap);
 }
 
 .form-section + .form-section {
-  margin-top: var(--space-4);
+  margin-top: var(--form-section-spacing);
 }

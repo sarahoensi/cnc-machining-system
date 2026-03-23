@@ -1,8 +1,7 @@
-// src/app/layout/AppShell.tsx
-
+import { Sidebar } from "@app/layout/Sidebar";
+import { Topbar } from "@app/layout/Topbar";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { Topbar } from "../layout/Topbar";
-import { Sidebar } from "../layout/Sidebar";
 import "./AppShell.css";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
@@ -20,11 +19,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className={`app-shell ${sidebarOpen ? "" : "sidebar-collapsed"}`}>
-
-      <header className="shell-topbar">
+    <div
+      className={clsx(
+        "app-shell",
+        !sidebarOpen && "sidebar-collapsed"
+      )}
+    >
+      <div className="shell-topbar">
         <Topbar toggleSidebar={() => setSidebarOpen(v => !v)} />
-      </header>
+      </div>
 
       <aside className="shell-sidebar">
         <Sidebar />
@@ -35,11 +38,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {children}
         </div>
 
-        <footer className="shell-footer">
-          
-        </footer>
+        <footer className="shell-footer" />
       </main>
-
     </div>
   );
 }

@@ -1,5 +1,6 @@
 // shared/ui/layout/StackedLayout/StackedLayout.tsx
 
+import clsx from "clsx";
 import "./StackedLayout.css";
 
 type Props = {
@@ -17,7 +18,7 @@ export function StackedLayout({
   className,
 }: Props) {
   return (
-    <div className={`stacked-layout ${className ?? ""}`}>
+    <div className={clsx("stacked-layout", className)}>
       {header && (
         <div className="sl-header">
           {header}

@@ -24,7 +24,7 @@
 
   font-size: var(--form-label-size);
   font-weight: var(--text-label-weight);
-  color: var(--text-primary);
+  color: var(--field-label-color, var(--text-primary));
 }
 
 
@@ -49,7 +49,7 @@
 .field-error {
   font-size: var(--form-caption-size);
   font-weight: var(--text-caption-weight);
-  color: var(--feedback-error);
+  color: var(--state-error);
 }
 
 
@@ -58,5 +58,5 @@
 ===================================================== */
 
 .field.has-error .field-label {
-  color: var(--feedback-error);
+  color: var(--field-label-error-color, var(--state-error));
 }

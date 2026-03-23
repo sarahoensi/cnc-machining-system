@@ -17,7 +17,7 @@ body {
   display: grid;
 
   grid-template-columns: auto 1fr;
-  grid-template-rows: var(--topbar-height) 1fr;
+  grid-template-rows: auto 1fr;
 
   grid-template-areas:
     "topbar topbar"
@@ -33,6 +33,9 @@ body {
 
 .shell-topbar {
   grid-area: topbar;
+
+  height: var(--topbar-height);
+
   z-index: var(--z-topbar);
 }
 
@@ -42,9 +45,9 @@ body {
   width: var(--sidebar-width);
 
   overflow: hidden;
-  background: var(--surface-panel);
+  background: var(--sidebar-bg);
 
-  border-right: var(--border-width-thin) solid var(--border-default);
+  border-right: var(--border-width-thin) solid var(--sidebar-border);
 
   transition: width var(--duration-slow) var(--easing-standard);
 }
@@ -73,6 +76,8 @@ body {
   border-top: var(--border-width-thin) solid var(--border-default);
   padding: var(--space-3);
   background: var(--surface-page);
+  flex: 1;
+
 }
 
 /* =========================

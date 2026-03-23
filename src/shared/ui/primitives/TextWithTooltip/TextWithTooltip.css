@@ -31,14 +31,18 @@
 
   flex: 0 0 auto;
 
-  opacity: var(--opacity-muted);
+  opacity: 1;
   color: var(--text-muted);
 
-  cursor: help;
+  cursor: pointer;
 }
 
 .tooltip-icon img {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+.tooltip-icon:hover {
+  color: var(--text-interactive-hover);
 }

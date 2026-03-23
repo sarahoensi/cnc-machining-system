@@ -96,7 +96,7 @@ export function HelixFigure({
     const part = (key: VisualKey) =>
         clsx(
             "spiral-part",
-            isActive(key) && "active"
+            isActive(key) && "is-active"
         );
 
     /* ----------------------------------------- */
@@ -203,7 +203,7 @@ export function HelixFigure({
             <path d={helixBack} className="helix-back" />
 
             {/* TOOL */}
-            <path d={toolPath} className={clsx("tool", isActive("tool") && "active")} />
+            <path d={toolPath} className={clsx("tool", isActive("tool") && "is-active")} />
 
             {/* HELIX FRONT */}
             <path d={helixFront} className={"helix-front"} />

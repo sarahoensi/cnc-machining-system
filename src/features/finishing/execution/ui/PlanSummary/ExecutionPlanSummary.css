@@ -7,53 +7,10 @@
 .execution-summary {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--form-fields-gap);
 }
-
-/* Mode */
-
-.execution-summary-mode {
-  display: inline-flex;
-  gap: var(--space-1);
-
-  font-size: var(--text-label-size);
-}
-
-/* Start + Target */
 
 .execution-summary-row {
   display: flex;
-  gap: var(--space-5);
-
-  font-size: var(--text-label-size);
-}
-
-/* Label vs value */
-
-.execution-summary-item .label,
-.execution-summary-mode .label {
-  color: var(--text-muted);
-}
-
-.execution-summary-item {
-  display: inline-flex;
-  gap: var(--space-1);
-
-  font-weight: var(--text-body-weight);
-}
-
-/* Edit link */
-
-.execution-edit-link {
-  font-size: var(--text-label-size);
-  color: var(--text-muted);
-  cursor: pointer;
-}
-
-.execution-edit-link:hover {
-  color: var(--text-primary);
-}
-
-.execution-edit-link::before {
-  content: "← ";
+  gap: var(--execution-row-gap, var(--space-4));
 }

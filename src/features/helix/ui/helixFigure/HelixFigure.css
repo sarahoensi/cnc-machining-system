@@ -4,7 +4,8 @@
 
 .spiral-figure {
   width: 100%;
-  height: auto;
+  max-width: var(--figure-max-width);
+  
 }
 
 
@@ -15,7 +16,7 @@
 .material {
   fill: var(--diagram-material-fill);
   stroke: var(--diagram-part-stroke);
-  stroke-width: 2;
+  stroke-width: var(--diagram-stroke-width);
 }
 
 
@@ -27,23 +28,25 @@
 .helix-back {
   fill: none;
   stroke: var(--diagram-part-stroke);
-  stroke-width: 2;
+  stroke-width: var(--diagram-stroke-width);
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .helix-back {
-  opacity: 0.35;
-  stroke-dasharray: 4 4;
+  opacity: var(--diagram-backface-opacity);
+  stroke-dasharray: var(--diagram-dash-pattern);
 }
 
 .helix-front {
-  transition: all 0.2s ease;
+  transition:
+    stroke var(--duration-fast) var(--easing-standard),
+    stroke-width var(--duration-fast) var(--easing-standard);
 }
 
-.helix-front.active {
-  stroke: var(--diagram-active-stroke);
-  stroke-width: 2.5;
+.helix-front.is-active {
+  stroke: var(--diagram-active-stroke, var(--state-active-border));
+  stroke-width: var(--diagram-stroke-width-active);
 }
 
 
@@ -52,15 +55,18 @@
 ========================================= */
 
 .tool {
-  fill: var(--diagram-tool-fill);
-  stroke: var(--diagram-tool-stroke);
-  stroke-width: 1.5;
-  transition: all 0.2s ease;
+  fill: var(--diagram-material-fill);
+  stroke: var(--diagram-part-stroke);
+  stroke-width: var(--diagram-stroke-width);
+
+  transition:
+    stroke var(--duration-fast) var(--easing-standard),
+    stroke-width var(--duration-fast) var(--easing-standard);
 }
 
-.tool.active {
-  stroke: var(--diagram-active-stroke);
-  stroke-width: 2.5;
+.tool.is-active {
+  stroke: var(--diagram-active-stroke, var(--state-active-border));
+  stroke-width: var(--diagram-stroke-width-active);
 }
 
 
@@ -71,14 +77,16 @@
 .spiral-part {
   fill: none;
   stroke: var(--diagram-part-stroke-muted);
-  stroke-width: 2;
+  stroke-width: var(--diagram-stroke-width);
   stroke-linecap: square;
-  transition: all 0.2s ease;
+  transition:
+    stroke var(--duration-fast) var(--easing-standard),
+    stroke-width var(--duration-fast) var(--easing-standard);
 }
 
-.spiral-part.active {
-  stroke: var(--diagram-active-stroke);
-  stroke-width: 2.5;
+.spiral-part.is-active {
+  stroke: var(--diagram-active-stroke, var(--state-active-border));
+  stroke-width: var(--diagram-stroke-width);
 }
 
 
@@ -92,18 +100,3 @@
   stroke: var(--diagram-part-stroke);
 }
 
-
-/* =========================================
-   STATE POLISH
-========================================= */
-
-/* gjør alt litt nedtonet når noe er aktivt */
-.spiral-figure:has(.active) .material,
-.spiral-figure:has(.active) .helix-back {
-  opacity: 0.6;
-}
-
-/* deaktivert look (kan brukes senere) */
-.diagram-disabled {
-  opacity: var(--diagram-disabled-opacity);
-}

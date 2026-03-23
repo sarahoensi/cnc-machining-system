@@ -2,47 +2,50 @@
   width: 100%;
   min-width: 0;
 
-  font-size: var(--font-size-md);
+  font-size: var(--form-text-size);
   font-variant-numeric: tabular-nums;
 
-  padding-block: 0.35em;
-  padding-left: 0.75em;
-  padding-right: calc(0.75em + 2.5em);
+  padding-block: var(--input-padding-y-form);
+  padding-inline-start: var(--input-padding-x-form);
+  padding-inline-end: calc(
+    var(--input-padding-x-form) + 2ch + var(--input-unit-gap)
+  );
 
-  border-radius: 0.35em;
-  border: 0.0625em solid var(--control-border);
+  border-radius: var(--input-radius);
+  border: var(--input-border-width) solid var(--input-border-color);
 
-  background: var(--control-bg);
+  background: var(--input-bg);
   color: var(--control-text);
 
   outline: none;
 }
 
 .ni-form .ni-input:focus-visible {
-  box-shadow: 0 0 0 0.125em var(--focus-ring-color);
-  border-color: var(--control-border-focus);
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  border-color: var(--input-border-color-focus);
 }
 
 .ni-form .ni-unit {
-  right: 0.75em;
+  right: var(--input-padding-x-form);
+  font-size: var(--form-unit-size);
 }
 
 /* Disabled */
 
 .ni-form.is-disabled .ni-input {
-  background: var(--control-bg-disabled);
-  color: var(--control-text-disabled);
+  background: var(--input-bg-disabled);
+  color: var(--input-text-disabled);
   cursor: not-allowed;
 }
 
 .ni-form.is-disabled .ni-unit {
-  opacity: var(--opacity-disabled);
+  opacity: var(--state-disabled-opacity);
 }
 
 /* Source states */
 
 .ni-form.ni-user .ni-input {
-  background: var(--color-user);
+  background: var(--input-bg-user);
 }
 
 .ni-form.ni-machine .ni-input {
