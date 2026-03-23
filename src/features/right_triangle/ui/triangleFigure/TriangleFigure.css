@@ -16,14 +16,17 @@
 ========================= */
 
 .edge {
-  stroke: var(--border-default);
-  stroke-width: 2;
-  transition: all 0.2s ease;
+  stroke: var(--diagram-part-stroke-muted);
+  stroke-width: var(--diagram-stroke-width);
+  
+  transition:
+    stroke var(--duration-fast) var(--easing-standard),
+    stroke-width var(--duration-fast) var(--easing-standard);
 }
 
 .edge.is-active {
-  stroke: var(--brand-primary);
-  stroke-width: 3;
+  stroke: var(--diagram-active-stroke);
+  stroke-width: var(--diagram-stroke-width-active);
 }
 
 
@@ -33,13 +36,14 @@
 
 .angle {
   fill: none;
-  stroke: var(--border-default);
-  stroke-width: 2;
-  transition: all 0.2s ease;
+  stroke: var(--diagram-part-stroke-muted);
+  stroke-width: var(--diagram-stroke-width-active);
+  
+  transition: stroke var(--duration-fast) var(--easing-standard);
 }
 
 .angle.is-active {
-  stroke: var(--brand-primary);
+  stroke: var(--diagram-active-stroke);
 }
 
 
@@ -48,15 +52,15 @@
 ========================= */
 
 .label {
-  font-size: 10px;
-  fill: var(--text-muted);
+  font-size: var(--diagram-label-size);
+  fill: var(--diagram-part-stroke-muted);
   font-weight: var(--text-label-weight);
 
-  transition: all 0.2s ease;
+  transition: fill var(--duration-fast) var(--easing-standard);
 }
 
 .label.is-active {
-  fill: var(--brand-primary);
+  fill: var(--diagram-active-stroke);
 }
 
 
@@ -66,6 +70,6 @@
 
 .right-angle {
   fill: none;
-  stroke: var(--border-default);
-  stroke-width: 2;
+  stroke: var(--diagram-part-stroke-muted);
+  stroke-width: var(--diagram-stroke-width);
 }
