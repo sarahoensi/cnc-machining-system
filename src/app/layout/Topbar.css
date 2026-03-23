@@ -8,7 +8,9 @@
   grid-template-columns: auto 1fr auto;
   align-items: center;
 
-  height: var(--topbar-height);
+  height: 100%;
+  box-sizing: border-box;
+
   padding: 0 var(--layout-padding);
 
   background: var(--surface-panel);

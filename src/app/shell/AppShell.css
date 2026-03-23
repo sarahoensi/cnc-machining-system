@@ -17,7 +17,7 @@ body {
   display: grid;
 
   grid-template-columns: auto 1fr;
-  grid-template-rows: var(--topbar-height) 1fr;
+  grid-template-rows: auto 1fr;
 
   grid-template-areas:
     "topbar topbar"
@@ -33,6 +33,9 @@ body {
 
 .shell-topbar {
   grid-area: topbar;
+
+  height: var(--topbar-height);
+
   z-index: var(--z-topbar);
 }
 
