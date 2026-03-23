@@ -224,29 +224,40 @@ Describe UI meaning. Never hardcode values.
 
 
 /* =====================================================
-   BUTTONS
+   BUTTONS (SEMANTIC → BRAND MAPPED)
 ===================================================== */
 
-  --button-primary-bg: var(--interactive-primary-bg);
-  --button-primary-bg-hover: var(--interactive-primary-bg-hover);
-  --button-primary-text: var(--interactive-primary-text);
+/* Primary */
+--button-primary-bg: var(--color-primary);
+--button-primary-bg-hover: var(--color-primary-hover);
+--button-primary-text: var(--color-on-primary);
 
-  --button-secondary-bg: var(--interactive-neutral-bg);
-  --button-secondary-bg-hover: var(--interactive-neutral-bg-hover);
-  --button-secondary-text: var(--interactive-neutral-text);
 
-  --button-danger-bg: var(--interactive-danger-bg);
-  --button-danger-bg-hover: var(--interactive-danger-bg-hover);
-  --button-danger-text: var(--interactive-danger-text);
+/* Secondary */
+--button-secondary-bg: var(--color-secondary);
+--button-secondary-bg-hover: var(--color-secondary-hover);
+--button-secondary-text: var(--color-on-secondary);
 
-  --button-bg-disabled: var(--state-disabled-bg);
-  --button-text-disabled: var(--state-disabled-text);
 
-  --button-icon-hover-bg: var(--state-hover-bg);
+/* Danger (tonet ned – ikke primary) */
+--button-danger-bg: transparent;
+--button-danger-bg-hover: var(--color-danger-soft, rgba(220, 38, 38, 0.08));
+--button-danger-text: var(--color-danger);
 
-  --button-link-text: var(--interactive-primary-bg);
-  --button-link-text-hover: var(--interactive-primary-bg-hover);
-  --button-link-text-disabled: var(--state-disabled-text);
+
+/* Disabled */
+--button-bg-disabled: var(--state-disabled-bg);
+--button-text-disabled: var(--state-disabled-text);
+
+
+/* Icon */
+--button-icon-hover-bg: var(--state-hover-bg);
+
+
+/* Link */
+--button-link-text: var(--color-primary);
+--button-link-text-hover: var(--color-primary-hover);
+--button-link-text-disabled: var(--state-disabled-text);
 
 
 /* =====================================================
