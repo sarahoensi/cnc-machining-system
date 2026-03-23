@@ -313,5 +313,22 @@ Describe UI meaning. Never hardcode values.
 --form-section-gap: var(--space-3);
 --form-section-spacing: var(--space-4);
 
+/* =====================================================
+   EXECUTION
+===================================================== */
+
+--execution-gap: var(--space-1);
+
+--execution-text-size: var(--form-text-size);
+--execution-caption-size: var(--form-caption-size);
+
+--execution-padding-x: var(--control-padding-x-sm);
+--execution-height: var(--control-height-sm);
+
+--execution-bg: transparent;
+--execution-border-color: transparent;
+
+--execution-error-color: var(--feedback-error);
+
 }
 
