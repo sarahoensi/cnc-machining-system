@@ -18,8 +18,8 @@
 
 /* SECONDARY + EXTRA */
 
-.form-actions-secondary,
-.form-actions-extra {
+.form-actions-secondary {
   display: flex;
   justify-content: flex-end;
+  gap: var(--space-2);
 }

@@ -30,17 +30,9 @@ import { validateCuttingDataForm } from "../domain/validateCuttingForm";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { CuttingHistoryPanel } from "./history/CuttingHistoryPanel";
 import { useCuttingPageController } from "./useCuttingPageController";
+import { Button } from "@shared/ui/primitives/Button/Button";
 
-/* ============================================================
-   Types
-============================================================ */
-/*
-type SavedEntry = {
-  id: string;
-  form: ReturnType<typeof createInitialCuttingDataForm>;
-  createdAt: number;
-};
-*/
+
 
 /* ============================================================
    Component
@@ -139,32 +131,33 @@ const error = form.formError ? (
   <FormError error={form.formError} />
 ) : null;
 
+  const saveButton =
+ (
+    <Button
+      variant="secondary"
+      size="medium"
+      onClick={save}
+    >
+      Save result
+    </Button>
+  );
+
 
  const actions = (
     <FormActions
       onCalculate={onCalculate}
       onReset={resetForm}
-    />
+    >
+    {saveButton}
+  </FormActions>
   );
 
-  const saveButton =
-    form.status === "solved" ? (
-      <div className="form-save-row">
-        <button onClick={save}>
-          Save result
-        </button>
-      </div>
-    ) : null;
+
 
   const formContent = (
     <div className="cutting-form">
       <FormLayout
-        fields={
-          <>
-            {fields}
-            {saveButton}
-          </>
-        }
+        fields={fields}
         error={error}
         actions={actions}
       />

@@ -37,14 +37,10 @@ export function FormActions({
       </div>
 
       <div className="form-actions-secondary">
+        
+        {children}
         <ResetButton onClick={onReset} />
       </div>
-
-      {children && (
-        <div className="form-actions-extra">
-          {children}
-        </div>
-      )}
 
     </div>
   );
