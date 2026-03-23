@@ -3,10 +3,10 @@
 .form-actions {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-
-  margin-top: var(--space-5);
+  gap: var(--form-actions-gap, var(--space-3));
 }
+
+/* PRIMARY */
 
 .form-actions-primary {
   width: 100%;
@@ -16,10 +16,9 @@
   width: 100%;
 }
 
-.form-actions-secondary {
-  align-self: flex-end;
-}
+/* SECONDARY + EXTRA */
 
+.form-actions-secondary,
 .form-actions-extra {
   display: flex;
   justify-content: flex-end;
