@@ -1,39 +1,100 @@
 /* styles/themes/pink.css */
 
 [data-theme="pink"] {
-  --color-surface: #fff1f6;
+
+  /* =====================================================
+     DRAGONFRUIT SCALE (SOURCE OF TRUTH)
+  ===================================================== */
+
+  --color-dragonfruit-50: #ffe5f1;
+  --color-dragonfruit-100: #ffcce3;
+  --color-dragonfruit-200: #ff99c7;
+  --color-dragonfruit-300: #ff66ab;
+  --color-dragonfruit-400: #ff338f;
+  --color-dragonfruit-500: #ff0073;
+  --color-dragonfruit-600: #cc005c;
+  --color-dragonfruit-700: #990045;
+  --color-dragonfruit-800: #66002e;
+  --color-dragonfruit-900: #330017;
+  --color-dragonfruit-950: #240010;
+
+
+  /* =====================================================
+     SURFACES
+  ===================================================== */
+
+  --color-surface: var(--color-dragonfruit-50);
   --color-surface-2: #ffffff;
   --color-surface-elevated: #ffffff;
-  --color-surface-hover: #ffe4ef;
-  --color-surface-muted: #ffe0ed;
+  --color-surface-hover: var(--color-dragonfruit-100);
+  --color-surface-muted: var(--color-dragonfruit-100);
 
-  --color-text: #831843;
-  --color-text-strong: #6d1237;
-  --color-text-muted: #9d174d;
-  --color-text-soft: #ca88a3;
-  --color-text-placeholder: #c02674;
+
+  /* =====================================================
+     TEXT
+  ===================================================== */
+
+  --color-text: var(--color-dragonfruit-800);
+  --color-text-strong: var(--color-dragonfruit-900);
+  --color-text-muted: var(--color-dragonfruit-600);
+  --color-text-soft: var(--color-dragonfruit-300);
+  --color-text-placeholder: var(--color-dragonfruit-400);
   --color-text-inverse: #ffffff;
 
-  --color-border: #fbcfe8;
-  --color-border-strong: #f9a8d4;
-  --color-border-muted: #fde7f3;
 
-  --color-primary: #ec4899;
-  --color-primary-hover: #db2777;
-  --color-primary-soft: rgba(236, 72, 153, 0.18);
+  /* =====================================================
+     BORDERS
+  ===================================================== */
+
+  --color-border: var(--color-dragonfruit-200);
+  --color-border-strong: var(--color-dragonfruit-300);
+  --color-border-muted: var(--color-dragonfruit-100);
+
+
+  /* =====================================================
+     BRAND / PRIMARY
+  ===================================================== */
+
+  --color-primary: var(--color-dragonfruit-500);
+  --color-primary-hover: var(--color-dragonfruit-600);
+  --color-primary-soft: rgba(255, 0, 115, 0.18); /* 500 */
   --color-on-primary: #ffffff;
 
-  --color-focus: rgba(236, 72, 153, 0.35);
+/* =====================================================
+   BRAND / SECONDARY
+===================================================== */
 
-  --color-danger: #e11d48;
+--color-secondary: var(--color-dragonfruit-100);
+--color-secondary-hover: var(--color-dragonfruit-200);
+--color-secondary-soft: rgba(255, 0, 115, 0.10);
+--color-on-secondary: var(--color-dragonfruit-800);
+
+  /* =====================================================
+     FOCUS
+  ===================================================== */
+
+  --color-focus: rgba(255, 0, 115, 0.35);
+
+
+  /* =====================================================
+     FEEDBACK
+  ===================================================== */
+
+  --color-danger: var(--color-dragonfruit-600);
   --color-on-danger: #ffffff;
+
   --color-success: #16a34a;
   --color-warning: #f59e0b;
   --color-info: #0ea5e9;
 
-  --color-user: rgba(236, 72, 153, 0.12);
-  --color-machine: rgba(131, 24, 67, 0.06);
-  --color-disabled: rgba(131, 24, 67, 0.06);
+
+  /* =====================================================
+     STATE / SPECIAL
+  ===================================================== */
+
+  --color-user: rgba(255, 0, 115, 0.12);
+  --color-machine: rgba(51, 0, 23, 0.06);   /* 900 */
+  --color-disabled: rgba(51, 0, 23, 0.06);
   --color-locked: rgba(245, 158, 11, 0.14);
 
   --color-backdrop: rgba(2, 6, 23, 0.5);
