@@ -195,12 +195,21 @@ Describe UI meaning. Never hardcode values.
 
 
 /* =====================================================
-   FORM CONTEXT
+   FORM SIZES
 ===================================================== */
 
-  --form-text-size: var(--font-size-md);
-  --form-label-size: var(--font-size-md);
-  --form-caption-size: var(--font-size-xs);
+/* default */
+--form-text-size: var(--font-size-md);
+--form-label-size: var(--font-size-md);
+--form-caption-size: var(--font-size-xs);
+
+/* compact */
+--form-sm-text-size: var(--font-size-sm);
+--form-sm-label-size: var(--font-size-sm);
+
+/* large */
+--form-lg-text-size: var(--font-size-lg);
+--form-lg-label-size: var(--font-size-md);
 
 
 /* =====================================================
@@ -258,4 +267,10 @@ Describe UI meaning. Never hardcode values.
   --diagram-tool-fill: var(--surface-muted);
   --diagram-tool-stroke: var(--border-strong);
 
+
+
+  --tooltip-icon-size: var(--size-icon-sm);
+
+  
 }
+
