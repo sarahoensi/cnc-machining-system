@@ -32,6 +32,7 @@ import { validateCuttingDataForm } from "../domain/validateCuttingForm";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { useState } from "react";
 import { CuttingHistoryPanel } from "./CuttingHistoryPanel";
+import { Button } from "@shared/ui/primitives/Button/Button";
 
 /* ============================================================
    Types
@@ -189,9 +190,13 @@ const actions = (
 const saveButton =
   form.status === "solved" ? (
     <div className="form-save-row">
-      <button onClick={onSave}>
+      <Button
+        variant="secondary"
+        size="small"
+        onClick={onSave}
+      >
         Save result
-      </button>
+      </Button>
     </div>
   ) : null;
 

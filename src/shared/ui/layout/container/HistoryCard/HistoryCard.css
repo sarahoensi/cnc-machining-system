@@ -23,8 +23,9 @@
 .history-card-item {
   display: flex;
   align-items: baseline;
-  gap: var(--space-2);
+  gap: var(--space-1);
 
+  font-size: var(--history-item-text-size);
   font-variant-numeric: tabular-nums;
 }
 
@@ -34,14 +35,16 @@
 }
 
 .hc-label {
-  color: var(--text-muted);
-  font-size: var(--text-caption-size);
+  color: var(--history-item-label-color);
+  font-size: inherit;
 }
 
 .hc-value {
-  color: var(--text-primary);
+  color: var(--history-item-value-color);
+  font-weight: var(--history-item-value-weight);
 }
 
 .hc-unit {
-  color: var(--text-secondary);
+  color: var(--history-item-unit-color);
+  margin-left: var(--space-1);
 }

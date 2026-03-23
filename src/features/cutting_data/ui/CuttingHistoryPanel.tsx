@@ -53,9 +53,15 @@ export function CuttingHistoryPanel({
       )}
 
       {history.length > 0 && (
-        <Button variant="link" onClick={onClear}>
-          Clear all results
-        </Button>
+        <div className="cutting-history-actions">
+  <Button
+    variant="secondary"
+    size="small"
+    onClick={onClear}
+  >
+    Clear all results
+  </Button>
+</div>
       )}
 
     </div>

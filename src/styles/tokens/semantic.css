@@ -341,5 +341,17 @@ Describe UI meaning. Never hardcode values.
 --field-display-gap: var(--space-2);
 --field-display-value-weight: var(--font-weight-medium);
 
+/* =====================================================
+   HISTORY CARD
+===================================================== */
+
+--history-item-text-size: var(--form-text-size);
+
+--history-item-label-color: var(--text-muted);
+--history-item-value-color: var(--text-primary);
+--history-item-value-weight: var(--font-weight-medium);
+
+--history-item-unit-color: var(--text-muted);
+
 }
 
