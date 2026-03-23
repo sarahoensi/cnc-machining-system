@@ -47,7 +47,7 @@
 .size-large {
   height: var(--control-height-lg);
   padding: 0 var(--control-padding-x-lg);
-  font-size: var(--heading-size);
+  font-size: var(--form-text-size);
 }
 
 .size-icon {
@@ -61,12 +61,12 @@
 ===================================================== */
 
 .variant-primary {
-  background: var(--brand-primary);
-  color: var(--brand-on-primary);
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
 }
 
 .variant-primary:hover:not(:disabled) {
-  background: var(--brand-primary-hover);
+  background: var(--button-primary-bg-hover);
 }
 
 .variant-primary:active:not(:disabled) {
@@ -74,22 +74,22 @@
 }
 
 .variant-secondary {
-  background: var(--surface-panel);
-  color: var(--text-primary);
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
   border-color: var(--border-default);
 }
 
 .variant-secondary:hover:not(:disabled) {
-  background: var(--surface-hover);
+  background: var(--button-secondary-bg-hover);
 }
 
 .variant-danger {
-  background: var(--feedback-error);
-  color: var(--text-inverse);
+  background: var(--button-danger-bg);
+  color: var(--button-danger-text);
 }
 
 .variant-danger:hover:not(:disabled) {
-  opacity: var(--opacity-muted);
+  background: var(--button-danger-bg-hover);
 }
 
 .variant-icon {
@@ -106,15 +106,18 @@
   background: none;
   border: none;
   padding: 0;
-
   height: auto;
 
-  color: var(--brand-primary);
-  font-size: var(--text-label-size);
+  color: var(--button-link-text);
 }
 
-.variant-link:hover {
+.variant-link:hover:not(:disabled) {
+  color: var(--button-link-text-hover);
   text-decoration: underline;
+}
+
+.variant-link:disabled {
+  color: var(--button-link-text-disabled);
 }
 
 /* =====================================================
