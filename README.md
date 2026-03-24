@@ -20,7 +20,7 @@ Includes a multi-layered test suite covering domain, application, and interface 
 ![Cutting Data](./src/assets/demo/CuttingDataPartial.png)
 
 ### Finishing Execution
-![Finishing](./src/assets/demo/FinishinExecution.png)
+![Finishing](./src/assets/demo/FinishingExecution.png)
 
 ---
 
