@@ -14,7 +14,8 @@ export default defineConfig(async () => ({
       '@shared': path.resolve(__dirname, 'src/shared'),
       '@styles': path.resolve(__dirname, 'src/styles'),
       '@layout': path.resolve(__dirname, 'src/layout'),
-      '@features': path.resolve(__dirname, 'src/features')
+      '@features': path.resolve(__dirname, 'src/features'),
+      '@assets': path.resolve(__dirname, 'src/assets')
     }
   },
 
