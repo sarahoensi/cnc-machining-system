@@ -11,16 +11,16 @@ Includes a multi-layered test suite covering domain, application, and interface 
 ## Screenshots
 
 ### Triangle Solver
-![Triangle](@assets/demo/Triangle.png)
+![Triangle](./src/assets/demo/Triangle.png)
 
 ### Helix Solver
-![Helix](@assets/demo/Helix.png)
+![Helix](./src/assets/demo/Helix.png)
 
 ### Cutting Data
-![Cutting Data](@assets/demo/CuttingDataPartial.png)
+![Cutting Data](./src/assets/demo/CuttingDataPartial.png)
 
 ### Finishing Execution
-![Finishing](@assets/demo/FinishinExecution.png)
+![Finishing](./src/assets/demo/FinishinExecution.png)
 
 ---
 
