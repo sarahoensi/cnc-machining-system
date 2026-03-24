@@ -122,7 +122,7 @@ All units:
 pub fn rpm_from_cutting_speed(
     cutting_speed: CuttingSpeed,
     diameter: Diameter,
-) -> Result<Rpm, CuttingError>
+) -> Result<Rpm, CuttingError>```
 
 ## Error Handling
 
