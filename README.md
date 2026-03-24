@@ -8,6 +8,22 @@ Includes a multi-layered test suite covering domain, application, and interface 
 
 ---
 
+## Screenshots
+
+### Triangle Solver
+![Triangle](@assets/demo/Triangle.png)
+
+### Helix Solver
+![Helix](@assets/demo/Helix.png)
+
+### Cutting Data
+![Cutting Data](@assets/demo/CuttingDataPartial.png)
+
+### Finishing Execution
+![Finishing](@assets/demo/FinishinExecution.png)
+
+---
+
 ## Overview
 
 This application supports CNC operators in daily work by solving:
