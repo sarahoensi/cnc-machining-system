@@ -1,7 +1,7 @@
 // shared/ui/components/primitives/TextWithTooltip/TextWithTooltip.tsx
 
 import clsx from "clsx";
-import TooltipIcon from "../../../../assets/tooltip-icon.svg";
+import TooltipIcon from "@assets/tooltip-icon.svg";
 import "./TextWithTooltip.css";
 
 type Props = {
