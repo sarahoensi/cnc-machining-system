@@ -37,7 +37,9 @@ pub fn generate_finishing_plan(
         .execute(request.into())
         .map_err(map_application_error)?;
 
-    let mut guard = state.finishing_execution.lock().unwrap();
+    let mut guard = state.finishing_execution.lock().map_err(|_| {
+        TauriError::message("Finishing state is unavailable")
+    })?;
     *guard = Some(execution.clone());
 
     let output: FinishingExecutionOutput = (&execution).into();
@@ -57,7 +59,9 @@ pub fn register_finishing_measurement(
 
     let uc = RegisterFinishingMeasurementUseCase::new();
 
-    let mut guard = state.finishing_execution.lock().unwrap();
+    let mut guard = state.finishing_execution.lock().map_err(|_| {
+        TauriError::message("Finishing state is unavailable")
+    })?;
 
     let execution = guard
         .as_mut()
