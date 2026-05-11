@@ -5,12 +5,13 @@ use crate::{
     domain::machining::{CylinderSpec, CylinderWeightError, CylinderWeightSolver, Material},
 };
 use serde::Deserialize;
+use std::collections::HashSet;
 
 use super::{
     CreateCylinderMaterialInput, CylinderMaterialOutput, CylinderMaterialRepository,
     DeleteCylinderMaterialInput, UpdateCylinderMaterialInput,
     ExportCylinderMaterialRow, ExportCylinderMaterialsOutput, ImportCylinderMaterialsInput,
-    ImportCylinderMaterialsOutput,
+    ImportAddedMaterialRow, ImportCylinderMaterialsOutput, ImportSkippedMaterialRow,
     SolveCylinderWeightInput, SolveCylinderWeightOutput,
 };
 
@@ -304,13 +305,13 @@ impl DeleteCylinderMaterialUseCase {
 #[derive(Deserialize)]
 struct ImportPayload {
     schema_version: u32,
-    materials: Vec<ImportMaterialRow>,
+    materials: Vec<serde_json::Value>,
 }
 
 #[derive(Deserialize)]
 struct ImportMaterialRow {
-    name: String,
-    density_kg_m3: f64,
+    name: Option<String>,
+    density_kg_m3: Option<f64>,
 }
 
 impl ImportCylinderMaterialsUseCase {
@@ -350,20 +351,175 @@ impl ImportCylinderMaterialsUseCase {
         let mut imported = 0usize;
         let mut skipped_duplicates = 0usize;
         let mut skipped_invalid = 0usize;
+        let mut added = Vec::<ImportAddedMaterialRow>::new();
+        let mut skipped = Vec::<ImportSkippedMaterialRow>::new();
 
-        for row in parsed.materials {
-            let material = match Material::new(row.name, row.density_kg_m3) {
-                Ok(m) => m,
+        let existing = repo.list();
+        let mut used_names: HashSet<String> = existing
+            .iter()
+            .map(|row| row.material.normalized_name().to_string())
+            .collect();
+        let mut existing_pairs: HashSet<(String, u64)> = existing
+            .iter()
+            .map(|row| {
+                (
+                    row.material.normalized_name().to_string(),
+                    row.material.density_kg_m3().to_bits(),
+                )
+            })
+            .collect();
+
+        for raw_row in parsed.materials {
+            let row: ImportMaterialRow = match serde_json::from_value(raw_row.clone()) {
+                Ok(v) => v,
                 Err(_) => {
                     skipped_invalid += 1;
+                    skipped.push(ImportSkippedMaterialRow {
+                        name: None,
+                        density_kg_m3: None,
+                        reason: "invalid".to_string(),
+                        message: "Invalid material row shape.".to_string(),
+                    });
+                    continue;
+                }
+            };
+            let raw_name = row.name.clone();
+            let raw_density = row.density_kg_m3;
+
+            let Some(name) = row.name else {
+                skipped_invalid += 1;
+                skipped.push(ImportSkippedMaterialRow {
+                    name: raw_name,
+                    density_kg_m3: raw_density,
+                    reason: "invalid".to_string(),
+                    message: "Material name is required.".to_string(),
+                });
+                continue;
+            };
+            let Some(density) = row.density_kg_m3 else {
+                skipped_invalid += 1;
+                skipped.push(ImportSkippedMaterialRow {
+                    name: Some(name),
+                    density_kg_m3: raw_density,
+                    reason: "invalid".to_string(),
+                    message: "Density is required.".to_string(),
+                });
+                continue;
+            };
+
+            let material = match Material::new(name.clone(), density) {
+                Ok(m) => m,
+                Err(CylinderWeightError::InvalidMaterialName) => {
+                    skipped_invalid += 1;
+                    skipped.push(ImportSkippedMaterialRow {
+                        name: Some(name),
+                        density_kg_m3: Some(density),
+                        reason: "invalid".to_string(),
+                        message: "Material name is required.".to_string(),
+                    });
+                    continue;
+                }
+                Err(CylinderWeightError::InvalidDensity) => {
+                    skipped_invalid += 1;
+                    skipped.push(ImportSkippedMaterialRow {
+                        name: Some(name),
+                        density_kg_m3: Some(density),
+                        reason: "invalid".to_string(),
+                        message: "Density must be a positive number.".to_string(),
+                    });
+                    continue;
+                }
+                Err(e) => {
+                    skipped_invalid += 1;
+                    skipped.push(ImportSkippedMaterialRow {
+                        name: Some(name),
+                        density_kg_m3: Some(density),
+                        reason: "invalid".to_string(),
+                        message: e.to_string(),
+                    });
                     continue;
                 }
             };
 
-            match repo.create(material) {
-                Ok(_) => imported += 1,
-                Err(e) if e == "duplicate_material" => skipped_duplicates += 1,
-                Err(_) => skipped_invalid += 1,
+            let normalized = material.normalized_name().to_string();
+            let density_bits = material.density_kg_m3().to_bits();
+            let pair_key = (normalized.clone(), density_bits);
+            if existing_pairs.contains(&pair_key) {
+                skipped_duplicates += 1;
+                skipped.push(ImportSkippedMaterialRow {
+                    name: Some(material.name().to_string()),
+                    density_kg_m3: Some(material.density_kg_m3()),
+                    reason: "duplicate".to_string(),
+                    message: "Same name and density already exists.".to_string(),
+                });
+                continue;
+            }
+
+            let mut imported_material = material.clone();
+            let mut original_name: Option<String> = None;
+            if used_names.contains(&normalized) {
+                match resolve_suffix_import_name(
+                    material.name(),
+                    material.density_kg_m3(),
+                    &used_names,
+                    &existing_pairs,
+                ) {
+                    SuffixResolution::DuplicateExistingName(existing_name) => {
+                        skipped_duplicates += 1;
+                        skipped.push(ImportSkippedMaterialRow {
+                            name: Some(material.name().to_string()),
+                            density_kg_m3: Some(material.density_kg_m3()),
+                            reason: "duplicate".to_string(),
+                            message: format!(
+                                "Already exists as {existing_name} with same density."
+                            ),
+                        });
+                        continue;
+                    }
+                    SuffixResolution::UniqueName(unique_name) => {
+                        original_name = Some(material.name().to_string());
+                        imported_material = Material::new(unique_name, material.density_kg_m3())
+                            .map_err(|e| {
+                                ApplicationError::Infrastructure(format!(
+                                    "failed to rename imported material: {e}"
+                                ))
+                            })?;
+                    }
+                }
+            }
+
+            match repo.create(imported_material.clone()) {
+                Ok(_) => {
+                    imported += 1;
+                    used_names.insert(imported_material.normalized_name().to_string());
+                    existing_pairs.insert((
+                        imported_material.normalized_name().to_string(),
+                        imported_material.density_kg_m3().to_bits(),
+                    ));
+                    added.push(ImportAddedMaterialRow {
+                        name: imported_material.name().to_string(),
+                        density_kg_m3: imported_material.density_kg_m3(),
+                        original_name,
+                    });
+                }
+                Err(e) if e == "duplicate_material" => {
+                    skipped_duplicates += 1;
+                    skipped.push(ImportSkippedMaterialRow {
+                        name: Some(imported_material.name().to_string()),
+                        density_kg_m3: Some(imported_material.density_kg_m3()),
+                        reason: "duplicate".to_string(),
+                        message: "Material name already exists.".to_string(),
+                    });
+                }
+                Err(e) => {
+                    skipped_invalid += 1;
+                    skipped.push(ImportSkippedMaterialRow {
+                        name: Some(imported_material.name().to_string()),
+                        density_kg_m3: Some(imported_material.density_kg_m3()),
+                        reason: "invalid".to_string(),
+                        message: format!("Failed to import material: {e}"),
+                    });
+                }
             }
         }
 
@@ -371,7 +527,40 @@ impl ImportCylinderMaterialsUseCase {
             imported,
             skipped_duplicates,
             skipped_invalid,
+            added,
+            skipped,
         })
+    }
+}
+
+enum SuffixResolution {
+    DuplicateExistingName(String),
+    UniqueName(String),
+}
+
+fn resolve_suffix_import_name(
+    base_name: &str,
+    density_kg_m3: f64,
+    used_names: &HashSet<String>,
+    existing_pairs: &HashSet<(String, u64)>,
+) -> SuffixResolution {
+    let trimmed = base_name.trim();
+    let mut suffix = 1usize;
+    let density_bits = density_kg_m3.to_bits();
+
+    loop {
+        let candidate = format!("{trimmed} ({suffix})");
+        let normalized = Material::normalize_name(&candidate);
+
+        if existing_pairs.contains(&(normalized.clone(), density_bits)) {
+            return SuffixResolution::DuplicateExistingName(candidate);
+        }
+
+        if !used_names.contains(&normalized) {
+            return SuffixResolution::UniqueName(candidate);
+        }
+
+        suffix += 1;
     }
 }
 

@@ -194,6 +194,8 @@ export function useCylinderWeightPageController() {
         imported: result.imported,
         skippedDuplicates: result.skipped_duplicates,
         skippedInvalid: result.skipped_invalid,
+        added: result.added,
+        skipped: result.skipped,
       });
     } catch (error) {
       const te = getTauriCommandError(error);
@@ -248,7 +250,13 @@ export function useCylinderWeightPageController() {
 
     setIsExportOpen(false);
     setSelectedExportIds([]);
-    setExportSummary({ exported: selectedRows.length });
+    setExportSummary({
+      exported: selectedRows.length,
+      materials: selectedRows.map((row) => ({
+        name: row.name,
+        density_kg_m3: row.density_kg_m3,
+      })),
+    });
   }
 
   async function calculate() {

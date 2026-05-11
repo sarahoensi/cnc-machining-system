@@ -43,6 +43,17 @@ export type ImportCylinderMaterialsResponse = {
   imported: number;
   skipped_duplicates: number;
   skipped_invalid: number;
+  added: Array<{
+    name: string;
+    density_kg_m3: number;
+    original_name?: string;
+  }>;
+  skipped: Array<{
+    name?: string;
+    density_kg_m3?: number;
+    reason: "duplicate" | "invalid";
+    message: string;
+  }>;
 };
 
 export type ExportCylinderMaterialResponse = {

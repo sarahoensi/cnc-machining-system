@@ -42,6 +42,21 @@ pub struct ImportCylinderMaterialsOutput {
     pub imported: usize,
     pub skipped_duplicates: usize,
     pub skipped_invalid: usize,
+    pub added: Vec<ImportAddedMaterialRow>,
+    pub skipped: Vec<ImportSkippedMaterialRow>,
+}
+
+pub struct ImportAddedMaterialRow {
+    pub name: String,
+    pub density_kg_m3: f64,
+    pub original_name: Option<String>,
+}
+
+pub struct ImportSkippedMaterialRow {
+    pub name: Option<String>,
+    pub density_kg_m3: Option<f64>,
+    pub reason: String,
+    pub message: String,
 }
 
 pub struct ExportCylinderMaterialRow {

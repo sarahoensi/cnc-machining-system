@@ -1,7 +1,7 @@
 use crate::application::{
     CreateCylinderMaterialInput, CylinderMaterialOutput, DeleteCylinderMaterialInput,
     ExportCylinderMaterialRow, ExportCylinderMaterialsOutput, ImportCylinderMaterialsInput,
-    ImportCylinderMaterialsOutput,
+    ImportAddedMaterialRow, ImportCylinderMaterialsOutput, ImportSkippedMaterialRow,
     SolveCylinderWeightInput,
     SolveCylinderWeightOutput,
     UpdateCylinderMaterialInput,
@@ -10,7 +10,7 @@ use crate::application::{
 use super::{
     CreateCylinderMaterialRequest, CylinderMaterialResponse, DeleteCylinderMaterialRequest,
     ExportCylinderMaterialResponse, ExportCylinderMaterialsResponse, ImportCylinderMaterialsRequest,
-    ImportCylinderMaterialsResponse,
+    ImportAddedMaterialResponse, ImportCylinderMaterialsResponse, ImportSkippedMaterialResponse,
     SolveCylinderWeightRequest,
     SolveCylinderWeightResponse,
     UpdateCylinderMaterialRequest,
@@ -89,6 +89,29 @@ impl From<ImportCylinderMaterialsOutput> for ImportCylinderMaterialsResponse {
             imported: out.imported,
             skipped_duplicates: out.skipped_duplicates,
             skipped_invalid: out.skipped_invalid,
+            added: out.added.into_iter().map(Into::into).collect(),
+            skipped: out.skipped.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+impl From<ImportAddedMaterialRow> for ImportAddedMaterialResponse {
+    fn from(out: ImportAddedMaterialRow) -> Self {
+        Self {
+            name: out.name,
+            density_kg_m3: out.density_kg_m3,
+            original_name: out.original_name,
+        }
+    }
+}
+
+impl From<ImportSkippedMaterialRow> for ImportSkippedMaterialResponse {
+    fn from(out: ImportSkippedMaterialRow) -> Self {
+        Self {
+            name: out.name,
+            density_kg_m3: out.density_kg_m3,
+            reason: out.reason,
+            message: out.message,
         }
     }
 }
