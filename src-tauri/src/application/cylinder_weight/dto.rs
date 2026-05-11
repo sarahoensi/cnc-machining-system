@@ -21,6 +21,18 @@ pub struct CreateCylinderMaterialInput {
     pub density_kg_m3: Option<f64>,
 }
 
+#[derive(Default)]
+pub struct UpdateCylinderMaterialInput {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub density_kg_m3: Option<f64>,
+}
+
+#[derive(Default)]
+pub struct DeleteCylinderMaterialInput {
+    pub id: Option<String>,
+}
+
 pub struct CylinderMaterialOutput {
     pub id: String,
     pub name: String,

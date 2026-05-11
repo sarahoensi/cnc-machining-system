@@ -1,11 +1,15 @@
 use crate::application::{
-    CreateCylinderMaterialInput, CylinderMaterialOutput, SolveCylinderWeightInput,
+    CreateCylinderMaterialInput, CylinderMaterialOutput, DeleteCylinderMaterialInput,
+    SolveCylinderWeightInput,
     SolveCylinderWeightOutput,
+    UpdateCylinderMaterialInput,
 };
 
 use super::{
-    CreateCylinderMaterialRequest, CylinderMaterialResponse, SolveCylinderWeightRequest,
+    CreateCylinderMaterialRequest, CylinderMaterialResponse, DeleteCylinderMaterialRequest,
+    SolveCylinderWeightRequest,
     SolveCylinderWeightResponse,
+    UpdateCylinderMaterialRequest,
 };
 
 impl From<SolveCylinderWeightRequest> for SolveCylinderWeightInput {
@@ -38,6 +42,22 @@ impl From<CreateCylinderMaterialRequest> for CreateCylinderMaterialInput {
             name: req.name,
             density_kg_m3: req.density_kg_m3,
         }
+    }
+}
+
+impl From<UpdateCylinderMaterialRequest> for UpdateCylinderMaterialInput {
+    fn from(req: UpdateCylinderMaterialRequest) -> Self {
+        Self {
+            id: req.id,
+            name: req.name,
+            density_kg_m3: req.density_kg_m3,
+        }
+    }
+}
+
+impl From<DeleteCylinderMaterialRequest> for DeleteCylinderMaterialInput {
+    fn from(req: DeleteCylinderMaterialRequest) -> Self {
+        Self { id: req.id }
     }
 }
 

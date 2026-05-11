@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { to: "/triangle", label: "Triangle" },
   { to: "/helix", label: "Helix" },
   { to: "/cutting", label: "Cutting Data" },
+  { to: "/cylinder-weight", label: "Cylinder Weight" },
   { to: "/finishing", label: "Finishing" },
 ];
 

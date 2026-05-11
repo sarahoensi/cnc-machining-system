@@ -27,6 +27,14 @@ impl CylinderMaterialRepository for FakeRepo {
     fn create(&mut self, _material: Material) -> Result<CylinderMaterialRecord, String> {
         unreachable!()
     }
+
+    fn update(&mut self, _id: &str, _material: Material) -> Result<CylinderMaterialRecord, String> {
+        unreachable!()
+    }
+
+    fn delete(&mut self, _id: &str) -> Result<(), String> {
+        unreachable!()
+    }
 }
 
 #[test]
@@ -46,5 +54,26 @@ fn solve_returns_mass_rounded_to_3_decimals() {
     };
 
     let out = SolveCylinderWeightUseCase::execute(&repo, input).unwrap();
+    assert_eq!(out.mass_kg, 61.654);
+}
+
+#[test]
+fn solve_treats_missing_inner_diameter_as_solid_cylinder() {
+    let repo = FakeRepo {
+        rows: vec![CylinderMaterialRecord {
+            id: "mat-steel".to_string(),
+            material: Material::new("Steel".to_string(), 7850.0).unwrap(),
+        }],
+    };
+
+    let input = SolveCylinderWeightInput {
+        material_id: Some("mat-steel".to_string()),
+        outer_diameter_mm: Some(100.0),
+        inner_diameter_mm: None,
+        length_mm: Some(1000.0),
+    };
+
+    let out = SolveCylinderWeightUseCase::execute(&repo, input).unwrap();
+    assert_eq!(out.inner_diameter_mm, 0.0);
     assert_eq!(out.mass_kg, 61.654);
 }

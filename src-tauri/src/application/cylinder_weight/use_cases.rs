@@ -1,18 +1,20 @@
 use crate::{
     application::{
-        shared::{AppResult, InputParser},
-        ApplicationError,
+        shared::{AppResult, ApplicationError, InputParser},
     },
-    domain::machining::{CylinderSpec, CylinderWeightSolver, Material},
+    domain::machining::{CylinderSpec, CylinderWeightError, CylinderWeightSolver, Material},
 };
 
 use super::{
     CreateCylinderMaterialInput, CylinderMaterialOutput, CylinderMaterialRepository,
+    DeleteCylinderMaterialInput, UpdateCylinderMaterialInput,
     SolveCylinderWeightInput, SolveCylinderWeightOutput,
 };
 
 pub struct ListCylinderMaterialsUseCase;
 pub struct CreateCylinderMaterialUseCase;
+pub struct UpdateCylinderMaterialUseCase;
+pub struct DeleteCylinderMaterialUseCase;
 pub struct SolveCylinderWeightUseCase;
 
 impl ListCylinderMaterialsUseCase {
@@ -51,7 +53,21 @@ impl CreateCylinderMaterialUseCase {
         };
 
         let material = match (name, density) {
-            (Some(n), Some(d)) => p.value("name", Material::new(n, d)),
+            (Some(n), Some(d)) => match Material::new(n, d) {
+                Ok(m) => Some(m),
+                Err(CylinderWeightError::InvalidMaterialName) => {
+                    p.push("name", "invalid", CylinderWeightError::InvalidMaterialName.to_string());
+                    None
+                }
+                Err(CylinderWeightError::InvalidDensity) => {
+                    p.push("density_kg_m3", "invalid", CylinderWeightError::InvalidDensity.to_string());
+                    None
+                }
+                Err(e) => {
+                    p.push("name", "invalid", e.to_string());
+                    None
+                }
+            },
             _ => None,
         };
 
@@ -97,13 +113,7 @@ impl SolveCylinderWeightUseCase {
                 None
             }
         };
-        let inner = match input.inner_diameter_mm {
-            Some(v) => Some(v),
-            None => {
-                p.push("inner_diameter_mm", "validation_error", "is required");
-                None
-            }
-        };
+        let inner = Some(input.inner_diameter_mm.unwrap_or(0.0));
         let length = match input.length_mm {
             Some(v) => Some(v),
             None => {
@@ -122,14 +132,44 @@ impl SolveCylinderWeightUseCase {
         }
 
         let spec = match (outer, inner, length) {
-            (Some(o), Some(i), Some(l)) => p.domain("inner_diameter_mm", CylinderSpec::new(o, i, l)),
+            (Some(o), Some(i), Some(l)) => match CylinderSpec::new(o, i, l) {
+                Ok(spec) => Some(spec),
+                Err(CylinderWeightError::InvalidOuterDiameter) => {
+                    p.push("outer_diameter_mm", "invalid_geometry", CylinderWeightError::InvalidOuterDiameter.to_string());
+                    None
+                }
+                Err(CylinderWeightError::InvalidInnerDiameter) => {
+                    p.push("inner_diameter_mm", "invalid_geometry", CylinderWeightError::InvalidInnerDiameter.to_string());
+                    None
+                }
+                Err(CylinderWeightError::InnerDiameterNotSmallerThanOuter) => {
+                    p.push(
+                        "inner_diameter_mm",
+                        "invalid_geometry",
+                        CylinderWeightError::InnerDiameterNotSmallerThanOuter.to_string(),
+                    );
+                    None
+                }
+                Err(CylinderWeightError::InvalidLength) => {
+                    p.push("length_mm", "invalid_geometry", CylinderWeightError::InvalidLength.to_string());
+                    None
+                }
+                Err(e) => {
+                    p.push("inner_diameter_mm", "invalid_geometry", e.to_string());
+                    None
+                }
+            },
             _ => None,
         };
 
         p.finish()?;
 
-        let (_, material) = material.expect("material should exist after validation");
-        let spec = spec.expect("spec should exist after validation");
+        let (_, material) = material.ok_or_else(|| {
+            ApplicationError::Infrastructure("material missing after successful validation".to_string())
+        })?;
+        let spec = spec.ok_or_else(|| {
+            ApplicationError::Infrastructure("spec missing after successful validation".to_string())
+        })?;
 
         let mass = CylinderWeightSolver::calculate_mass_kg(spec, &material)
             .map_err(|e| ApplicationError::Domain(e.into()))?;
@@ -147,4 +187,111 @@ impl SolveCylinderWeightUseCase {
 
 fn round3(v: f64) -> f64 {
     (v * 1000.0).round() / 1000.0
+}
+
+impl UpdateCylinderMaterialUseCase {
+    pub fn execute(
+        repo: &mut dyn CylinderMaterialRepository,
+        input: UpdateCylinderMaterialInput,
+    ) -> AppResult<CylinderMaterialOutput> {
+        let mut p = InputParser::new();
+
+        let id = match input.id {
+            Some(v) if !v.trim().is_empty() => Some(v),
+            Some(_) => {
+                p.push("id", "validation_error", "must not be empty");
+                None
+            }
+            None => {
+                p.push("id", "validation_error", "is required");
+                None
+            }
+        };
+
+        let name = match input.name {
+            Some(v) => Some(v),
+            None => {
+                p.push("name", "validation_error", "is required");
+                None
+            }
+        };
+        let density = match input.density_kg_m3 {
+            Some(v) => Some(v),
+            None => {
+                p.push("density_kg_m3", "validation_error", "is required");
+                None
+            }
+        };
+
+        let material = match (name, density) {
+            (Some(n), Some(d)) => match Material::new(n, d) {
+                Ok(m) => Some(m),
+                Err(CylinderWeightError::InvalidMaterialName) => {
+                    p.push("name", "invalid", CylinderWeightError::InvalidMaterialName.to_string());
+                    None
+                }
+                Err(CylinderWeightError::InvalidDensity) => {
+                    p.push("density_kg_m3", "invalid", CylinderWeightError::InvalidDensity.to_string());
+                    None
+                }
+                Err(e) => {
+                    p.push("name", "invalid", e.to_string());
+                    None
+                }
+            },
+            _ => None,
+        };
+
+        p.finish()?;
+
+        let id = id.ok_or_else(|| ApplicationError::Infrastructure("id missing after validation".to_string()))?;
+        let material = material.ok_or_else(|| {
+            ApplicationError::Infrastructure("material missing after validation".to_string())
+        })?;
+
+        match repo.update(&id, material) {
+            Ok(saved) => Ok(CylinderMaterialOutput {
+                id: saved.id,
+                name: saved.material.name().to_string(),
+                density_kg_m3: saved.material.density_kg_m3(),
+            }),
+            Err(e) if e == "duplicate_material" => Err(ApplicationError::Infrastructure(
+                "duplicate_material".to_string(),
+            )),
+            Err(e) if e == "material_not_found" => Err(ApplicationError::Infrastructure(
+                "material_not_found".to_string(),
+            )),
+            Err(e) => Err(ApplicationError::Infrastructure(e)),
+        }
+    }
+}
+
+impl DeleteCylinderMaterialUseCase {
+    pub fn execute(
+        repo: &mut dyn CylinderMaterialRepository,
+        input: DeleteCylinderMaterialInput,
+    ) -> AppResult<()> {
+        let mut p = InputParser::new();
+        let id = match input.id {
+            Some(v) if !v.trim().is_empty() => Some(v),
+            Some(_) => {
+                p.push("id", "validation_error", "must not be empty");
+                None
+            }
+            None => {
+                p.push("id", "validation_error", "is required");
+                None
+            }
+        };
+        p.finish()?;
+        let id = id.ok_or_else(|| ApplicationError::Infrastructure("id missing after validation".to_string()))?;
+
+        match repo.delete(&id) {
+            Ok(()) => Ok(()),
+            Err(e) if e == "material_not_found" => Err(ApplicationError::Infrastructure(
+                "material_not_found".to_string(),
+            )),
+            Err(e) => Err(ApplicationError::Infrastructure(e)),
+        }
+    }
 }

@@ -17,8 +17,10 @@ use crate::interface::{
     cutting_data::solve_cutting_data,
     cylinder_weight::{
         create_cylinder_material,
+        delete_cylinder_material,
         list_cylinder_materials,
         solve_cylinder_weight,
+        update_cylinder_material,
     },
     helix::solve_helix,
     right_triangle::solve_right_triangle,
@@ -68,6 +70,8 @@ pub fn run() {
             // cylinder_weight
             list_cylinder_materials,
             create_cylinder_material,
+            update_cylinder_material,
+            delete_cylinder_material,
             solve_cylinder_weight,
 
             // finishing

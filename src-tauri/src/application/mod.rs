@@ -30,6 +30,8 @@ pub use cutting_data::solve_cutting_data_use_case::SolveCuttingDataUseCase;
 pub use cylinder_weight::{
     CreateCylinderMaterialInput,
     CreateCylinderMaterialUseCase,
+    DeleteCylinderMaterialInput,
+    DeleteCylinderMaterialUseCase,
     CylinderMaterialOutput,
     CylinderMaterialRecord,
     CylinderMaterialRepository,
@@ -38,4 +40,6 @@ pub use cylinder_weight::{
     SolveCylinderWeightInput,
     SolveCylinderWeightOutput,
     SolveCylinderWeightUseCase,
+    UpdateCylinderMaterialInput,
+    UpdateCylinderMaterialUseCase,
 };

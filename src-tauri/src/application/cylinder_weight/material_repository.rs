@@ -20,6 +20,8 @@ pub trait CylinderMaterialRepository {
     fn get_by_id(&self, id: &str) -> Option<CylinderMaterialRecord>;
     fn get_by_normalized_name(&self, normalized_name: &str) -> Option<CylinderMaterialRecord>;
     fn create(&mut self, material: Material) -> Result<CylinderMaterialRecord, String>;
+    fn update(&mut self, id: &str, material: Material) -> Result<CylinderMaterialRecord, String>;
+    fn delete(&mut self, id: &str) -> Result<(), String>;
 }
 
 #[derive(Debug, Clone)]
@@ -143,6 +145,44 @@ impl CylinderMaterialRepository for JsonCylinderMaterialRepository {
             id: record.id,
             material,
         })
+    }
+
+    fn update(&mut self, id: &str, material: Material) -> Result<CylinderMaterialRecord, String> {
+        if self
+            .data
+            .materials
+            .iter()
+            .any(|m| m.id != id && m.normalized_name == material.normalized_name())
+        {
+            return Err("duplicate_material".to_string());
+        }
+
+        let Some(row) = self.data.materials.iter_mut().find(|m| m.id == id) else {
+            return Err("material_not_found".to_string());
+        };
+
+        row.name = material.name().to_string();
+        row.normalized_name = material.normalized_name().to_string();
+        row.density_kg_m3 = material.density_kg_m3();
+
+        self.persist()?;
+
+        Ok(CylinderMaterialRecord {
+            id: id.to_string(),
+            material,
+        })
+    }
+
+    fn delete(&mut self, id: &str) -> Result<(), String> {
+        let len_before = self.data.materials.len();
+        self.data.materials.retain(|m| m.id != id);
+
+        if self.data.materials.len() == len_before {
+            return Err("material_not_found".to_string());
+        }
+
+        self.persist()?;
+        Ok(())
     }
 }
 

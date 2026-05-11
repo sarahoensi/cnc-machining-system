@@ -13,3 +13,15 @@ pub struct CreateCylinderMaterialRequest {
     pub name: Option<String>,
     pub density_kg_m3: Option<f64>,
 }
+
+#[derive(Default, Deserialize)]
+pub struct UpdateCylinderMaterialRequest {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub density_kg_m3: Option<f64>,
+}
+
+#[derive(Default, Deserialize)]
+pub struct DeleteCylinderMaterialRequest {
+    pub id: Option<String>,
+}
