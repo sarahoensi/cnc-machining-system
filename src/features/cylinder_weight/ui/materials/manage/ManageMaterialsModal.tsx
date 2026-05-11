@@ -1,7 +1,7 @@
 //ManageMaterialsModal.tsx
 
 import { useRef } from "react";
-import { Modal } from "@shared/ui/components/overlay/Modal/Modal";
+import { Modal, ModalScrollArea } from "@shared/ui/components/overlay/Modal/Modal";
 import { DialogActions } from "@shared/ui/components/overlay/DialogActions/DialogActions";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { Button } from "@shared/ui/primitives/Button/Button";
@@ -32,7 +32,7 @@ export function ManageMaterialsModal({
   if (!open) return null;
 
   return (
-    <Modal title="Manage Materials" onClose={onClose} size="md">
+    <Modal title="Manage Materials" onClose={onClose} size="md" height="fixed">
       <DialogActions align="left">
         <Button variant="secondary" size="small" onClick={onOpenCreate}>
           + New Material
@@ -67,7 +67,9 @@ export function ManageMaterialsModal({
         }}
       />
 
-      <MaterialLibraryTable materials={materials} edit={edit} />
+      <ModalScrollArea>
+        <MaterialLibraryTable materials={materials} edit={edit} />
+      </ModalScrollArea>
 
       {edit.error ? <FormError error={edit.error} /> : null}
     </Modal>

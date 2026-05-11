@@ -11,6 +11,7 @@ type ModalProps = {
   closeLabel?: string;
   showCloseButton?: boolean;
   size?: "sm" | "md" | "lg";
+  height?: "auto" | "fixed";
 };
 
 export function Modal({
@@ -21,11 +22,17 @@ export function Modal({
   closeLabel = "Close",
   showCloseButton = true,
   size = "md",
+  height = "auto",
 }: ModalProps) {
   return (
     <div className="app-modal-backdrop" onClick={onClose}>
       <div
-        className={clsx("app-modal", `app-modal-${size}`, className)}
+        className={clsx(
+          "app-modal",
+          `app-modal-${size}`,
+          `app-modal-height-${height}`,
+          className
+        )}
         role="dialog"
         aria-modal="true"
         aria-label={title}
@@ -44,4 +51,13 @@ export function Modal({
       </div>
     </div>
   );
+}
+
+type ModalScrollAreaProps = {
+  children: ReactNode;
+  className?: string;
+};
+
+export function ModalScrollArea({ children, className }: ModalScrollAreaProps) {
+  return <div className={clsx("app-modal-scroll-area", className)}>{children}</div>;
 }

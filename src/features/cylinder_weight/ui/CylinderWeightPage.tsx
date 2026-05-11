@@ -89,7 +89,9 @@ export function CylinderWeightPage() {
 
   return (
     <>
-      <FormFigureLayout form={formContent} figure={null} />
+      <div className="cylinder-weight-page-layout">
+        <FormFigureLayout form={formContent} figure={null} />
+      </div>
 
       <ManageMaterialsModal
         open={controller.manageModal.open}

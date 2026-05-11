@@ -22,6 +22,11 @@
   gap: var(--space-3);
 }
 
+.app-modal-height-fixed {
+  height: min(720px, calc(100vh - var(--space-8)));
+  overflow: hidden;
+}
+
 .app-modal-sm {
   width: min(520px, 100%);
 }
@@ -46,4 +51,10 @@
   font-size: var(--heading-size);
   font-weight: var(--heading-weight);
   color: var(--text-primary);
+}
+
+.app-modal-scroll-area {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: auto;
 }
