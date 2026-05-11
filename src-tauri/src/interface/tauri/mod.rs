@@ -8,6 +8,7 @@
 //! and cutting-data workflows.
 
 pub mod cutting_data;
+pub mod cylinder_weight;
 pub mod finishing;
 pub mod helix;
 pub mod right_triangle;

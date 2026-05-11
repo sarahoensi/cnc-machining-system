@@ -4,6 +4,7 @@ use thiserror::Error;
 
 use crate::domain::{
     machining::finishing::FinishingError, 
+    machining::CylinderWeightError,
     geometry::GeometryError, 
     machining::CuttingError, 
     units::UnitsError
@@ -26,4 +27,7 @@ pub enum DomainError {
 
     #[error(transparent)]
     MachiningStrategy(#[from] FinishingError),
+
+    #[error(transparent)]
+    CylinderWeight(#[from] CylinderWeightError),
 }

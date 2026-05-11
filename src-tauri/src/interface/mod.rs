@@ -10,5 +10,6 @@ pub use tauri::{
     right_triangle,
     helix,
     cutting_data,
+    cylinder_weight,
     finishing,
 };
