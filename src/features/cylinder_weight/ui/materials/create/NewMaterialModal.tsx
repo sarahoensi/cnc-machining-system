@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Field } from "@shared/ui/components/form/Field/Field";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { Modal } from "@shared/ui/components/overlay/Modal/Modal";
@@ -28,22 +29,41 @@ export function NewMaterialModal({
   error,
   onSave,
 }: Props) {
+  const densityInputRef = useRef<HTMLInputElement>(null);
+
   if (!open) return null;
 
   return (
     <Modal title="New Material" size="sm" onClose={onClose}>
       <FormStack>
         <Field label="Name">
-          <TextInput value={name} onChange={setName} placeholder="Ex: Bronze" />
+          <TextInput
+            value={name}
+            onChange={setName}
+            placeholder="Ex: Bronze"
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                densityInputRef.current?.focus();
+              }
+            }}
+          />
         </Field>
 
         <Field label="Density">
           <NumberInput
+            ref={densityInputRef}
             value={density}
             onChange={setDensity}
             unit="kg/m3"
             className="ni-form ni-user"
             placeholder="Ex: 8800"
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                onSave();
+              }
+            }}
           />
         </Field>
 

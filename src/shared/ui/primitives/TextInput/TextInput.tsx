@@ -1,4 +1,4 @@
-import { forwardRef, useId } from "react";
+import { KeyboardEventHandler, forwardRef, useId } from "react";
 import clsx from "clsx";
 import "./TextInput.css";
 
@@ -10,6 +10,7 @@ type Props = {
   disabled?: boolean;
   autoFocus?: boolean;
   className?: string;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 };
 
 export const TextInput = forwardRef<HTMLInputElement, Props>(
@@ -22,6 +23,7 @@ export const TextInput = forwardRef<HTMLInputElement, Props>(
       disabled = false,
       autoFocus,
       className,
+      onKeyDown,
     },
     ref
   ) {
@@ -38,6 +40,7 @@ export const TextInput = forwardRef<HTMLInputElement, Props>(
         placeholder={placeholder}
         disabled={disabled}
         autoFocus={autoFocus}
+        onKeyDown={onKeyDown}
         className={clsx("app-text-input", className)}
       />
     );
