@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 import {
@@ -11,7 +11,6 @@ import { FormActions } from "@shared/ui/components/form/FormActions/FormActions"
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { Field } from "@shared/ui/components/form/Field/Field";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
-import { Panel } from "@shared/ui/layout/container/Panel/Panel";
 import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
 import { NumberInput } from "@shared/ui/primitives/NumberInput/NumberInput";
 import { Button } from "@shared/ui/primitives/Button/Button";
@@ -62,6 +61,10 @@ export function CylinderWeightPage() {
   const [editMaterialName, setEditMaterialName] = useState("");
   const [editMaterialDensity, setEditMaterialDensity] = useState("");
   const [editMaterialError, setEditMaterialError] = useState<string>();
+  const [isManageOpen, setIsManageOpen] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isMaterialMenuOpen, setIsMaterialMenuOpen] = useState(false);
+  const materialMenuRef = useRef<HTMLDivElement>(null);
 
   const navigation = useFormNavigation({
     keys: ["outer_diameter_mm", "inner_diameter_mm", "length_mm"],
@@ -71,6 +74,20 @@ export function CylinderWeightPage() {
 
   useEffect(() => {
     void loadMaterials();
+  }, []);
+
+  useEffect(() => {
+    function handleOutsideClick(event: MouseEvent) {
+      if (
+        materialMenuRef.current &&
+        !materialMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsMaterialMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
 
   async function loadMaterials() {
@@ -158,6 +175,7 @@ export function CylinderWeightPage() {
       setNewMaterialName("");
       setNewMaterialDensity("");
       onMaterialChange(saved.id);
+      setIsCreateOpen(false);
     } catch (error) {
       const tauriError = getTauriCommandError(error);
       if (tauriError) {
@@ -320,20 +338,86 @@ export function CylinderWeightPage() {
   );
 
   const materialField = (
-    <Field label="Material">
-      <select
-        className="cylinder-weight-material-select"
-        value={form.extras.materialId}
-        onChange={(e) => onMaterialChange(e.target.value)}
+    <div className="cylinder-weight-material-block">
+      <Field label="Material">
+        <div className="cylinder-weight-material-control-row">
+          <div className="cylinder-weight-material-dropdown" ref={materialMenuRef}>
+            <button
+              type="button"
+              className="cylinder-weight-material-select"
+              onClick={() => setIsMaterialMenuOpen((v) => !v)}
+            >
+              <span className="cylinder-weight-material-select-label">
+                {selectedMaterial?.name ?? "Select material"}
+              </span>
+              <span className="cylinder-weight-material-select-caret" />
+            </button>
+
+            {isMaterialMenuOpen ? (
+              <div className="cylinder-weight-material-dropdown-menu">
+                {materials.map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    className="cylinder-weight-material-dropdown-item"
+                    onClick={() => {
+                      onMaterialChange(m.id);
+                      setIsMaterialMenuOpen(false);
+                    }}
+                  >
+                    <span className="cylinder-weight-material-dropdown-name">
+                      {m.name}
+                    </span>
+                    <span className="cylinder-weight-material-dropdown-density">
+                      {"\u00b7"} {m.density_kg_m3} kg/m3
+                    </span>
+                  </button>
+                ))}
+
+                <div className="cylinder-weight-material-dropdown-divider" />
+
+                <button
+                  type="button"
+                  className="cylinder-weight-material-dropdown-utility"
+                  onClick={() => {
+                    setIsMaterialMenuOpen(false);
+                    setIsManageOpen(true);
+                    setIsCreateOpen(true);
+                  }}
+                >
+                  + New Material...
+                </button>
+
+                <button
+                  type="button"
+                  className="cylinder-weight-material-dropdown-utility"
+                  onClick={() => {
+                    setIsMaterialMenuOpen(false);
+                    setIsManageOpen(true);
+                  }}
+                >
+                  Manage Materials...
+                </button>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </Field>
+
+      <button
+        type="button"
+        className="cylinder-weight-manage-link"
+        onClick={() => setIsManageOpen(true)}
       >
-        <option value="">Select material</option>
-        {materials.map((m) => (
-          <option key={m.id} value={m.id}>
-            {m.name}
-          </option>
-        ))}
-      </select>
-    </Field>
+        Manage Materials
+      </button>
+
+      {materialLoadError ? (
+        <div className="cylinder-weight-material-hint">
+          {materialLoadError}
+        </div>
+      ) : null}
+    </div>
   );
 
   const error = form.formError ? (
@@ -361,140 +445,155 @@ export function CylinderWeightPage() {
     />
   );
 
-  const figure = (
-    <div className="cylinder-weight-figure">
-      <Panel title="Material Info">
-        {loadingMaterials ? (
-          <div>Loading materials...</div>
-        ) : materialLoadError ? (
-          <div>{materialLoadError}</div>
-        ) : selectedMaterial ? (
-          <div>
-            {selectedMaterial.name} - {selectedMaterial.density_kg_m3} kg/m3
-          </div>
-        ) : (
-          <div>No material selected</div>
-        )}
-      </Panel>
-
-      <Panel title="Saved Materials">
-        <div className="cylinder-weight-material-list">
-          {materials.map((material) => {
-            const isEditing = editMaterialId === material.id;
-
-            if (isEditing) {
-              return (
-                <div
-                  key={material.id}
-                  className="cylinder-weight-material-row"
-                >
-                  <div className="cylinder-weight-add-material">
-                    <input
-                      className="cylinder-weight-input"
-                      type="text"
-                      value={editMaterialName}
-                      onChange={(e) => setEditMaterialName(e.target.value)}
-                    />
-                    <NumberInput
-                      value={editMaterialDensity}
-                      onChange={setEditMaterialDensity}
-                      unit="kg/m3"
-                      className="ni-form ni-user"
-                    />
-                  </div>
-                  <div className="cylinder-weight-material-actions">
-                    <Button variant="secondary" size="small" onClick={onSaveEditMaterial}>
-                      Save
-                    </Button>
-                    <Button variant="secondary" size="small" onClick={cancelEditMaterial}>
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              );
-            }
-
-            return (
-              <div
-                key={material.id}
-                className="cylinder-weight-material-row"
-              >
-                <div className="cylinder-weight-material-meta">
-                  <strong>{material.name}</strong>
-                  <span>{material.density_kg_m3} kg/m3</span>
-                </div>
-                <div className="cylinder-weight-material-actions">
-                  <Button
-                    variant="secondary"
-                    size="small"
-                    onClick={() => startEditMaterial(material)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="small"
-                    onClick={() => void onDeleteMaterial(material.id)}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </div>
-            );
-          })}
-
-          {editMaterialError ? (
-            <div className="cylinder-weight-material-hint">
-              {editMaterialError}
-            </div>
-          ) : null}
-        </div>
-      </Panel>
-
-      <Panel title="Add Material">
-        <div className="cylinder-weight-add-material">
-          <Field label="Name">
-            <input
-              className="cylinder-weight-input"
-              type="text"
-              value={newMaterialName}
-              onChange={(e) => setNewMaterialName(e.target.value)}
-              placeholder="Ex: Bronze"
-            />
-          </Field>
-
-          <Field label="Density">
-            <NumberInput
-              value={newMaterialDensity}
-              onChange={setNewMaterialDensity}
-              unit="kg/m3"
-              className="ni-form ni-user"
-              placeholder="Ex: 8800"
-            />
-          </Field>
-
-          <Button
-            variant="secondary"
-            size="medium"
-            onClick={onCreateMaterial}
-          >
-            Add material
-          </Button>
-
-          {createMaterialError ? (
-            <div className="cylinder-weight-material-hint">
-              {createMaterialError}
-            </div>
-          ) : null}
-        </div>
-      </Panel>
-    </div>
-  );
-
   return (
-    <FormFigureLayout
-      form={formContent}
-      figure={figure}
-    />
+    <>
+      <FormFigureLayout
+        form={formContent}
+        figure={null}
+      />
+
+      {isManageOpen ? (
+        <div
+          className="cylinder-weight-modal-backdrop"
+          onClick={() => setIsManageOpen(false)}
+        >
+          <div
+            className="cylinder-weight-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Manage materials"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="cylinder-weight-modal-header">
+              <h3>Manage Materials</h3>
+              <Button variant="secondary" size="small" onClick={() => setIsManageOpen(false)}>
+                Close
+              </Button>
+            </div>
+
+            <div className="cylinder-weight-library-toolbar">
+              <Button
+                variant="link"
+                onClick={() => setIsCreateOpen((v) => !v)}
+              >
+                + New Material
+              </Button>
+            </div>
+
+            {isCreateOpen ? (
+              <div className="cylinder-weight-create-inline">
+                <Field label="Name">
+                  <input
+                    className="cylinder-weight-input"
+                    type="text"
+                    value={newMaterialName}
+                    onChange={(e) => setNewMaterialName(e.target.value)}
+                    placeholder="Ex: Bronze"
+                  />
+                </Field>
+
+                <Field label="Density">
+                  <NumberInput
+                    value={newMaterialDensity}
+                    onChange={setNewMaterialDensity}
+                    unit="kg/m3"
+                    className="ni-form ni-user"
+                    placeholder="Ex: 8800"
+                  />
+                </Field>
+
+                <div className="cylinder-weight-inline-actions">
+                  <Button
+                    variant="link"
+                    onClick={onCreateMaterial}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    variant="link"
+                    onClick={() => {
+                      setIsCreateOpen(false);
+                      setCreateMaterialError(undefined);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+
+                {createMaterialError ? (
+                  <div className="cylinder-weight-material-hint">
+                    {createMaterialError}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+
+            <div className="cylinder-weight-material-list">
+              {materials.map((material) => {
+                const isEditing = editMaterialId === material.id;
+
+                if (isEditing) {
+                  return (
+                    <div key={material.id} className="cylinder-weight-material-row">
+                      <div className="cylinder-weight-material-edit">
+                        <input
+                          className="cylinder-weight-input"
+                          type="text"
+                          value={editMaterialName}
+                          onChange={(e) => setEditMaterialName(e.target.value)}
+                        />
+                        <NumberInput
+                          value={editMaterialDensity}
+                          onChange={setEditMaterialDensity}
+                          unit="kg/m3"
+                          className="ni-form ni-user"
+                        />
+                      </div>
+                      <div className="cylinder-weight-material-actions">
+                        <Button variant="link" onClick={onSaveEditMaterial}>
+                          Save
+                        </Button>
+                        <Button variant="link" onClick={cancelEditMaterial}>
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div key={material.id} className="cylinder-weight-material-row">
+                    <div className="cylinder-weight-material-name">
+                      {material.name}
+                    </div>
+                    <div className="cylinder-weight-material-density">
+                      {material.density_kg_m3} kg/m3
+                    </div>
+                    <div className="cylinder-weight-material-actions">
+                      <Button variant="link" onClick={() => startEditMaterial(material)}>
+                        Edit
+                      </Button>
+                      <Button
+                        variant="link"
+                        className="cylinder-weight-action-delete"
+                        onClick={() => void onDeleteMaterial(material.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {editMaterialError ? (
+              <div className="cylinder-weight-material-hint">
+                {editMaterialError}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }
