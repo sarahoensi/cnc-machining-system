@@ -3,6 +3,9 @@ import {
   CreateCylinderMaterialRequest,
   CylinderMaterialResponse,
   DeleteCylinderMaterialRequest,
+  ExportCylinderMaterialsResponse,
+  ImportCylinderMaterialsRequest,
+  ImportCylinderMaterialsResponse,
   SolveCylinderWeightRequest,
   SolveCylinderWeightResponse,
   UpdateCylinderMaterialRequest,
@@ -47,5 +50,20 @@ export function solveCylinderWeightApi(
   return tauriInvoke<SolveCylinderWeightResponse>(
     "solve_cylinder_weight",
     { request }
+  );
+}
+
+export function importCylinderMaterialsApi(
+  request: ImportCylinderMaterialsRequest
+) {
+  return tauriInvoke<ImportCylinderMaterialsResponse>(
+    "import_cylinder_materials",
+    { request }
+  );
+}
+
+export function exportCylinderMaterialsApi() {
+  return tauriInvoke<ExportCylinderMaterialsResponse>(
+    "export_cylinder_materials"
   );
 }

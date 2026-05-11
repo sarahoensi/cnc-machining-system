@@ -25,3 +25,8 @@ pub struct UpdateCylinderMaterialRequest {
 pub struct DeleteCylinderMaterialRequest {
     pub id: Option<String>,
 }
+
+#[derive(Default, Deserialize)]
+pub struct ImportCylinderMaterialsRequest {
+    pub json_payload: Option<String>,
+}

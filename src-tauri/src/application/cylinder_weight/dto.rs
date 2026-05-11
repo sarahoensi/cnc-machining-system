@@ -33,6 +33,27 @@ pub struct DeleteCylinderMaterialInput {
     pub id: Option<String>,
 }
 
+#[derive(Default)]
+pub struct ImportCylinderMaterialsInput {
+    pub json_payload: Option<String>,
+}
+
+pub struct ImportCylinderMaterialsOutput {
+    pub imported: usize,
+    pub skipped_duplicates: usize,
+    pub skipped_invalid: usize,
+}
+
+pub struct ExportCylinderMaterialRow {
+    pub name: String,
+    pub density_kg_m3: f64,
+}
+
+pub struct ExportCylinderMaterialsOutput {
+    pub schema_version: u32,
+    pub materials: Vec<ExportCylinderMaterialRow>,
+}
+
 pub struct CylinderMaterialOutput {
     pub id: String,
     pub name: String,

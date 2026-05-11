@@ -4,10 +4,13 @@ use crate::{
     },
     domain::machining::{CylinderSpec, CylinderWeightError, CylinderWeightSolver, Material},
 };
+use serde::Deserialize;
 
 use super::{
     CreateCylinderMaterialInput, CylinderMaterialOutput, CylinderMaterialRepository,
     DeleteCylinderMaterialInput, UpdateCylinderMaterialInput,
+    ExportCylinderMaterialRow, ExportCylinderMaterialsOutput, ImportCylinderMaterialsInput,
+    ImportCylinderMaterialsOutput,
     SolveCylinderWeightInput, SolveCylinderWeightOutput,
 };
 
@@ -15,6 +18,8 @@ pub struct ListCylinderMaterialsUseCase;
 pub struct CreateCylinderMaterialUseCase;
 pub struct UpdateCylinderMaterialUseCase;
 pub struct DeleteCylinderMaterialUseCase;
+pub struct ImportCylinderMaterialsUseCase;
+pub struct ExportCylinderMaterialsUseCase;
 pub struct SolveCylinderWeightUseCase;
 
 impl ListCylinderMaterialsUseCase {
@@ -292,6 +297,98 @@ impl DeleteCylinderMaterialUseCase {
                 "material_not_found".to_string(),
             )),
             Err(e) => Err(ApplicationError::Infrastructure(e)),
+        }
+    }
+}
+
+#[derive(Deserialize)]
+struct ImportPayload {
+    schema_version: u32,
+    materials: Vec<ImportMaterialRow>,
+}
+
+#[derive(Deserialize)]
+struct ImportMaterialRow {
+    name: String,
+    density_kg_m3: f64,
+}
+
+impl ImportCylinderMaterialsUseCase {
+    pub fn execute(
+        repo: &mut dyn CylinderMaterialRepository,
+        input: ImportCylinderMaterialsInput,
+    ) -> AppResult<ImportCylinderMaterialsOutput> {
+        let mut p = InputParser::new();
+
+        let payload = match input.json_payload {
+            Some(v) if !v.trim().is_empty() => Some(v),
+            Some(_) => {
+                p.push("json_payload", "validation_error", "must not be empty");
+                None
+            }
+            None => {
+                p.push("json_payload", "validation_error", "is required");
+                None
+            }
+        };
+
+        p.finish()?;
+        let payload = payload.ok_or_else(|| {
+            ApplicationError::Infrastructure("json payload missing after validation".to_string())
+        })?;
+
+        let parsed: ImportPayload = serde_json::from_str(&payload)
+            .map_err(|e| ApplicationError::Infrastructure(format!("invalid import json: {e}")))?;
+
+        if parsed.schema_version != 1 {
+            return Err(ApplicationError::Infrastructure(format!(
+                "unsupported schema_version: {}",
+                parsed.schema_version
+            )));
+        }
+
+        let mut imported = 0usize;
+        let mut skipped_duplicates = 0usize;
+        let mut skipped_invalid = 0usize;
+
+        for row in parsed.materials {
+            let material = match Material::new(row.name, row.density_kg_m3) {
+                Ok(m) => m,
+                Err(_) => {
+                    skipped_invalid += 1;
+                    continue;
+                }
+            };
+
+            match repo.create(material) {
+                Ok(_) => imported += 1,
+                Err(e) if e == "duplicate_material" => skipped_duplicates += 1,
+                Err(_) => skipped_invalid += 1,
+            }
+        }
+
+        Ok(ImportCylinderMaterialsOutput {
+            imported,
+            skipped_duplicates,
+            skipped_invalid,
+        })
+    }
+}
+
+impl ExportCylinderMaterialsUseCase {
+    pub fn execute(repo: &dyn CylinderMaterialRepository) -> ExportCylinderMaterialsOutput {
+        let materials = repo
+            .list()
+            .into_iter()
+            .map(|r| ExportCylinderMaterialRow {
+                name: r.material.name().to_string(),
+                density_kg_m3: r.material.density_kg_m3(),
+            })
+            .collect();
+
+        ExportCylinderMaterialsOutput {
+            schema_version: 1,
+            materials,
         }
     }
 }

@@ -90,6 +90,7 @@
   display: flex;
   justify-content: flex-end;
   gap: var(--space-1);
+  align-items: center;
 }
 
 .cylinder-weight-material-block {
@@ -252,6 +253,8 @@
 .cylinder-weight-library-toolbar {
   display: flex;
   justify-content: flex-start;
+  gap: var(--space-2);
+  flex-wrap: wrap;
 }
 
 .cylinder-weight-create-inline {
@@ -275,4 +278,87 @@
 
 .cylinder-weight-action-delete {
   color: var(--state-error);
+}
+
+.cylinder-weight-export-modal {
+  width: min(680px, 100%);
+}
+
+.cylinder-weight-create-modal {
+  width: min(520px, 100%);
+}
+
+.cylinder-weight-export-help {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--form-caption-size);
+  line-height: 1.4;
+}
+
+.cylinder-weight-export-list {
+  border: 1px solid var(--panel-border-color);
+  border-radius: var(--radius-md);
+  max-height: 320px;
+  overflow: auto;
+}
+
+.cylinder-weight-export-row {
+  display: grid;
+  grid-template-columns: auto minmax(180px, 1fr) minmax(120px, 140px);
+  gap: var(--space-2);
+  align-items: center;
+  padding: 8px var(--space-3);
+  border-bottom: 1px solid var(--panel-border-color);
+  font-size: var(--form-text-size);
+}
+
+.cylinder-weight-export-row:last-child {
+  border-bottom: none;
+}
+
+.cylinder-weight-export-select-all {
+  border: 1px solid var(--panel-border-color);
+  border-radius: var(--radius-md);
+}
+
+.cylinder-weight-export-name {
+  color: var(--text-primary);
+}
+
+.cylinder-weight-export-density {
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.cylinder-weight-export-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.cylinder-weight-import-summary p {
+  margin: 0 0 var(--space-1) 0;
+  color: var(--text-primary);
+  font-size: var(--form-text-size);
+}
+
+.cylinder-materials-table {
+  margin-top: var(--space-1);
+}
+
+.cylinder-materials-table .ui-table-header-cell {
+  font-size: var(--form-caption-size);
+}
+
+.cylinder-materials-table .ui-table-cell {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.cylinder-weight-input-compact {
+  min-height: 34px;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }

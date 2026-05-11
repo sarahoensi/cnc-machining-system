@@ -1,5 +1,7 @@
 use crate::application::{
     CreateCylinderMaterialInput, CylinderMaterialOutput, DeleteCylinderMaterialInput,
+    ExportCylinderMaterialRow, ExportCylinderMaterialsOutput, ImportCylinderMaterialsInput,
+    ImportCylinderMaterialsOutput,
     SolveCylinderWeightInput,
     SolveCylinderWeightOutput,
     UpdateCylinderMaterialInput,
@@ -7,6 +9,8 @@ use crate::application::{
 
 use super::{
     CreateCylinderMaterialRequest, CylinderMaterialResponse, DeleteCylinderMaterialRequest,
+    ExportCylinderMaterialResponse, ExportCylinderMaterialsResponse, ImportCylinderMaterialsRequest,
+    ImportCylinderMaterialsResponse,
     SolveCylinderWeightRequest,
     SolveCylinderWeightResponse,
     UpdateCylinderMaterialRequest,
@@ -67,6 +71,42 @@ impl From<CylinderMaterialOutput> for CylinderMaterialResponse {
             id: out.id,
             name: out.name,
             density_kg_m3: out.density_kg_m3,
+        }
+    }
+}
+
+impl From<ImportCylinderMaterialsRequest> for ImportCylinderMaterialsInput {
+    fn from(req: ImportCylinderMaterialsRequest) -> Self {
+        Self {
+            json_payload: req.json_payload,
+        }
+    }
+}
+
+impl From<ImportCylinderMaterialsOutput> for ImportCylinderMaterialsResponse {
+    fn from(out: ImportCylinderMaterialsOutput) -> Self {
+        Self {
+            imported: out.imported,
+            skipped_duplicates: out.skipped_duplicates,
+            skipped_invalid: out.skipped_invalid,
+        }
+    }
+}
+
+impl From<ExportCylinderMaterialRow> for ExportCylinderMaterialResponse {
+    fn from(out: ExportCylinderMaterialRow) -> Self {
+        Self {
+            name: out.name,
+            density_kg_m3: out.density_kg_m3,
+        }
+    }
+}
+
+impl From<ExportCylinderMaterialsOutput> for ExportCylinderMaterialsResponse {
+    fn from(out: ExportCylinderMaterialsOutput) -> Self {
+        Self {
+            schema_version: out.schema_version,
+            materials: out.materials.into_iter().map(Into::into).collect(),
         }
     }
 }

@@ -18,6 +18,8 @@ use crate::interface::{
     cylinder_weight::{
         create_cylinder_material,
         delete_cylinder_material,
+        export_cylinder_materials,
+        import_cylinder_materials,
         list_cylinder_materials,
         solve_cylinder_weight,
         update_cylinder_material,
@@ -72,6 +74,8 @@ pub fn run() {
             create_cylinder_material,
             update_cylinder_material,
             delete_cylinder_material,
+            import_cylinder_materials,
+            export_cylinder_materials,
             solve_cylinder_weight,
 
             // finishing

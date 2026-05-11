@@ -16,3 +16,22 @@ pub struct CylinderMaterialResponse {
     pub name: String,
     pub density_kg_m3: f64,
 }
+
+#[derive(Serialize)]
+pub struct ImportCylinderMaterialsResponse {
+    pub imported: usize,
+    pub skipped_duplicates: usize,
+    pub skipped_invalid: usize,
+}
+
+#[derive(Serialize)]
+pub struct ExportCylinderMaterialResponse {
+    pub name: String,
+    pub density_kg_m3: f64,
+}
+
+#[derive(Serialize)]
+pub struct ExportCylinderMaterialsResponse {
+    pub schema_version: u32,
+    pub materials: Vec<ExportCylinderMaterialResponse>,
+}

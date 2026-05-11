@@ -4,6 +4,7 @@ use crate::{
     application::{
         CreateCylinderMaterialInput, CreateCylinderMaterialUseCase, ListCylinderMaterialsUseCase,
         DeleteCylinderMaterialInput, DeleteCylinderMaterialUseCase, SolveCylinderWeightInput,
+        ExportCylinderMaterialsUseCase, ImportCylinderMaterialsInput, ImportCylinderMaterialsUseCase,
         SolveCylinderWeightUseCase, UpdateCylinderMaterialInput, UpdateCylinderMaterialUseCase,
     },
     interface::tauri::error::{map_application_error, TauriError, TauriFieldError},
@@ -12,6 +13,7 @@ use crate::{
 
 use super::{
     CreateCylinderMaterialRequest, CylinderMaterialResponse, DeleteCylinderMaterialRequest,
+    ExportCylinderMaterialsResponse, ImportCylinderMaterialsRequest, ImportCylinderMaterialsResponse,
     SolveCylinderWeightRequest,
     SolveCylinderWeightResponse,
     UpdateCylinderMaterialRequest,
@@ -118,4 +120,26 @@ pub fn delete_cylinder_material(
         }
         Err(err) => Err(map_application_error(err)),
     }
+}
+
+#[command]
+pub fn import_cylinder_materials(
+    state: State<AppState>,
+    request: ImportCylinderMaterialsRequest,
+) -> Result<ImportCylinderMaterialsResponse, TauriError> {
+    let input: ImportCylinderMaterialsInput = request.into();
+    let mut repo = state.cylinder_material_repository.lock().unwrap();
+
+    let out = ImportCylinderMaterialsUseCase::execute(&mut *repo, input)
+        .map_err(map_application_error)?;
+    Ok(out.into())
+}
+
+#[command]
+pub fn export_cylinder_materials(
+    state: State<AppState>,
+) -> Result<ExportCylinderMaterialsResponse, TauriError> {
+    let repo = state.cylinder_material_repository.lock().unwrap();
+    let out = ExportCylinderMaterialsUseCase::execute(&*repo);
+    Ok(out.into())
 }

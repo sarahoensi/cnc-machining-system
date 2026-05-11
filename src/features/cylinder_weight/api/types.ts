@@ -34,3 +34,23 @@ export type CylinderMaterialResponse = {
   name: string;
   density_kg_m3: number;
 };
+
+export type ImportCylinderMaterialsRequest = {
+  json_payload?: string;
+};
+
+export type ImportCylinderMaterialsResponse = {
+  imported: number;
+  skipped_duplicates: number;
+  skipped_invalid: number;
+};
+
+export type ExportCylinderMaterialResponse = {
+  name: string;
+  density_kg_m3: number;
+};
+
+export type ExportCylinderMaterialsResponse = {
+  schema_version: number;
+  materials: ExportCylinderMaterialResponse[];
+};
