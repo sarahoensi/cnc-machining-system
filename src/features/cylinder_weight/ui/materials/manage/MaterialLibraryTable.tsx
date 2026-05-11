@@ -4,6 +4,7 @@ import { NumberInput } from "@shared/ui/primitives/NumberInput/NumberInput";
 import { TextInput } from "@shared/ui/primitives/TextInput/TextInput";
 import { DialogActions } from "@shared/ui/components/overlay/DialogActions/DialogActions";
 import { CylinderMaterial, MaterialEditState } from "../types";
+import { sortCylinderMaterials } from "../sortMaterials";
 
 type Props = {
   materials: CylinderMaterial[];
@@ -11,6 +12,8 @@ type Props = {
 };
 
 export function MaterialLibraryTable({ materials, edit }: Props) {
+  const sortedMaterials = sortCylinderMaterials(materials);
+
   return (
     <Table.Root>
       <Table.Head>
@@ -22,7 +25,7 @@ export function MaterialLibraryTable({ materials, edit }: Props) {
       </Table.Head>
 
       <Table.Body>
-        {materials.map((material) => (
+        {sortedMaterials.map((material) => (
           <MaterialRow key={material.id} material={material} edit={edit} />
         ))}
       </Table.Body>

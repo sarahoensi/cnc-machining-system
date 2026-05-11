@@ -22,6 +22,7 @@ import { parseCylinderWeight } from "../domain/parseCylinderWeight";
 import { validateCylinderWeightForm } from "../domain/validateCylinderWeightForm";
 import { handleUserEdit } from "@shared/form/engine/formEngine";
 import { CylinderMaterial, ExportSummary, ImportSummary } from "./materials";
+import { sortCylinderMaterials } from "./materials/sortMaterials";
 
 const validInputSets = [
   ["outer_diameter_mm", "inner_diameter_mm", "length_mm"],
@@ -65,7 +66,7 @@ export function useCylinderWeightPageController() {
     setMaterialLoadError(undefined);
     try {
       const rows = await listCylinderMaterialsApi();
-      setMaterials(rows);
+      setMaterials(sortCylinderMaterials(rows));
 
       if (!form.extras.materialId && rows.length > 0) {
         setForm((prev) => ({
@@ -119,7 +120,7 @@ export function useCylinderWeightPageController() {
         name: newMaterialName,
         density_kg_m3: density,
       });
-      setMaterials((prev) => [...prev, saved]);
+      setMaterials((prev) => sortCylinderMaterials([...prev, saved]));
       setNewMaterialName("");
       setNewMaterialDensity("");
       onMaterialChange(saved.id);
@@ -158,7 +159,9 @@ export function useCylinderWeightPageController() {
         name: editMaterialName,
         density_kg_m3: density,
       });
-      setMaterials((prev) => prev.map((m) => (m.id === updated.id ? updated : m)));
+      setMaterials((prev) =>
+        sortCylinderMaterials(prev.map((m) => (m.id === updated.id ? updated : m)))
+      );
       if (form.extras.materialId === updated.id) onMaterialChange(updated.id);
       cancelEditMaterial();
     } catch (error) {
@@ -173,7 +176,7 @@ export function useCylinderWeightPageController() {
     try {
       await deleteCylinderMaterialApi({ id: materialId });
       const next = materials.filter((m) => m.id !== materialId);
-      setMaterials(next);
+      setMaterials(sortCylinderMaterials(next));
       if (editMaterialId === materialId) cancelEditMaterial();
       if (form.extras.materialId === materialId) onMaterialChange(next[0]?.id ?? "");
     } catch (error) {
