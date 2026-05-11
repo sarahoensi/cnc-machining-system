@@ -1,0 +1,17 @@
+.info-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.info-dialog-content p {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: var(--form-text-size);
+}
+
+.info-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}

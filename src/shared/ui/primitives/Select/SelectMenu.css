@@ -1,0 +1,110 @@
+.app-select-menu {
+  position: relative;
+  min-width: 0;
+}
+
+.app-select-trigger {
+  width: 100%;
+  min-height: var(--control-height-md);
+  border-radius: var(--input-radius);
+  border: var(--input-border-width) solid var(--input-border-color);
+  background: var(--input-bg);
+  color: var(--control-text);
+  font-size: var(--form-text-size);
+  padding: 0 var(--input-padding-x-form);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.app-select-trigger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  border-color: var(--input-border-color-focus);
+}
+
+.app-select-trigger-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-select-trigger-caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--text-muted);
+}
+
+.app-select-dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow: auto;
+  background: var(--overlay-surface);
+  border: var(--border-width-sm) solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: var(--z-dropdown);
+}
+
+.app-select-option {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  padding: 6px var(--space-3);
+  font-size: var(--form-text-size);
+  cursor: pointer;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.app-select-option:hover {
+  background: var(--surface-hover);
+}
+
+.app-select-option-label {
+  color: var(--text-primary);
+  font-weight: var(--text-label-weight);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-select-option-meta {
+  color: var(--text-muted);
+  font-size: var(--text-label-size);
+  white-space: nowrap;
+}
+
+.app-select-divider {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--panel-border-color);
+}
+
+.app-select-utility {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 6px var(--space-3);
+  font-size: var(--text-label-size);
+  cursor: pointer;
+}
+
+.app-select-utility:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}

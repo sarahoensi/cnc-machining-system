@@ -1,0 +1,49 @@
+.app-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  background: var(--overlay-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.app-modal {
+  width: min(760px, 100%);
+  max-height: min(84vh, 920px);
+  overflow: auto;
+  background: var(--overlay-surface);
+  border: var(--panel-border-width) solid var(--panel-border-color);
+  border-radius: var(--panel-radius);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.app-modal-sm {
+  width: min(520px, 100%);
+}
+
+.app-modal-md {
+  width: min(680px, 100%);
+}
+
+.app-modal-lg {
+  width: min(900px, 100%);
+}
+
+.app-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.app-modal-header h3 {
+  margin: 0;
+  font-size: var(--heading-size);
+  font-weight: var(--heading-weight);
+  color: var(--text-primary);
+}
