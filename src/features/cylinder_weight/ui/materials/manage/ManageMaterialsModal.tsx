@@ -33,23 +33,25 @@ export function ManageMaterialsModal({
 
   return (
     <Modal title="Manage Materials" onClose={onClose} size="md" height="fixed">
-      <DialogActions align="left">
-        <Button variant="secondary" size="small" onClick={onOpenCreate}>
+      <div className="cylinder-weight-toolbar">
+        <Button variant="primary" size="small" onClick={onOpenCreate}>
           + New Material
         </Button>
 
-        <Button
-          variant="secondary"
-          size="small"
-          onClick={() => importInputRef.current?.click()}
-        >
-          Import Materials
-        </Button>
+        <DialogActions align="right">
+          <Button
+            variant="link"
+            size="small"
+            onClick={() => importInputRef.current?.click()}
+          >
+            Import
+          </Button>
 
-        <Button variant="secondary" size="small" onClick={onOpenExport}>
-          Export Materials
-        </Button>
-      </DialogActions>
+          <Button variant="link" size="small" onClick={onOpenExport}>
+            Export
+          </Button>
+        </DialogActions>
+      </div>
 
       <input
         ref={importInputRef}

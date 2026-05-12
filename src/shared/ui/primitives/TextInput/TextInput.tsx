@@ -11,6 +11,7 @@ type Props = {
   autoFocus?: boolean;
   className?: string;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+  size?: "small" | "medium";
 };
 
 export const TextInput = forwardRef<HTMLInputElement, Props>(
@@ -24,6 +25,7 @@ export const TextInput = forwardRef<HTMLInputElement, Props>(
       autoFocus,
       className,
       onKeyDown,
+      size = "medium",
     },
     ref
   ) {
@@ -41,7 +43,7 @@ export const TextInput = forwardRef<HTMLInputElement, Props>(
         disabled={disabled}
         autoFocus={autoFocus}
         onKeyDown={onKeyDown}
-        className={clsx("app-text-input", className)}
+        className={clsx("app-text-input", `size-${size}`, className)}
       />
     );
   }

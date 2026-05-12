@@ -96,7 +96,7 @@ function ReadonlyMaterialRow({
             Edit
           </Button>
 
-          <Button variant="link" onClick={() => edit.remove(material.id)}>
+          <Button variant="danger" size="small" onClick={() => edit.remove(material.id)}>
             Delete
           </Button>
         </DialogActions>

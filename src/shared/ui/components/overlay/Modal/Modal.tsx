@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import clsx from "clsx";
-import { Button } from "@shared/ui/primitives/Button/Button";
 import "./Modal.css";
 
 type ModalProps = {
@@ -41,9 +40,15 @@ export function Modal({
         <div className="app-modal-header">
           <h3>{title}</h3>
           {showCloseButton ? (
-            <Button variant="secondary" size="small" onClick={onClose}>
-              {closeLabel}
-            </Button>
+            <button
+              type="button"
+              className="app-modal-close"
+              onClick={onClose}
+              aria-label={closeLabel}
+              title={closeLabel}
+            >
+              ×
+            </button>
           ) : null}
         </div>
 

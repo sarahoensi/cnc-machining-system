@@ -11,6 +11,12 @@
   outline: none;
 }
 
+.app-text-input.size-small {
+  min-height: var(--control-height-xsm);
+  padding: calc(var(--input-padding-y-form) * 0.65) var(--input-padding-x-form);
+  font-size: var(--text-label-size);
+}
+
 .app-text-input:focus-visible {
   box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
   border-color: var(--input-border-color-focus);

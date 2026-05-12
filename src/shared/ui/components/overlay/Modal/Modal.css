@@ -53,6 +53,39 @@
   color: var(--text-primary);
 }
 
+.app-modal-close {
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: var(--control-radius);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard);
+}
+
+.app-modal-close:hover {
+  background: var(--state-hover-bg);
+  color: var(--text-primary);
+}
+
+.app-modal-close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+}
+
+.app-modal-close:active {
+  transform: translateY(1px);
+}
+
 .app-modal-scroll-area {
   min-height: 0;
   flex: 1 1 auto;
