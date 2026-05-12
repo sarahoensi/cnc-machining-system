@@ -13,6 +13,7 @@
  mod helix;
  pub mod shared;
  mod cutting_data;
+ mod cylinder_weight;
  pub mod finishing;
 
 pub use shared::{ApplicationError, ValidationErrors};
@@ -25,3 +26,28 @@ pub use helix::dto::{SolveHelixInput, SolveHelixOutput};
 
 pub use cutting_data::dto::{SolveCuttingDataInput, SolveCuttingDataOutput};
 pub use cutting_data::solve_cutting_data_use_case::SolveCuttingDataUseCase;
+
+pub use cylinder_weight::{
+    CreateCylinderMaterialInput,
+    CreateCylinderMaterialUseCase,
+    DeleteCylinderMaterialInput,
+    DeleteCylinderMaterialUseCase,
+    ExportCylinderMaterialRow,
+    ExportCylinderMaterialsOutput,
+    ExportCylinderMaterialsUseCase,
+    ImportCylinderMaterialsInput,
+    ImportAddedMaterialRow,
+    ImportCylinderMaterialsOutput,
+    ImportSkippedMaterialRow,
+    ImportCylinderMaterialsUseCase,
+    CylinderMaterialOutput,
+    CylinderMaterialRecord,
+    CylinderMaterialRepository,
+    JsonCylinderMaterialRepository,
+    ListCylinderMaterialsUseCase,
+    SolveCylinderWeightInput,
+    SolveCylinderWeightOutput,
+    SolveCylinderWeightUseCase,
+    UpdateCylinderMaterialInput,
+    UpdateCylinderMaterialUseCase,
+};

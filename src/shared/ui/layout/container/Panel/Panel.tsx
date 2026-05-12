@@ -1,3 +1,5 @@
+// src/shared/ui/layout/container/Panel/Panel.tsx
+
 //
 
 import clsx from "clsx";

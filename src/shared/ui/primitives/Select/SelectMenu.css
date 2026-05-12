@@ -1,0 +1,120 @@
+.app-select-menu {
+  position: relative;
+  min-width: 0;
+}
+
+.app-select-trigger {
+  appearance: none;
+  -webkit-appearance: none;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  gap: var(--space-2);
+}
+
+.app-select-trigger:focus-visible {
+  outline: none;
+}
+
+.app-select-trigger-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.app-select-trigger-caret {
+  flex: 0 0 auto;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--text-muted);
+}
+
+.app-select-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow: auto;
+  background: var(--overlay-surface);
+  border: var(--border-width-sm) solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: var(--z-dropdown);
+}
+
+.app-select-menu.is-open .app-select-trigger {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.app-select-menu.is-open .app-select-dropdown {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.app-select-option {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  padding: 6px var(--space-3);
+  font-size: var(--form-text-size);
+  cursor: pointer;
+}
+
+.app-select-option:hover {
+  background: var(--surface-hover);
+}
+
+.app-select-label {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.app-select-label-main {
+  color: var(--text-primary);
+  font-weight: var(--text-label-weight);
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-select-label-meta {
+  flex: 0 0 auto;
+  color: var(--text-muted);
+  font-size: var(--text-label-size);
+  white-space: nowrap;
+}
+
+.app-select-divider {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--panel-border-color);
+}
+
+.app-select-utility {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 6px var(--space-3);
+  font-size: var(--text-label-size);
+  cursor: pointer;
+}
+
+.app-select-utility:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}

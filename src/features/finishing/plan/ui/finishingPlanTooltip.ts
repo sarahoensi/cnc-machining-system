@@ -1,3 +1,5 @@
+// src/features/finishing/plan/ui/finishingPlanTooltip.ts
+
 //
 
 export const finishingTooltips = {

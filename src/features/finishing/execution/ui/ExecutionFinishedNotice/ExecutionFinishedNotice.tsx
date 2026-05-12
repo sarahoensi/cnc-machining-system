@@ -1,3 +1,5 @@
+// src/features/finishing/execution/ui/ExecutionFinishedNotice/ExecutionFinishedNotice.tsx
+
 // ExecutionFinisheNotice.tsx
 
 import { Panel } from "@shared/ui/layout/container/Panel/Panel";

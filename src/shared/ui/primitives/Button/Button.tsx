@@ -4,7 +4,7 @@ import React, { forwardRef } from "react";
 import clsx from "clsx";
 import "./Button.css";
 
-import SettingsIcon from "../../../../assets/settings-icon.svg";
+import SettingsIcon from "@assets/settings-icon.svg";
 
 
 /* =====================================================

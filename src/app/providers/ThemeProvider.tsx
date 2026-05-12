@@ -1,3 +1,5 @@
+// src/app/providers/ThemeProvider.tsx
+
 import {
   createContext,
   useContext,
@@ -142,3 +144,4 @@ export function useTheme() {
 
   return ctx;
 }
+

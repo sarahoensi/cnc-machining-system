@@ -1,3 +1,5 @@
+// src/shared/ui/components/execution/ExecutionDisplay.tsx
+
 //
 
 import { ReactNode } from "react";

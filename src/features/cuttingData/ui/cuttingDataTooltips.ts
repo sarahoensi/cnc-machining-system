@@ -1,3 +1,5 @@
+// src/features/cuttingData/ui/cuttingDataTooltips.ts
+
 //
 
 export const cuttingDataTooltips = {

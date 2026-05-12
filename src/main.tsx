@@ -1,3 +1,5 @@
+// src/main.tsx
+
 // main.tsx
 
 import React from "react";
@@ -19,3 +21,4 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </BrowserRouter>
   </React.StrictMode>
 );
+

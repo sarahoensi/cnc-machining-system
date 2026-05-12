@@ -1,0 +1,32 @@
+.cylinder-weight-page-layout {
+  --layout-form-width: min(20rem, 100%);
+}
+
+.cylinder-weight-material-field {
+  display: grid;
+  gap: 6px;
+}
+
+.cylinder-weight-manage-link {
+  justify-self: start;
+  padding: 0;
+  min-height: auto;
+}
+
+.cylinder-weight-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cylinder-weight-export-help {
+  margin: 0 0 12px;
+}
+
+.cylinder-weight-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}

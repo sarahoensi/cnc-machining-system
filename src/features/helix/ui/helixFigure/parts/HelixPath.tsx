@@ -1,3 +1,5 @@
+// src/features/helix/ui/helixFigure/parts/HelixPath.tsx
+
 //
 
 /* --------------------------------------------- */

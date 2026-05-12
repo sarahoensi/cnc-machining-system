@@ -1,3 +1,5 @@
+// src/shared/ui/components/table/Table/TableHeaderSelect.tsx
+
 // TableHeaderSelect.tsx
 
 import { ReactNode, useEffect, useRef, useState } from "react";

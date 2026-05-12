@@ -2,9 +2,14 @@
 
 import React, { forwardRef, useId } from "react";
 import clsx from "clsx";
+import { InputBase } from "@shared/ui/primitives/input/InputBase";
+import type {
+  InputAppearance,
+  InputSize,
+  InputSource,
+} from "@shared/ui/primitives/input/types";
+import "@shared/ui/primitives/input/InputControl/InputControl.css";
 import "./NumberInput.base.css";
-import "./NumberInput.form.css";
-import "./NumberInput.execution.css";
 
 
 
@@ -28,6 +33,9 @@ type Props = {
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
 
   placeholder?: string;
+  appearance?: InputAppearance;
+  source?: InputSource;
+  size?: InputSize;
   className?: string;
 };
 
@@ -50,6 +58,9 @@ function NumberInput(
   onFocus,
   onBlur,
   placeholder,
+  appearance = "form",
+  source = "default",
+  size = "medium",
   className,
 },
 ref
@@ -94,12 +105,19 @@ ref
         isDisabled && "is-disabled",
         isReadOnly && "readonly",
         isDisplayOnly && "is-display-only",
+        `number-input--${appearance}`,
         className
       )}
     >
-      <div className="ni-input-wrapper">
-
-        <input
+      <InputBase
+        wrapperClassName="ni-input-wrapper"
+        rightSlot={
+          unit ? (
+            <span className="ni-unit">
+              {unit}
+            </span>
+          ) : null
+        }
           id={inputId}
           ref={ref}
           type="text"
@@ -119,16 +137,16 @@ ref
           onFocus={onFocus}
           onBlur={onBlur}
           onKeyDown={onKeyDown}
-          className="ni-input"
-        />
-
-        {unit && (
-          <span className="ni-unit">
-            {unit}
-          </span>
-        )}
-
-      </div>
+          className={clsx(
+            "ni-input",
+            "input-control",
+            `input-control--${appearance}`,
+            `input-control--${size}`,
+            source !== "default" && `input-control--${source}`,
+            isDisabled && "input-control--disabled"
+          )}
+      />
     </div>
   );
 });
+

@@ -6,6 +6,7 @@ import { TrianglePage } from "@features/right_triangle/TrianglePage";
 import { HelixPage } from "@features/helix/ui/HelixPage";
 import  {CuttingDataPage} from "@features/cuttingData/ui/cuttingDataPage";
 import { FinishingPage } from "@features/finishing/page/FinishingPage";
+import { CylinderWeightPage } from "@features/cylinder_weight/ui/CylinderWeightPage";
 
 
 export function AppRoutes() {
@@ -23,6 +24,7 @@ export function AppRoutes() {
 
       {/* Machining strategy */}
       <Route path="/finishing" element={<FinishingPage />} />
+      <Route path="/cylinder-weight" element={<CylinderWeightPage />} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/triangle" replace />} />
