@@ -1,10 +1,7 @@
 .cutting-history {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  gap: var(--stack-gap);
-  max-height: min(34rem, calc(100vh - 10rem));
-  min-height: 0;
+  gap: var(--stack-header-gap);
 }
 
 .cutting-history-title {
@@ -15,9 +12,10 @@
 }
 
 .cutting-history-scroll {
-  flex: 1;
-  max-height: 100%;
-  min-height: 0;
+  max-height: 28rem;
+  overflow-y: auto;
+  padding-bottom: var(--space-2);
+  padding-inline-end: var(--space-2);
 }
 
 .cutting-history-empty {
@@ -34,4 +32,5 @@
 .cutting-history-actions {
   display: flex;
   justify-content: flex-end;
+  padding-inline-end: var(--space-2);
 }

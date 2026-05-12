@@ -31,6 +31,7 @@ import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { CuttingHistoryPanel } from "./history/CuttingHistoryPanel";
 import { useCuttingPageController } from "./useCuttingPageController";
 import { Button } from "@shared/ui/primitives/Button/Button";
+import "./cuttingDataPage.css";
 
 
 
@@ -170,6 +171,7 @@ const error = form.formError ? (
 
 return (
   <FormSidebarLayout
+      className="cutting-data-layout"
       form={formContent}
       sidebar={
         <CuttingHistoryPanel
