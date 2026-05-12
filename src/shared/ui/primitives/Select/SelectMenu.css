@@ -4,6 +4,9 @@
 }
 
 .app-select-trigger {
+  appearance: none;
+  -webkit-appearance: none;
+  text-align: left;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -15,14 +18,13 @@
   outline: none;
 }
 
-.app-select-trigger-label {
+.app-select-trigger-content {
+  flex: 1 1 auto;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .app-select-trigger-caret {
+  flex: 0 0 auto;
   width: 0;
   height: 0;
   border-left: 4px solid transparent;
@@ -63,26 +65,33 @@
   padding: 6px var(--space-3);
   font-size: var(--form-text-size);
   cursor: pointer;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-2);
 }
 
 .app-select-option:hover {
   background: var(--surface-hover);
 }
 
-.app-select-option-label {
+.app-select-label {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.app-select-label-main {
   color: var(--text-primary);
   font-weight: var(--text-label-weight);
+  flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.app-select-option-meta {
+.app-select-label-meta {
+  flex: 0 0 auto;
   color: var(--text-muted);
   font-size: var(--text-label-size);
   white-space: nowrap;

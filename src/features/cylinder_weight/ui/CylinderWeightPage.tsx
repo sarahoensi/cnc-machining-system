@@ -5,6 +5,7 @@ import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
+import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
 import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
 import { useFormNavigation } from "@shared/ui";
 import { cylinderWeightFieldConfig } from "./cylinderWeightFieldConfig";
@@ -29,32 +30,58 @@ export function CylinderWeightPage() {
 
   const fields = (
     <>
-      {cylinderWeightFieldConfig.map((f) => {
-        const fieldState = controller.form.fields[f.key];
-        return (
-          <FormNumberField
-            key={f.key}
-            label={f.label}
-            tooltip={f.tooltip}
-            unit={f.unit}
-            field={fieldState}
-            autoFocus={f.autoFocus}
-            disabled={fieldState.locked}
-            readonly={f.readOnly}
-            onChange={(value) => controller.onFieldChange(f.key, value)}
-            ref={
-              f.readOnly
-                ? undefined
-                : navigation.register(f.key as Exclude<CylinderWeightKey, "mass_kg">)
-            }
-            onKeyDown={
-              f.readOnly
-                ? undefined
-                : navigation.handleKeyDown(f.key as Exclude<CylinderWeightKey, "mass_kg">)
-            }
-          />
-        );
-      })}
+      <FormSection>
+        <MaterialField
+          materials={controller.materials}
+          selectedMaterial={controller.selectedMaterial}
+          onMaterialChange={controller.onMaterialChange}
+          onOpenManage={() => controller.manageModal.setOpen(true)}
+          onOpenCreate={() => controller.manageModal.setNewMaterialOpen(true)}
+          materialLoadError={controller.materialLoadError}
+        />
+
+        {cylinderWeightFieldConfig
+          .filter((f) => !f.readOnly)
+          .map((f) => {
+            const fieldState = controller.form.fields[f.key];
+            return (
+              <FormNumberField
+                key={f.key}
+                label={f.label}
+                tooltip={f.tooltip}
+                unit={f.unit}
+                field={fieldState}
+                autoFocus={f.autoFocus}
+                disabled={fieldState.locked}
+                readonly={f.readOnly}
+                onChange={(value) => controller.onFieldChange(f.key, value)}
+                ref={navigation.register(f.key as Exclude<CylinderWeightKey, "mass_kg">)}
+                onKeyDown={navigation.handleKeyDown(f.key as Exclude<CylinderWeightKey, "mass_kg">)}
+              />
+            );
+          })}
+      </FormSection>
+
+      <FormSection variant="result">
+        {cylinderWeightFieldConfig
+          .filter((f) => f.readOnly)
+          .map((f) => {
+            const fieldState = controller.form.fields[f.key];
+            return (
+              <FormNumberField
+                key={f.key}
+                label={f.label}
+                tooltip={f.tooltip}
+                unit={f.unit}
+                field={fieldState}
+                autoFocus={f.autoFocus}
+                disabled={fieldState.locked}
+                readonly={f.readOnly}
+                onChange={(value) => controller.onFieldChange(f.key, value)}
+              />
+            );
+          })}
+      </FormSection>
     </>
   );
 
@@ -72,19 +99,7 @@ export function CylinderWeightPage() {
 
   const formContent = (
     <FormLayout
-      fields={
-        <>
-          <MaterialField
-            materials={controller.materials}
-            selectedMaterial={controller.selectedMaterial}
-            onMaterialChange={controller.onMaterialChange}
-            onOpenManage={() => controller.manageModal.setOpen(true)}
-            onOpenCreate={() => controller.manageModal.setNewMaterialOpen(true)}
-            materialLoadError={controller.materialLoadError}
-          />
-          {fields}
-        </>
-      }
+      fields={fields}
       error={error}
       actions={actions}
     />

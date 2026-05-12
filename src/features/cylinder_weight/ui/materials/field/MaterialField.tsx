@@ -5,6 +5,7 @@
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { FormSelectMenuField } from "@shared/ui/components/form/fields";
 import { Button } from "@shared/ui/primitives/Button/Button";
+import { SelectMenuLabel } from "@shared/ui/primitives/Select";
 import { CylinderMaterial } from "../types";
 
 type Props = {
@@ -29,11 +30,20 @@ export function MaterialField({
       <FormSelectMenuField
         label="Material"
         tooltip="Select material to use for density in mass calculation."
-        valueLabel={selectedMaterial?.name ?? "Select material"}
+        valueLabel={
+          selectedMaterial ? (
+            <SelectMenuLabel
+              label={selectedMaterial.name}
+              meta={`${selectedMaterial.density_kg_m3} kg/m³`}
+            />
+          ) : (
+            "Select material"
+          )
+        }
         options={materials.map((material) => ({
           value: material.id,
           label: material.name,
-          meta: `\u00b7 ${material.density_kg_m3} kg/m3`,
+          meta: `${material.density_kg_m3} kg/m³`,
         }))}
         onSelect={onMaterialChange}
         utilityItems={[

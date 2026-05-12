@@ -16,6 +16,21 @@ type SelectOption<T extends string> = {
   meta?: ReactNode;
 };
 
+type SelectMenuLabelProps = {
+  label: ReactNode;
+  meta?: ReactNode;
+  className?: string;
+};
+
+export function SelectMenuLabel({ label, meta, className }: SelectMenuLabelProps) {
+  return (
+    <span className={clsx("app-select-label", className)}>
+      <span className="app-select-label-main">{label}</span>
+      {meta ? <span className="app-select-label-meta">{meta}</span> : null}
+    </span>
+  );
+}
+
 type SelectMenuProps<T extends string> = {
   valueLabel: ReactNode;
   open: boolean;
@@ -62,7 +77,7 @@ export function SelectMenu<T extends string>({
         }}
         disabled={disabled}
       >
-        <span className="app-select-trigger-label">{valueLabel}</span>
+        <span className="app-select-trigger-content">{valueLabel}</span>
         <span className="app-select-trigger-caret" />
       </button>
 
@@ -75,10 +90,11 @@ export function SelectMenu<T extends string>({
               className="app-select-option"
               onClick={() => onSelect(option.value)}
             >
-              <span className="app-select-option-label">{option.label}</span>
-              {option.meta ? (
-                <span className="app-select-option-meta">{option.meta}</span>
-              ) : null}
+              <SelectMenuLabel
+                className="app-select-option-content"
+                label={option.label}
+                meta={option.meta}
+              />
             </button>
           ))}
 
