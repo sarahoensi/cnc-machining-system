@@ -1,3 +1,5 @@
+// src/features/cylinder_weight/ui/materials/manage/ManageMaterialsModal.tsx
+
 //ManageMaterialsModal.tsx
 
 import { useRef } from "react";
@@ -77,3 +79,4 @@ export function ManageMaterialsModal({
     </Modal>
   );
 }
+

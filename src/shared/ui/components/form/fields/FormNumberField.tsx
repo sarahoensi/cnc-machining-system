@@ -2,10 +2,9 @@
 
 import React, { forwardRef, useId } from "react";
 import { Field } from "../Field/Field";
-import { NumberInput } from "../../../primitives/NumberInput/NumberInput";
+import { NumberInput } from "@shared/ui/primitives/input";
 import type { FieldState } from "@shared/form/types/fields";
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
-import clsx from "clsx";
 
 //import "./FormNumberField.css";
 
@@ -51,6 +50,7 @@ ref
 
   const isDisabled = disabled || field.locked;
   const isReadonly = readonly && !isDisabled;
+  const inputSource = field.source === "empty" ? "default" : field.source;
 
   const displayValue =
   field.source === "machine" &&
@@ -59,13 +59,6 @@ ref
     : field.value ?? "";
 
     const tabIndex = field.locked ? -1 : undefined;
-
-     const appearance =
-    field.source === "machine"
-      ? "ni-machine"
-      : field.source === "user"
-      ? "ni-user"
-      : undefined;
 
   return (
     <Field
@@ -87,7 +80,8 @@ ref
         onFocus={onFocus}
         onBlur={onBlur}
         tabIndex={tabIndex}
-        className={clsx("ni-form", appearance)}
+        appearance="form"
+        source={inputSource}
       />
     </Field>
   );

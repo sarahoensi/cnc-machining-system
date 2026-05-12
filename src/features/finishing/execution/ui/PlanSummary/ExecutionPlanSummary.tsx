@@ -1,3 +1,5 @@
+// src/features/finishing/execution/ui/PlanSummary/ExecutionPlanSummary.tsx
+
 // ExecutionPlanSummary.tsx
 
 import { Panel } from "@shared/ui/layout/container/Panel/Panel";

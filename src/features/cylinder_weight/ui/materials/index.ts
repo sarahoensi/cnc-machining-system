@@ -1,3 +1,5 @@
+// src/features/cylinder_weight/ui/materials/index.ts
+
 export type {
   CylinderMaterial,
   ImportSummary,
@@ -11,3 +13,4 @@ export { NewMaterialModal } from "./create/NewMaterialModal";
 export { ExportMaterialsModal } from "./export/ExportMaterialsModal";
 export { MaterialResultDialogs } from "./feedback/MaterialResultDialogs";
 export { sortCylinderMaterials } from "./sortMaterials";
+

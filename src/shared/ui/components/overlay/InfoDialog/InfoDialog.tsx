@@ -1,3 +1,5 @@
+// src/shared/ui/components/overlay/InfoDialog/InfoDialog.tsx
+
 import { ReactNode } from "react";
 import { Modal } from "../Modal/Modal";
 import { Button } from "@shared/ui/primitives/Button/Button";

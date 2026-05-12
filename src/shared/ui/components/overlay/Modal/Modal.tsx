@@ -1,3 +1,5 @@
+// src/shared/ui/components/overlay/Modal/Modal.tsx
+
 import { ReactNode } from "react";
 import clsx from "clsx";
 import "./Modal.css";
@@ -66,3 +68,4 @@ type ModalScrollAreaProps = {
 export function ModalScrollArea({ children, className }: ModalScrollAreaProps) {
   return <div className={clsx("app-modal-scroll-area", className)}>{children}</div>;
 }
+

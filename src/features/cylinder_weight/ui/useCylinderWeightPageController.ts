@@ -1,3 +1,5 @@
+// src/features/cylinder_weight/ui/useCylinderWeightPageController.ts
+
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 import {
   clearMachineFields,
@@ -21,6 +23,7 @@ import {
 import { parseCylinderWeight } from "../domain/parseCylinderWeight";
 import { validateCylinderWeightForm } from "../domain/validateCylinderWeightForm";
 import { handleUserEdit } from "@shared/form/engine/formEngine";
+import { machineField } from "@shared/form/types/fields";
 import { CylinderMaterial, ExportSummary, ImportSummary } from "./materials";
 import { sortCylinderMaterials } from "./materials/sortMaterials";
 
@@ -269,6 +272,31 @@ export function useCylinderWeightPageController() {
       solveCylinderWeight,
       validateCylinderWeightForm
     );
+    if (next.status === "solved") {
+      const massField = next.fields.mass_kg;
+      const hasMachineMass =
+        massField.machineValue != null || massField.value.trim() !== "";
+
+      if (hasMachineMass) {
+        setForm({
+          ...next,
+          fields: {
+            ...next.fields,
+            mass_kg: machineField(
+              massField.machineValue != null
+                ? String(massField.machineValue)
+                : massField.value,
+              {
+                ...massField,
+                source: "machine",
+              }
+            ),
+          },
+        });
+        return;
+      }
+    }
+
     setForm(next);
   }
 
@@ -351,3 +379,4 @@ export function useCylinderWeightPageController() {
     },
   };
 }
+

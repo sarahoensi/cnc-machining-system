@@ -1,3 +1,5 @@
+// src/features/helix/ui/helixFigure/parts/OuterMaterialPath.tsx
+
 //
 
 export function buildOuterMaterialPath({

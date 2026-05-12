@@ -1,3 +1,5 @@
+// src/app/providers/AppProviders.tsx
+
 import { ThemeProvider } from "./ThemeProvider";
 import { DisplaySettingProvider } from "./DisplaySettingProvider";
 import { FormStateProvider } from "./FormStateProvider";
@@ -20,3 +22,4 @@ export function AppProviders({ children }: Props) {
     </ThemeProvider>
   );
 }
+

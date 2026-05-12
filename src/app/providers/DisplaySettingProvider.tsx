@@ -1,3 +1,5 @@
+// src/app/providers/DisplaySettingProvider.tsx
+
 import {
   createContext,
   useContext,
@@ -100,3 +102,4 @@ export function useDisplaySettings() {
 
   return ctx;
 }
+

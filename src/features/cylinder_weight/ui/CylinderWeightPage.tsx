@@ -1,3 +1,5 @@
+// src/features/cylinder_weight/ui/CylinderWeightPage.tsx
+
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
@@ -29,15 +31,16 @@ export function CylinderWeightPage() {
     <>
       {cylinderWeightFieldConfig.map((f) => {
         const fieldState = controller.form.fields[f.key];
-
         return (
           <FormNumberField
             key={f.key}
             label={f.label}
+            tooltip={f.tooltip}
             unit={f.unit}
             field={fieldState}
             autoFocus={f.autoFocus}
-            disabled={fieldState.locked || f.readOnly}
+            disabled={fieldState.locked}
+            readonly={f.readOnly}
             onChange={(value) => controller.onFieldChange(f.key, value)}
             ref={
               f.readOnly
@@ -95,9 +98,13 @@ export function CylinderWeightPage() {
 
       <ManageMaterialsModal
         open={controller.manageModal.open}
-        onClose={() => controller.manageModal.setOpen(false)}
+        onClose={() => {
+          controller.editMaterial.cancel();
+          controller.manageModal.setOpen(false);
+        }}
         materials={controller.materials}
         onOpenCreate={() => {
+          controller.editMaterial.cancel();
           controller.createMaterial.setError(undefined);
           controller.manageModal.setNewMaterialOpen(true);
         }}
@@ -150,3 +157,4 @@ export function CylinderWeightPage() {
     </>
   );
 }
+

@@ -1,6 +1,6 @@
 // shared/ui/components/execution/ExecutionValue.tsx
 
-import { NumberInput } from "@shared/ui/primitives/NumberInput/NumberInput";
+import { NumberInput } from "@shared/ui/primitives/input";
 import "./ExecutionField.css";
 
 type Props = {
@@ -17,7 +17,7 @@ export function ExecutionValue({
       <NumberInput
         value={value ?? ""}
         unit={unit}
-        className="ni-execution"
+        appearance="execution"
         displayOnly
       />
     </div>

@@ -1,3 +1,5 @@
+// src/features/cylinder_weight/ui/materials/export/ExportMaterialsModal.tsx
+
 import { Modal } from "@shared/ui/components/overlay/Modal/Modal";
 import { DialogActions } from "@shared/ui/components/overlay/DialogActions/DialogActions";
 import { Button } from "@shared/ui/primitives/Button/Button";
@@ -56,3 +58,4 @@ export function ExportMaterialsModal({
     </Modal>
   );
 }
+

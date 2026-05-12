@@ -1,3 +1,5 @@
+// src/shared/ui/components/form/FormError/FormError.tsx
+
 //
 
 import "./FormError.css";

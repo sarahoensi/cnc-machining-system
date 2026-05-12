@@ -1,0 +1,53 @@
+.number-input {
+  width: 100%;
+}
+
+.ni-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.ni-input {
+  font-variant-numeric: tabular-nums;
+}
+
+.ni-unit {
+  position: absolute;
+  right: 0;
+
+  font-size: inherit;
+  font-weight: inherit;
+  color: var(--input-unit-color);
+
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.number-input--form .ni-input {
+  padding-inline-end: calc(
+    var(--input-padding-x-form) + 2ch + var(--input-unit-gap)
+  );
+}
+
+.number-input--form .ni-unit {
+  right: var(--input-padding-x-form);
+  font-size: var(--form-unit-size);
+}
+
+.number-input--execution .ni-unit {
+  right: var(--input-padding-x);
+}
+
+.number-input.is-disabled .ni-unit {
+  opacity: var(--state-disabled-opacity);
+}
+
+.number-input--execution.readonly .ni-input,
+.number-input--execution.is-display-only .ni-input {
+  border-color: transparent;
+  cursor: default;
+  pointer-events: none;
+}

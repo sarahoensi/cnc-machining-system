@@ -1,3 +1,5 @@
+// src/features/right_triangle/domain/buildRequest.ts
+
 // --------------------------------------------------
 // Request builder (feature logic)
 // --------------------------------------------------

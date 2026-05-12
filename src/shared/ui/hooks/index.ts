@@ -1,2 +1,5 @@
+// src/shared/ui/hooks/index.ts
+
 export * from "./form";
 export * from "./field/useFieldErrors";
+

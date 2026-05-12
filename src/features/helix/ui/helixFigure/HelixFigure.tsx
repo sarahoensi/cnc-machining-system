@@ -1,3 +1,5 @@
+// src/features/helix/ui/helixFigure/HelixFigure.tsx
+
 import clsx from "clsx";
 import "./HelixFigure.css";
 import type { HelixKey } from "../../domain/helixForm";

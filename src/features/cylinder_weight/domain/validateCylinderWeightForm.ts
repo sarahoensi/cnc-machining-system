@@ -1,3 +1,5 @@
+// src/features/cylinder_weight/domain/validateCylinderWeightForm.ts
+
 import { FieldState } from "@shared/form";
 import { CylinderWeightExtras, CylinderWeightKey } from "./cylinderWeightForm";
 
@@ -19,3 +21,4 @@ export function validateCylinderWeightForm(
 
   return errors.length > 0 ? errors : null;
 }
+

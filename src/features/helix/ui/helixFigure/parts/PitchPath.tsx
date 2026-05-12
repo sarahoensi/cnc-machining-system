@@ -1,3 +1,5 @@
+// src/features/helix/ui/helixFigure/parts/PitchPath.tsx
+
 //
 
 export function buildPitchPath({

@@ -1,3 +1,5 @@
+// src/app/shell/AppShell.tsx
+
 import { Sidebar } from "@app/layout/Sidebar";
 import { Topbar } from "@app/layout/Topbar";
 import clsx from "clsx";

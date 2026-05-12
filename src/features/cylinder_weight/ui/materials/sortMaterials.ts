@@ -1,3 +1,5 @@
+// src/features/cylinder_weight/ui/materials/sortMaterials.ts
+
 import { CylinderMaterial } from "./types";
 
 type MaterialSortToken =
@@ -83,3 +85,4 @@ export function sortCylinderMaterials(rows: CylinderMaterial[]): CylinderMateria
     })
     .map((entry) => entry.row);
 }
+

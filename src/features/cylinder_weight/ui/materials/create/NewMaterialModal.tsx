@@ -1,12 +1,14 @@
+// src/features/cylinder_weight/ui/materials/create/NewMaterialModal.tsx
+
 import { useRef } from "react";
 import { Field } from "@shared/ui/components/form/Field/Field";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
+import { FormTextField } from "@shared/ui/components/form/fields";
 import { Modal } from "@shared/ui/components/overlay/Modal/Modal";
 import { DialogActions } from "@shared/ui/components/overlay/DialogActions/DialogActions";
 import { FormStack } from "@shared/ui/layout/container/FormStack/FormStack";
 import { Button } from "@shared/ui/primitives/Button/Button";
-import { NumberInput } from "@shared/ui/primitives/NumberInput/NumberInput";
-import { TextInput } from "@shared/ui/primitives/TextInput/TextInput";
+import { NumberInput } from "@shared/ui/primitives/input";
 
 type Props = {
   open: boolean;
@@ -36,19 +38,19 @@ export function NewMaterialModal({
   return (
     <Modal title="New Material" size="sm" onClose={onClose}>
       <FormStack>
-        <Field label="Name">
-          <TextInput
-            value={name}
-            onChange={setName}
-            placeholder="Ex: Bronze"
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                event.preventDefault();
-                densityInputRef.current?.focus();
-              }
-            }}
-          />
-        </Field>
+        <FormTextField
+          label="Name"
+          value={name}
+          onChange={setName}
+          source="user"
+          placeholder="Ex: Bronze"
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              densityInputRef.current?.focus();
+            }
+          }}
+        />
 
         <Field label="Density">
           <NumberInput
@@ -56,7 +58,8 @@ export function NewMaterialModal({
             value={density}
             onChange={setDensity}
             unit="kg/m3"
-            className="ni-form ni-user"
+            appearance="form"
+            source="user"
             placeholder="Ex: 8800"
             onKeyDown={(event) => {
               if (event.key === "Enter") {
@@ -82,3 +85,5 @@ export function NewMaterialModal({
     </Modal>
   );
 }
+
+

@@ -2,7 +2,7 @@
 
 import { forwardRef } from "react";
 import "./ExecutionField.css";
-import { NumberInput } from "@shared/ui/primitives/NumberInput/NumberInput";
+import { NumberInput } from "@shared/ui/primitives/input";
 
 type Props = {
     value: string;
@@ -36,7 +36,7 @@ export const ExecutionInput = forwardRef<
         placeholder={placeholder}
         unit={unit}
         onChange={onChange}
-        className="ni-execution"
+        appearance="execution"
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();

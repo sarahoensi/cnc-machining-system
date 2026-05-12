@@ -1,3 +1,5 @@
+// src/features/cylinder_weight/domain/parseCylinderWeight.ts
+
 import { safeParseDecimal } from "@shared/parsing/decimalParser";
 import { FieldState } from "@shared/form/types";
 import { CylinderWeightExtras, CylinderWeightKey } from "./cylinderWeightForm";
@@ -26,3 +28,4 @@ export function parseCylinderWeight(
 
   return parsed;
 }
+

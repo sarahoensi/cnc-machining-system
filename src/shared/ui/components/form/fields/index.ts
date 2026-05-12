@@ -8,3 +8,5 @@
 
 export {FormNumberField} from "./FormNumberField";
 export {FormModeField} from "./FormModeField";
+export {FormSelectMenuField} from "./FormSelectMenuField";
+export {FormTextField} from "./FormTextField";

@@ -1,3 +1,5 @@
+// src/features/cylinder_weight/domain/cylinderWeightForm.ts
+
 import type { FormState } from "@shared/form/types/forms";
 import { emptyField } from "@shared/form/types/fields";
 
@@ -32,3 +34,4 @@ export function createInitialCylinderWeightForm(): FormState<
     },
   };
 }
+

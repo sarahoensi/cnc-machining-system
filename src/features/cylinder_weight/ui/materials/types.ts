@@ -1,3 +1,5 @@
+// src/features/cylinder_weight/ui/materials/types.ts
+
 export type CylinderMaterial = {
   id: string;
   name: string;
@@ -41,3 +43,4 @@ export type MaterialEditState = {
   save: () => void;
   remove: (id: string) => void;
 };
+

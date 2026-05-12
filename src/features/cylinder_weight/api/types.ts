@@ -1,3 +1,5 @@
+// src/features/cylinder_weight/api/types.ts
+
 export type SolveCylinderWeightRequest = {
   material_id?: string;
   outer_diameter_mm?: number;
@@ -65,3 +67,4 @@ export type ExportCylinderMaterialsResponse = {
   schema_version: number;
   materials: ExportCylinderMaterialResponse[];
 };
+

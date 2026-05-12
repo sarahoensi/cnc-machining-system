@@ -4,24 +4,15 @@
 }
 
 .app-select-trigger {
-  width: 100%;
-  min-height: var(--control-height-md);
-  border-radius: var(--input-radius);
-  border: var(--input-border-width) solid var(--input-border-color);
-  background: var(--input-bg);
-  color: var(--control-text);
-  font-size: var(--form-text-size);
-  padding: 0 var(--input-padding-x-form);
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  gap: var(--space-2);
 }
 
 .app-select-trigger:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
-  border-color: var(--input-border-color-focus);
 }
 
 .app-select-trigger-label {

@@ -1,3 +1,5 @@
+// src/features/cylinder_weight/ui/materials/export/MaterialExportTable.tsx
+
 import { useEffect, useRef } from "react";
 import { Table } from "@shared/ui/components/table/Table";
 import { CylinderMaterial } from "../types";
@@ -62,3 +64,4 @@ export function MaterialExportTable({
     </Table.Root>
   );
 }
+

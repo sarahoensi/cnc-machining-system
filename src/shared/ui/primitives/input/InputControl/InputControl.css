@@ -1,0 +1,55 @@
+.input-control {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--control-height-md);
+  font-size: var(--form-text-size);
+  border-radius: var(--input-radius);
+  border: var(--input-border-width) solid var(--input-border-color);
+  background: var(--input-bg);
+  color: var(--control-text);
+  outline: none;
+}
+
+.input-control--form {
+  padding-block: var(--input-padding-y-form);
+  padding-inline: var(--input-padding-x-form);
+}
+
+.input-control--execution {
+  padding-block: var(--input-padding-y);
+  padding-inline: var(--input-padding-x);
+  font-size: var(--exec-text-size);
+  color: var(--input-text);
+}
+
+.input-control--small {
+  min-height: var(--control-height-xsm);
+  font-size: var(--text-label-size);
+}
+
+.input-control--small.input-control--form {
+  padding-block: calc(var(--input-padding-y-form) * 0.6);
+}
+
+.input-control--user {
+  background: var(--input-bg-user);
+}
+
+.input-control--machine {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-strong);
+}
+
+.input-control:focus-visible {
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  border-color: var(--input-border-color-focus);
+}
+
+.input-control:disabled,
+.input-control--disabled {
+  background: var(--input-bg-disabled);
+  color: var(--input-text-disabled);
+  cursor: not-allowed;
+}
