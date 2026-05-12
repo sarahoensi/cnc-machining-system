@@ -23,7 +23,7 @@ import {
 
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 import { usePageTitle } from "@app/providers/TitleContextProvider";
-import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
+import { FormSidebarLayout } from "@shared/ui/layout/page/FormSidebarLayout/FormSidebarLayout";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { validateCuttingDataForm } from "../domain/validateCuttingForm";
 
@@ -31,6 +31,7 @@ import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { CuttingHistoryPanel } from "./history/CuttingHistoryPanel";
 import { useCuttingPageController } from "./useCuttingPageController";
 import { Button } from "@shared/ui/primitives/Button/Button";
+import "./cuttingDataPage.css";
 
 
 
@@ -169,9 +170,10 @@ const error = form.formError ? (
   ========================= */
 
 return (
-  <FormFigureLayout
+  <FormSidebarLayout
+      className="cutting-data-layout"
       form={formContent}
-      figure={
+      sidebar={
         <CuttingHistoryPanel
           history={history}
           onLoad={load}
