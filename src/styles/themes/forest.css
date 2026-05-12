@@ -34,8 +34,8 @@
 
   --color-text: var(--color-onyx-900);
   --color-text-strong: var(--color-onyx-950);
-  --color-text-muted: var(--color-onyx-600);
-  --color-text-placeholder: var(--color-onyx-400);
+  --color-text-muted: var(--color-onyx-700);
+  --color-text-placeholder: var(--color-onyx-500);
   --color-text-inverse: #ffffff;
 
 
@@ -92,7 +92,7 @@
 
   --color-user: rgba(102, 153, 102, 0.12);
   --color-machine: rgba(20, 31, 20, 0.06);  /* 900 */
-  --color-disabled: rgba(20, 31, 20, 0.06);
+  --color-disabled: rgba(20, 31, 20, 0.12);
   --color-locked: rgba(133, 173, 133, 0.14);
 
 
