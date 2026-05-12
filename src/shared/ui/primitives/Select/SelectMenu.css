@@ -32,7 +32,7 @@
 
 .app-select-dropdown {
   position: absolute;
-  top: calc(100% + var(--space-1));
+  top: 100%;
   left: 0;
   right: 0;
   max-height: 220px;
@@ -42,6 +42,16 @@
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   z-index: var(--z-dropdown);
+}
+
+.app-select-menu.is-open .app-select-trigger {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.app-select-menu.is-open .app-select-dropdown {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .app-select-option {

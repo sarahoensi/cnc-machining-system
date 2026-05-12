@@ -44,7 +44,7 @@ export function SelectMenu<T extends string>({
   disabled = false,
 }: SelectMenuProps<T>) {
   return (
-    <div className={clsx("app-select-menu", className)}>
+    <div className={clsx("app-select-menu", open && !disabled && "is-open", className)}>
       <button
         type="button"
         className={clsx(
