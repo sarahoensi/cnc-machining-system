@@ -21,9 +21,22 @@
   margin-bottom: 12px;
 }
 
+.cylinder-weight-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
 .cylinder-weight-material-search {
-  margin-bottom: 12px;
+  min-width: 0;
   max-width: 320px;
+}
+
+.cylinder-weight-search-icon {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .cylinder-weight-material-empty {

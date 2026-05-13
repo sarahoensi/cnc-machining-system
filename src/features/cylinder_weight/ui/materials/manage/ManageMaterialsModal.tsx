@@ -8,6 +8,7 @@ import { DialogActions } from "@shared/ui/components/overlay/DialogActions/Dialo
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { Button } from "@shared/ui/primitives/Button/Button";
 import { TextInput } from "@shared/ui/primitives/input";
+import SearchIcon from "@assets/search-icon.svg";
 import { CylinderMaterial, MaterialEditState } from "../types";
 import { MaterialLibraryTable } from "./MaterialLibraryTable";
 
@@ -53,9 +54,22 @@ export function ManageMaterialsModal({
   return (
     <Modal title="Manage Materials" onClose={onClose} size="md" height="fixed">
       <div className="cylinder-weight-toolbar">
-        <Button variant="primary" size="small" onClick={onOpenCreate}>
-          + New Material
-        </Button>
+        <div className="cylinder-weight-toolbar-left">
+          <Button variant="primary" size="small" onClick={onOpenCreate}>
+            + New Material
+          </Button>
+
+          <div className="cylinder-weight-material-search">
+            <TextInput
+              value={search}
+              onChange={setSearch}
+              placeholder="Search materials"
+              appearance="form"
+              size="small"
+              leftSlot={<img src={SearchIcon} alt="" className="cylinder-weight-search-icon" />}
+            />
+          </div>
+        </div>
 
         <DialogActions align="right">
           <Button
@@ -70,16 +84,6 @@ export function ManageMaterialsModal({
             Export
           </Button>
         </DialogActions>
-      </div>
-
-      <div className="cylinder-weight-material-search">
-        <TextInput
-          value={search}
-          onChange={setSearch}
-          placeholder="Search materials"
-          appearance="form"
-          size="small"
-        />
       </div>
 
       <input

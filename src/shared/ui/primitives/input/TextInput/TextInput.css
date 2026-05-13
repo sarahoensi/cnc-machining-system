@@ -1,3 +1,40 @@
 .app-text-input {
   font-variant-numeric: tabular-nums;
 }
+
+.app-text-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.app-text-input-left-slot {
+  position: absolute;
+  left: var(--input-padding-x-form);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
+  color: var(--text-secondary);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.app-text-input--with-left-slot.input-control--form {
+  padding-inline-start: calc(
+    var(--input-padding-x-form) + var(--size-icon-sm) + var(--space-2)
+  );
+}
+
+.app-text-input--with-left-slot.input-control--execution {
+  padding-inline-start: calc(
+    var(--input-padding-x) + var(--size-icon-sm) + var(--space-2)
+  );
+}
+
+.app-text-input-wrapper--execution .app-text-input-left-slot {
+  left: var(--input-padding-x);
+}
