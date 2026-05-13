@@ -5,7 +5,7 @@
 }
 
 .form-section--result {
-  margin-top: var(--form-section-spacing);
+  margin-top: var(--form-fields-gap);
   padding-top: var(--form-section-spacing);
   border-top: var(--border-width-sm) solid var(--border-muted);
 }
