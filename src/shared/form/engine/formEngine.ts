@@ -162,10 +162,14 @@ export function handleModeChange<
     return form;
   }
 
+  const fieldsWithoutMachine = clearMachineFields(form.fields);
+  const cleanedFields = clearFieldErrors(fieldsWithoutMachine);
+
   return {
     status: "editing",
-    fields: clearMachineFields(form.fields),
+    fields: cleanedFields,
     extras: newExtras,
+    formError: undefined,
   };
 }
 
