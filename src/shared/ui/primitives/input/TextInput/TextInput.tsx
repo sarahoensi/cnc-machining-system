@@ -62,6 +62,7 @@ export const TextInput = forwardRef<HTMLInputElement, Props>(
         id={inputId}
         ref={ref}
         type="text"
+        autoComplete="off"
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
         placeholder={placeholder}
