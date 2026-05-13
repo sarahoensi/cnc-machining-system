@@ -8,13 +8,17 @@ export function useFormNavigation<K extends string>(options: {
 }) {
   const { keys, autoFocusOnMount = false, onSubmit, activePath } = options;
 
-  const refs = useRef<Partial<Record<K, HTMLInputElement>>>({});
+  const refs = useRef<Partial<Record<K, HTMLElement>>>({});
   const lastFocused = useRef<K | undefined>(undefined);
   const didAutoFocus = useRef(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  const isReadOnlyElement = (el: HTMLElement) => {
+    return "readOnly" in el && Boolean((el as HTMLInputElement).readOnly);
+  };
+
   const register = useCallback(
-    (key: K) => (el: HTMLInputElement | null) => {
+    (key: K) => (el: HTMLElement | null) => {
       if (el) refs.current[key] = el;
     },
     []
@@ -24,7 +28,7 @@ export function useFormNavigation<K extends string>(options: {
     if (!key) return;
 
     const el = refs.current[key];
-    if (!el || el.disabled) return;
+    if (!el || (el as HTMLInputElement | HTMLButtonElement).disabled) return;
 
     el.focus();
     lastFocused.current = key;
@@ -43,7 +47,12 @@ export function useFormNavigation<K extends string>(options: {
   const focusFirst = useCallback(() => {
     for (const key of keys) {
       const el = refs.current[key];
-      if (el && !el.disabled && el.tabIndex !== -1 && !el.readOnly) {
+      if (
+        el &&
+        !((el as HTMLInputElement | HTMLButtonElement).disabled) &&
+        el.tabIndex !== -1 &&
+        !isReadOnlyElement(el)
+      ) {
         focus(key);
         return true;
       }
@@ -52,11 +61,12 @@ export function useFormNavigation<K extends string>(options: {
   }, [focus, keys]);
 
   const focusFirstMatching = useCallback(
-    (match: (key: K, el: HTMLInputElement) => boolean) => {
+    (match: (key: K, el: HTMLElement) => boolean) => {
       for (const key of keys) {
         const el = refs.current[key];
         if (!el) continue;
-        if (el.disabled || el.readOnly || el.tabIndex === -1) continue;
+        if ((el as HTMLInputElement | HTMLButtonElement).disabled) continue;
+        if (isReadOnlyElement(el) || el.tabIndex === -1) continue;
         if (el.offsetParent === null) continue;
         if (!match(key, el)) continue;
         focus(key);
@@ -68,7 +78,7 @@ export function useFormNavigation<K extends string>(options: {
   );
 
   const focusFirstMatchingAfterRender = useCallback(
-    (match: (key: K, el: HTMLInputElement) => boolean) => {
+    (match: (key: K, el: HTMLElement) => boolean) => {
       requestAnimationFrame(() => {
         focusFirstMatching(match);
       });
@@ -77,11 +87,12 @@ export function useFormNavigation<K extends string>(options: {
   );
 
   const focusFirstInOrder = useCallback(
-    (order: readonly K[], match?: (key: K, el: HTMLInputElement) => boolean) => {
+    (order: readonly K[], match?: (key: K, el: HTMLElement) => boolean) => {
       for (const key of order) {
         const el = refs.current[key];
         if (!el) continue;
-        if (el.disabled || el.readOnly || el.tabIndex === -1) continue;
+        if ((el as HTMLInputElement | HTMLButtonElement).disabled) continue;
+        if (isReadOnlyElement(el) || el.tabIndex === -1) continue;
         if (el.offsetParent === null) continue;
         if (match && !match(key, el)) continue;
         focus(key);
@@ -93,7 +104,7 @@ export function useFormNavigation<K extends string>(options: {
   );
 
   const focusFirstInOrderAfterRender = useCallback(
-    (order: readonly K[], match?: (key: K, el: HTMLInputElement) => boolean) => {
+    (order: readonly K[], match?: (key: K, el: HTMLElement) => boolean) => {
       requestAnimationFrame(() => {
         focusFirstInOrder(order, match);
       });
@@ -112,7 +123,8 @@ export function useFormNavigation<K extends string>(options: {
       for (const key of keys) {
         const el = refs.current[key];
         if (!el) continue;
-        if (el.disabled || el.readOnly || el.tabIndex === -1) continue;
+        if ((el as HTMLInputElement | HTMLButtonElement).disabled) continue;
+        if (isReadOnlyElement(el) || el.tabIndex === -1) continue;
         if (!hasError(key)) continue;
         focus(key);
         return key;
@@ -149,7 +161,7 @@ export function useFormNavigation<K extends string>(options: {
       while (i >= 0 && i < keys.length) {
         const key = keys[i];
         const el = refs.current[key];
-        if (el && !el.disabled) return key;
+        if (el && !(el as HTMLInputElement | HTMLButtonElement).disabled) return key;
         i += direction;
       }
 

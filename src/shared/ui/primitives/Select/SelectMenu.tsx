@@ -1,6 +1,6 @@
 // src/shared/ui/primitives/Select/SelectMenu.tsx
 
-import { ReactNode } from "react";
+import { ReactNode, Ref } from "react";
 import clsx from "clsx";
 import type {
   InputAppearance,
@@ -43,6 +43,7 @@ type SelectMenuProps<T extends string> = {
   source?: InputSource;
   size?: InputSize;
   disabled?: boolean;
+  triggerRef?: Ref<HTMLButtonElement>;
 };
 
 export function SelectMenu<T extends string>({
@@ -57,10 +58,12 @@ export function SelectMenu<T extends string>({
   source = "default",
   size = "medium",
   disabled = false,
+  triggerRef,
 }: SelectMenuProps<T>) {
   return (
     <div className={clsx("app-select-menu", open && !disabled && "is-open", className)}>
       <button
+        ref={triggerRef}
         type="button"
         className={clsx(
           "app-select-trigger",

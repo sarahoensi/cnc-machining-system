@@ -9,14 +9,8 @@ export function validateFinishingForm(
 
   const errors: string[] = [];
 
-  const start = fields.start_diameter_mm.value;
-  const target = fields.target_diameter_mm.value;
   const cuts = fields.cuts.value;
   const engagement = fields.radial_engagement_mm.value;
-
-  if (!start || !target) {
-    errors.push("Start and target diameter are required");
-  }
 
   if (!cuts && !engagement) {
     errors.push("Provide either cuts or radial engagement");

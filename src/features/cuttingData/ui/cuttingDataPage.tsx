@@ -92,6 +92,39 @@ export function CuttingDataPage() {
   ========================= */
 
   async function onCalculate() {
+    const diameterMissing = !form.fields.diameter.value;
+    const formErrors = validateCuttingDataForm(form.fields) ?? undefined;
+
+    if (diameterMissing || formErrors) {
+      const next = {
+        ...form,
+        status: "editing" as const,
+        fields: {
+          ...form.fields,
+          diameter: {
+            ...form.fields.diameter,
+            invalid: diameterMissing,
+            error: diameterMissing ? "Diameter is required" : undefined,
+          },
+        },
+        formError: formErrors,
+      };
+
+      setForm(next);
+
+      const hasInlineError = focusOrder.some((key) => Boolean(next.fields[key].error));
+
+      if (hasInlineError) {
+        navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+        return;
+      }
+
+      navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
+        const value = next.fields[key]?.value;
+        return value == null || String(value).trim() === "";
+      });
+      return;
+    }
 
     const next = await handleCalculateAsync(
       form,

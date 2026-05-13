@@ -17,6 +17,7 @@ import { mutuallyExclusiveFinishingPairs, validFinishingInputSets } from "../dom
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { finishingTooltips } from "./finishingPlanTooltip";
+import { validateFinishingForm } from "../domain/ValidateFinishingForm";
 
 type Props = {
   form: ReturnType<typeof createInitialFinishingForm>;
@@ -44,6 +45,46 @@ export function PlanForm({
   const focusOrder = finishingFieldConfig.map((f) => f.key);
 
   async function onCalculate() {
+    const startMissing = !form.fields.start_diameter_mm.value;
+    const targetMissing = !form.fields.target_diameter_mm.value;
+    const formErrors = validateFinishingForm(form.fields) ?? undefined;
+
+    if (startMissing || targetMissing || formErrors) {
+      const next = {
+        ...form,
+        status: "editing" as const,
+        fields: {
+          ...form.fields,
+          start_diameter_mm: {
+            ...form.fields.start_diameter_mm,
+            invalid: startMissing,
+            error: startMissing ? "Start diameter is required" : undefined,
+          },
+          target_diameter_mm: {
+            ...form.fields.target_diameter_mm,
+            invalid: targetMissing,
+            error: targetMissing ? "Target diameter is required" : undefined,
+          },
+        },
+        formError: formErrors,
+      };
+
+      setForm(next);
+
+      const hasInlineError = finishingFieldConfig.some((f) => Boolean(next.fields[f.key].error));
+
+      if (hasInlineError) {
+        navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+        return;
+      }
+
+      navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
+        const value = next.fields[key]?.value;
+        return value == null || String(value).trim() === "";
+      });
+      return;
+    }
+
     const next = await onGenerate();
     if (!next) return;
     const hasInlineError = finishingFieldConfig.some((f) => Boolean(next.fields[f.key].error));

@@ -5,13 +5,10 @@ import { CylinderWeightExtras, CylinderWeightKey } from "./cylinderWeightForm";
 
 export function validateCylinderWeightForm(
   fields: Record<CylinderWeightKey, FieldState>,
-  extras: CylinderWeightExtras
+  _extras: CylinderWeightExtras
 ): string[] | null {
   const errors: string[] = [];
 
-  if (!extras.materialId) {
-    errors.push("Material is required");
-  }
   if (!fields.outer_diameter_mm.value) {
     errors.push("Outer diameter is required");
   }

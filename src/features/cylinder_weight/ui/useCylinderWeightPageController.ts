@@ -21,7 +21,6 @@ import {
   CylinderWeightKey,
 } from "../domain/cylinderWeightForm";
 import { parseCylinderWeight } from "../domain/parseCylinderWeight";
-import { validateCylinderWeightForm } from "../domain/validateCylinderWeightForm";
 import { handleUserEdit } from "@shared/form/engine/formEngine";
 import { machineField } from "@shared/form/types/fields";
 import { CylinderMaterial, ExportSummary, ImportSummary } from "./materials";
@@ -42,6 +41,7 @@ export function useCylinderWeightPageController() {
   const [materials, setMaterials] = useState<CylinderMaterial[]>([]);
   const [loadingMaterials, setLoadingMaterials] = useState(true);
   const [materialLoadError, setMaterialLoadError] = useState<string>();
+  const [materialError, setMaterialError] = useState<string>();
 
   const [newMaterialName, setNewMaterialName] = useState("");
   const [newMaterialDensity, setNewMaterialDensity] = useState("");
@@ -70,18 +70,6 @@ export function useCylinderWeightPageController() {
     try {
       const rows = await listCylinderMaterialsApi();
       setMaterials(sortCylinderMaterials(rows));
-
-      if (!form.extras.materialId && rows.length > 0) {
-        setForm((prev) => ({
-          ...prev,
-          extras: {
-            ...prev.extras,
-            materialId: rows[0].id,
-            materialName: rows[0].name,
-            densityKgM3: rows[0].density_kg_m3,
-          },
-        }));
-      }
     } catch (error) {
       if (error instanceof Error) setMaterialLoadError(error.message);
       else setMaterialLoadError("Failed to load materials");
@@ -110,6 +98,7 @@ export function useCylinderWeightPageController() {
       },
       formError: undefined,
     }));
+    setMaterialError(undefined);
   }
 
   async function onCreateMaterial() {
@@ -272,11 +261,39 @@ export function useCylinderWeightPageController() {
   }
 
   async function calculate() {
+    const materialMissing = !form.extras.materialId;
+    const outerMissing = !form.fields.outer_diameter_mm.value;
+    const lengthMissing = !form.fields.length_mm.value;
+
+    setMaterialError(materialMissing ? "Material is required" : undefined);
+
+    if (materialMissing || outerMissing || lengthMissing) {
+      const next = {
+        ...form,
+        status: "editing" as const,
+        formError: undefined,
+        fields: {
+          ...form.fields,
+          outer_diameter_mm: {
+            ...form.fields.outer_diameter_mm,
+            invalid: outerMissing,
+            error: outerMissing ? "Outer diameter is required" : undefined,
+          },
+          length_mm: {
+            ...form.fields.length_mm,
+            invalid: lengthMissing,
+            error: lengthMissing ? "Length is required" : undefined,
+          },
+        },
+      };
+      setForm(next);
+      return next;
+    }
+
     const next = await handleCalculateAsync(
       form,
       parseCylinderWeight,
-      solveCylinderWeight,
-      validateCylinderWeightForm
+      solveCylinderWeight
     );
     if (next.status === "solved") {
       const massField = next.fields.mass_kg;
@@ -308,18 +325,8 @@ export function useCylinderWeightPageController() {
   }
 
   function resetForm() {
-    setForm((prev) => {
-      const initial = createInitialCylinderWeightForm();
-      return {
-        ...initial,
-        extras: {
-          ...initial.extras,
-          materialId: prev.extras.materialId,
-          materialName: prev.extras.materialName,
-          densityKgM3: prev.extras.densityKgM3,
-        },
-      };
-    });
+    setMaterialError(undefined);
+    setForm(createInitialCylinderWeightForm());
   }
 
   const selectedMaterial = useMemo(
@@ -337,6 +344,7 @@ export function useCylinderWeightPageController() {
     selectedMaterial,
     loadingMaterials,
     materialLoadError,
+    materialError,
     onMaterialChange,
 
     manageModal: {

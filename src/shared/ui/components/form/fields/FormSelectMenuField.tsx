@@ -1,6 +1,6 @@
 // src/shared/ui/components/form/fields/FormSelectMenuField.tsx
 
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactElement, ReactNode, Ref, forwardRef, useEffect, useRef, useState } from "react";
 import { Field } from "../Field/Field";
 import { SelectMenu } from "@shared/ui/primitives/Select";
 import type {
@@ -23,6 +23,7 @@ type UtilityItem = {
 type Props<T extends string> = {
   label: string;
   tooltip?: string;
+  error?: string;
   valueLabel: ReactNode;
   options: SelectOption<T>[];
   onSelect: (value: T) => void;
@@ -34,9 +35,10 @@ type Props<T extends string> = {
   disabled?: boolean;
 };
 
-export function FormSelectMenuField<T extends string>({
+function FormSelectMenuFieldInner<T extends string>({
   label,
   tooltip,
+  error,
   valueLabel,
   options,
   onSelect,
@@ -46,7 +48,7 @@ export function FormSelectMenuField<T extends string>({
   source = "default",
   size = "medium",
   disabled = false,
-}: Props<T>) {
+}: Props<T>, ref: Ref<HTMLButtonElement>) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -62,9 +64,10 @@ export function FormSelectMenuField<T extends string>({
   }, []);
 
   return (
-    <Field label={label} tooltip={tooltip}>
+    <Field label={label} tooltip={tooltip} error={error}>
       <div ref={menuRef}>
         <SelectMenu
+          triggerRef={ref}
           className={className}
           appearance={appearance}
           source={source}
@@ -90,4 +93,10 @@ export function FormSelectMenuField<T extends string>({
     </Field>
   );
 }
+
+export const FormSelectMenuField = forwardRef(FormSelectMenuFieldInner) as <
+  T extends string
+>(
+  props: Props<T> & { ref?: Ref<HTMLButtonElement> }
+) => ReactElement;
 

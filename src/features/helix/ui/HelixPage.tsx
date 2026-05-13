@@ -93,6 +93,45 @@ export function HelixPage() {
   ========================= */
 
   async function onCalculate() {
+    const diameterMissing = !form.fields.diameter.value;
+    const toolMissing = !form.fields.tool_diameter.value;
+    const formErrors = validateHelixForm(form.fields) ?? undefined;
+
+    if (diameterMissing || toolMissing || formErrors) {
+      const next = {
+        ...form,
+        status: "editing" as const,
+        fields: {
+          ...form.fields,
+          diameter: {
+            ...form.fields.diameter,
+            invalid: diameterMissing,
+            error: diameterMissing ? "Diameter is required" : undefined,
+          },
+          tool_diameter: {
+            ...form.fields.tool_diameter,
+            invalid: toolMissing,
+            error: toolMissing ? "Tool diameter is required" : undefined,
+          },
+        },
+        formError: formErrors,
+      };
+
+      setForm(next);
+
+      const hasInlineError = helixFieldConfig.some((f) => Boolean(next.fields[f.key].error));
+
+      if (hasInlineError) {
+        navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+        return;
+      }
+
+      navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
+        const value = next.fields[key]?.value;
+        return value == null || String(value).trim() === "";
+      });
+      return;
+    }
 
     const next = await handleCalculateAsync(
       form,

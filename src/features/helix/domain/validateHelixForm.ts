@@ -9,14 +9,6 @@ export function validateHelixForm(
 
   const errors: string[] = [];
 
-  if (!fields.diameter.value) {
-    errors.push("Diameter is required");
-  }
-
-  if (!fields.tool_diameter.value) {
-    errors.push("Tool diameter is required");
-  }
-
   if (!fields.pitch.value && !fields.angle.value) {
     errors.push("Provide either pitch or angle");
   }

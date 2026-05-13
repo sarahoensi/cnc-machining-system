@@ -9,7 +9,6 @@ import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection
 import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
 import { useFormNavigation } from "@shared/ui";
 import { cylinderWeightFieldConfig } from "./cylinderWeightFieldConfig";
-import { CylinderWeightKey } from "../domain/cylinderWeightForm";
 import { useCylinderWeightPageController } from "./useCylinderWeightPageController";
 import { MaterialField } from "./materials/field/MaterialField";
 import { ManageMaterialsModal } from "./materials/manage/ManageMaterialsModal";
@@ -18,12 +17,18 @@ import { MaterialResultDialogs } from "./materials/feedback/MaterialResultDialog
 import "./CylinderWeightPage.css";
 import { ExportMaterialsModal } from "./materials";
 
+type CylinderWeightFocusKey =
+  | "material_id"
+  | "outer_diameter_mm"
+  | "inner_diameter_mm"
+  | "length_mm";
+
 export function CylinderWeightPage() {
   usePageTitle("Cylinder Weight");
   const controller = useCylinderWeightPageController();
 
   const navigation = useFormNavigation({
-    keys: ["outer_diameter_mm", "inner_diameter_mm", "length_mm"],
+    keys: ["material_id", "outer_diameter_mm", "inner_diameter_mm", "length_mm"] as const,
     autoFocusOnMount: true,
     activePath: "/cylinder-weight",
     onSubmit: onCalculate,
@@ -32,21 +37,31 @@ export function CylinderWeightPage() {
   async function onCalculate() {
     const next = await controller.calculate();
     if (!next) return;
-    const focusOrder: Exclude<CylinderWeightKey, "mass_kg">[] = [
+    const focusOrder: CylinderWeightFocusKey[] = [
+      "material_id",
       "outer_diameter_mm",
       "inner_diameter_mm",
       "length_mm",
     ];
-    const hasInlineError = focusOrder.some((key) => Boolean(next.fields[key].error));
+    const hasInlineError = focusOrder.some((key) => {
+      if (key === "material_id") return !next.extras.materialId;
+      return Boolean(next.fields[key].error);
+    });
 
     if (hasInlineError) {
-      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+      navigation.focusFirstInvalidAfterRender((key) => {
+        if (key === "material_id") return !next.extras.materialId;
+        return Boolean(next.fields[key].error);
+      });
       return;
     }
 
     if (!next.formError) return;
 
     navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
+      if (key === "material_id") {
+        return !controller.form.extras.materialId;
+      }
       const value = next.fields[key]?.value;
       return value == null || String(value).trim() === "";
     });
@@ -61,12 +76,14 @@ export function CylinderWeightPage() {
     <>
       <FormSection>
         <MaterialField
+          triggerRef={navigation.register("material_id")}
           materials={controller.materials}
           selectedMaterial={controller.selectedMaterial}
           onMaterialChange={controller.onMaterialChange}
           onOpenManage={() => controller.manageModal.setOpen(true)}
           onOpenCreate={() => controller.manageModal.setNewMaterialOpen(true)}
           materialLoadError={controller.materialLoadError}
+          error={controller.materialError}
         />
 
         {cylinderWeightFieldConfig
@@ -84,8 +101,8 @@ export function CylinderWeightPage() {
                 disabled={fieldState.locked}
                 readonly={f.readOnly}
                 onChange={(value) => controller.onFieldChange(f.key, value)}
-                ref={navigation.register(f.key as Exclude<CylinderWeightKey, "mass_kg">)}
-                onKeyDown={navigation.handleKeyDown(f.key as Exclude<CylinderWeightKey, "mass_kg">)}
+                ref={navigation.register(f.key as CylinderWeightFocusKey)}
+                onKeyDown={navigation.handleKeyDown(f.key as CylinderWeightFocusKey)}
               />
             );
           })}
