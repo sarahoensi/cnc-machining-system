@@ -32,7 +32,24 @@ export function CylinderWeightPage() {
   async function onCalculate() {
     const next = await controller.calculate();
     if (!next) return;
-    navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+    const focusOrder: Exclude<CylinderWeightKey, "mass_kg">[] = [
+      "outer_diameter_mm",
+      "inner_diameter_mm",
+      "length_mm",
+    ];
+    const hasInlineError = focusOrder.some((key) => Boolean(next.fields[key].error));
+
+    if (hasInlineError) {
+      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+      return;
+    }
+
+    if (!next.formError) return;
+
+    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
+      const value = next.fields[key]?.value;
+      return value == null || String(value).trim() === "";
+    });
   }
 
   function onReset() {

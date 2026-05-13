@@ -54,6 +54,7 @@ export function TrianglePage() {
     activePath: "/triangle",
     onSubmit: onCalculate,
   });
+  const focusOrder = triangleFieldConfig.map((f) => f.key);
 
   /* =========================
      Field change
@@ -88,7 +89,19 @@ export function TrianglePage() {
     );
 
     setForm(next);
-    navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+    const hasInlineError = triangleFieldConfig.some((f) => Boolean(next.fields[f.key].error));
+
+    if (hasInlineError) {
+      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+      return;
+    }
+
+    if (!next.formError) return;
+
+    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
+      const value = next.fields[key]?.value;
+      return value == null || String(value).trim() === "";
+    });
   }
 
   /* =========================

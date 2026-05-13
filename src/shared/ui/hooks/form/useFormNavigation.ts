@@ -51,6 +51,56 @@ export function useFormNavigation<K extends string>(options: {
     return false;
   }, [focus, keys]);
 
+  const focusFirstMatching = useCallback(
+    (match: (key: K, el: HTMLInputElement) => boolean) => {
+      for (const key of keys) {
+        const el = refs.current[key];
+        if (!el) continue;
+        if (el.disabled || el.readOnly || el.tabIndex === -1) continue;
+        if (el.offsetParent === null) continue;
+        if (!match(key, el)) continue;
+        focus(key);
+        return key;
+      }
+      return undefined;
+    },
+    [focus, keys]
+  );
+
+  const focusFirstMatchingAfterRender = useCallback(
+    (match: (key: K, el: HTMLInputElement) => boolean) => {
+      requestAnimationFrame(() => {
+        focusFirstMatching(match);
+      });
+    },
+    [focusFirstMatching]
+  );
+
+  const focusFirstInOrder = useCallback(
+    (order: readonly K[], match?: (key: K, el: HTMLInputElement) => boolean) => {
+      for (const key of order) {
+        const el = refs.current[key];
+        if (!el) continue;
+        if (el.disabled || el.readOnly || el.tabIndex === -1) continue;
+        if (el.offsetParent === null) continue;
+        if (match && !match(key, el)) continue;
+        focus(key);
+        return key;
+      }
+      return undefined;
+    },
+    [focus]
+  );
+
+  const focusFirstInOrderAfterRender = useCallback(
+    (order: readonly K[], match?: (key: K, el: HTMLInputElement) => boolean) => {
+      requestAnimationFrame(() => {
+        focusFirstInOrder(order, match);
+      });
+    },
+    [focusFirstInOrder]
+  );
+
   const focusFirstAfterRender = useCallback(() => {
     requestAnimationFrame(() => {
       focusFirst();
@@ -183,6 +233,10 @@ export function useFormNavigation<K extends string>(options: {
     focus,
     focusAfterRender,
     focusFirst,
+    focusFirstMatching,
+    focusFirstMatchingAfterRender,
+    focusFirstInOrder,
+    focusFirstInOrderAfterRender,
     focusFirstAfterRender,
     focusFirstInvalid,
     focusFirstInvalidAfterRender,

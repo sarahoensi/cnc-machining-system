@@ -60,6 +60,14 @@ export function CuttingDataPage() {
     activePath: "/cutting",
     onSubmit: onCalculate,
   });
+  const focusOrder: CuttingDataKey[] = [
+    "diameter",
+    "rpm",
+    "cutting_speed",
+    "teeth",
+    "feed_rate",
+    "chip_load",
+  ];
   /* =========================
      Field change
   ========================= */
@@ -93,7 +101,19 @@ export function CuttingDataPage() {
     );
 
     setForm(next);
-    navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+    const hasInlineError = focusOrder.some((key) => Boolean(next.fields[key].error));
+
+    if (hasInlineError) {
+      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+      return;
+    }
+
+    if (!next.formError) return;
+
+    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
+      const value = next.fields[key]?.value;
+      return value == null || String(value).trim() === "";
+    });
   }
 
   function onReset() {

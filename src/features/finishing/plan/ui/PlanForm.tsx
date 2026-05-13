@@ -41,11 +41,24 @@ export function PlanForm({
     activePath: "/finishing",
     onSubmit: onCalculate,
   });
+  const focusOrder = finishingFieldConfig.map((f) => f.key);
 
   async function onCalculate() {
     const next = await onGenerate();
     if (!next) return;
-    navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+    const hasInlineError = finishingFieldConfig.some((f) => Boolean(next.fields[f.key].error));
+
+    if (hasInlineError) {
+      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+      return;
+    }
+
+    if (!next.formError) return;
+
+    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
+      const value = next.fields[key]?.value;
+      return value == null || String(value).trim() === "";
+    });
   }
 
   function handleReset() {

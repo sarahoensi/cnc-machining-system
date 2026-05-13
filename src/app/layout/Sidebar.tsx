@@ -11,12 +11,14 @@ const NAV_ITEMS = [
 
 export function Sidebar() {
   const location = useLocation();
+  const isPathActive = (to: string) =>
+    location.pathname === to || location.pathname.startsWith(`${to}/`);
 
   return (
     <aside className="sidebar">
       <nav className="sidebar-nav">
         {NAV_ITEMS.map((item) => {
-          const isActive = location.pathname === item.to;
+          const isActive = isPathActive(item.to);
 
           return (
             <NavLink
@@ -25,11 +27,15 @@ export function Sidebar() {
               className={({ isActive: navIsActive }) =>
                 `sidebar-link ${navIsActive ? "active" : ""}`
               }
+              onPointerDownCapture={(e) => {
+                if (!isActive) return;
+                e.preventDefault();
+              }}
               onMouseDown={(e) => {
                 if (!isActive) return;
                 e.preventDefault();
               }}
-              onClick={(e) => {
+              onClickCapture={(e) => {
                 if (!isActive) return;
                 e.preventDefault();
                 window.dispatchEvent(
