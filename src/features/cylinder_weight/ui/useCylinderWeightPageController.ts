@@ -33,10 +33,33 @@ const validInputSets = [
 
 const mutuallyExclusivePairs = [] as const;
 
+type CylinderWeightSavedResult = {
+  id: string;
+  materialName: string;
+  density: number;
+  outerDiameter: number;
+  innerDiameter: number;
+  length: number;
+  mass: number;
+  units: {
+    density: "kg/m³";
+    outerDiameter: "mm";
+    innerDiameter: "mm";
+    length: "mm";
+    mass: "kg";
+  };
+  createdAt: number;
+  form: ReturnType<typeof createInitialCylinderWeightForm>;
+};
+
 export function useCylinderWeightPageController() {
   const [form, setForm] = useFeatureForm(
     "cylinder_weight",
     createInitialCylinderWeightForm
+  );
+  const [history, setHistory] = useFeatureForm<CylinderWeightSavedResult[]>(
+    "cylinder_weight-history",
+    () => []
   );
 
   const [materials, setMaterials] = useState<CylinderMaterial[]>([]);
@@ -94,6 +117,60 @@ export function useCylinderWeightPageController() {
     setForm((prev) =>
       handleUserEdit(prev, key, value, validInputSets, mutuallyExclusivePairs)
     );
+  }
+
+  function save() {
+    if (form.status !== "solved") return;
+
+    const outerDiameter = toNumber(form.fields.outer_diameter_mm);
+    const innerDiameter = toNumber(form.fields.inner_diameter_mm) ?? 0;
+    const length = toNumber(form.fields.length_mm);
+    const mass = toNumber(form.fields.mass_kg);
+    const density = form.extras.densityKgM3;
+    const materialName = form.extras.materialName;
+
+    if (
+      outerDiameter == null ||
+      length == null ||
+      mass == null ||
+      density == null ||
+      !materialName
+    ) {
+      return;
+    }
+
+    const entry: CylinderWeightSavedResult = {
+      id: crypto.randomUUID(),
+      materialName,
+      density,
+      outerDiameter,
+      innerDiameter,
+      length,
+      mass,
+      units: {
+        density: "kg/m³",
+        outerDiameter: "mm",
+        innerDiameter: "mm",
+        length: "mm",
+        mass: "kg",
+      },
+      createdAt: Date.now(),
+      form: structuredClone(form),
+    };
+
+    setHistory((prev) => [...prev, entry]);
+  }
+
+  function load(entry: CylinderWeightSavedResult) {
+    setForm(structuredClone(entry.form));
+  }
+
+  function removeSavedResult(id: string) {
+    setHistory((prev) => prev.filter((entry) => entry.id !== id));
+  }
+
+  function clearSavedResults() {
+    setHistory([]);
   }
 
   function onMaterialChange(materialId: string) {
@@ -325,6 +402,11 @@ export function useCylinderWeightPageController() {
     onFieldChange,
     calculate,
     resetForm,
+    history,
+    save,
+    load,
+    removeSavedResult,
+    clearSavedResults,
 
     materials,
     selectedMaterial,
@@ -378,5 +460,15 @@ export function useCylinderWeightPageController() {
       confirmExportSelected,
     },
   };
+}
+
+function toNumber(field: { value: string; machineValue?: number | null }) {
+  const rawValue = field.machineValue ?? field.value;
+  if (rawValue == null) return undefined;
+
+  const parsed =
+    typeof rawValue === "number" ? rawValue : Number(rawValue);
+
+  return Number.isNaN(parsed) ? undefined : parsed;
 }
 

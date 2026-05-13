@@ -6,7 +6,7 @@ import { FormActions } from "@shared/ui/components/form/FormActions/FormActions"
 import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
-import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
+import { FormSidebarLayout } from "@shared/ui/layout/page/FormSidebarLayout/FormSidebarLayout";
 import { useFormNavigation } from "@shared/ui";
 import { cylinderWeightFieldConfig } from "./cylinderWeightFieldConfig";
 import { CylinderWeightKey } from "../domain/cylinderWeightForm";
@@ -17,6 +17,8 @@ import { NewMaterialModal } from "./materials/create/NewMaterialModal";
 import { MaterialResultDialogs } from "./materials/feedback/MaterialResultDialogs";
 import "./CylinderWeightPage.css";
 import { ExportMaterialsModal } from "./materials";
+import { Button } from "@shared/ui/primitives/Button/Button";
+import { CylinderWeightHistoryPanel } from "./history/CylinderWeightHistoryPanel";
 
 export function CylinderWeightPage() {
   usePageTitle("Cylinder Weight");
@@ -94,7 +96,11 @@ export function CylinderWeightPage() {
       onCalculate={controller.calculate}
       onReset={controller.resetForm}
       disabled={controller.loadingMaterials}
-    />
+    >
+      <Button variant="secondary" size="medium" onClick={controller.save}>
+        Save result
+      </Button>
+    </FormActions>
   );
 
   const formContent = (
@@ -108,7 +114,17 @@ export function CylinderWeightPage() {
   return (
     <>
       <div className="cylinder-weight-page-layout">
-        <FormFigureLayout form={formContent} figure={null} />
+        <FormSidebarLayout
+          form={formContent}
+          sidebar={
+            <CylinderWeightHistoryPanel
+              history={controller.history}
+              onLoad={controller.load}
+              onDelete={controller.removeSavedResult}
+              onClear={controller.clearSavedResults}
+            />
+          }
+        />
       </div>
 
       <ManageMaterialsModal

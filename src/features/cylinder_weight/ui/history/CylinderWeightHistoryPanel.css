@@ -1,0 +1,36 @@
+.cylinder-weight-history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-header-gap);
+}
+
+.cylinder-weight-history-title {
+  margin: 0;
+  font-size: var(--heading-size);
+  font-weight: var(--heading-weight);
+  color: var(--cylinder-weight-history-title-color, var(--text-primary));
+}
+
+.cylinder-weight-history-scroll {
+  max-height: 28rem;
+  overflow-y: auto;
+  padding-bottom: var(--space-2);
+  padding-inline-end: var(--space-2);
+}
+
+.cylinder-weight-history-empty {
+  color: var(--cylinder-weight-history-empty-color, var(--text-muted));
+  font-size: var(--text-label-size);
+}
+
+.cylinder-weight-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-header-gap);
+}
+
+.cylinder-weight-history-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-inline-end: var(--space-2);
+}
