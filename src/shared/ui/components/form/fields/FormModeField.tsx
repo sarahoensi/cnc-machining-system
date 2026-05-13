@@ -33,6 +33,7 @@ export function FormModeField<T extends string>({
         onChange={onChange}
         options={options}
         disabled={disabled}
+        className="radio-group--form"
       />
     </Field>
   );
