@@ -156,9 +156,9 @@ export function HelixPage() {
   </>
 );
 
-const error = (
+const error = form.formError ? (
   <FormError error={form.formError} />
-);
+) : null;
 
 const actions = (
   <FormActions
