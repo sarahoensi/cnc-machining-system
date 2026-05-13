@@ -33,6 +33,10 @@
   max-width: 320px;
 }
 
+.cylinder-weight-material-search-input {
+  height: var(--control-height-xsm);
+}
+
 .cylinder-weight-search-icon {
   width: 100%;
   height: 100%;
