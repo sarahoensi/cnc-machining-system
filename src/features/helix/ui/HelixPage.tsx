@@ -53,6 +53,7 @@ export function HelixPage() {
   const navigation = useFormNavigation({
     keys: helixFieldConfig.map(f => f.key),
     autoFocusOnMount: true,
+    activePath: "/helix",
     onSubmit: onCalculate,
   });
 
@@ -100,6 +101,7 @@ export function HelixPage() {
     );
 
     setForm(next);
+    navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
   }
 
   /* =========================
@@ -108,6 +110,7 @@ export function HelixPage() {
 
   function onReset() {
     setForm(createInitialHelixForm());
+    navigation.focusFirstAfterRender();
   }
 
   /* =========================
@@ -168,11 +171,13 @@ const actions = (
 );
 
 const formContent = (
-  <FormLayout
-    fields={fields}
-    error={error}
-    actions={actions}
-  />
+  <div ref={navigation.containerRef}>
+    <FormLayout
+      fields={fields}
+      error={error}
+      actions={actions}
+    />
+  </div>
 );
 
 

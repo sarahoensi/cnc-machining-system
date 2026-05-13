@@ -57,6 +57,7 @@ export function CuttingDataPage() {
   const navigation = useFormNavigation({
     keys: cuttingDataFieldConfig.map((f) => f.key),
     autoFocusOnMount: true,
+    activePath: "/cutting",
     onSubmit: onCalculate,
   });
   /* =========================
@@ -92,6 +93,12 @@ export function CuttingDataPage() {
     );
 
     setForm(next);
+    navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+  }
+
+  function onReset() {
+    resetForm();
+    navigation.focusFirstAfterRender();
   }
 
 
@@ -147,7 +154,7 @@ const error = form.formError ? (
  const actions = (
     <FormActions
       onCalculate={onCalculate}
-      onReset={resetForm}
+      onReset={onReset}
     >
     {saveButton}
   </FormActions>
@@ -155,8 +162,8 @@ const error = form.formError ? (
 
 
 
-  const formContent = (
-    <div className="cutting-form">
+ const formContent = (
+    <div className="cutting-form" ref={navigation.containerRef}>
       <FormLayout
         fields={fields}
         error={error}

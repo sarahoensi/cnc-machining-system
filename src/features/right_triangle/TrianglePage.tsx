@@ -51,6 +51,7 @@ export function TrianglePage() {
   const navigation = useFormNavigation({
     keys: triangleFieldConfig.map(f => f.key),
     autoFocusOnMount: true,
+    activePath: "/triangle",
     onSubmit: onCalculate,
   });
 
@@ -87,6 +88,7 @@ export function TrianglePage() {
     );
 
     setForm(next);
+    navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
   }
 
   /* =========================
@@ -95,6 +97,7 @@ export function TrianglePage() {
 
   function onReset() {
     setForm(createInitialTriangleForm());
+    navigation.focusFirstAfterRender();
   }
 
   /* =========================
@@ -140,11 +143,13 @@ const actions = (
 );
   
 const formContent = (
-  <FormLayout
-    fields={fields}
-    error={error}
-    actions={actions}
-  />
+  <div ref={navigation.containerRef}>
+    <FormLayout
+      fields={fields}
+      error={error}
+      actions={actions}
+    />
+  </div>
 );
 
 

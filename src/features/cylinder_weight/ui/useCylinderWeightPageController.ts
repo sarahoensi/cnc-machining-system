@@ -299,11 +299,12 @@ export function useCylinderWeightPageController() {
             ),
           },
         });
-        return;
+        return next;
       }
     }
 
     setForm(next);
+    return next;
   }
 
   function resetForm() {
