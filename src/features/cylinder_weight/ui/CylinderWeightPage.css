@@ -9,10 +9,15 @@
 
 .cylinder-weight-manage-link {
   justify-self: start;
+  align-self: start;
+  display: inline-flex;
+  justify-content: flex-start;
   padding: 0;
-  padding-inline-start: calc(var(--input-padding-x-form) * 0.5);
+  padding-inline-start: var(--input-padding-x-form);
   margin-top: var(--space-0-5);
   min-height: auto;
+  font-size: var(--form-sm-text-size);
+  font-weight: var(--font-weight-regular);
 }
 
 .cylinder-weight-toolbar {

@@ -356,16 +356,20 @@ Describe UI meaning. Never hardcode values.
    FORM LAYOUT
 ===================================================== */
 
---form-gap: var(--space-4);
---form-fields-gap: var(--space-4);
+--form-gap: var(--space-3);
+--form-fields-gap: var(--form-field-stack-gap);
 --form-actions-gap: var(--space-2);
 --form-label-control-gap: var(--space-0);
 --form-label-icon-gap: var(--space-1-5);
---form-field-gap-compact: var(--space-2);
+--form-field-gap-compact: var(--form-field-stack-gap);
+--form-field-stack-gap: var(--space-0-5);
+--field-control-error-gap: var(--space-0-5);
+--field-error-reserved-height: calc(var(--form-caption-size) * 1.2);
+--form-label-min-height: calc(var(--form-label-size) * var(--line-height-normal));
 
 --form-error-min-height: 1.4em;
 
---form-section-gap: var(--space-4);
+--form-section-gap: var(--form-field-stack-gap);
 --form-section-spacing: var(--space-6);
 
 

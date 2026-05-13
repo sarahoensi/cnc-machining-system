@@ -50,11 +50,15 @@ export function Field({
         {children}
       </div>
 
-      {error && (
-        <div className="field-error">
-          {error}
-        </div>
-      )}
+      <div
+        className={clsx(
+          "field-error",
+          !error && "is-empty"
+        )}
+        aria-hidden={!error}
+      >
+        {error ?? " "}
+      </div>
     </div>
   );
 }

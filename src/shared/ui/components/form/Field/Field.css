@@ -21,7 +21,7 @@
 .field-label {
   display: inline-flex;
   align-items: center;
-  min-height: var(--control-height-xsm);
+  min-height: var(--form-label-min-height);
 
   font-size: var(--form-label-size);
   font-weight: var(--text-label-weight);
@@ -54,8 +54,14 @@
 .field-error {
   font-size: var(--form-caption-size);
   font-weight: var(--text-caption-weight);
-  line-height: var(--line-height-normal);
+  line-height: 1.2;
   color: var(--state-error);
+  min-height: var(--field-error-reserved-height);
+  margin-top: var(--field-control-error-gap);
+}
+
+.field-error.is-empty {
+  visibility: hidden;
 }
 
 

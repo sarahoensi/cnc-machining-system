@@ -24,6 +24,7 @@ type Props<T extends string> = {
   label: string;
   tooltip?: string;
   error?: string;
+  footer?: ReactNode;
   valueLabel: ReactNode;
   options: SelectOption<T>[];
   onSelect: (value: T) => void;
@@ -39,6 +40,7 @@ function FormSelectMenuFieldInner<T extends string>({
   label,
   tooltip,
   error,
+  footer,
   valueLabel,
   options,
   onSelect,
@@ -90,6 +92,7 @@ function FormSelectMenuFieldInner<T extends string>({
           }))}
         />
       </div>
+      {footer}
     </Field>
   );
 }

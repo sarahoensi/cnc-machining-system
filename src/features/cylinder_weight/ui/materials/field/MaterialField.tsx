@@ -68,11 +68,16 @@ export function MaterialField({
             },
           },
         ]}
+        footer={
+          <Button
+            variant="link"
+            className="cylinder-weight-manage-link"
+            onClick={onOpenManage}
+          >
+            Manage Materials
+          </Button>
+        }
       />
-
-      <Button variant="link" className="cylinder-weight-manage-link" onClick={onOpenManage}>
-        Manage Materials
-      </Button>
 
       {materialLoadError ? <FormError error={materialLoadError} /> : null}
     </div>
