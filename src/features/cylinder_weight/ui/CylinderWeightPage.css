@@ -4,12 +4,14 @@
 
 .cylinder-weight-material-field {
   display: grid;
-  gap: var(--space-1-5);
+  gap: var(--space-1);
 }
 
 .cylinder-weight-manage-link {
   justify-self: start;
   padding: 0;
+  padding-inline-start: calc(var(--input-padding-x-form) * 0.5);
+  margin-top: var(--space-0-5);
   min-height: auto;
 }
 
