@@ -11,15 +11,28 @@
 }
 
 .ni-input {
-  font-variant-numeric: tabular-nums;
+  font-family: var(--font-family-mono);
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+.number-input--form .ni-input {
+  font-size: var(--text-numeric-size);
+}
+
+.number-input--execution .ni-input {
+  font-size: var(--execution-text-size);
 }
 
 .ni-unit {
   position: absolute;
   right: 0;
 
-  font-size: inherit;
-  font-weight: inherit;
+  min-width: var(--input-unit-width);
+  text-align: right;
+  font-family: var(--font-family-mono);
+  font-size: var(--form-unit-size);
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums slashed-zero;
   color: var(--input-unit-color);
 
   pointer-events: none;
@@ -28,13 +41,12 @@
 
 .number-input--form .ni-input {
   padding-inline-end: calc(
-    var(--input-padding-x-form) + 2ch + var(--input-unit-gap)
+    var(--input-padding-x-form) + var(--input-unit-width) + var(--input-unit-gap)
   );
 }
 
 .number-input--form .ni-unit {
   right: var(--input-padding-x-form);
-  font-size: var(--form-unit-size);
 }
 
 .number-input--execution .ni-unit {

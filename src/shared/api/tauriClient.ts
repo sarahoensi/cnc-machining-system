@@ -6,19 +6,21 @@
  * Centralizes error handling and serialization concerns.
  */
 
-
 import { invoke } from "@tauri-apps/api/core";
 
 export async function tauriInvoke<T>(
-  command: string, 
-  payload?: Record<string, unknown>) {
+  command: string,
+  payload?: Record<string, unknown>,
+) {
+  if (import.meta.env.DEV) {
+    console.log("TAURI CALL ->", command, payload);
+  }
 
-    console.log("TAURI CALL →", command, payload);
+  const result = await invoke<T>(command, payload);
 
-    const result = await invoke<T>(command, payload);
-
- console.log("TAURI RESULT ←", command, result);
+  if (import.meta.env.DEV) {
+    console.log("TAURI RESULT <-", command, result);
+  }
 
   return result;
-
 }

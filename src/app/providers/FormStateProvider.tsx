@@ -1,6 +1,11 @@
-// app/providers/FormStateProvider.tsx
-
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 type FormsStore = Record<string, unknown>;
 
@@ -11,25 +16,34 @@ type FormStateContextType = {
 
 const FormStateContext = createContext<FormStateContextType | null>(null);
 
-export function FormStateProvider({ children }: { children: React.ReactNode }) {
+export function resolveInitialForm<T>(
+  form: T | undefined,
+  cached: T | undefined,
+  createInitial: () => T,
+) {
+  if (form !== undefined) {
+    return { value: form, cache: cached, shouldHydrate: false };
+  }
 
+  const initial = cached ?? createInitial();
+  return { value: initial, cache: initial, shouldHydrate: true };
+}
+
+export function FormStateProvider({ children }: { children: React.ReactNode }) {
   const [forms, setForms] = useState<FormsStore>({});
 
-  function setForm<T>(key: string, value: T | ((prev: T) => T)) {
-    setForms(prev => {
+  const setForm = useCallback(<T,>(key: string, value: T | ((prev: T) => T)) => {
+    setForms((prev) => {
       const prevValue = prev[key] as T;
-
       const nextValue =
-        typeof value === "function"
-          ? (value as (p: T) => T)(prevValue)
-          : value;
+        typeof value === "function" ? (value as (p: T) => T)(prevValue) : value;
 
       return {
         ...prev,
         [key]: nextValue,
       };
     });
-  }
+  }, []);
 
   return (
     <FormStateContext.Provider value={{ forms, setForm }}>
@@ -38,28 +52,31 @@ export function FormStateProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function useFeatureForm<T>(
-  key: string,
-  createInitial: () => T
-) {
+export function useFeatureForm<T>(key: string, createInitial: () => T) {
   const ctx = useContext(FormStateContext);
   if (!ctx) {
     throw new Error("useFeatureForm must be used inside FormStateProvider");
   }
 
   const { forms, setForm } = ctx;
-
   const form = forms[key] as T | undefined;
 
-  if (form === undefined) {
-    const initial = createInitial();
-    setForm(key, initial);
-    return [initial, (v: any) => setForm(key, v)] as const;
-  }
+  const cacheRef = useRef<T | undefined>(undefined);
+  const resolved = resolveInitialForm(form, cacheRef.current, createInitial);
+  cacheRef.current = resolved.cache;
 
-  function setFeatureForm(value: T | ((prev: T) => T)) {
-    setForm<T>(key, value);
-  }
+  useEffect(() => {
+    if (resolved.shouldHydrate) {
+      setForm<T>(key, resolved.value);
+    }
+  }, [key, resolved.shouldHydrate, resolved.value, setForm]);
 
-  return [form, setFeatureForm] as const;
+  const setFeatureForm = useCallback(
+    (value: T | ((prev: T) => T)) => {
+      setForm<T>(key, value);
+    },
+    [key, setForm],
+  );
+
+  return [resolved.value, setFeatureForm] as const;
 }

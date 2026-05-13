@@ -1,10 +1,12 @@
 .field-display {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: var(--field-display-gap, var(--space-2));
 
   font-size: var(--form-text-size);
-  font-variant-numeric: tabular-nums;
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-normal);
+  font-variant-numeric: tabular-nums slashed-zero;
 }
 
 /* Label */
@@ -16,15 +18,20 @@
 
 /* Value */
 .field-display-value {
+  font-family: var(--font-family-mono);
   color: var(--field-display-value-color, var(--text-primary));
   font-weight: var(--field-display-value-weight, var(--font-weight-medium));
 }
 
 /* Unit */
 .field-display-unit {
-  color: var(--field-display-unit-color, var(--text-muted));
-  font-weight: var(--font-weight-regular);
-  margin-left: var(--space-1);
+  min-width: var(--input-unit-width);
+  text-align: right;
+  font-family: var(--font-family-mono);
+  font-size: var(--form-unit-size);
+  font-weight: var(--font-weight-medium);
+  color: var(--field-display-unit-color, var(--text-secondary));
+  margin-left: var(--input-unit-gap);
 }
 
 /* Align */

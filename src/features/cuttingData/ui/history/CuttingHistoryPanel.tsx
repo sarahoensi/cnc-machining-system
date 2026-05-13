@@ -5,6 +5,7 @@ import { formatNumber } from "@shared/ui/format/formatNumber";
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 import { HistoryCard } from "@shared/ui/layout/container/HistoryCard/HistoryCard";
 import { Button } from "@shared/ui/primitives/Button/Button";
+import { ScrollArea } from "@shared/ui/layout/container/ScrollArea/ScrollArea";
 
 import "./CuttingHistoryPanel.css";
 
@@ -24,49 +25,49 @@ export function CuttingHistoryPanel({
   const { decimals } = useDisplaySettings();
 
   return (
-    <div className="cutting-history">
-
+    <section className="cutting-history">
       <h3 className="cutting-history-title">
         Saved results
       </h3>
 
-      {history.length === 0 && (
-        <div className="cutting-history-empty">
-          No saved results yet
-        </div>
-      )}
+      <ScrollArea className="cutting-history-scroll">
+        {history.length === 0 && (
+          <div className="cutting-history-empty">
+            No saved results yet
+          </div>
+        )}
 
-      {history.length > 0 && (
-        <div className="cutting-history-list">
-          {history.map((entry) => {
-            const items = buildItems(entry, decimals);
+        {history.length > 0 && (
+          <div className="cutting-history-list">
+            {history.map((entry) => {
+              const items = buildItems(entry, decimals);
 
-            return (
-              <HistoryCard
-                key={entry.id}
-                items={items}
-                columns={2}
-                onClick={() => onLoad(entry)}
-                onDelete={() => onDelete(entry.id)}
-              />
-            );
-          })}
-        </div>
-      )}
+              return (
+                <HistoryCard
+                  key={entry.id}
+                  items={items}
+                  columns={2}
+                  onClick={() => onLoad(entry)}
+                  onDelete={() => onDelete(entry.id)}
+                />
+              );
+            })}
+          </div>
+        )}
+      </ScrollArea>
 
       {history.length > 0 && (
         <div className="cutting-history-actions">
-  <Button
-    variant="secondary"
-    size="small"
-    onClick={onClear}
-  >
-    Clear all results
-  </Button>
-</div>
+          <Button
+            variant="secondary"
+            size="small"
+            onClick={onClear}
+          >
+            Clear all results
+          </Button>
+        </div>
       )}
-
-    </div>
+    </section>
   );
 }
 

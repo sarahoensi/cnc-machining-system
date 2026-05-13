@@ -34,8 +34,8 @@
 
   --color-text: var(--color-night-950);
   --color-text-strong: #ffffff;
-  --color-text-muted: var(--color-night-900);
-  --color-text-placeholder: var(--color-night-700);
+  --color-text-muted: #cbd5e1;
+  --color-text-placeholder: #93a4bf;
   --color-text-inverse: var(--color-night-50);
 
 
@@ -93,7 +93,7 @@
 
   --color-user: rgba(96, 165, 250, 0.14);
   --color-machine: rgba(255, 255, 255, 0.06);
-  --color-disabled: rgba(255, 255, 255, 0.06);
+  --color-disabled: rgba(255, 255, 255, 0.12);
   --color-locked: rgba(251, 191, 36, 0.14);
 
 

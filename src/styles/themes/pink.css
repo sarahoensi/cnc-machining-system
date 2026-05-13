@@ -36,9 +36,9 @@
 
   --color-text: var(--color-dragonfruit-800);
   --color-text-strong: var(--color-dragonfruit-900);
-  --color-text-muted: var(--color-dragonfruit-600);
+  --color-text-muted: var(--color-dragonfruit-700);
   --color-text-soft: var(--color-dragonfruit-300);
-  --color-text-placeholder: var(--color-dragonfruit-400);
+  --color-text-placeholder: var(--color-dragonfruit-500);
   --color-text-inverse: #ffffff;
 
 
@@ -94,7 +94,7 @@
 
   --color-user: rgba(255, 0, 115, 0.12);
   --color-machine: rgba(51, 0, 23, 0.06);   /* 900 */
-  --color-disabled: rgba(51, 0, 23, 0.06);
+  --color-disabled: rgba(51, 0, 23, 0.12);
   --color-locked: rgba(245, 158, 11, 0.14);
 
   --color-backdrop: rgba(2, 6, 23, 0.5);
