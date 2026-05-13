@@ -60,6 +60,33 @@
   margin: 0 0 var(--space-3);
 }
 
+.cylinder-weight-export-content {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.cylinder-weight-export-search {
+  margin-bottom: var(--space-3);
+}
+
+.cylinder-weight-export-scroll-area {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.cylinder-weight-export-select-all {
+  margin-bottom: var(--space-2);
+}
+
+.cylinder-weight-export-table-area {
+  min-height: 18rem;
+  overflow-y: auto;
+}
+
 .cylinder-weight-checkbox-label {
   display: inline-flex;
   align-items: center;

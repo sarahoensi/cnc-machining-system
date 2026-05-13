@@ -11,6 +11,7 @@ import { TextInput } from "@shared/ui/primitives/input";
 import SearchIcon from "@assets/search-icon.svg";
 import { CylinderMaterial, MaterialEditState } from "../types";
 import { MaterialLibraryTable } from "./MaterialLibraryTable";
+import { filterMaterialsBySearch } from "../searchMaterials";
 
 type Props = {
   open: boolean;
@@ -35,18 +36,7 @@ export function ManageMaterialsModal({
   const [search, setSearch] = useState("");
 
   const filteredMaterials = useMemo(() => {
-    const normalizedQuery = search.trim().toLowerCase();
-
-    if (!normalizedQuery) {
-      return materials;
-    }
-
-    return materials.filter((material) =>
-      material.name
-        .toLowerCase()
-        .split(/\s+/)
-        .some((token) => token.startsWith(normalizedQuery))
-    );
+    return filterMaterialsBySearch(materials, search);
   }, [materials, search]);
 
   if (!open) return null;
