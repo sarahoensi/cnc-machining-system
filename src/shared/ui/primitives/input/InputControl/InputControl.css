@@ -4,10 +4,14 @@
   min-width: 0;
   min-height: var(--control-height-md);
   font-size: var(--form-text-size);
+  font-weight: var(--text-numeric-weight);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-normal);
   border-radius: var(--input-radius);
   border: var(--input-border-width) solid var(--input-border-color);
   background: var(--input-bg);
   color: var(--control-text);
+  caret-color: var(--input-caret);
   outline: none;
 }
 
@@ -19,7 +23,7 @@
 .input-control--execution {
   padding-block: var(--input-padding-y);
   padding-inline: var(--input-padding-x);
-  font-size: var(--exec-text-size);
+  font-size: var(--execution-text-size);
   color: var(--input-text);
 }
 
@@ -51,5 +55,6 @@
 .input-control--disabled {
   background: var(--input-bg-disabled);
   color: var(--input-text-disabled);
+  opacity: var(--state-disabled-opacity);
   cursor: not-allowed;
 }

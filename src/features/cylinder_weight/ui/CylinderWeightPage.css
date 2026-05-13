@@ -4,7 +4,7 @@
 
 .cylinder-weight-material-field {
   display: grid;
-  gap: 6px;
+  gap: var(--space-1-5);
 }
 
 .cylinder-weight-manage-link {
@@ -17,16 +17,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
 }
 
 .cylinder-weight-export-help {
-  margin: 0 0 12px;
+  margin: 0 0 var(--space-3);
 }
 
 .cylinder-weight-checkbox-label {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-1-5);
 }

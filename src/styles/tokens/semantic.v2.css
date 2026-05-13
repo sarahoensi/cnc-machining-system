@@ -114,15 +114,19 @@ Describe UI meaning. Never hardcode values.
   --text-body-weight: var(--font-weight-regular);
   --text-body-line-height: var(--line-height-normal);
 
-  --text-label-size: var(--font-size-lg);
+  --text-label-size: var(--font-size-sm);
   --text-label-weight: var(--font-weight-medium);
 
-  --text-caption-size: var(--font-size-xs);
+  --text-caption-size: var(--font-size-sm);
   --text-caption-weight: var(--font-weight-regular);
 
-  --heading-size: var(--font-size-lg);
+  --heading-size: clamp(var(--font-size-3xl), 2.2vw, var(--font-size-4xl));
   --heading-weight: var(--font-weight-semibold);
   --heading-line-height: var(--line-height-tight);
+
+  --text-numeric-size: var(--font-size-lg);
+  --text-numeric-size-md: var(--font-size-md);
+  --text-numeric-weight: var(--font-weight-medium);
 
 
 /* =====================================================
@@ -130,12 +134,13 @@ Describe UI meaning. Never hardcode values.
 ===================================================== */
 
   --form-text-size: var(--font-size-lg);
-  --form-label-size: var(--font-size-lg);
-  --form-caption-size: var(--font-size-xs);
+  --form-label-size: var(--font-size-sm);
+  --form-caption-size: var(--font-size-sm);
   --form-unit-size: var(--font-size-md);
 
   --form-sm-text-size: var(--font-size-sm);
-  --form-sm-label-size: var(--font-size-sm);
+  --form-md-text-size: var(--font-size-md);
+   --form-sm-label-size: var(--font-size-sm);
 
   --form-lg-text-size: var(--font-size-lg);
   --form-lg-label-size: var(--font-size-md);
@@ -189,7 +194,7 @@ Describe UI meaning. Never hardcode values.
   --control-border-color-error: var(--state-error);
 
   --control-text: var(--interactive-neutral-text);
-  --control-text-disabled: var(--state-disabled-text);
+  --control-text-disabled: var(--text-secondary);
 
 
 /* =====================================================
@@ -217,7 +222,8 @@ Describe UI meaning. Never hardcode values.
   --input-border-width: var(--border-width-sm);
 
   --input-unit-gap: var(--space-2);
-  --input-unit-color: var(--text-muted);
+  --input-unit-color: var(--text-secondary);
+  --input-unit-width: 7ch;
 
   --input-padding-x-form: var(--space-3);
   --input-padding-y-form: 0.35em;
@@ -280,7 +286,7 @@ Describe UI meaning. Never hardcode values.
 
   --table-text-size: var(--font-size-lg);
   --table-header-size: var(--font-size-lg);
-  --table-caption-size: var(--font-size-xs);
+  --table-caption-size: var(--font-size-sm);
 
 
 /* =====================================================
@@ -351,17 +357,44 @@ Describe UI meaning. Never hardcode values.
 ===================================================== */
 
 --form-gap: var(--space-4);
---form-fields-gap: var(--space-3);
+--form-fields-gap: var(--space-4);
 --form-actions-gap: var(--space-2);
+--form-label-control-gap: var(--space-0);
+--form-label-icon-gap: var(--space-1-5);
+--form-field-gap-compact: var(--space-2);
 
---form-error-min-height: 1.2em;
+--form-error-min-height: 1.4em;
 
 --form-section-gap: var(--space-4);
---form-section-spacing: var(--space-4);
+--form-section-spacing: var(--space-6);
 
 
 
 --history-item-text-size: var(--font-size-lg);
 --history-item-padding: var(--space-3);
+
+/* =====================================================
+   EXECUTION
+===================================================== */
+
+--execution-gap: var(--space-2);
+--execution-text-size: var(--text-numeric-size-md);
+--execution-caption-size: var(--form-caption-size);
+--execution-padding-x: var(--control-padding-x-sm);
+--execution-height: var(--control-height-md);
+--execution-error-color: var(--state-error);
+
+/* =====================================================
+   FIELD DISPLAY
+===================================================== */
+
+--field-display-gap: var(--space-2);
+--field-display-value-weight: var(--font-weight-medium);
+
+/* =====================================================
+   FEATURE: DIAGRAM / TOOLTIP
+===================================================== */
+
+--tooltip-icon-size: var(--size-icon-md);
 
 }

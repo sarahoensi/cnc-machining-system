@@ -38,8 +38,8 @@
 
   --color-text: var(--color-imperial-blue-900);
   --color-text-strong: var(--color-imperial-blue-950);
-  --color-text-muted: var(--color-imperial-blue-600);
-  --color-text-placeholder: var(--color-imperial-blue-400);
+  --color-text-muted: var(--color-imperial-blue-700);
+  --color-text-placeholder: var(--color-imperial-blue-500);
   --color-text-inverse: #ffffff;
 
 
@@ -104,7 +104,7 @@
 
   --color-user: rgba(23, 86, 232, 0.12);
   --color-machine: rgba(5, 17, 46, 0.06);  /* 900 */
-  --color-disabled: rgba(5, 17, 46, 0.08);
+  --color-disabled: rgba(5, 17, 46, 0.14);
   --color-locked: rgba(116, 153, 241, 0.18);
 
 

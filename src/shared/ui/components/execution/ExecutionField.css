@@ -11,7 +11,7 @@
 }
 
 .exec-display {
-  height: var(--execution-height);
+  min-height: var(--execution-height);
 
   display: flex;
   align-items: center;
@@ -19,11 +19,11 @@
   padding-inline: var(--execution-padding-x);
 
   font-size: var(--execution-text-size);
-  font-weight: var(--text-body-weight);
-  font-variant-numeric: tabular-nums;
-
-
-
+  font-family: var(--font-family-mono);
+  font-weight: var(--text-numeric-weight);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-normal);
+  font-variant-numeric: tabular-nums slashed-zero;
 
   min-width: 0;
 }

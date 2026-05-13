@@ -7,6 +7,15 @@ html, body, #root {
 
 body {
   overflow: hidden;
+  font-family: var(--font-family-sans);
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  line-height: var(--text-body-line-height);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--text-primary);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  font-synthesis-weight: none;
 }
 
 /* =========================

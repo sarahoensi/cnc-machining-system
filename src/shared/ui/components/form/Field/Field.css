@@ -8,7 +8,7 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--form-label-control-gap);
 
   min-width: 0;
 }
@@ -21,9 +21,12 @@
 .field-label {
   display: inline-flex;
   align-items: center;
+  min-height: var(--control-height-xsm);
 
   font-size: var(--form-label-size);
   font-weight: var(--text-label-weight);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-wide);
   color: var(--field-label-color, var(--text-primary));
 }
 
@@ -35,8 +38,10 @@
 .field-control {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 
   font-size: var(--form-text-size);
+  line-height: var(--line-height-normal);
 
   min-width: 0;
 }
@@ -49,6 +54,7 @@
 .field-error {
   font-size: var(--form-caption-size);
   font-weight: var(--text-caption-weight);
+  line-height: var(--line-height-normal);
   color: var(--state-error);
 }
 

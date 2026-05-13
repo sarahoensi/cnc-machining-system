@@ -54,14 +54,14 @@
 }
 
 .app-modal-close {
-  width: 2rem;
-  height: 2rem;
+  width: var(--control-height-xsm);
+  height: var(--control-height-xsm);
   border: none;
   border-radius: var(--control-radius);
   background: transparent;
   color: var(--text-secondary);
-  font-size: 1.25rem;
-  line-height: 1;
+  font-size: var(--text-label-size);
+  line-height: var(--line-height-tight);
   display: inline-flex;
   align-items: center;
   justify-content: center;
