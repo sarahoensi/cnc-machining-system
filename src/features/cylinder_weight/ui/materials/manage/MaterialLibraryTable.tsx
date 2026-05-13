@@ -16,8 +16,12 @@ type Props = {
 export function MaterialLibraryTable({ materials, edit }: Props) {
   const sortedMaterials = sortCylinderMaterials(materials);
 
+  if (sortedMaterials.length === 0) {
+    return <p className="cylinder-weight-material-empty">No materials found</p>;
+  }
+
   return (
-    <Table.Root>
+    <Table.Root className="cylinder-weight-material-table">
       <Table.Head>
         <Table.HeadRow>
           <Table.HeaderCell>Material</Table.HeaderCell>

@@ -2,11 +2,12 @@
 
 //ManageMaterialsModal.tsx
 
-import { useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Modal, ModalScrollArea } from "@shared/ui/components/overlay/Modal/Modal";
 import { DialogActions } from "@shared/ui/components/overlay/DialogActions/DialogActions";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { Button } from "@shared/ui/primitives/Button/Button";
+import { TextInput } from "@shared/ui/primitives/input";
 import { CylinderMaterial, MaterialEditState } from "../types";
 import { MaterialLibraryTable } from "./MaterialLibraryTable";
 
@@ -30,6 +31,22 @@ export function ManageMaterialsModal({
   edit,
 }: Props) {
   const importInputRef = useRef<HTMLInputElement>(null);
+  const [search, setSearch] = useState("");
+
+  const filteredMaterials = useMemo(() => {
+    const normalizedQuery = search.trim().toLowerCase();
+
+    if (!normalizedQuery) {
+      return materials;
+    }
+
+    return materials.filter((material) =>
+      material.name
+        .toLowerCase()
+        .split(/\s+/)
+        .some((token) => token.startsWith(normalizedQuery))
+    );
+  }, [materials, search]);
 
   if (!open) return null;
 
@@ -55,6 +72,16 @@ export function ManageMaterialsModal({
         </DialogActions>
       </div>
 
+      <div className="cylinder-weight-material-search">
+        <TextInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Search materials"
+          appearance="form"
+          size="small"
+        />
+      </div>
+
       <input
         ref={importInputRef}
         type="file"
@@ -72,7 +99,7 @@ export function ManageMaterialsModal({
       />
 
       <ModalScrollArea>
-        <MaterialLibraryTable materials={materials} edit={edit} />
+        <MaterialLibraryTable materials={filteredMaterials} edit={edit} />
       </ModalScrollArea>
 
       {edit.error ? <FormError error={edit.error} /> : null}

@@ -21,6 +21,24 @@
   margin-bottom: 12px;
 }
 
+.cylinder-weight-material-search {
+  margin-bottom: 12px;
+  max-width: 320px;
+}
+
+.cylinder-weight-material-empty {
+  margin: 0;
+  padding: var(--space-3);
+  color: var(--text-secondary);
+}
+
+.cylinder-weight-material-table .ui-table-header-cell {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--table-header-bg);
+}
+
 .cylinder-weight-export-help {
   margin: 0 0 12px;
 }
