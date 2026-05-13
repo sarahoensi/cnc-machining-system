@@ -21,7 +21,7 @@ import { finishingTooltips } from "./finishingPlanTooltip";
 type Props = {
   form: ReturnType<typeof createInitialFinishingForm>;
   setForm: (v: any) => void;
-  onGenerate: () => void;
+  onGenerate: () => Promise<ReturnType<typeof createInitialFinishingForm> | void> | ReturnType<typeof createInitialFinishingForm> | void;
   onReset: () => void;
   onEdit: () => void;
   readOnly: boolean;
@@ -38,8 +38,33 @@ export function PlanForm({
   const navigation = useFormNavigation({
     keys: finishingFieldConfig.map(f => f.key),
     autoFocusOnMount: true,
-    onSubmit: onGenerate,
+    activePath: "/finishing",
+    onSubmit: onCalculate,
   });
+  const focusOrder = finishingFieldConfig.map((f) => f.key);
+
+  async function onCalculate() {
+    const next = await onGenerate();
+    if (!next) return;
+    const hasInlineError = finishingFieldConfig.some((f) => Boolean(next.fields[f.key].error));
+
+    if (hasInlineError) {
+      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+      return;
+    }
+
+    if (!next.formError) return;
+
+    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
+      const value = next.fields[key]?.value;
+      return value == null || String(value).trim() === "";
+    });
+  }
+
+  function handleReset() {
+    onReset();
+    navigation.focusFirstAfterRender();
+  }
 
   function onFieldChange(
     key: FinishingKey,
@@ -110,16 +135,18 @@ export function PlanForm({
 
   const actions = (
     <FormActions
-      onCalculate={onGenerate}
-      onReset={onReset}
+      onCalculate={onCalculate}
+      onReset={handleReset}
     />
   );
 
   return (
-    <FormLayout
-      fields={fields}
-      error={error}
-      actions={actions}
-    />
+    <div ref={navigation.containerRef}>
+      <FormLayout
+        fields={fields}
+        error={error}
+        actions={actions}
+      />
+    </div>
   );
 }

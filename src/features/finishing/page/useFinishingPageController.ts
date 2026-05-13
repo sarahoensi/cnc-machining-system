@@ -105,6 +105,8 @@ export function useFinishingPageController() {
         mapFinishingExecution(result)
       );
     }
+
+    return nextForm;
   }
 
   /* ============================================================

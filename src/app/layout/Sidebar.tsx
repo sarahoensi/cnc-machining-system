@@ -1,6 +1,4 @@
-// src/app/layout/Sidebar.tsx
-
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import "./Sidebar.css";
 
 const NAV_ITEMS = [
@@ -12,20 +10,45 @@ const NAV_ITEMS = [
 ];
 
 export function Sidebar() {
+  const location = useLocation();
+  const isPathActive = (to: string) =>
+    location.pathname === to || location.pathname.startsWith(`${to}/`);
+
   return (
     <aside className="sidebar">
       <nav className="sidebar-nav">
-        {NAV_ITEMS.map(item => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) =>
-              `sidebar-link ${isActive ? "active" : ""}`
-            }
-          >
-            {item.label}
-          </NavLink>
-        ))}
+        {NAV_ITEMS.map((item) => {
+          const isActive = isPathActive(item.to);
+
+          return (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive: navIsActive }) =>
+                `sidebar-link ${navIsActive ? "active" : ""}`
+              }
+              onPointerDownCapture={(e) => {
+                if (!isActive) return;
+                e.preventDefault();
+              }}
+              onMouseDown={(e) => {
+                if (!isActive) return;
+                e.preventDefault();
+              }}
+              onClickCapture={(e) => {
+                if (!isActive) return;
+                e.preventDefault();
+                window.dispatchEvent(
+                  new CustomEvent("app:active-nav-click", {
+                    detail: { path: item.to },
+                  })
+                );
+              }}
+            >
+              {item.label}
+            </NavLink>
+          );
+        })}
       </nav>
     </aside>
   );

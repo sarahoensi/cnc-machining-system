@@ -53,8 +53,10 @@ export function HelixPage() {
   const navigation = useFormNavigation({
     keys: helixFieldConfig.map(f => f.key),
     autoFocusOnMount: true,
+    activePath: "/helix",
     onSubmit: onCalculate,
   });
+  const focusOrder = helixFieldConfig.map((f) => f.key);
 
   /* =========================
      Field change
@@ -100,6 +102,19 @@ export function HelixPage() {
     );
 
     setForm(next);
+    const hasInlineError = helixFieldConfig.some((f) => Boolean(next.fields[f.key].error));
+
+    if (hasInlineError) {
+      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+      return;
+    }
+
+    if (!next.formError) return;
+
+    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
+      const value = next.fields[key]?.value;
+      return value == null || String(value).trim() === "";
+    });
   }
 
   /* =========================
@@ -108,6 +123,7 @@ export function HelixPage() {
 
   function onReset() {
     setForm(createInitialHelixForm());
+    navigation.focusFirstAfterRender();
   }
 
   /* =========================
@@ -168,11 +184,13 @@ const actions = (
 );
 
 const formContent = (
-  <FormLayout
-    fields={fields}
-    error={error}
-    actions={actions}
-  />
+  <div ref={navigation.containerRef}>
+    <FormLayout
+      fields={fields}
+      error={error}
+      actions={actions}
+    />
+  </div>
 );
 
 

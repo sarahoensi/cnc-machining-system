@@ -57,8 +57,17 @@ export function CuttingDataPage() {
   const navigation = useFormNavigation({
     keys: cuttingDataFieldConfig.map((f) => f.key),
     autoFocusOnMount: true,
+    activePath: "/cutting",
     onSubmit: onCalculate,
   });
+  const focusOrder: CuttingDataKey[] = [
+    "diameter",
+    "rpm",
+    "cutting_speed",
+    "teeth",
+    "feed_rate",
+    "chip_load",
+  ];
   /* =========================
      Field change
   ========================= */
@@ -92,6 +101,24 @@ export function CuttingDataPage() {
     );
 
     setForm(next);
+    const hasInlineError = focusOrder.some((key) => Boolean(next.fields[key].error));
+
+    if (hasInlineError) {
+      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+      return;
+    }
+
+    if (!next.formError) return;
+
+    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
+      const value = next.fields[key]?.value;
+      return value == null || String(value).trim() === "";
+    });
+  }
+
+  function onReset() {
+    resetForm();
+    navigation.focusFirstAfterRender();
   }
 
 
@@ -147,7 +174,7 @@ const error = form.formError ? (
  const actions = (
     <FormActions
       onCalculate={onCalculate}
-      onReset={resetForm}
+      onReset={onReset}
     >
     {saveButton}
   </FormActions>
@@ -155,8 +182,8 @@ const error = form.formError ? (
 
 
 
-  const formContent = (
-    <div className="cutting-form">
+ const formContent = (
+    <div className="cutting-form" ref={navigation.containerRef}>
       <FormLayout
         fields={fields}
         error={error}

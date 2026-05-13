@@ -25,8 +25,37 @@ export function CylinderWeightPage() {
   const navigation = useFormNavigation({
     keys: ["outer_diameter_mm", "inner_diameter_mm", "length_mm"],
     autoFocusOnMount: true,
-    onSubmit: controller.calculate,
+    activePath: "/cylinder-weight",
+    onSubmit: onCalculate,
   });
+
+  async function onCalculate() {
+    const next = await controller.calculate();
+    if (!next) return;
+    const focusOrder: Exclude<CylinderWeightKey, "mass_kg">[] = [
+      "outer_diameter_mm",
+      "inner_diameter_mm",
+      "length_mm",
+    ];
+    const hasInlineError = focusOrder.some((key) => Boolean(next.fields[key].error));
+
+    if (hasInlineError) {
+      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
+      return;
+    }
+
+    if (!next.formError) return;
+
+    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
+      const value = next.fields[key]?.value;
+      return value == null || String(value).trim() === "";
+    });
+  }
+
+  function onReset() {
+    controller.resetForm();
+    navigation.focusFirstAfterRender();
+  }
 
   const fields = (
     <>
@@ -91,8 +120,8 @@ export function CylinderWeightPage() {
 
   const actions = (
     <FormActions
-      onCalculate={controller.calculate}
-      onReset={controller.resetForm}
+      onCalculate={onCalculate}
+      onReset={onReset}
       disabled={controller.loadingMaterials}
     />
   );
@@ -108,7 +137,9 @@ export function CylinderWeightPage() {
   return (
     <>
       <div className="cylinder-weight-page-layout">
-        <FormFigureLayout form={formContent} figure={null} />
+        <div ref={navigation.containerRef}>
+          <FormFigureLayout form={formContent} figure={null} />
+        </div>
       </div>
 
       <ManageMaterialsModal
