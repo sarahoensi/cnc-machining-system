@@ -1,55 +1,38 @@
 // src/features/cylinder_weight/ui/materials/export/MaterialExportTable.tsx
 
-import { useEffect, useRef } from "react";
 import { Table } from "@shared/ui/components/table/Table";
 import { CylinderMaterial } from "../types";
 
 type Props = {
   materials: CylinderMaterial[];
   selectedIds: string[];
-  onSetAll: (checked: boolean) => void;
   onToggle: (id: string) => void;
 };
 
 export function MaterialExportTable({
   materials,
   selectedIds,
-  onSetAll,
   onToggle,
 }: Props) {
-  const selectAllRef = useRef<HTMLInputElement>(null);
-  const allSelected = materials.length > 0 && selectedIds.length === materials.length;
-  const someSelected = selectedIds.length > 0 && selectedIds.length < materials.length;
-
-  useEffect(() => {
-    if (selectAllRef.current) {
-      selectAllRef.current.indeterminate = someSelected;
-    }
-  }, [someSelected]);
+  if (materials.length === 0) {
+    return <p className="cylinder-weight-material-empty">No materials found</p>;
+  }
 
   return (
-    <Table.Root>
+    <Table.Root className="cylinder-weight-export-materials-table">
       <Table.Head>
         <Table.HeadRow>
-          <Table.HeaderCell>
-            <label className="cylinder-weight-checkbox-label">
-              <input
-                ref={selectAllRef}
-                type="checkbox"
-                checked={allSelected}
-                onChange={(e) => onSetAll(e.target.checked)}
-              />
-              <span>Select all</span>
-            </label>
-          </Table.HeaderCell>
+          <Table.HeaderCell className="cylinder-weight-export-materials-check-col" />
           <Table.HeaderCell>Material</Table.HeaderCell>
-          <Table.HeaderCell align="right">Density</Table.HeaderCell>
+          <Table.HeaderCell align="right" className="cylinder-weight-export-materials-density-col">
+            Density
+          </Table.HeaderCell>
         </Table.HeadRow>
       </Table.Head>
       <Table.Body>
         {materials.map((material) => (
           <Table.BodyRow key={material.id}>
-            <Table.Cell>
+            <Table.Cell className="cylinder-weight-export-materials-check-col">
               <input
                 type="checkbox"
                 checked={selectedIds.includes(material.id)}
@@ -57,7 +40,9 @@ export function MaterialExportTable({
               />
             </Table.Cell>
             <Table.Cell>{material.name}</Table.Cell>
-            <Table.Cell align="right">{material.density_kg_m3} kg/m3</Table.Cell>
+            <Table.Cell align="right" className="cylinder-weight-export-materials-density-col">
+              {material.density_kg_m3} kg/m3
+            </Table.Cell>
           </Table.BodyRow>
         ))}
       </Table.Body>

@@ -1,6 +1,6 @@
 // src/shared/ui/primitives/input/TextInput/TextInput.tsx
 
-import { FocusEventHandler, KeyboardEventHandler, forwardRef, useId } from "react";
+import { FocusEventHandler, KeyboardEventHandler, ReactNode, forwardRef, useId } from "react";
 import clsx from "clsx";
 import { InputBase } from "@shared/ui/primitives/input/InputBase";
 import type {
@@ -25,6 +25,7 @@ type Props = {
   size?: InputSize;
   source?: InputSource;
   appearance?: InputAppearance;
+  leftSlot?: ReactNode;
 };
 
 export const TextInput = forwardRef<HTMLInputElement, Props>(
@@ -43,6 +44,7 @@ export const TextInput = forwardRef<HTMLInputElement, Props>(
       appearance = "form",
       size = "medium",
       source = "default",
+      leftSlot,
     },
     ref
   ) {
@@ -51,9 +53,16 @@ export const TextInput = forwardRef<HTMLInputElement, Props>(
 
     return (
       <InputBase
+        wrapperClassName={
+          leftSlot
+            ? clsx("app-text-input-wrapper", `app-text-input-wrapper--${appearance}`)
+            : undefined
+        }
+        leftSlot={leftSlot ? <span className="app-text-input-left-slot">{leftSlot}</span> : undefined}
         id={inputId}
         ref={ref}
         type="text"
+        autoComplete="off"
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
         placeholder={placeholder}
@@ -64,6 +73,7 @@ export const TextInput = forwardRef<HTMLInputElement, Props>(
         onBlur={onBlur}
         className={clsx(
           "app-text-input",
+          leftSlot && "app-text-input--with-left-slot",
           "input-control",
           `input-control--${appearance}`,
           `input-control--${size}`,

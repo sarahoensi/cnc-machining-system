@@ -6,11 +6,12 @@ import clsx from "clsx";
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & {
   wrapperClassName?: string;
   inputClassName?: string;
+  leftSlot?: ReactNode;
   rightSlot?: ReactNode;
 };
 
 export const InputBase = forwardRef<HTMLInputElement, Props>(function InputBase(
-  { wrapperClassName, inputClassName, rightSlot, className, ...inputProps },
+  { wrapperClassName, inputClassName, leftSlot, rightSlot, className, ...inputProps },
   ref
 ) {
   const input = (
@@ -21,12 +22,13 @@ export const InputBase = forwardRef<HTMLInputElement, Props>(function InputBase(
     />
   );
 
-  if (!wrapperClassName && !rightSlot) {
+  if (!wrapperClassName && !leftSlot && !rightSlot) {
     return input;
   }
 
   return (
     <div className={wrapperClassName}>
+      {leftSlot}
       {input}
       {rightSlot}
     </div>

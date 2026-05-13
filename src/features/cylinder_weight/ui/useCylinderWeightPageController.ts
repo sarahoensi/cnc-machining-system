@@ -222,8 +222,14 @@ export function useCylinderWeightPageController() {
     );
   }
 
-  function setExportAll(checked: boolean) {
-    setSelectedExportIds(checked ? materials.map((m) => m.id) : []);
+  function setExportAll(checked: boolean, visibleIds: string[]) {
+    setSelectedExportIds((prev) => {
+      if (checked) {
+        return Array.from(new Set([...prev, ...visibleIds]));
+      }
+
+      return prev.filter((id) => !visibleIds.includes(id));
+    });
   }
 
   function cancelExportDialog() {

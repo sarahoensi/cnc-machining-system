@@ -2,13 +2,16 @@
 
 //ManageMaterialsModal.tsx
 
-import { useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Modal, ModalScrollArea } from "@shared/ui/components/overlay/Modal/Modal";
 import { DialogActions } from "@shared/ui/components/overlay/DialogActions/DialogActions";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { Button } from "@shared/ui/primitives/Button/Button";
+import { TextInput } from "@shared/ui/primitives/input";
+import SearchIcon from "@assets/search-icon.svg";
 import { CylinderMaterial, MaterialEditState } from "../types";
 import { MaterialLibraryTable } from "./MaterialLibraryTable";
+import { filterMaterialsBySearch } from "../searchMaterials";
 
 type Props = {
   open: boolean;
@@ -30,15 +33,34 @@ export function ManageMaterialsModal({
   edit,
 }: Props) {
   const importInputRef = useRef<HTMLInputElement>(null);
+  const [search, setSearch] = useState("");
+
+  const filteredMaterials = useMemo(() => {
+    return filterMaterialsBySearch(materials, search);
+  }, [materials, search]);
 
   if (!open) return null;
 
   return (
     <Modal title="Manage Materials" onClose={onClose} size="md" height="fixed">
       <div className="cylinder-weight-toolbar">
-        <Button variant="primary" size="small" onClick={onOpenCreate}>
-          + New Material
-        </Button>
+        <div className="cylinder-weight-toolbar-left">
+          <Button variant="primary" size="small" onClick={onOpenCreate}>
+            + New Material
+          </Button>
+
+          <div className="cylinder-weight-material-search">
+            <TextInput
+              value={search}
+              onChange={setSearch}
+              placeholder="Search materials"
+              appearance="form"
+              size="small"
+              className="cylinder-weight-material-search-input"
+              leftSlot={<img src={SearchIcon} alt="" className="cylinder-weight-search-icon" />}
+            />
+          </div>
+        </div>
 
         <DialogActions align="right">
           <Button
@@ -72,7 +94,7 @@ export function ManageMaterialsModal({
       />
 
       <ModalScrollArea>
-        <MaterialLibraryTable materials={materials} edit={edit} />
+        <MaterialLibraryTable materials={filteredMaterials} edit={edit} />
       </ModalScrollArea>
 
       {edit.error ? <FormError error={edit.error} /> : null}
