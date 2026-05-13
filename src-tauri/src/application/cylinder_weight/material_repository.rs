@@ -56,16 +56,11 @@ impl JsonCylinderMaterialRepository {
         }
 
         let raw = fs::read_to_string(&path).map_err(|e| format!("failed to read materials file: {e}"))?;
-        let mut data: PersistedMaterials =
+        let data: PersistedMaterials =
             serde_json::from_str(&raw).map_err(|e| format!("failed to parse materials file: {e}"))?;
 
         if data.schema_version != 1 {
             return Err(format!("unsupported schema_version: {}", data.schema_version));
-        }
-
-        if data.materials.is_empty() {
-            data.materials = default_seed_materials();
-            write_data_file(&path, &data)?;
         }
 
         Ok(Self { path, data })
@@ -205,22 +200,5 @@ fn write_data_file(path: &Path, data: &PersistedMaterials) -> Result<(), String>
 }
 
 fn default_seed_materials() -> Vec<PersistedMaterial> {
-    vec![
-        ("Steel", 7850.0),
-        ("Stainless Steel", 8000.0),
-        ("Aluminum 6061", 2700.0),
-        ("Brass", 8500.0),
-        ("Copper", 8960.0),
-        ("Titanium Grade 5", 4430.0),
-        ("Delrin", 1410.0),
-        ("Nylon", 1150.0),
-    ]
-    .into_iter()
-    .map(|(name, density)| PersistedMaterial {
-        id: Uuid::new_v4().to_string(),
-        name: name.to_string(),
-        normalized_name: Material::normalize_name(name),
-        density_kg_m3: density,
-    })
-    .collect()
+    Vec::new()
 }
