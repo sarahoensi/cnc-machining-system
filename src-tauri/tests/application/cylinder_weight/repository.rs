@@ -16,14 +16,13 @@ fn temp_file_path() -> std::path::PathBuf {
 }
 
 #[test]
-fn seeds_default_materials_on_first_init() {
+fn starts_empty_on_first_init() {
     let path = temp_file_path();
 
     let repo = JsonCylinderMaterialRepository::load_or_initialize(path.clone()).unwrap();
     let items = repo.list();
 
-    assert!(!items.is_empty());
-    assert!(items.iter().any(|m| m.material.name() == "Steel"));
+    assert!(items.is_empty());
 
     let _ = fs::remove_file(path);
 }
@@ -50,6 +49,10 @@ fn persists_created_material_and_reloads() {
 fn rejects_duplicate_material_case_insensitive() {
     let path = temp_file_path();
     let mut repo = JsonCylinderMaterialRepository::load_or_initialize(path.clone()).unwrap();
+
+    repo
+        .create(Material::new("Steel".to_string(), 7850.0).unwrap())
+        .unwrap();
 
     let result = repo.create(Material::new("steel".to_string(), 7900.0).unwrap());
     assert!(result.is_err());

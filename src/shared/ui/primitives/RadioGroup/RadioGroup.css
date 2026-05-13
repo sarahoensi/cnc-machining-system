@@ -12,6 +12,10 @@
 
 }
 
+.radio-group--form {
+  padding-inline-start: calc(var(--input-padding-x-form) * 0.5);
+}
+
 
 /* =====================================================
    DISABLED STATE
