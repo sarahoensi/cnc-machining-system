@@ -66,6 +66,7 @@ export function ManageMaterialsModal({
               placeholder="Search materials"
               appearance="form"
               size="small"
+              className="cylinder-weight-material-search-input"
               leftSlot={<img src={SearchIcon} alt="" className="cylinder-weight-search-icon" />}
             />
           </div>
