@@ -34,24 +34,24 @@ export function TriangleFigure({ activeField }: Props) {
         <Label at={mid(TL, BL)} text="b" active={activeField === "b"} dx={-8} />
         <Label at={mid(TL, BR)} text="c" active={activeField === "c"} dx={6} />
 
-        {/* α mellom a og c, altså i BR */}
+        {/* β mellom a og c, altså i BR */}
         <AngleArc
           vertex={BR}
           p1={BL}
           p2={TL}
           r={18}
-          active={activeField === "alpha"}
-          label="α"
+          active={activeField === "beta"}
+          label="β"
         />
 
-        {/* β mellom b og c, altså i TL */}
+        {/* α mellom b og c, altså i TL */}
         <AngleArc
           vertex={TL}
           p1={BL}
           p2={BR}
           r={18}
-          active={activeField === "beta"}
-          label="β"
+          active={activeField === "alpha"}
+          label="α"
         />
       </svg>
     </div>
