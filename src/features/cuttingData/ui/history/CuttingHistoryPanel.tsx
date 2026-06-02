@@ -82,14 +82,26 @@ function buildItems(entry: any, decimals: number) {
       if (!field) return null;
 
       const rawValue = field.machineValue ?? field.value;
-      if (rawValue == null) return null;
+      if (rawValue == null || rawValue === "") {
+        return {
+          label: config.shortLabel ?? config.label,
+          value: "-",
+          unit: config.unit,
+        };
+      }
 
       const num =
         typeof rawValue === "number"
           ? rawValue
           : Number(rawValue);
 
-      if (isNaN(num)) return null;
+      if (isNaN(num)) {
+        return {
+          label: config.shortLabel ?? config.label,
+          value: "-",
+          unit: config.unit,
+        };
+      }
 
       return {
         label: config.shortLabel ?? config.label,
