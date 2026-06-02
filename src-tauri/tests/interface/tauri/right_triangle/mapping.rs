@@ -1,12 +1,13 @@
 // tests/interface/tauri/right_triangle/mapping.rs
 
-use cnc_machining_system_lib::interface::right_triangle::{SolveRightTriangleResponse, SolveRightTriangleRequest};
+use cnc_machining_system_lib::interface::right_triangle::{
+    SolveRightTriangleRequest, SolveRightTriangleResponse,
+};
 
 use cnc_machining_system_lib::application::{SolveRightTriangleInput, SolveRightTriangleOutput};
 
 #[test]
 fn maps_legs_request_to_application_input() {
-
     let request = SolveRightTriangleRequest::Legs {
         a_mm: 3.0,
         b_mm: 4.0,
@@ -25,7 +26,6 @@ fn maps_legs_request_to_application_input() {
 
 #[test]
 fn maps_application_output_to_response() {
-
     let output = SolveRightTriangleOutput {
         a_mm: 3.0,
         b_mm: 4.0,
@@ -38,5 +38,3 @@ fn maps_application_output_to_response() {
 
     assert_eq!(response.c_mm, 5.0);
 }
-
-

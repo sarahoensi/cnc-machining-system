@@ -5,16 +5,9 @@
 
 // interface/tauri/helix/mapping.rs
 
-use crate::application::{
-    SolveHelixInput,
-    SolveHelixOutput,
-};
+use crate::application::{SolveHelixInput, SolveHelixOutput};
 
-use super::{
-    SolveHelixRequest,
-    SolveHelixResponse,
-    HelixMode as UiHelixMode,
-};
+use super::{HelixMode as UiHelixMode, SolveHelixRequest, SolveHelixResponse};
 
 use crate::domain::HelixMode;
 
@@ -34,7 +27,6 @@ impl From<UiHelixMode> for HelixMode {
 impl From<SolveHelixRequest> for SolveHelixInput {
     fn from(req: SolveHelixRequest) -> Self {
         match req {
-
             SolveHelixRequest::Pitch {
                 mode,
                 diameter,

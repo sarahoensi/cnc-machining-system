@@ -8,10 +8,7 @@ use uuid::Uuid;
 
 fn temp_file_path() -> std::path::PathBuf {
     let mut p = env::temp_dir();
-    p.push(format!(
-        "cylinder_materials_test_{}.json",
-        Uuid::new_v4()
-    ));
+    p.push(format!("cylinder_materials_test_{}.json", Uuid::new_v4()));
     p
 }
 
@@ -50,8 +47,7 @@ fn rejects_duplicate_material_case_insensitive() {
     let path = temp_file_path();
     let mut repo = JsonCylinderMaterialRepository::load_or_initialize(path.clone()).unwrap();
 
-    repo
-        .create(Material::new("Steel".to_string(), 7850.0).unwrap())
+    repo.create(Material::new("Steel".to_string(), 7850.0).unwrap())
         .unwrap();
 
     let result = repo.create(Material::new("steel".to_string(), 7900.0).unwrap());

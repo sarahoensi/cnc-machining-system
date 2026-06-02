@@ -3,15 +3,13 @@
 use cnc_machining_system_lib::{
     application::finishing::{
         dto::{GenerateFinishingPlanInput, RegisterFinishingMeasurementInput},
-        GenerateFinishingPlanUseCase,
-        RegisterFinishingMeasurementUseCase,
+        GenerateFinishingPlanUseCase, RegisterFinishingMeasurementUseCase,
     },
     domain::machining::finishing::FinishingMode,
 };
 
 #[test]
 fn full_finishing_workflow() {
-
     let generate = GenerateFinishingPlanUseCase::new();
     let register = RegisterFinishingMeasurementUseCase::new();
 
@@ -25,13 +23,15 @@ fn full_finishing_workflow() {
         .unwrap();
 
     // --- Step 1 measurement ---
-    register.execute(
-        &mut execution,
-        RegisterFinishingMeasurementInput {
-            step_number: 1,
-            measurement_mm: 9.6,
-        },
-    ).unwrap();
+    register
+        .execute(
+            &mut execution,
+            RegisterFinishingMeasurementInput {
+                step_number: 1,
+                measurement_mm: 9.6,
+            },
+        )
+        .unwrap();
 
     assert_eq!(
         execution.steps()[0].measurement().map(|d| d.mm_value()),
@@ -39,13 +39,15 @@ fn full_finishing_workflow() {
     );
 
     // --- Step 2 measurement ---
-    register.execute(
-        &mut execution,
-        RegisterFinishingMeasurementInput {
-            step_number: 2,
-            measurement_mm: 8.9,
-        },
-    ).unwrap();
+    register
+        .execute(
+            &mut execution,
+            RegisterFinishingMeasurementInput {
+                step_number: 2,
+                measurement_mm: 8.9,
+            },
+        )
+        .unwrap();
 
     assert_eq!(
         execution.steps()[1].measurement().map(|d| d.mm_value()),
@@ -53,13 +55,15 @@ fn full_finishing_workflow() {
     );
 
     // --- Edit step 2 ---
-    register.execute(
-        &mut execution,
-        RegisterFinishingMeasurementInput {
-            step_number: 2,
-            measurement_mm: 8.7,
-        },
-    ).unwrap();
+    register
+        .execute(
+            &mut execution,
+            RegisterFinishingMeasurementInput {
+                step_number: 2,
+                measurement_mm: 8.7,
+            },
+        )
+        .unwrap();
 
     // ✔ measurement updated
     assert_eq!(

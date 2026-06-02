@@ -1,9 +1,6 @@
 // domain/machining/cutting_data/tool.rs
 
-use crate::domain::units::{
-    Diameter,
-    ToothCount,
-};
+use crate::domain::units::{Diameter, ToothCount};
 
 /// Represents a physical cutting tool used in machining.
 ///
@@ -23,14 +20,10 @@ pub struct Tool {
 }
 
 impl Tool {
-
     /// Creates a new validated tool definition.
     ///
     /// All invariants are enforced by the value objects.
-    pub fn new(
-        diameter: Diameter,
-        teeth: ToothCount,
-    ) -> Self {
+    pub fn new(diameter: Diameter, teeth: ToothCount) -> Self {
         Self { diameter, teeth }
     }
 

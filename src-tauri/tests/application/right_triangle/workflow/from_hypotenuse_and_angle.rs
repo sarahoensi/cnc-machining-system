@@ -1,21 +1,17 @@
-use cnc_machining_system_lib::application::{
-    SolveRightTriangleInput,
-    SolveRightTriangleUseCase,
-};
+use cnc_machining_system_lib::application::{SolveRightTriangleInput, SolveRightTriangleUseCase};
 
 const EPS: f64 = 1e-9;
 
 #[test]
 fn solves_triangle_from_hypotenuse_and_alpha() {
-
     let use_case = SolveRightTriangleUseCase;
 
-    let result = use_case.execute(
-        SolveRightTriangleInput::HypotenuseAndAlpha {
+    let result = use_case
+        .execute(SolveRightTriangleInput::HypotenuseAndAlpha {
             c_mm: 10.0,
             alpha_deg: 30.0,
-        }
-    ).unwrap();
+        })
+        .unwrap();
 
     // a = c * sin(30°) = 10 * 0.5 = 5
     assert!((result.a_mm - 5.0).abs() < EPS);
@@ -27,15 +23,14 @@ fn solves_triangle_from_hypotenuse_and_alpha() {
 
 #[test]
 fn solves_triangle_from_hypotenuse_and_beta() {
-
     let use_case = SolveRightTriangleUseCase;
 
-    let result = use_case.execute(
-        SolveRightTriangleInput::HypotenuseAndBeta {
+    let result = use_case
+        .execute(SolveRightTriangleInput::HypotenuseAndBeta {
             c_mm: 10.0,
             beta_deg: 60.0,
-        }
-    ).unwrap();
+        })
+        .unwrap();
 
     assert!((result.a_mm - 5.0).abs() < EPS);
     assert!((result.alpha_deg - 30.0).abs() < EPS);

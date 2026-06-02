@@ -2,15 +2,11 @@
 
 use cnc_machining_system_lib::{
     application::finishing::{
-        dto::FinishingExecutionOutput,
-        dto::GenerateFinishingPlanInput,
-        GenerateFinishingPlanUseCase,
+        dto::FinishingExecutionOutput, dto::GenerateFinishingPlanInput,
+        GenerateFinishingPlanUseCase, RegisterFinishingMeasurementInput,
         RegisterFinishingMeasurementUseCase,
-        RegisterFinishingMeasurementInput,
     },
-    domain::{
-        machining::finishing::FinishingMode
-    },
+    domain::machining::finishing::FinishingMode,
 };
 
 //
@@ -21,7 +17,6 @@ use cnc_machining_system_lib::{
 
 #[test]
 fn mapping_preserves_measurement_values() {
-
     let generate = GenerateFinishingPlanUseCase::new();
     let mut execution = generate
         .execute(GenerateFinishingPlanInput::ByCuts {
@@ -34,13 +29,15 @@ fn mapping_preserves_measurement_values() {
 
     let register = RegisterFinishingMeasurementUseCase::new();
 
-    register.execute(
-        &mut execution,
-        RegisterFinishingMeasurementInput {
-            step_number: 1,
-            measurement_mm: 9.5,
-        },
-    ).unwrap();
+    register
+        .execute(
+            &mut execution,
+            RegisterFinishingMeasurementInput {
+                step_number: 1,
+                measurement_mm: 9.5,
+            },
+        )
+        .unwrap();
 
     let output: FinishingExecutionOutput = (&execution).into();
 
@@ -55,7 +52,6 @@ fn mapping_preserves_measurement_values() {
 
 #[test]
 fn mapping_preserves_none_measurements() {
-
     let generate = GenerateFinishingPlanUseCase::new();
 
     let execution = generate
@@ -80,7 +76,6 @@ fn mapping_preserves_none_measurements() {
 
 #[test]
 fn mapping_preserves_step_ordering() {
-
     let generate = GenerateFinishingPlanUseCase::new();
 
     let execution = generate
@@ -107,7 +102,6 @@ fn mapping_preserves_step_ordering() {
 
 #[test]
 fn mapping_preserves_active_step() {
-
     let generate = GenerateFinishingPlanUseCase::new();
 
     let execution = generate

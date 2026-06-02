@@ -10,7 +10,6 @@ use crate::domain::DomainError;
 /// UI/API should only depend on this type.
 #[derive(Debug, Error)]
 pub enum ApplicationError {
-
     /// Input validation failure (field-level errors).
     #[error("Validation failed")]
     Validation(ValidationErrors),

@@ -1,15 +1,11 @@
 // tests/domain/machining_strategy/finishing_execution_tests.rs
 
 use cnc_machining_system_lib::domain::{
-    units::*,
     machining::finishing::{
-        FinishingExecution,
-        FinishingPlan,
-        FinishingPlanner,
-        FinishingPlanning,
+        FinishingExecution, FinishingMode, FinishingPlan, FinishingPlanner, FinishingPlanning,
         FinishingRequest,
-        FinishingMode,
     },
+    units::*,
 };
 
 const EPS: f64 = 1e-9;
@@ -59,10 +55,7 @@ fn assert_execution_invariants(exec: &FinishingExecution) {
     assert!(!steps.is_empty());
 
     // first step must start at plan.start
-    assert!(approx(
-        steps[0].start().mm_value(),
-        plan.start().mm_value()
-    ));
+    assert!(approx(steps[0].start().mm_value(), plan.start().mm_value()));
 
     // last step must end at target
     let last = steps.last().unwrap();
@@ -74,17 +67,15 @@ fn assert_execution_invariants(exec: &FinishingExecution) {
 
     // ensure continuity between steps
     for pair in steps.windows(2) {
-
-    let previous_end =
-        pair[0]
+        let previous_end = pair[0]
             .measurement()
             .unwrap_or(pair[0].planned_end())
             .mm_value();
 
-    let next_start = pair[1].start().mm_value();
+        let next_start = pair[1].start().mm_value();
 
-    assert!(approx(previous_end, next_start));
-}
+        assert!(approx(previous_end, next_start));
+    }
 }
 
 //

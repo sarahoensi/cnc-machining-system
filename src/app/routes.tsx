@@ -7,6 +7,7 @@ import { HelixPage } from "@features/helix/ui/HelixPage";
 import  {CuttingDataPage} from "@features/cuttingData/ui/cuttingDataPage";
 import { FinishingPage } from "@features/finishing/page/FinishingPage";
 import { CylinderWeightPage } from "@features/cylinder_weight/ui/CylinderWeightPage";
+import { TolerancesPage } from "@features/tolerances/ui/TolerancesPage";
 
 
 export function AppRoutes() {
@@ -21,6 +22,7 @@ export function AppRoutes() {
 
       {/* Machining physics */}
       <Route path="/cutting" element={<CuttingDataPage />} />
+      <Route path="/tolerances" element={<TolerancesPage />} />
 
       {/* Machining strategy */}
       <Route path="/finishing" element={<FinishingPage />} />

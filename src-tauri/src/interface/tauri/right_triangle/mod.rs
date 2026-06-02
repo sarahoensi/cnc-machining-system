@@ -8,9 +8,9 @@
 // interface/tauri/right_triangle/mod.rs
 
 mod command;
+mod mapping;
 mod request;
 mod response;
-mod mapping;
 
 pub use command::*;
 pub use request::*;

@@ -23,15 +23,11 @@ pub struct RightTriangle {
 }
 
 impl RightTriangle {
-
     // ---------------------------------------------------------
     // Constructors
     // ---------------------------------------------------------
 
-    pub fn from_legs(
-        a: PositiveLength,
-        b: PositiveLength,
-    ) -> Self {
+    pub fn from_legs(a: PositiveLength, b: PositiveLength) -> Self {
         Self { a, b }
     }
 
@@ -39,22 +35,20 @@ impl RightTriangle {
         a: PositiveLength,
         c: PositiveLength,
     ) -> Result<Self, GeometryError> {
-
         let a_mm = a.mm_value();
         let c_mm = c.mm_value();
 
         if a_mm >= c_mm {
-            return Err(
-                RightTriangleError::HypotenuseTooShort {
-                    leg: a_mm,
-                    hypotenuse: c_mm,
-                }.into()
-            );
+            return Err(RightTriangleError::HypotenuseTooShort {
+                leg: a_mm,
+                hypotenuse: c_mm,
+            }
+            .into());
         }
 
         // numerically stable: c² − a² = (c−a)(c+a)
         let diff = c_mm - a_mm;
-        let sum  = c_mm + a_mm;
+        let sum = c_mm + a_mm;
 
         let b = PositiveLength::mm_unchecked((diff * sum).sqrt());
 
@@ -65,32 +59,26 @@ impl RightTriangle {
         b: PositiveLength,
         c: PositiveLength,
     ) -> Result<Self, GeometryError> {
-
         let b_mm = b.mm_value();
         let c_mm = c.mm_value();
 
         if b_mm >= c_mm {
-            return Err(
-                RightTriangleError::HypotenuseTooShort {
-                    leg: b_mm,
-                    hypotenuse: c_mm,
-                }.into()
-            );
+            return Err(RightTriangleError::HypotenuseTooShort {
+                leg: b_mm,
+                hypotenuse: c_mm,
+            }
+            .into());
         }
 
         let diff = c_mm - b_mm;
-        let sum  = c_mm + b_mm;
+        let sum = c_mm + b_mm;
 
         let a = PositiveLength::mm_unchecked((diff * sum).sqrt());
 
         Ok(Self { a, b })
     }
 
-    pub fn from_hypotenuse_and_angle(
-        c: PositiveLength,
-        alpha: AcuteAngle,
-    ) -> Self {
-
+    pub fn from_hypotenuse_and_angle(c: PositiveLength, alpha: AcuteAngle) -> Self {
         let c_mm = c.mm_value();
         let rad = alpha.radians_value();
 
@@ -104,7 +92,6 @@ impl RightTriangle {
         a: PositiveLength,
         alpha: AcuteAngle,
     ) -> Result<Self, GeometryError> {
-
         let a_mm = a.mm_value();
         let rad = alpha.radians_value();
 
@@ -124,7 +111,6 @@ impl RightTriangle {
         b: PositiveLength,
         alpha: AcuteAngle,
     ) -> Result<Self, GeometryError> {
-
         let b_mm = b.mm_value();
         let rad = alpha.radians_value();
 
@@ -144,41 +130,20 @@ impl RightTriangle {
     // Beta wrappers
     // ---------------------------------------------------------
 
-    pub fn from_leg_a_and_beta(
-        a: PositiveLength,
-        beta: AcuteAngle,
-    ) -> Result<Self, GeometryError> {
-
-        let alpha =
-            AcuteAngle::radians_unchecked(
-                FRAC_PI_2 - beta.radians_value()
-            );
+    pub fn from_leg_a_and_beta(a: PositiveLength, beta: AcuteAngle) -> Result<Self, GeometryError> {
+        let alpha = AcuteAngle::radians_unchecked(FRAC_PI_2 - beta.radians_value());
 
         Self::from_leg_and_opposite_angle(a, alpha)
     }
 
-    pub fn from_leg_b_and_beta(
-        b: PositiveLength,
-        beta: AcuteAngle,
-    ) -> Result<Self, GeometryError> {
-
-        let alpha =
-            AcuteAngle::radians_unchecked(
-                FRAC_PI_2 - beta.radians_value()
-            );
+    pub fn from_leg_b_and_beta(b: PositiveLength, beta: AcuteAngle) -> Result<Self, GeometryError> {
+        let alpha = AcuteAngle::radians_unchecked(FRAC_PI_2 - beta.radians_value());
 
         Self::from_adjacent_leg_and_angle(b, alpha)
     }
 
-    pub fn from_hypotenuse_and_beta(
-        c: PositiveLength,
-        beta: AcuteAngle,
-    ) -> Self {
-
-        let alpha =
-            AcuteAngle::radians_unchecked(
-                FRAC_PI_2 - beta.radians_value()
-            );
+    pub fn from_hypotenuse_and_beta(c: PositiveLength, beta: AcuteAngle) -> Self {
+        let alpha = AcuteAngle::radians_unchecked(FRAC_PI_2 - beta.radians_value());
 
         Self::from_hypotenuse_and_angle(c, alpha)
     }
@@ -187,8 +152,12 @@ impl RightTriangle {
     // Accessors
     // ---------------------------------------------------------
 
-    pub fn a(&self) -> PositiveLength { self.a }
-    pub fn b(&self) -> PositiveLength { self.b }
+    pub fn a(&self) -> PositiveLength {
+        self.a
+    }
+    pub fn b(&self) -> PositiveLength {
+        self.b
+    }
 
     // ---------------------------------------------------------
     // Internal helper
@@ -268,8 +237,6 @@ impl RightTriangle {
 // Helpers
 // ---------------------------------------------------------
 
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -286,8 +253,7 @@ mod tests {
     fn pythagoras_identity() {
         let t = sample_triangle();
 
-        let lhs =
-            t.a().mm_value().powi(2) + t.b().mm_value().powi(2);
+        let lhs = t.a().mm_value().powi(2) + t.b().mm_value().powi(2);
 
         let rhs = t.c().mm_value().powi(2);
 
@@ -298,8 +264,7 @@ mod tests {
     fn angle_sum_identity() {
         let t = sample_triangle();
 
-        let sum =
-            t.alpha().degrees_value() + t.beta().degrees_value();
+        let sum = t.alpha().degrees_value() + t.beta().degrees_value();
 
         assert!(approx_eq(sum, 90.0, DEFAULT_EPS));
     }
@@ -308,23 +273,16 @@ mod tests {
     fn projection_identity() {
         let t = sample_triangle();
 
-        let sum = t.projection_a_on_c().mm_value()
-            + t.projection_b_on_c().mm_value();
+        let sum = t.projection_a_on_c().mm_value() + t.projection_b_on_c().mm_value();
 
-        assert!(approx_eq(
-            sum,
-            t.c().mm_value(),
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(sum, t.c().mm_value(), DEFAULT_EPS));
     }
 
     #[test]
     fn altitude_identity() {
         let t = sample_triangle();
 
-        let expected =
-            (t.a().mm_value() * t.b().mm_value())
-                / t.c().mm_value();
+        let expected = (t.a().mm_value() * t.b().mm_value()) / t.c().mm_value();
 
         assert!(approx_eq(
             t.altitude_to_hypotenuse().mm_value(),
@@ -339,10 +297,7 @@ mod tests {
 
         let via_ab = t.area();
 
-        let via_ch =
-            t.c().mm_value()
-                * t.altitude_to_hypotenuse().mm_value()
-                / 2.0;
+        let via_ch = t.c().mm_value() * t.altitude_to_hypotenuse().mm_value() / 2.0;
 
         assert!(approx_eq(via_ab, via_ch, DEFAULT_EPS));
     }
@@ -354,10 +309,6 @@ mod tests {
         let s = t.sin_alpha();
         let c = t.cos_alpha();
 
-        assert!(approx_eq(
-            s.powi(2) + c.powi(2),
-            1.0,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(s.powi(2) + c.powi(2), 1.0, DEFAULT_EPS));
     }
 }

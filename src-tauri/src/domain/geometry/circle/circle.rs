@@ -91,8 +91,8 @@ impl Circle {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
     use crate::domain::units::Angle;
+    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
 
     #[test]
     fn constructors_are_consistent() {
@@ -128,11 +128,7 @@ mod tests {
 
         let expected = PI * 9.0;
 
-        assert!(approx_eq(
-            c.area(),
-            expected,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(c.area(), expected, DEFAULT_EPS));
     }
 
     #[test]
@@ -156,19 +152,15 @@ mod tests {
 
         let expected = 0.5 * c.area();
 
-        assert!(approx_eq(
-            c.sector_area(angle),
-            expected,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(c.sector_area(angle), expected, DEFAULT_EPS));
     }
 }
 
 #[cfg(test)]
 mod property_tests {
     use super::*;
-    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
     use crate::domain::units::Angle;
+    use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
     use proptest::prelude::*;
 
     proptest! {
@@ -219,4 +211,3 @@ mod property_tests {
         }
     }
 }
-

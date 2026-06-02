@@ -1,6 +1,6 @@
 // domain/units/length/length.rs
 
-use crate::domain::units::{UnitsError, core::NumericError};
+use crate::domain::units::{core::NumericError, UnitsError};
 
 /// Represents a signed linear length measurement.
 ///
@@ -19,14 +19,11 @@ pub struct Length(f64);
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct PositiveLength(f64);
 
-
-
 // ============================================================
 // Length (signed)
 // ============================================================
 
 impl Length {
-
     pub(crate) fn mm_unchecked(value: f64) -> Self {
         debug_assert!(value.is_finite());
         Self(value)
@@ -66,14 +63,11 @@ impl Length {
     }
 }
 
-
-
 // ============================================================
 // PositiveLength (> 0)
 // ============================================================
 
 impl PositiveLength {
-
     pub(crate) fn mm_unchecked(value: f64) -> Self {
         debug_assert!(value.is_finite());
         debug_assert!(value > 0.0);
@@ -116,8 +110,6 @@ impl PositiveLength {
     }
 }
 
-
-
 // ============================================================
 // Arithmetic for Length (signed)
 // ============================================================
@@ -150,8 +142,6 @@ impl std::ops::Div<f64> for Length {
     }
 }
 
-
-
 // ============================================================
 // Arithmetic for PositiveLength
 // ============================================================
@@ -178,32 +168,32 @@ mod tests {
     use crate::test_utils::approx::{approx_eq, DEFAULT_EPS};
 
     // --- Validation ---
-/*/
-    #[test]
-    fn rejects_nan() {
-        assert!(Length::mm(f64::NAN).is_err());
-        assert!(Length::mm_non_negative(f64::NAN).is_err());
-        assert!(Length::mm_positive(f64::NAN).is_err());
-    }
+    /*/
+        #[test]
+        fn rejects_nan() {
+            assert!(Length::mm(f64::NAN).is_err());
+            assert!(Length::mm_non_negative(f64::NAN).is_err());
+            assert!(Length::mm_positive(f64::NAN).is_err());
+        }
 
-    #[test]
-    fn rejects_infinity() {
-        assert!(Length::mm(f64::INFINITY).is_err());
-        assert!(Length::mm(f64::NEG_INFINITY).is_err());
-    }
+        #[test]
+        fn rejects_infinity() {
+            assert!(Length::mm(f64::INFINITY).is_err());
+            assert!(Length::mm(f64::NEG_INFINITY).is_err());
+        }
 
-    #[test]
-    fn non_negative_rules() {
-        assert!(Length::mm_non_negative(0.0).is_ok());
-        assert!(Length::mm_non_negative(-1.0).is_err());
-    }
+        #[test]
+        fn non_negative_rules() {
+            assert!(Length::mm_non_negative(0.0).is_ok());
+            assert!(Length::mm_non_negative(-1.0).is_err());
+        }
 
-    #[test]
-    fn positive_rules() {
-        assert!(Length::mm_positive(0.0).is_err());
-        assert!(Length::mm_positive(1.0).is_ok());
-    }
-*/
+        #[test]
+        fn positive_rules() {
+            assert!(Length::mm_positive(0.0).is_err());
+            assert!(Length::mm_positive(1.0).is_ok());
+        }
+    */
     // --- Conversion ---
 
     #[test]

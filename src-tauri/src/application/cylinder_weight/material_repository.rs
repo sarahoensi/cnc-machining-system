@@ -55,12 +55,16 @@ impl JsonCylinderMaterialRepository {
             return Ok(Self { path, data: seeded });
         }
 
-        let raw = fs::read_to_string(&path).map_err(|e| format!("failed to read materials file: {e}"))?;
-        let data: PersistedMaterials =
-            serde_json::from_str(&raw).map_err(|e| format!("failed to parse materials file: {e}"))?;
+        let raw =
+            fs::read_to_string(&path).map_err(|e| format!("failed to read materials file: {e}"))?;
+        let data: PersistedMaterials = serde_json::from_str(&raw)
+            .map_err(|e| format!("failed to parse materials file: {e}"))?;
 
         if data.schema_version != 1 {
-            return Err(format!("unsupported schema_version: {}", data.schema_version));
+            return Err(format!(
+                "unsupported schema_version: {}",
+                data.schema_version
+            ));
         }
 
         Ok(Self { path, data })
@@ -91,14 +95,18 @@ impl CylinderMaterialRepository for JsonCylinderMaterialRepository {
     }
 
     fn get_by_id(&self, id: &str) -> Option<CylinderMaterialRecord> {
-        self.data.materials.iter().find(|m| m.id == id).and_then(|m| {
-            Material::new(m.name.clone(), m.density_kg_m3)
-                .ok()
-                .map(|material| CylinderMaterialRecord {
-                    id: m.id.clone(),
-                    material,
-                })
-        })
+        self.data
+            .materials
+            .iter()
+            .find(|m| m.id == id)
+            .and_then(|m| {
+                Material::new(m.name.clone(), m.density_kg_m3)
+                    .ok()
+                    .map(|material| CylinderMaterialRecord {
+                        id: m.id.clone(),
+                        material,
+                    })
+            })
     }
 
     fn get_by_normalized_name(&self, normalized_name: &str) -> Option<CylinderMaterialRecord> {
@@ -183,16 +191,21 @@ impl CylinderMaterialRepository for JsonCylinderMaterialRepository {
 
 fn write_data_file(path: &Path, data: &PersistedMaterials) -> Result<(), String> {
     if let Some(parent) = path.parent() {
-        fs::create_dir_all(parent).map_err(|e| format!("failed to create app data directory: {e}"))?;
+        fs::create_dir_all(parent)
+            .map_err(|e| format!("failed to create app data directory: {e}"))?;
     }
 
     let tmp_path = path.with_extension("json.tmp");
-    let bytes = serde_json::to_vec_pretty(data).map_err(|e| format!("failed to serialize materials: {e}"))?;
+    let bytes = serde_json::to_vec_pretty(data)
+        .map_err(|e| format!("failed to serialize materials: {e}"))?;
 
     {
-        let mut f = fs::File::create(&tmp_path).map_err(|e| format!("failed to create temp materials file: {e}"))?;
-        f.write_all(&bytes).map_err(|e| format!("failed to write temp materials file: {e}"))?;
-        f.flush().map_err(|e| format!("failed to flush temp materials file: {e}"))?;
+        let mut f = fs::File::create(&tmp_path)
+            .map_err(|e| format!("failed to create temp materials file: {e}"))?;
+        f.write_all(&bytes)
+            .map_err(|e| format!("failed to write temp materials file: {e}"))?;
+        f.flush()
+            .map_err(|e| format!("failed to flush temp materials file: {e}"))?;
     }
 
     fs::rename(&tmp_path, path).map_err(|e| format!("failed to replace materials file: {e}"))?;

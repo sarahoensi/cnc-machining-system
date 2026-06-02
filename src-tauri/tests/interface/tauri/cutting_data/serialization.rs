@@ -4,7 +4,6 @@ use cnc_machining_system_lib::interface::cutting_data::SolveCuttingDataRequest;
 
 #[test]
 fn deserializes_valid_json() {
-
     let json = r#"
     {
         "rpm": 5000,

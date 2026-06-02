@@ -3,15 +3,13 @@
 use cnc_machining_system_lib::{
     application::finishing::{
         dto::{GenerateFinishingPlanInput, RegisterFinishingMeasurementInput},
-        GenerateFinishingPlanUseCase,
-        RegisterFinishingMeasurementUseCase,
+        GenerateFinishingPlanUseCase, RegisterFinishingMeasurementUseCase,
     },
     domain::machining::finishing::FinishingMode,
 };
 
 #[test]
 fn registers_measurement_via_use_cases() {
-
     let generate_uc = GenerateFinishingPlanUseCase::new();
     let register_uc = RegisterFinishingMeasurementUseCase::new();
 

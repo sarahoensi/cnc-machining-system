@@ -1,0 +1,48 @@
+.tolerances-page {
+  display: grid;
+  grid-template-columns: minmax(18rem, 22rem) minmax(18rem, 22rem);
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.tolerances-output-column,
+.tolerances-input-column {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-gap);
+}
+
+.tolerances-result-actions {
+  display: flex;
+  justify-content: flex-start;
+  padding-inline-start: calc(var(--input-padding-x-form) * 0.5);
+}
+
+.tolerances-fit-type {
+  padding-inline-start: calc(var(--input-padding-x-form) * 0.5);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.tolerances-table .ui-table-header-cell {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--table-header-bg);
+}
+
+.tolerances-empty {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.tolerances-error {
+  min-height: var(--form-error-min-height);
+}
+
+@media (max-width: 760px) {
+  .tolerances-page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

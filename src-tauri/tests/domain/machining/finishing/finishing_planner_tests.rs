@@ -1,13 +1,8 @@
 // tests/domain/machining_strategy/finishing_planner_tests.rs
 
 use cnc_machining_system_lib::domain::{
+    machining::finishing::{FinishingMode, FinishingPlanner, FinishingPlanning, FinishingRequest},
     units::*,
-    machining::finishing::{
-        FinishingPlanner,
-        FinishingPlanning,
-        FinishingRequest,
-        FinishingMode,
-    },
 };
 
 const EPS: f64 = 1e-9;

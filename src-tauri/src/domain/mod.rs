@@ -1,7 +1,7 @@
 // domain/mod.rs
-pub mod units;
 mod geometry;
 pub mod machining;
+pub mod units;
 //mod machining_strategy;
 mod error;
 
@@ -12,14 +12,14 @@ pub use error::DomainError;
 // --------------------------------
 pub use geometry::{
     Circle,
-    Helix,
-    HelixMode,
-    HelixError,
-    //EffectiveDiameter,
-    RightTriangle,
     //RightTriangleSolver,
     GeometryError,
-    RightTriangleError
+    Helix,
+    HelixError,
+    HelixMode,
+    //EffectiveDiameter,
+    RightTriangle,
+    RightTriangleError,
 };
 
 // --------------------------------
@@ -38,7 +38,7 @@ Tool,
 // --------------------------------
 // Machining Strategy
 // --------------------------------
-/* 
+/*
 pub use machining_strategy::{
     FinishingPlanner,
     FinishingExecution,

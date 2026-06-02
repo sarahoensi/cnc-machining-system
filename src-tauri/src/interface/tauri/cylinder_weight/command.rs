@@ -2,10 +2,11 @@ use tauri::{command, State};
 
 use crate::{
     application::{
-        CreateCylinderMaterialInput, CreateCylinderMaterialUseCase, ListCylinderMaterialsUseCase,
-        DeleteCylinderMaterialInput, DeleteCylinderMaterialUseCase, SolveCylinderWeightInput,
-        ExportCylinderMaterialsUseCase, ImportCylinderMaterialsInput, ImportCylinderMaterialsUseCase,
-        SolveCylinderWeightUseCase, UpdateCylinderMaterialInput, UpdateCylinderMaterialUseCase,
+        CreateCylinderMaterialInput, CreateCylinderMaterialUseCase, DeleteCylinderMaterialInput,
+        DeleteCylinderMaterialUseCase, ExportCylinderMaterialsUseCase,
+        ImportCylinderMaterialsInput, ImportCylinderMaterialsUseCase, ListCylinderMaterialsUseCase,
+        SolveCylinderWeightInput, SolveCylinderWeightUseCase, UpdateCylinderMaterialInput,
+        UpdateCylinderMaterialUseCase,
     },
     interface::tauri::error::{map_application_error, TauriError, TauriFieldError},
     AppState,
@@ -13,9 +14,8 @@ use crate::{
 
 use super::{
     CreateCylinderMaterialRequest, CylinderMaterialResponse, DeleteCylinderMaterialRequest,
-    ExportCylinderMaterialsResponse, ImportCylinderMaterialsRequest, ImportCylinderMaterialsResponse,
-    SolveCylinderWeightRequest,
-    SolveCylinderWeightResponse,
+    ExportCylinderMaterialsResponse, ImportCylinderMaterialsRequest,
+    ImportCylinderMaterialsResponse, SolveCylinderWeightRequest, SolveCylinderWeightResponse,
     UpdateCylinderMaterialRequest,
 };
 
@@ -38,7 +38,9 @@ pub fn create_cylinder_material(
 
     match CreateCylinderMaterialUseCase::execute(&mut *repo, input) {
         Ok(out) => Ok(out.into()),
-        Err(crate::application::ApplicationError::Infrastructure(msg)) if msg == "duplicate_material" => {
+        Err(crate::application::ApplicationError::Infrastructure(msg))
+            if msg == "duplicate_material" =>
+        {
             Err(TauriError {
                 message: "Material already exists".to_string(),
                 field_errors: Some(vec![TauriFieldError {
@@ -74,7 +76,9 @@ pub fn update_cylinder_material(
 
     match UpdateCylinderMaterialUseCase::execute(&mut *repo, input) {
         Ok(out) => Ok(out.into()),
-        Err(crate::application::ApplicationError::Infrastructure(msg)) if msg == "duplicate_material" => {
+        Err(crate::application::ApplicationError::Infrastructure(msg))
+            if msg == "duplicate_material" =>
+        {
             Err(TauriError {
                 message: "Material already exists".to_string(),
                 field_errors: Some(vec![TauriFieldError {
@@ -84,7 +88,9 @@ pub fn update_cylinder_material(
                 }]),
             })
         }
-        Err(crate::application::ApplicationError::Infrastructure(msg)) if msg == "material_not_found" => {
+        Err(crate::application::ApplicationError::Infrastructure(msg))
+            if msg == "material_not_found" =>
+        {
             Err(TauriError {
                 message: "Material not found".to_string(),
                 field_errors: Some(vec![TauriFieldError {
@@ -108,7 +114,9 @@ pub fn delete_cylinder_material(
 
     match DeleteCylinderMaterialUseCase::execute(&mut *repo, input) {
         Ok(()) => Ok(()),
-        Err(crate::application::ApplicationError::Infrastructure(msg)) if msg == "material_not_found" => {
+        Err(crate::application::ApplicationError::Infrastructure(msg))
+            if msg == "material_not_found" =>
+        {
             Err(TauriError {
                 message: "Material not found".to_string(),
                 field_errors: Some(vec![TauriFieldError {

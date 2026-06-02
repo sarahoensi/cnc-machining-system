@@ -7,21 +7,11 @@
 
 use tauri::command;
 
-use crate::interface::tauri::error::{
-    TauriError,
-    map_application_error,
-};
+use crate::interface::tauri::error::{map_application_error, TauriError};
 
-use crate::application::{
-    SolveCuttingDataInput,
-    SolveCuttingDataUseCase,
-};
+use crate::application::{SolveCuttingDataInput, SolveCuttingDataUseCase};
 
-use super::{
-    SolveCuttingDataRequest,
-    SolveCuttingDataResponse,
-};
-
+use super::{SolveCuttingDataRequest, SolveCuttingDataResponse};
 
 /// Solves and completes cutting data for a machining setup request.
 ///
@@ -49,11 +39,9 @@ use super::{
 pub fn solve_cutting_data(
     request: SolveCuttingDataRequest,
 ) -> Result<SolveCuttingDataResponse, TauriError> {
-
     let input: SolveCuttingDataInput = request.into();
 
-    let output = SolveCuttingDataUseCase::execute(input)
-        .map_err(map_application_error)?;
+    let output = SolveCuttingDataUseCase::execute(input).map_err(map_application_error)?;
 
     Ok(output.into())
 }

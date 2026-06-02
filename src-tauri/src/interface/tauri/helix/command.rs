@@ -7,25 +7,19 @@
 
 use tauri::command;
 
-use crate::{application::SolveHelixUseCase, interface::tauri::error::{TauriError, map_application_error}};
-
-
-use super::{
-    SolveHelixRequest,
-    SolveHelixResponse,
+use crate::{
+    application::SolveHelixUseCase,
+    interface::tauri::error::{map_application_error, TauriError},
 };
 
+use super::{SolveHelixRequest, SolveHelixResponse};
 
 #[command]
-pub fn solve_helix(
-    request: SolveHelixRequest,
-) -> Result<SolveHelixResponse, TauriError> {
-
+pub fn solve_helix(request: SolveHelixRequest) -> Result<SolveHelixResponse, TauriError> {
     let use_case = SolveHelixUseCase;
     let input = request.into();
 
     match use_case.execute(input) {
-
         Ok(result) => Ok(result.into()),
 
         Err(err) => {

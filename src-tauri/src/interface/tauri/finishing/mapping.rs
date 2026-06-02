@@ -5,22 +5,14 @@
 //! without changing workflow meaning.
 
 use crate::application::finishing::{
-    FinishingExecutionOutput,
-    FinishingStepOutput,
-    GenerateFinishingPlanInput,
+    FinishingExecutionOutput, FinishingStepOutput, GenerateFinishingPlanInput,
 };
 
 use crate::domain::machining::finishing::FinishingMode as AppFinishingMode;
 
-use super::request::{
-    GenerateFinishingPlanRequest,
-    FinishingMode as UiFinishingMode,
-};
+use super::request::{FinishingMode as UiFinishingMode, GenerateFinishingPlanRequest};
 
-use super::response::{
-    FinishingExecutionResponse,
-    FinishingStepResponse,
-};
+use super::response::{FinishingExecutionResponse, FinishingStepResponse};
 
 //
 // -----------------------------
@@ -45,9 +37,7 @@ impl From<UiFinishingMode> for AppFinishingMode {
 
 impl From<GenerateFinishingPlanRequest> for GenerateFinishingPlanInput {
     fn from(req: GenerateFinishingPlanRequest) -> Self {
-
         match req {
-
             GenerateFinishingPlanRequest::ByCuts {
                 mode,
                 start_diameter_mm,

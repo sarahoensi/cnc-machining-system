@@ -1,12 +1,10 @@
 // tests/domain/geometry/right_triangle_solver_tests.rs
 use cnc_machining_system_lib::domain::{
-    RightTriangle,
     units::{AcuteAngle, PositiveLength},
+    RightTriangle,
 };
 
-use cnc_machining_system_lib::test_utils::approx::{
-    approx_eq, DEFAULT_EPS
-};
+use cnc_machining_system_lib::test_utils::approx::{approx_eq, DEFAULT_EPS};
 
 const TRI_345_ALPHA: f64 = 36.869897645844;
 
@@ -45,17 +43,13 @@ fn assert_triangle_close(t1: &RightTriangle, t2: &RightTriangle) {
 }
 
 fn assert_output_invariants(t: &RightTriangle) {
-
-    let lhs = t.a().mm_value().powi(2)
-        + t.b().mm_value().powi(2);
+    let lhs = t.a().mm_value().powi(2) + t.b().mm_value().powi(2);
 
     let rhs = t.c().mm_value().powi(2);
 
     assert!(approx_eq(lhs, rhs, DEFAULT_EPS));
 
-    let sum =
-        t.alpha().degrees_value()
-        + t.beta().degrees_value();
+    let sum = t.alpha().degrees_value() + t.beta().degrees_value();
 
     assert!(approx_eq(sum, 90.0, DEFAULT_EPS));
 
@@ -72,34 +66,13 @@ fn assert_output_invariants(t: &RightTriangle) {
 
 #[test]
 fn constructors_build_expected_345_triangle() {
-
     let tests = [
         RightTriangle::from_legs(len(3.0), len(4.0)),
-
-        RightTriangle::from_leg_and_hypotenuse(
-            len(3.0),
-            len(5.0)
-        ).unwrap(),
-
-        RightTriangle::from_other_leg_and_hypotenuse(
-            len(4.0),
-            len(5.0)
-        ).unwrap(),
-
-        RightTriangle::from_hypotenuse_and_angle(
-            len(5.0),
-            angle_deg(TRI_345_ALPHA)
-        ),
-
-        RightTriangle::from_leg_and_opposite_angle(
-            len(3.0),
-            angle_deg(TRI_345_ALPHA)
-        ).unwrap(),
-
-        RightTriangle::from_adjacent_leg_and_angle(
-            len(4.0),
-            angle_deg(TRI_345_ALPHA)
-        ).unwrap(),
+        RightTriangle::from_leg_and_hypotenuse(len(3.0), len(5.0)).unwrap(),
+        RightTriangle::from_other_leg_and_hypotenuse(len(4.0), len(5.0)).unwrap(),
+        RightTriangle::from_hypotenuse_and_angle(len(5.0), angle_deg(TRI_345_ALPHA)),
+        RightTriangle::from_leg_and_opposite_angle(len(3.0), angle_deg(TRI_345_ALPHA)).unwrap(),
+        RightTriangle::from_adjacent_leg_and_angle(len(4.0), angle_deg(TRI_345_ALPHA)).unwrap(),
     ];
 
     for t in tests {
@@ -116,28 +89,14 @@ fn constructors_build_expected_345_triangle() {
 
 #[test]
 fn all_constructor_paths_produce_identical_triangle() {
-
     let base = t_345();
 
     let variants = [
         RightTriangle::from_leg_and_hypotenuse(len(3.0), len(5.0)).unwrap(),
-
         RightTriangle::from_other_leg_and_hypotenuse(len(4.0), len(5.0)).unwrap(),
-
-        RightTriangle::from_hypotenuse_and_angle(
-            len(5.0),
-            angle_deg(TRI_345_ALPHA)
-        ),
-
-        RightTriangle::from_leg_and_opposite_angle(
-            len(3.0),
-            angle_deg(TRI_345_ALPHA)
-        ).unwrap(),
-
-        RightTriangle::from_adjacent_leg_and_angle(
-            len(4.0),
-            angle_deg(TRI_345_ALPHA)
-        ).unwrap(),
+        RightTriangle::from_hypotenuse_and_angle(len(5.0), angle_deg(TRI_345_ALPHA)),
+        RightTriangle::from_leg_and_opposite_angle(len(3.0), angle_deg(TRI_345_ALPHA)).unwrap(),
+        RightTriangle::from_adjacent_leg_and_angle(len(4.0), angle_deg(TRI_345_ALPHA)).unwrap(),
     ];
 
     for t in variants {
@@ -153,24 +112,12 @@ fn all_constructor_paths_produce_identical_triangle() {
 
 #[test]
 fn round_trip_reconstruction() {
-
-    let t = RightTriangle::from_legs(
-        len(7.3),
-        len(2.9),
-    );
+    let t = RightTriangle::from_legs(len(7.3), len(2.9));
 
     let variants = [
         RightTriangle::from_hypotenuse_and_angle(t.c(), t.alpha()),
-
-        RightTriangle::from_leg_and_opposite_angle(
-            t.a(),
-            t.alpha()
-        ).unwrap(),
-
-        RightTriangle::from_adjacent_leg_and_angle(
-            t.b(),
-            t.alpha()
-        ).unwrap(),
+        RightTriangle::from_leg_and_opposite_angle(t.a(), t.alpha()).unwrap(),
+        RightTriangle::from_adjacent_leg_and_angle(t.b(), t.alpha()).unwrap(),
     ];
 
     for reconstructed in variants {
@@ -186,7 +133,6 @@ fn round_trip_reconstruction() {
 
 #[test]
 fn scaling_preserves_angles() {
-
     let t1 = RightTriangle::from_legs(len(3.2), len(4.7));
     let t2 = RightTriangle::from_legs(len(32.0), len(47.0));
 
@@ -199,7 +145,6 @@ fn scaling_preserves_angles() {
 
 #[test]
 fn swapping_legs_swaps_angles() {
-
     let t1 = RightTriangle::from_legs(len(3.0), len(4.0));
     let t2 = RightTriangle::from_legs(len(4.0), len(3.0));
 
@@ -218,9 +163,7 @@ fn swapping_legs_swaps_angles() {
 
 #[test]
 fn random_legs_always_produce_valid_triangle() {
-
     for i in 1..100 {
-
         let a = i as f64 * 0.73 + 0.1;
         let b = i as f64 * 1.11 + 0.3;
 
@@ -238,33 +181,21 @@ fn random_legs_always_produce_valid_triangle() {
 
 #[test]
 fn tolerates_small_rounding_noise() {
-
-    let r = RightTriangle::from_leg_and_hypotenuse(
-        len(3.0),
-        len(5.0000000000000001),
-    );
+    let r = RightTriangle::from_leg_and_hypotenuse(len(3.0), len(5.0000000000000001));
 
     assert!(r.is_ok());
 }
 
 #[test]
 fn extremely_small_opposite_angle_rejected() {
-
-    let r = RightTriangle::from_leg_and_opposite_angle(
-        len(3.0),
-        angle_deg(1e-11),
-    );
+    let r = RightTriangle::from_leg_and_opposite_angle(len(3.0), angle_deg(1e-11));
 
     assert!(r.is_err());
 }
 
 #[test]
 fn near_ninety_angle_still_valid() {
-
-    let t = RightTriangle::from_leg_and_opposite_angle(
-        len(10.0),
-        angle_deg(89.999999),
-    ).unwrap();
+    let t = RightTriangle::from_leg_and_opposite_angle(len(10.0), angle_deg(89.999999)).unwrap();
 
     assert_output_invariants(&t);
 }
@@ -277,14 +208,12 @@ fn near_ninety_angle_still_valid() {
 
 #[test]
 fn rejects_invalid_lengths() {
-
     assert!(PositiveLength::mm(0.0).is_err());
     assert!(PositiveLength::mm(-3.0).is_err());
 }
 
 #[test]
 fn rejects_invalid_angles() {
-
     for a in [0.0, 90.0, -30.0, 120.0] {
         assert!(AcuteAngle::degrees(a).is_err());
     }
@@ -292,11 +221,5 @@ fn rejects_invalid_angles() {
 
 #[test]
 fn rejects_impossible_geometry() {
-
-    assert!(
-        RightTriangle::from_leg_and_hypotenuse(
-            len(5.0),
-            len(3.0)
-        ).is_err()
-    );
+    assert!(RightTriangle::from_leg_and_hypotenuse(len(5.0), len(3.0)).is_err());
 }

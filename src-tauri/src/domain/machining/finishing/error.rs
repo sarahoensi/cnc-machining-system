@@ -26,10 +26,16 @@ pub enum FinishingError {
     StepNumberMustBeOneBased,
 
     #[error("Step number {step_number} is out of range (total steps: {total_steps})")]
-    StepNumberOutOfRange { step_number: u32, total_steps: usize },
+    StepNumberOutOfRange {
+        step_number: u32,
+        total_steps: usize,
+    },
 
     #[error("Step {attempted_step} is locked (last measured step: {last_measured_step})")]
-    StepLocked { attempted_step: u32, last_measured_step: u32 },
+    StepLocked {
+        attempted_step: u32,
+        last_measured_step: u32,
+    },
 
     #[error("Measurement {measured_mm} mm is outside bounds ({start_mm} mm → {target_mm} mm)")]
     MeasurementOutOfBounds {
@@ -39,14 +45,8 @@ pub enum FinishingError {
     },
 
     #[error("Measurement moved backwards ({previous_mm} mm → {measured_mm} mm)")]
-    MeasurementBackwards {
-        previous_mm: f64,
-        measured_mm: f64,
-    },
+    MeasurementBackwards { previous_mm: f64, measured_mm: f64 },
 
     #[error("Measurement {measured_mm} mm exceeds target {target_mm} mm")]
-    MeasurementExceedsTarget {
-        measured_mm: f64,
-        target_mm: f64,
-    },
+    MeasurementExceedsTarget { measured_mm: f64, target_mm: f64 },
 }
