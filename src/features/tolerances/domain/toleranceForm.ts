@@ -19,6 +19,7 @@ export type ToleranceExtras = {
   mode: ToleranceMode;
   options: ToleranceOptionsResponse;
   loadingOptions: boolean;
+  deviationUnit: "mm";
 };
 
 export type ToleranceFormState = FormState<ToleranceKey, ToleranceExtras>;
@@ -46,6 +47,7 @@ export function createInitialToleranceForm(): ToleranceFormState {
         shafts: [],
       },
       loadingOptions: true,
+      deviationUnit: "mm",
     },
   };
 }
@@ -60,6 +62,7 @@ export function migrateToleranceForm(
     shaftLetter?: string;
     shaftGrade?: string;
   };
+  const shouldConvertDeviationResults = form.extras.deviationUnit !== "mm";
   const needsMigration =
     !form.fields.hole_letter ||
     !form.fields.hole_grade ||
@@ -71,6 +74,7 @@ export function migrateToleranceForm(
     !form.fields.max_mm ||
     !form.extras.options ||
     form.extras.loadingOptions == null ||
+    form.extras.deviationUnit !== "mm" ||
     legacyExtras.holeLetter != null ||
     legacyExtras.holeGrade != null ||
     legacyExtras.shaftLetter != null ||
@@ -78,51 +82,55 @@ export function migrateToleranceForm(
 
   if (!needsMigration) return normalizeSolvedResultFields(form);
 
-  return normalizeSolvedResultFields({
-    ...initial,
-    ...form,
-    fields: {
-      ...initial.fields,
-      ...form.fields,
-      hole_letter:
-        form.fields.hole_letter ??
-        userField(legacyExtras.holeLetter ?? initial.fields.hole_letter.value),
-      hole_grade:
-        form.fields.hole_grade ??
-        userField(legacyExtras.holeGrade ?? initial.fields.hole_grade.value),
-      shaft_letter:
-        form.fields.shaft_letter ??
-        userField(
-          legacyExtras.shaftLetter ?? initial.fields.shaft_letter.value,
-        ),
-      shaft_grade:
-        form.fields.shaft_grade ??
-        userField(legacyExtras.shaftGrade ?? initial.fields.shaft_grade.value),
-      upper_um: {
-        ...initial.fields.upper_um,
-        ...form.fields.upper_um,
+  return normalizeSolvedResultFields(
+    {
+      ...initial,
+      ...form,
+      fields: {
+        ...initial.fields,
+        ...form.fields,
+        hole_letter:
+          form.fields.hole_letter ??
+          userField(legacyExtras.holeLetter ?? initial.fields.hole_letter.value),
+        hole_grade:
+          form.fields.hole_grade ??
+          userField(legacyExtras.holeGrade ?? initial.fields.hole_grade.value),
+        shaft_letter:
+          form.fields.shaft_letter ??
+          userField(
+            legacyExtras.shaftLetter ?? initial.fields.shaft_letter.value,
+          ),
+        shaft_grade:
+          form.fields.shaft_grade ??
+          userField(legacyExtras.shaftGrade ?? initial.fields.shaft_grade.value),
+        upper_um: {
+          ...initial.fields.upper_um,
+          ...form.fields.upper_um,
+        },
+        lower_um: {
+          ...initial.fields.lower_um,
+          ...form.fields.lower_um,
+        },
+        min_mm: {
+          ...initial.fields.min_mm,
+          ...form.fields.min_mm,
+        },
+        max_mm: {
+          ...initial.fields.max_mm,
+          ...form.fields.max_mm,
+        },
       },
-      lower_um: {
-        ...initial.fields.lower_um,
-        ...form.fields.lower_um,
-      },
-      min_mm: {
-        ...initial.fields.min_mm,
-        ...form.fields.min_mm,
-      },
-      max_mm: {
-        ...initial.fields.max_mm,
-        ...form.fields.max_mm,
+      extras: {
+        ...initial.extras,
+        mode: form.extras.mode ?? initial.extras.mode,
+        options: form.extras.options ?? initial.extras.options,
+        loadingOptions:
+          form.extras.loadingOptions ?? initial.extras.loadingOptions,
+        deviationUnit: "mm",
       },
     },
-    extras: {
-      ...initial.extras,
-      mode: form.extras.mode ?? initial.extras.mode,
-      options: form.extras.options ?? initial.extras.options,
-      loadingOptions:
-        form.extras.loadingOptions ?? initial.extras.loadingOptions,
-    },
-  });
+    shouldConvertDeviationResults,
+  );
 }
 
 export function buildToleranceFormInput(
@@ -144,11 +152,29 @@ export function resultField() {
 
 function normalizeSolvedResultFields(
   form: ToleranceFormState,
+  convertDeviationResults = false,
 ): ToleranceFormState {
   if (form.status !== "solved") return form;
 
   let changed = false;
   const fields = { ...form.fields };
+
+  if (convertDeviationResults) {
+    for (const key of ["upper_um", "lower_um"] as const) {
+      const field = fields[key];
+      const machineValue =
+        field.machineValue != null ? field.machineValue / 1000 : undefined;
+      const value =
+        field.value.trim() === "" ? field.value : String(Number(field.value) / 1000);
+
+      fields[key] = {
+        ...field,
+        value,
+        machineValue,
+      };
+      changed = true;
+    }
+  }
 
   for (const key of resultKeys) {
     const field = fields[key];

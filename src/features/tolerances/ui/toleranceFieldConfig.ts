@@ -21,14 +21,14 @@ export const toleranceFieldConfig: ToleranceFieldConfig[] = [
   {
     key: "upper_um",
     label: "Upper",
-    unit: "um",
+    unit: "mm",
     tooltip: toleranceTooltips.upper_um,
     readOnly: true,
   },
   {
     key: "lower_um",
     label: "Lower",
-    unit: "um",
+    unit: "mm",
     tooltip: toleranceTooltips.lower_um,
     readOnly: true,
   },

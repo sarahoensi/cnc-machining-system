@@ -191,4 +191,35 @@ describe("tolerance frontend mapping", () => {
     expect(migrated.fields.min_mm.locked).toBe(false);
     expect(migrated.fields.max_mm.locked).toBe(false);
   });
+
+  it("converts persisted solved deviation results from micrometers to millimeters", () => {
+    const form = createInitialToleranceForm();
+    form.status = "solved";
+    form.extras = ({
+      ...form.extras,
+      deviationUnit: undefined,
+    } as unknown) as typeof form.extras;
+    form.fields.upper_um = {
+      ...form.fields.upper_um,
+      value: "25",
+      source: "machine",
+      machineValue: 25,
+      locked: true,
+    };
+    form.fields.lower_um = {
+      ...form.fields.lower_um,
+      value: "-9",
+      source: "machine",
+      machineValue: -9,
+      locked: true,
+    };
+
+    const migrated = migrateToleranceForm(form);
+
+    expect(migrated.fields.upper_um.value).toBe("0.025");
+    expect(migrated.fields.upper_um.machineValue).toBe(0.025);
+    expect(migrated.fields.lower_um.value).toBe("-0.009");
+    expect(migrated.fields.lower_um.machineValue).toBe(-0.009);
+    expect(migrated.extras.deviationUnit).toBe("mm");
+  });
 });
