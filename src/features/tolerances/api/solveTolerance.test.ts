@@ -3,6 +3,7 @@ import { buildLookupIso286ToleranceRequest } from "../domain/buildRequest";
 import {
   buildToleranceFormInput,
   createInitialToleranceForm,
+  migrateToleranceForm,
 } from "../domain/toleranceForm";
 import { validateToleranceForm } from "../domain/validateToleranceForm";
 
@@ -16,12 +17,12 @@ describe("tolerance frontend mapping", () => {
     expect(form.fields.lower_um.locked).toBe(true);
     expect(form.fields.min_mm.locked).toBe(true);
     expect(form.fields.max_mm.locked).toBe(true);
+    expect(form.fields.hole_letter.value).toBe("H");
+    expect(form.fields.hole_grade.value).toBe("7");
+    expect(form.fields.shaft_letter.value).toBe("g");
+    expect(form.fields.shaft_grade.value).toBe("6");
     expect(form.extras).toMatchObject({
       mode: "hole",
-      holeLetter: "H",
-      holeGrade: "7",
-      shaftLetter: "g",
-      shaftGrade: "6",
       loadingOptions: true,
     });
   });
@@ -82,60 +83,112 @@ describe("tolerance frontend mapping", () => {
   });
 
   it("rejects missing hole class and invalid nominal size", () => {
-    expect(
-      validateToleranceForm({
-        nominal: "0",
-        mode: "hole",
-        holeLetter: "",
-        holeGrade: "",
-        shaftLetter: "",
-        shaftGrade: "",
-      }),
-    ).toEqual({
-      holeGrade: "Hole tolerance grade is required",
-      holeLetter: "Hole tolerance letter is required",
-      nominal: "Nominal size must be greater than zero",
-    });
+    const form = createInitialToleranceForm();
+    form.fields.nominal.value = "0";
+    form.fields.hole_letter.value = "";
+    form.fields.hole_grade.value = "";
+
+    expect(validateToleranceForm(form.fields, form.extras)).toEqual([
+      "Hole tolerance letter is required",
+      "Hole tolerance grade is required",
+      "Nominal size must be greater than zero",
+    ]);
   });
 
   it("rejects missing shaft class and invalid nominal size", () => {
-    expect(
-      validateToleranceForm({
-        nominal: "0",
-        mode: "shaft",
-        holeLetter: "",
-        holeGrade: "",
-        shaftLetter: "",
-        shaftGrade: "",
-      }),
-    ).toEqual({
-      nominal: "Nominal size must be greater than zero",
-      shaftGrade: "Shaft tolerance grade is required",
-      shaftLetter: "Shaft tolerance letter is required",
-    });
+    const form = createInitialToleranceForm();
+    form.extras.mode = "shaft";
+    form.fields.nominal.value = "0";
+    form.fields.shaft_letter.value = "";
+    form.fields.shaft_grade.value = "";
+
+    expect(validateToleranceForm(form.fields, form.extras)).toEqual([
+      "Shaft tolerance letter is required",
+      "Shaft tolerance grade is required",
+      "Nominal size must be greater than zero",
+    ]);
   });
 
   it("validates only fields required by the selected single mode", () => {
-    expect(
-      validateToleranceForm({
-        nominal: "42",
-        mode: "hole",
-        holeLetter: "ZA",
-        holeGrade: "8",
-        shaftLetter: "",
-        shaftGrade: "",
-      }),
-    ).toEqual({});
+    const holeForm = createInitialToleranceForm();
+    holeForm.fields.nominal.value = "42";
+    holeForm.fields.hole_letter.value = "ZA";
+    holeForm.fields.hole_grade.value = "8";
+    holeForm.fields.shaft_letter.value = "";
+    holeForm.fields.shaft_grade.value = "";
 
-    expect(
-      validateToleranceForm({
-        nominal: "42",
-        mode: "shaft",
-        holeLetter: "",
-        holeGrade: "",
-        shaftLetter: "js",
-        shaftGrade: "6",
-      }),
-    ).toEqual({});
+    expect(validateToleranceForm(holeForm.fields, holeForm.extras)).toBeNull();
+
+    const shaftForm = createInitialToleranceForm();
+    shaftForm.extras.mode = "shaft";
+    shaftForm.fields.nominal.value = "42";
+    shaftForm.fields.hole_letter.value = "";
+    shaftForm.fields.hole_grade.value = "";
+    shaftForm.fields.shaft_letter.value = "js";
+    shaftForm.fields.shaft_grade.value = "6";
+
+    expect(validateToleranceForm(shaftForm.fields, shaftForm.extras)).toBeNull();
+  });
+
+  it("keeps solved result fields unlocked during migration", () => {
+    const form = createInitialToleranceForm();
+    form.status = "solved";
+    form.fields.upper_um = {
+      ...form.fields.upper_um,
+      value: "25",
+      source: "machine",
+      machineValue: 25,
+      locked: false,
+    };
+    form.fields.lower_um = {
+      ...form.fields.lower_um,
+      value: "0",
+      source: "machine",
+      machineValue: 0,
+      locked: false,
+    };
+    form.fields.min_mm = {
+      ...form.fields.min_mm,
+      value: "42",
+      source: "machine",
+      machineValue: 42,
+      locked: false,
+    };
+    form.fields.max_mm = {
+      ...form.fields.max_mm,
+      value: "42.025",
+      source: "machine",
+      machineValue: 42.025,
+      locked: false,
+    };
+
+    const migrated = migrateToleranceForm(form);
+
+    expect(migrated.fields.upper_um.locked).toBe(false);
+    expect(migrated.fields.lower_um.locked).toBe(false);
+    expect(migrated.fields.min_mm.locked).toBe(false);
+    expect(migrated.fields.max_mm.locked).toBe(false);
+  });
+
+  it("unlocks persisted solved machine result fields during migration", () => {
+    const form = createInitialToleranceForm();
+    form.status = "solved";
+
+    for (const key of ["upper_um", "lower_um", "min_mm", "max_mm"] as const) {
+      form.fields[key] = {
+        ...form.fields[key],
+        value: "1",
+        source: "machine",
+        machineValue: 1,
+        locked: true,
+      };
+    }
+
+    const migrated = migrateToleranceForm(form);
+
+    expect(migrated.fields.upper_um.locked).toBe(false);
+    expect(migrated.fields.lower_um.locked).toBe(false);
+    expect(migrated.fields.min_mm.locked).toBe(false);
+    expect(migrated.fields.max_mm.locked).toBe(false);
   });
 });

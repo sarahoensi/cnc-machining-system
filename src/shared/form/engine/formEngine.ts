@@ -69,7 +69,7 @@ export function clearMachineFields<K extends string>(
   for (const key in fields) {
     next[key] =
       fields[key].source === "machine"
-        ? emptyField()
+        ? emptyField({ locked: fields[key].locked })
         : fields[key];
   }
 
@@ -258,15 +258,16 @@ export function applyFieldNormalization<K extends string, E>(
 
 export async function handleCalculateAsync<
   K extends string,
-  E
+  E,
+  I = Partial<Record<K, number>>,
 >(
   form: FormState<K, E>,
   parse: (
     fields: Record<K, FieldState>,
     extras: E
-  ) => Partial<Record<K, number>> | null,
+  ) => I | null,
   solve: (
-    input: Partial<Record<K, number>>,
+    input: I,
     extras: E
   ) => Promise<Partial<Record<K, number>>>,
   validate?: FormValidateFn<K, E>,

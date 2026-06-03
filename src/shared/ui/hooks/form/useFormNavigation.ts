@@ -23,6 +23,7 @@ export function useFormNavigation<K extends string>(options: {
   const register = useCallback(
     (key: K) => (el: FormNavigationControl | null) => {
       if (el) refs.current[key] = el;
+      else delete refs.current[key];
     },
     []
   );

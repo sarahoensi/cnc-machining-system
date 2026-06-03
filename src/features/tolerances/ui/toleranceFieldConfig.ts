@@ -1,8 +1,8 @@
 import type { ToleranceKey } from "../domain/toleranceForm";
 import { toleranceTooltips } from "./toleranceTooltips";
 
-export type ToleranceFieldConfig<K extends ToleranceKey = ToleranceKey> = {
-  key: K;
+type ToleranceFieldConfig = {
+  key: ToleranceKey;
   label: string;
   unit?: string;
   tooltip?: string;
@@ -10,9 +10,7 @@ export type ToleranceFieldConfig<K extends ToleranceKey = ToleranceKey> = {
   readOnly?: boolean;
 };
 
-export type ToleranceInputKey = Extract<ToleranceKey, "nominal">;
-
-export const toleranceInputFieldConfig: ToleranceFieldConfig<ToleranceInputKey>[] = [
+export const toleranceFieldConfig: ToleranceFieldConfig[] = [
   {
     key: "nominal",
     label: "Nominal size",
@@ -20,9 +18,6 @@ export const toleranceInputFieldConfig: ToleranceFieldConfig<ToleranceInputKey>[
     tooltip: toleranceTooltips.nominal,
     autoFocus: true,
   },
-];
-
-export const toleranceResultFieldConfig: ToleranceFieldConfig[] = [
   {
     key: "upper_um",
     label: "Upper",
