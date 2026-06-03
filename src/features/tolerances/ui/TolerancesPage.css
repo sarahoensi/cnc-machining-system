@@ -1,9 +1,9 @@
 .tolerances-page-layout {
-  --layout-form-width: clamp(20rem, 42vw, 22rem);
-  --split-form-input-width: 9rem;
-  --split-form-output-min-width: 9rem;
-  --split-form-output-width: 9rem;
-  --split-form-gap: var(--space-4);
+  --layout-form-width: clamp(17.5rem, 34vw, 19rem);
+  --split-form-input-width: 8rem;
+  --split-form-output-min-width: 7.5rem;
+  --split-form-output-width: 7.5rem;
+  --split-form-gap: var(--space-3);
   height: 100%;
   min-height: 0;
 }

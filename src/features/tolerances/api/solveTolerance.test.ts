@@ -6,6 +6,7 @@ import {
   migrateToleranceForm,
 } from "../domain/toleranceForm";
 import { validateToleranceForm } from "../domain/validateToleranceForm";
+import { buildToleranceHistoryRow } from "../ui/toleranceHistoryRows";
 
 describe("tolerance frontend mapping", () => {
   it("creates the initial persisted tolerance form", () => {
@@ -221,5 +222,65 @@ describe("tolerance frontend mapping", () => {
     expect(migrated.fields.lower_um.value).toBe("-0.009");
     expect(migrated.fields.lower_um.machineValue).toBe(-0.009);
     expect(migrated.extras.deviationUnit).toBe("mm");
+  });
+
+  it("formats hole saved results as compact history rows", () => {
+    const form = createInitialToleranceForm();
+    form.status = "solved";
+    form.extras.mode = "hole";
+    form.fields.nominal.value = "6";
+    form.fields.hole_letter.value = "H";
+    form.fields.hole_grade.value = "7";
+    form.fields.lower_um.machineValue = 0;
+    form.fields.upper_um.machineValue = 0.012;
+    form.fields.min_mm.machineValue = 6;
+    form.fields.max_mm.machineValue = 6.012;
+
+    expect(
+      buildToleranceHistoryRow(
+        {
+          id: "hole-row",
+          form,
+          createdAt: 1,
+        },
+        3,
+      ),
+    ).toMatchObject({
+      modeLabel: "Hole",
+      modeClassName: "tolerance-history-row--hole",
+      toleranceClass: "H7",
+      nominal: "\u00d86.000 mm",
+      deviations: "EI 0.000 / ES +0.012",
+    });
+  });
+
+  it("formats shaft saved results as compact history rows", () => {
+    const form = createInitialToleranceForm();
+    form.status = "solved";
+    form.extras.mode = "shaft";
+    form.fields.nominal.value = "6";
+    form.fields.shaft_letter.value = "g";
+    form.fields.shaft_grade.value = "6";
+    form.fields.lower_um.machineValue = -0.012;
+    form.fields.upper_um.machineValue = -0.004;
+    form.fields.min_mm.machineValue = 5.988;
+    form.fields.max_mm.machineValue = 5.996;
+
+    expect(
+      buildToleranceHistoryRow(
+        {
+          id: "shaft-row",
+          form,
+          createdAt: 1,
+        },
+        3,
+      ),
+    ).toMatchObject({
+      modeLabel: "Shaft",
+      modeClassName: "tolerance-history-row--shaft",
+      toleranceClass: "g6",
+      nominal: "\u00d86.000 mm",
+      deviations: "ei -0.012 / es -0.004",
+    });
   });
 });
