@@ -28,7 +28,9 @@ import {
 import { parseTolerance } from "../domain/parseTolerance";
 import { validateToleranceForm } from "../domain/validateToleranceForm";
 
-const validInputSets: readonly (readonly ToleranceKey[])[] = [["nominal"]];
+const validInputSets: readonly (readonly ToleranceKey[])[] = [
+  ["nominal", "hole_letter", "hole_grade", "shaft_letter", "shaft_grade"],
+];
 const mutuallyExclusivePairs: readonly (readonly [ToleranceKey, ToleranceKey])[] =
   [];
 const resultKeys = ["upper_um", "lower_um", "min_mm", "max_mm"] as const;
