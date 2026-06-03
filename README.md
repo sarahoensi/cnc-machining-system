@@ -202,6 +202,24 @@ The project includes a comprehensive, multi-layered test suite covering:
 - Idempotency (same input → same output)
 - Cross-path validation (different inputs → consistent results)
 - Workflow constraints (step locking, forward progression)
+
+### ISO 286 tolerance database tests
+
+The ISO 286-2 tolerance database is covered by a dedicated Rust integration test suite:
+
+```powershell
+cd src-tauri
+cargo test --test iso286_database
+```
+
+It validates imported table row counts, size interval lookup boundaries, supported hole/shaft classes, hardcoded ISO spot checks, ES/EI and es/ei invariants, fit clearance calculations, and invalid input handling. The tests use the bundled SQLite database for database validation and an in-memory SQLite fixture for missing-value robustness checks.
+
+To run the full backend test suite:
+
+```powershell
+cd src-tauri
+cargo test
+```
 ---
 
 ##  Why This Project Is Different
