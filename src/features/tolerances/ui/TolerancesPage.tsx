@@ -1,4 +1,5 @@
 import { usePageTitle } from "@app/providers/TitleContextProvider";
+import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { FormModeField } from "@shared/ui/components/form/fields/FormModeField";
@@ -6,8 +7,15 @@ import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberFie
 import { FormSelectMenuField } from "@shared/ui/components/form/fields/FormSelectMenuField";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
-import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
+import { FormSidebarLayout } from "@shared/ui/layout/page/FormSidebarLayout/FormSidebarLayout";
+import { Button } from "@shared/ui/primitives/Button/Button";
 import { useFormNavigation } from "@shared/ui";
+import {
+  buildFieldHistoryItems,
+  type HistoryItem,
+  type SavedResultEntry,
+} from "@shared/savedResults";
+import { SavedResultsPanel } from "@shared/ui/components/history/SavedResultsPanel";
 
 import {
   toleranceClassFieldConfig,
@@ -15,7 +23,7 @@ import {
   toleranceModeConfig,
 } from "./toleranceFieldConfig";
 import { useTolerancePageController } from "./useTolerancePageController";
-import type { ToleranceKey } from "../domain/toleranceForm";
+import type { ToleranceFormState, ToleranceKey } from "../domain/toleranceForm";
 import type { ToleranceOption } from "../api/types";
 import "./TolerancesPage.css";
 
@@ -40,6 +48,7 @@ type ToleranceNavigationKey = Extract<
 
 export function TolerancesPage() {
   usePageTitle("Tolerances");
+  const { decimals } = useDisplaySettings();
 
   const controller = useTolerancePageController();
   const { form } = controller;
@@ -220,13 +229,25 @@ export function TolerancesPage() {
   );
 
   const error = form.formError ? <FormError error={form.formError} /> : null;
+  const saveButton = (
+    <Button
+      variant="secondary"
+      size="medium"
+      onClick={controller.save}
+      disabled={form.status !== "solved"}
+    >
+      Save result
+    </Button>
+  );
   const actions = (
     <FormActions
       onCalculate={onCalculate}
       onReset={onReset}
       calculateRef={navigation.registerSubmitAction}
       onCalculateKeyDown={navigation.handleSubmitActionKeyDown}
-    />
+    >
+      {saveButton}
+    </FormActions>
   );
 
   const formContent = (
@@ -234,11 +255,19 @@ export function TolerancesPage() {
   );
 
   return (
-    <div className="tolerances-page-layout">
-      <div ref={navigation.containerRef}>
-        <FormFigureLayout form={formContent} figure={null} />
-      </div>
-    </div>
+    <FormSidebarLayout
+      className="tolerances-page-layout"
+      form={<div ref={navigation.containerRef}>{formContent}</div>}
+      sidebar={
+        <SavedResultsPanel
+          entries={controller.history}
+          buildItems={(entry) => buildToleranceHistoryItems(entry, decimals)}
+          onLoad={controller.load}
+          onDelete={controller.remove}
+          onClear={controller.clear}
+        />
+      }
+    />
   );
 }
 
@@ -246,4 +275,40 @@ function gradesForZone(options: ToleranceOption[], zone: string) {
   return (
     options.find((option) => option.zone === zone)?.grades.map(String) ?? []
   );
+}
+
+function buildToleranceHistoryItems(
+  entry: SavedResultEntry<ToleranceFormState>,
+  decimals: number,
+): HistoryItem[] {
+  const { form } = entry;
+  const mode = form.extras.mode;
+  const letterKey = mode === "hole" ? "hole_letter" : "shaft_letter";
+  const gradeKey = mode === "hole" ? "hole_grade" : "shaft_grade";
+  const toleranceClass = `${form.fields[letterKey].value}${form.fields[gradeKey].value}`;
+  const fieldItems = buildFieldHistoryItems(
+    form.fields,
+    toleranceFieldConfig.filter(
+      (config) =>
+        config.key === "nominal" ||
+        config.key === "upper_um" ||
+        config.key === "lower_um" ||
+        config.key === "min_mm" ||
+        config.key === "max_mm",
+    ),
+    decimals,
+  );
+
+  return [
+    fieldItems[0] ?? {
+      label: "Nominal size",
+      value: "-",
+      unit: "mm",
+    },
+    {
+      label: "Class",
+      value: toleranceClass.trim() || "-",
+    },
+    ...fieldItems.slice(1),
+  ];
 }

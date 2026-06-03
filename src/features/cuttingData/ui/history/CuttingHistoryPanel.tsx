@@ -1,17 +1,13 @@
-// features/cuttingData/ui/CuttingHistoryPanel.tsx
-
 import { cuttingDataFieldConfig } from "../cuttingDataFieldConfig";
-import { formatNumber } from "@shared/ui/format/formatNumber";
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
-import { HistoryCard } from "@shared/ui/layout/container/HistoryCard/HistoryCard";
-import { Button } from "@shared/ui/primitives/Button/Button";
-import { ScrollArea } from "@shared/ui/layout/container/ScrollArea/ScrollArea";
-
-import "./CuttingHistoryPanel.css";
+import { buildFieldHistoryItems } from "@shared/savedResults";
+import type { SavedResultEntry } from "@shared/savedResults";
+import { SavedResultsPanel } from "@shared/ui/components/history/SavedResultsPanel";
+import type { createInitialCuttingDataForm } from "../../domain/cuttingDataForm";
 
 type Props = {
-  history: any[];
-  onLoad(entry: any): void;
+  history: SavedResultEntry<ReturnType<typeof createInitialCuttingDataForm>>[];
+  onLoad(entry: SavedResultEntry<ReturnType<typeof createInitialCuttingDataForm>>): void;
   onDelete(id: string): void;
   onClear(): void;
 };
@@ -25,93 +21,14 @@ export function CuttingHistoryPanel({
   const { decimals } = useDisplaySettings();
 
   return (
-    <section className="cutting-history">
-      <h3 className="cutting-history-title">
-        Saved results
-      </h3>
-
-      <ScrollArea className="cutting-history-scroll">
-        {history.length === 0 && (
-          <div className="cutting-history-empty">
-            No saved results yet
-          </div>
-        )}
-
-        {history.length > 0 && (
-          <div className="cutting-history-list">
-            {history.map((entry) => {
-              const items = buildItems(entry, decimals);
-
-              return (
-                <HistoryCard
-                  key={entry.id}
-                  items={items}
-                  columns={2}
-                  onClick={() => onLoad(entry)}
-                  onDelete={() => onDelete(entry.id)}
-                />
-              );
-            })}
-          </div>
-        )}
-      </ScrollArea>
-
-      {history.length > 0 && (
-        <div className="cutting-history-actions">
-          <Button
-            variant="secondary"
-            size="small"
-            onClick={onClear}
-          >
-            Clear all results
-          </Button>
-        </div>
-      )}
-    </section>
+    <SavedResultsPanel
+      entries={history}
+      buildItems={(entry) =>
+        buildFieldHistoryItems(entry.form.fields, cuttingDataFieldConfig, decimals)
+      }
+      onLoad={onLoad}
+      onDelete={onDelete}
+      onClear={onClear}
+    />
   );
-}
-
-/* =====================================================
-   HELPERS
-===================================================== */
-
-function buildItems(entry: any, decimals: number) {
-  return cuttingDataFieldConfig
-    .map((config) => {
-      const field = entry.form.fields[config.key];
-      if (!field) return null;
-
-      const rawValue = field.machineValue ?? field.value;
-      if (rawValue == null || rawValue === "") {
-        return {
-          label: config.shortLabel ?? config.label,
-          value: "-",
-          unit: config.unit,
-        };
-      }
-
-      const num =
-        typeof rawValue === "number"
-          ? rawValue
-          : Number(rawValue);
-
-      if (isNaN(num)) {
-        return {
-          label: config.shortLabel ?? config.label,
-          value: "-",
-          unit: config.unit,
-        };
-      }
-
-      return {
-        label: config.shortLabel ?? config.label,
-        value: formatNumber(num, decimals),
-        unit: config.unit,
-      };
-    })
-    .filter(Boolean) as {
-      label: string;
-      value: string;
-      unit?: string;
-    }[];
 }

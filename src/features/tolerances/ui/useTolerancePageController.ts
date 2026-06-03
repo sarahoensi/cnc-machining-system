@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
+import { useSavedResults } from "@shared/savedResults";
 import { getTauriCommandError } from "@shared/api/tauriError";
 import {
   clearMachineFields,
@@ -41,6 +42,21 @@ export function useTolerancePageController() {
     createInitialToleranceForm,
   );
   const form = useMemo(() => migrateToleranceForm(storedForm), [storedForm]);
+  const savedResults = useSavedResults<ToleranceFormState>({
+    storageKey: "tolerances-history",
+    normalizeLoadedForm: (loadedForm) => {
+      const migrated = migrateToleranceForm(loadedForm);
+
+      return {
+        ...migrated,
+        extras: {
+          ...migrated.extras,
+          options: form.extras.options,
+          loadingOptions: form.extras.loadingOptions,
+        },
+      };
+    },
+  });
 
   useEffect(() => {
     if (form !== storedForm) {
@@ -256,6 +272,14 @@ export function useTolerancePageController() {
     });
   }
 
+  function save() {
+    savedResults.save(form);
+  }
+
+  function load(entry: (typeof savedResults.history)[number]) {
+    setForm(savedResults.load(entry));
+  }
+
   function updateEditingFields(
     patch: Partial<Record<ToleranceKey, string>>,
   ) {
@@ -284,6 +308,11 @@ export function useTolerancePageController() {
     onToleranceGradeChange,
     calculate,
     resetForm,
+    history: savedResults.history,
+    save,
+    load,
+    remove: savedResults.remove,
+    clear: savedResults.clear,
   };
 }
 
