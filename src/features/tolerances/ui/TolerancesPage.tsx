@@ -7,6 +7,7 @@ import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberFie
 import { Modal, ModalScrollArea } from "@shared/ui/components/overlay/Modal/Modal";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
+import { FormSidebarLayout } from "@shared/ui/layout/page/FormSidebarLayout/FormSidebarLayout";
 import { Button } from "@shared/ui/primitives/Button/Button";
 import { useFormNavigation } from "@shared/ui";
 
@@ -148,30 +149,36 @@ export function TolerancesPage() {
     />
   );
 
+  const formContent = (
+    <div ref={navigation.containerRef}>
+      <FormLayout fields={inputFields} error={error} actions={actions} />
+    </div>
+  );
+
+  const resultContent = (
+    <>
+      <ToleranceResultFields form={form} />
+
+      <div className="tolerances-result-actions">
+        <Button
+          variant="secondary"
+          size="small"
+          onClick={() => controller.setTableOpen(true)}
+          disabled={!controller.result}
+        >
+          View in table
+        </Button>
+      </div>
+    </>
+  );
+
   return (
     <>
-      <div className="tolerances-page">
-        <div className="tolerances-input-column">
-          <div ref={navigation.containerRef}>
-            <FormLayout fields={inputFields} error={error} actions={actions} />
-          </div>
-        </div>
-
-        <div className="tolerances-output-column">
-          <ToleranceResultFields form={form} />
-
-          <div className="tolerances-result-actions">
-            <Button
-              variant="secondary"
-              size="small"
-              onClick={() => controller.setTableOpen(true)}
-              disabled={!controller.result}
-            >
-              View in table
-            </Button>
-          </div>
-        </div>
-      </div>
+      <FormSidebarLayout
+        variant="compact"
+        form={formContent}
+        sidebar={resultContent}
+      />
 
       {controller.tableOpen && controller.result && (
         <Modal

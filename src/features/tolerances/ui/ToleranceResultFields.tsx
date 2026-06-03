@@ -10,7 +10,7 @@ export function ToleranceResultFields({
   form: ToleranceFormState;
 }) {
   return (
-    <FormSection variant="result">
+    <FormSection>
       {toleranceResultFieldConfig.map((fieldConfig) => (
         <FormNumberField
           key={fieldConfig.key}

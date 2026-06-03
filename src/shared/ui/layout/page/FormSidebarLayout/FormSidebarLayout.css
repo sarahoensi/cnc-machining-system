@@ -15,6 +15,15 @@
   align-items: stretch;
 }
 
+.form-sidebar-layout--compact {
+  grid-template-columns: minmax(18rem, 22rem) minmax(18rem, 22rem);
+  gap: var(--space-5);
+  max-width: none;
+  height: auto;
+  align-items: start;
+  justify-content: start;
+}
+
 .fsl-form {
   min-width: 0;
   min-height: 0;
@@ -35,12 +44,24 @@
   flex-direction: column;
 }
 
+.form-sidebar-layout--compact .fsl-form,
+.form-sidebar-layout--compact .fsl-sidebar {
+  height: auto;
+  gap: var(--form-gap);
+}
+
 @media (max-width: 50rem) {
-  .form-sidebar-layout {
+  .form-sidebar-layout:not(.form-sidebar-layout--compact) {
     grid-template-columns: 1fr;
   }
 
-  .fsl-sidebar {
+  .form-sidebar-layout:not(.form-sidebar-layout--compact) .fsl-sidebar {
     min-height: 20rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .form-sidebar-layout--compact {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
