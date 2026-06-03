@@ -5,8 +5,8 @@ import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { FormModeField } from "@shared/ui/components/form/fields/FormModeField";
 import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
 import { FormSelectMenuField } from "@shared/ui/components/form/fields/FormSelectMenuField";
-import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
+import { SplitFormLayout } from "@shared/ui/layout/container/SplitFormLayout/SplitFormLayout";
 import { FormSidebarLayout } from "@shared/ui/layout/page/FormSidebarLayout/FormSidebarLayout";
 import { Button } from "@shared/ui/primitives/Button/Button";
 import { useFormNavigation } from "@shared/ui";
@@ -93,139 +93,139 @@ export function TolerancesPage() {
     navigation.focusFirstAfterRender();
   }
 
-  const fields = (
-    <>
-      <FormSection>
-        <FormModeField
-          label={toleranceModeConfig.label}
-          tooltip={toleranceModeConfig.tooltip}
-          value={mode}
-          options={modeOptions}
-          onChange={controller.onModeChange}
-        />
+  const input = (
+    <FormSection>
+      <FormModeField
+        label={toleranceModeConfig.label}
+        tooltip={toleranceModeConfig.tooltip}
+        value={mode}
+        options={modeOptions}
+        onChange={controller.onModeChange}
+      />
 
-        {toleranceFieldConfig
-          .filter((f) => !f.readOnly)
-          .map((f) => {
-            const fieldState = form.fields[f.key];
-            return (
-              <FormNumberField
-                key={f.key}
-                label={f.label}
-                tooltip={f.tooltip}
-                unit={f.unit}
-                field={fieldState}
-                autoFocus={f.autoFocus}
-                disabled={fieldState.locked}
-                readonly={f.readOnly}
-                onChange={(value) => controller.onFieldChange(f.key, value)}
-                ref={navigation.register(f.key as ToleranceNavigationKey)}
-                onKeyDown={navigation.handleKeyDown(
-                  f.key as ToleranceNavigationKey,
-                )}
-              />
-            );
-          })}
-
-        {mode === "hole" && (
-          <>
-            <FormSelectMenuField
-              label="Class"
-              tooltip={toleranceClassFieldConfig.classTooltip}
-              valueLabel={holeLetter || "-"}
-              options={options.holes.map((option) => ({
-                value: option.zone,
-                label: option.zone,
-              }))}
-              onSelect={(value) =>
-                controller.onToleranceLetterChange("hole", value)
-              }
-              disabled={loadingOptions}
-              ref={navigation.register("hole_letter")}
-              onKeyDown={navigation.handleKeyDown("hole_letter")}
+      {toleranceFieldConfig
+        .filter((f) => !f.readOnly)
+        .map((f) => {
+          const fieldState = form.fields[f.key];
+          return (
+            <FormNumberField
+              key={f.key}
+              label={f.label}
+              tooltip={f.tooltip}
+              unit={f.unit}
+              field={fieldState}
+              autoFocus={f.autoFocus}
+              disabled={fieldState.locked}
+              readonly={f.readOnly}
+              onChange={(value) => controller.onFieldChange(f.key, value)}
+              ref={navigation.register(f.key as ToleranceNavigationKey)}
+              onKeyDown={navigation.handleKeyDown(
+                f.key as ToleranceNavigationKey,
+              )}
             />
+          );
+        })}
 
-            <FormSelectMenuField
-              label="Grade"
-              tooltip={toleranceClassFieldConfig.gradeTooltip}
-              valueLabel={holeGrade || "-"}
-              options={gradesForZone(options.holes, holeLetter).map((value) => ({
-                value,
-                label: value,
-              }))}
-              onSelect={(value) =>
-                controller.onToleranceGradeChange("hole", value)
-              }
-              disabled={
-                loadingOptions || gradesForZone(options.holes, holeLetter).length === 0
-              }
-              ref={navigation.register("hole_grade")}
-              onKeyDown={navigation.handleKeyDown("hole_grade")}
+      {mode === "hole" && (
+        <>
+          <FormSelectMenuField
+            label="Class"
+            tooltip={toleranceClassFieldConfig.classTooltip}
+            valueLabel={holeLetter || "-"}
+            options={options.holes.map((option) => ({
+              value: option.zone,
+              label: option.zone,
+            }))}
+            onSelect={(value) =>
+              controller.onToleranceLetterChange("hole", value)
+            }
+            disabled={loadingOptions}
+            ref={navigation.register("hole_letter")}
+            onKeyDown={navigation.handleKeyDown("hole_letter")}
+          />
+
+          <FormSelectMenuField
+            label="Grade"
+            tooltip={toleranceClassFieldConfig.gradeTooltip}
+            valueLabel={holeGrade || "-"}
+            options={gradesForZone(options.holes, holeLetter).map((value) => ({
+              value,
+              label: value,
+            }))}
+            onSelect={(value) =>
+              controller.onToleranceGradeChange("hole", value)
+            }
+            disabled={
+              loadingOptions || gradesForZone(options.holes, holeLetter).length === 0
+            }
+            ref={navigation.register("hole_grade")}
+            onKeyDown={navigation.handleKeyDown("hole_grade")}
+          />
+        </>
+      )}
+
+      {mode === "shaft" && (
+        <>
+          <FormSelectMenuField
+            label="Class"
+            tooltip={toleranceClassFieldConfig.classTooltip}
+            valueLabel={shaftLetter || "-"}
+            options={options.shafts.map((option) => ({
+              value: option.zone,
+              label: option.zone,
+            }))}
+            onSelect={(value) =>
+              controller.onToleranceLetterChange("shaft", value)
+            }
+            disabled={loadingOptions}
+            ref={navigation.register("shaft_letter")}
+            onKeyDown={navigation.handleKeyDown("shaft_letter")}
+          />
+
+          <FormSelectMenuField
+            label="Grade"
+            tooltip={toleranceClassFieldConfig.gradeTooltip}
+            valueLabel={shaftGrade || "-"}
+            options={gradesForZone(options.shafts, shaftLetter).map((value) => ({
+              value,
+              label: value,
+            }))}
+            onSelect={(value) =>
+              controller.onToleranceGradeChange("shaft", value)
+            }
+            disabled={
+              loadingOptions ||
+              gradesForZone(options.shafts, shaftLetter).length === 0
+            }
+            ref={navigation.register("shaft_grade")}
+            onKeyDown={navigation.handleKeyDown("shaft_grade")}
+          />
+        </>
+      )}
+    </FormSection>
+  );
+
+  const output = (
+    <FormSection>
+      {toleranceFieldConfig
+        .filter((f) => f.readOnly)
+        .map((f) => {
+          const fieldState = form.fields[f.key];
+          return (
+            <FormNumberField
+              key={f.key}
+              label={f.label}
+              tooltip={f.tooltip}
+              unit={f.unit}
+              field={fieldState}
+              autoFocus={f.autoFocus}
+              disabled={fieldState.locked}
+              readonly={f.readOnly}
+              onChange={(value) => controller.onFieldChange(f.key, value)}
             />
-          </>
-        )}
-
-        {mode === "shaft" && (
-          <>
-            <FormSelectMenuField
-              label="Class"
-              tooltip={toleranceClassFieldConfig.classTooltip}
-              valueLabel={shaftLetter || "-"}
-              options={options.shafts.map((option) => ({
-                value: option.zone,
-                label: option.zone,
-              }))}
-              onSelect={(value) =>
-                controller.onToleranceLetterChange("shaft", value)
-              }
-              disabled={loadingOptions}
-              ref={navigation.register("shaft_letter")}
-              onKeyDown={navigation.handleKeyDown("shaft_letter")}
-            />
-
-            <FormSelectMenuField
-              label="Grade"
-              tooltip={toleranceClassFieldConfig.gradeTooltip}
-              valueLabel={shaftGrade || "-"}
-              options={gradesForZone(options.shafts, shaftLetter).map((value) => ({
-                value,
-                label: value,
-              }))}
-              onSelect={(value) =>
-                controller.onToleranceGradeChange("shaft", value)
-              }
-              disabled={
-                loadingOptions ||
-                gradesForZone(options.shafts, shaftLetter).length === 0
-              }
-              ref={navigation.register("shaft_grade")}
-              onKeyDown={navigation.handleKeyDown("shaft_grade")}
-            />
-          </>
-        )}
-      </FormSection>
-
-      <FormSection variant="result">
-        {toleranceFieldConfig
-          .filter((f) => f.readOnly)
-          .map((f) => {
-            const fieldState = form.fields[f.key];
-            return (
-              <FormNumberField
-                key={f.key}
-                label={f.label}
-                tooltip={f.tooltip}
-                unit={f.unit}
-                field={fieldState}
-                autoFocus={f.autoFocus}
-                disabled={fieldState.locked}
-                readonly={f.readOnly}
-                onChange={(value) => controller.onFieldChange(f.key, value)}
-              />
-            );
-          })}
-      </FormSection>
-    </>
+          );
+        })}
+    </FormSection>
   );
 
   const error = form.formError ? <FormError error={form.formError} /> : null;
@@ -251,7 +251,12 @@ export function TolerancesPage() {
   );
 
   const formContent = (
-    <FormLayout fields={fields} error={error} actions={actions} />
+    <SplitFormLayout
+      input={input}
+      output={output}
+      error={error}
+      actions={actions}
+    />
   );
 
   return (

@@ -1,5 +1,9 @@
 .tolerances-page-layout {
-  --layout-form-width: min(20rem, 100%);
+  --layout-form-width: clamp(20rem, 42vw, 22rem);
+  --split-form-input-width: 9rem;
+  --split-form-output-min-width: 9rem;
+  --split-form-output-width: 9rem;
+  --split-form-gap: var(--space-4);
   height: 100%;
   min-height: 0;
 }
@@ -15,4 +19,8 @@
   flex-direction: column;
   height: 100%;
   min-height: 0;
+}
+
+.tolerances-page-layout .form-actions-secondary {
+  flex-wrap: wrap;
 }
