@@ -1,5 +1,6 @@
-use cnc_machining_system_lib::tolerance::{
-    calculate_fit_with_connection, lookup_tolerance, parse_tolerance_code, Iso286Error,
+use cnc_machining_system_lib::application::{
+    calculate_fit_with_connection, list_tolerance_options_with_connection, lookup_tolerance,
+    lookup_tolerance_with_connection, parse_tolerance_code, Iso286Error,
 };
 use rusqlite::Connection;
 use std::path::Path;
@@ -14,6 +15,7 @@ fn parses_tolerance_codes() {
     assert_eq!(parse_tolerance_code("JS7").unwrap(), ("JS".to_string(), 7));
     assert_eq!(parse_tolerance_code("g6").unwrap(), ("g".to_string(), 6));
     assert_eq!(parse_tolerance_code("js6").unwrap(), ("js".to_string(), 6));
+    assert_eq!(parse_tolerance_code("r6").unwrap(), ("r".to_string(), 6));
 }
 
 #[test]
@@ -81,6 +83,70 @@ fn calculates_h7_h6_at_42_mm() {
 }
 
 #[test]
+fn calculates_d6_h6_at_42_mm() {
+    let conn = fixture_connection();
+    let result = calculate_fit_with_connection(&conn, 42.0, "D6", "h6").unwrap();
+
+    assert_eq!(result.hole.zone, "D");
+    assert_eq!(result.hole.grade, 6);
+    assert_close(result.hole.upper_um, 26.0);
+    assert_close(result.hole.lower_um, 20.0);
+    assert_eq!(result.hole.source_table.as_deref(), Some("Table 3"));
+    assert_eq!(result.hole.source_file.as_deref(), Some("table_3.csv"));
+    assert_eq!(result.fit.fit_type, "clearance");
+}
+
+#[test]
+fn looks_up_single_hole_and_shaft_tolerances() {
+    let conn = fixture_connection();
+
+    let hole = lookup_tolerance_with_connection(&conn, 42.0, "hole", "JS7").unwrap();
+    assert_eq!(hole.zone, "JS");
+    assert_eq!(hole.grade, 7);
+    assert_close(hole.upper_um, 12.5);
+    assert_close(hole.lower_um, -12.5);
+
+    let shaft = lookup_tolerance_with_connection(&conn, 42.0, "shaft", "p6").unwrap();
+    assert_eq!(shaft.zone, "p");
+    assert_eq!(shaft.grade, 6);
+    assert_close(shaft.upper_um, 42.0);
+    assert_close(shaft.lower_um, 26.0);
+}
+
+#[test]
+fn lists_only_supported_tolerance_options() {
+    let conn = fixture_connection();
+    let options = list_tolerance_options_with_connection(&conn).unwrap();
+
+    let hole_zones: Vec<_> = options
+        .holes
+        .iter()
+        .map(|option| option.zone.as_str())
+        .collect();
+    let shaft_zones: Vec<_> = options
+        .shafts
+        .iter()
+        .map(|option| option.zone.as_str())
+        .collect();
+
+    assert_eq!(hole_zones, vec!["D", "H", "JS", "ZA"]);
+    assert_eq!(shaft_zones, vec!["g", "h", "js", "p", "r"]);
+    assert_eq!(options.holes[2].grades, vec![7]);
+    assert_eq!(options.shafts[4].grades, vec![6]);
+}
+
+#[test]
+fn rejects_classes_outside_supported_allowlist() {
+    let conn = fixture_connection();
+    let result = lookup_tolerance_with_connection(&conn, 42.0, "hole", "CD6");
+
+    assert!(matches!(
+        result,
+        Err(Iso286Error::UnsupportedToleranceClass { .. })
+    ));
+}
+
+#[test]
 fn upper_bound_uses_current_interval() {
     let conn = fixture_connection();
     let result = calculate_fit_with_connection(&conn, 50.0, "H7", "g6").unwrap();
@@ -105,7 +171,10 @@ fn hh7_is_invalid_when_zone_does_not_exist_in_database() {
     let conn = fixture_connection();
     let result = calculate_fit_with_connection(&conn, 42.0, "HH7", "g6");
 
-    assert!(matches!(result, Err(Iso286Error::ToleranceNotFound { .. })));
+    assert!(matches!(
+        result,
+        Err(Iso286Error::UnsupportedToleranceClass { .. })
+    ));
 }
 
 fn fixture_connection() -> Connection {
@@ -140,8 +209,15 @@ fn fixture_connection() -> Connection {
           feature, zone, grade, size_min, size_max, upper_um, lower_um, source_table, source_file
         ) VALUES
           ('hole', 'H', 7, 30.0, 50.0, 25.0, 0.0, 'Table 6', 'holes_h.csv'),
+          ('hole', 'D', 6, 30.0, 50.0, 26.0, 20.0, 'Table 3', 'table_3.csv'),
+          ('hole', 'JS', 7, 30.0, 50.0, 12.5, -12.5, 'Table 7', 'table_7.csv'),
+          ('hole', 'ZA', 8, 30.0, 50.0, 160.0, 120.0, 'Table 15', 'table_15.csv'),
+          ('hole', 'CD', 6, 30.0, 50.0, 80.0, 64.0, 'Table extra', 'extra.csv'),
           ('shaft', 'g', 6, 30.0, 50.0, -9.0, -25.0, 'Table 21', 'shafts_g.csv'),
-          ('shaft', 'h', 6, 30.0, 50.0, 0.0, -16.0, 'Table 22', 'shafts_h.csv');
+          ('shaft', 'h', 6, 30.0, 50.0, 0.0, -16.0, 'Table 22', 'shafts_h.csv'),
+          ('shaft', 'js', 6, 30.0, 50.0, 8.0, -8.0, 'Table 23', 'table_23.csv'),
+          ('shaft', 'p', 6, 30.0, 50.0, 42.0, 26.0, 'Table 26', 'table_26.csv'),
+          ('shaft', 'r', 6, 30.0, 50.0, 50.0, 34.0, 'Table 27', 'table_27.csv');
         ",
     )
     .unwrap();

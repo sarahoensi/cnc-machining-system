@@ -4,7 +4,13 @@ ISO 286 data is not included in this repository yet. The app must not be used fo
 
 ## Directory Layout
 
-Place normalized CSV files here:
+Place raw ISO 286 CSV tables here:
+
+```text
+src-tauri/data/csv/
+```
+
+Normalized ISO 286 CSV files may also be placed in:
 
 ```text
 data/iso286/normalized/

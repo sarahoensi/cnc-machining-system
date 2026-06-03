@@ -1,9 +1,21 @@
 export type ToleranceObjectType = "hole" | "shaft";
+export type ToleranceMode = ToleranceObjectType;
 
-export type CalculateIso286FitRequest = {
-  nominal_mm: number;
-  hole: string;
-  shaft: string;
+export type ToleranceOption = {
+  feature: ToleranceObjectType;
+  zone: string;
+  grades: number[];
+};
+
+export type ToleranceOptionsResponse = {
+  holes: ToleranceOption[];
+  shafts: ToleranceOption[];
+};
+
+export type LookupIso286ToleranceRequest = {
+  feature: ToleranceObjectType;
+  nominalMm: number;
+  code: string;
 };
 
 export type Iso286MemberResult = {
@@ -16,17 +28,4 @@ export type Iso286MemberResult = {
   min_mm: number;
   source_table: string | null;
   source_file: string | null;
-};
-
-export type Iso286FitSummary = {
-  min_clearance_mm: number;
-  max_clearance_mm: number;
-  type: "clearance" | "interference" | "transition";
-};
-
-export type Iso286FitResult = {
-  nominal_mm: number;
-  hole: Iso286MemberResult;
-  shaft: Iso286MemberResult;
-  fit: Iso286FitSummary;
 };

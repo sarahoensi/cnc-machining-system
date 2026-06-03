@@ -1,4 +1,7 @@
+import type { ToleranceMode } from "../api/types";
+
 export type ToleranceFormInput = {
+  mode: ToleranceMode;
   nominal: string;
   holeLetter: string;
   holeGrade: string;
@@ -6,12 +9,20 @@ export type ToleranceFormInput = {
   shaftGrade: string;
 };
 
-export function buildCalculateIso286FitRequest(
+function parseNominal(input: ToleranceFormInput) {
+  return Number(input.nominal.replace(",", "."));
+}
+
+export function buildLookupIso286ToleranceRequest(
   input: ToleranceFormInput,
 ) {
+  const feature = input.mode;
+  const letter = feature === "hole" ? input.holeLetter : input.shaftLetter;
+  const grade = feature === "hole" ? input.holeGrade : input.shaftGrade;
+
   return {
-    nominal_mm: Number(input.nominal.replace(",", ".")),
-    hole: `${input.holeLetter}${input.holeGrade}`.trim(),
-    shaft: `${input.shaftLetter}${input.shaftGrade}`.trim(),
+    feature,
+    nominalMm: parseNominal(input),
+    code: `${letter}${grade}`.trim(),
   };
 }

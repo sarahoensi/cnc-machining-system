@@ -15,6 +15,7 @@ pub mod finishing;
 mod helix;
 mod right_triangle;
 pub mod shared;
+mod tolerance;
 
 pub use shared::{ApplicationError, ValidationErrors};
 
@@ -36,4 +37,11 @@ pub use cylinder_weight::{
     JsonCylinderMaterialRepository, ListCylinderMaterialsUseCase, SolveCylinderWeightInput,
     SolveCylinderWeightOutput, SolveCylinderWeightUseCase, UpdateCylinderMaterialInput,
     UpdateCylinderMaterialUseCase,
+};
+
+pub use tolerance::{
+    calculate_fit, calculate_fit_with_connection, list_tolerance_options,
+    list_tolerance_options_with_connection, lookup_tolerance, lookup_tolerance_with_connection,
+    parse_tolerance_code, FitResult, FitSummary, Iso286Error, ToleranceOption, ToleranceOptions,
+    ToleranceResult,
 };

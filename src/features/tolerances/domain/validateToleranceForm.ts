@@ -3,20 +3,22 @@ import type { ToleranceFormInput } from "./buildRequest";
 export function validateToleranceForm(input: ToleranceFormInput) {
   const errors: Partial<Record<keyof ToleranceFormInput, string>> = {};
   const nominal = Number(input.nominal.replace(",", "."));
+  const needsHole = input.mode === "hole";
+  const needsShaft = input.mode === "shaft";
 
-  if (!input.holeLetter.trim()) {
+  if (needsHole && !input.holeLetter.trim()) {
     errors.holeLetter = "Hole tolerance letter is required";
   }
 
-  if (!input.holeGrade.trim()) {
+  if (needsHole && !input.holeGrade.trim()) {
     errors.holeGrade = "Hole tolerance grade is required";
   }
 
-  if (!input.shaftLetter.trim()) {
+  if (needsShaft && !input.shaftLetter.trim()) {
     errors.shaftLetter = "Shaft tolerance letter is required";
   }
 
-  if (!input.shaftGrade.trim()) {
+  if (needsShaft && !input.shaftGrade.trim()) {
     errors.shaftGrade = "Shaft tolerance grade is required";
   }
 

@@ -19,12 +19,6 @@
   padding-inline-start: calc(var(--input-padding-x-form) * 0.5);
 }
 
-.tolerances-fit-type {
-  padding-inline-start: calc(var(--input-padding-x-form) * 0.5);
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
 .tolerances-table .ui-table-header-cell {
   position: sticky;
   top: 0;

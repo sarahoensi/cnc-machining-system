@@ -11,5 +11,6 @@ pub mod cylinder_weight;
 pub mod finishing;
 pub mod helix;
 pub mod right_triangle;
+pub mod tolerance;
 
 mod error;

@@ -6,7 +6,6 @@ pub mod application;
 pub mod domain;
 pub mod interface;
 pub mod test_utils;
-pub mod tolerance;
 
 use std::sync::Mutex;
 use tauri::Manager;
@@ -23,8 +22,8 @@ use crate::interface::{
     finishing::{generate_finishing_plan, register_finishing_measurement},
     helix::solve_helix,
     right_triangle::solve_right_triangle,
+    tolerance::{calculate_iso286_fit, list_iso286_tolerance_options, lookup_iso286_tolerance},
 };
-use crate::tolerance::calculate_iso286_fit;
 
 pub struct AppState {
     pub finishing_execution: Mutex<Option<FinishingExecution>>,
@@ -61,6 +60,8 @@ pub fn run() {
             solve_cutting_data,
             // tolerances
             calculate_iso286_fit,
+            lookup_iso286_tolerance,
+            list_iso286_tolerance_options,
             // cylinder_weight
             list_cylinder_materials,
             create_cylinder_material,

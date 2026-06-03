@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# ISO 286 source tables
+src-tauri/data/csv/
+data/iso286/normalized/
+data/iso286/raw_tables/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
