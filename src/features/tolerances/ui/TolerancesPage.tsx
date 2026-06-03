@@ -36,6 +36,7 @@ import {
   ToleranceFormState,
 } from "../domain/toleranceForm";
 import { validateToleranceForm } from "../domain/validateToleranceForm";
+import { toleranceTooltips } from "./toleranceTooltips";
 
 import "./TolerancesPage.css";
 
@@ -300,6 +301,7 @@ export function TolerancesPage() {
     <FormSection>
       <FormModeField
         label="Mode"
+        tooltip={toleranceTooltips.mode}
         value={mode}
         options={modeOptions}
         onChange={onModeChange}
@@ -307,6 +309,7 @@ export function TolerancesPage() {
 
       <FormNumberField
         label="Nominal size"
+        tooltip={toleranceTooltips.nominal}
         unit="mm"
         field={form.fields.nominal}
         onChange={onNominalChange}
@@ -424,6 +427,7 @@ function ToleranceClassFields({
     <>
       <FormSelectMenuField
         label={`${title} class`}
+        tooltip={toleranceTooltips.class}
         valueLabel={letter || "-"}
         options={options.map((option) => ({
           value: option.zone,
@@ -435,6 +439,7 @@ function ToleranceClassFields({
 
       <FormSelectMenuField
         label={`${title} grade`}
+        tooltip={toleranceTooltips.grade}
         valueLabel={grade || "-"}
         options={grades.map((value) => ({
           value,
@@ -452,6 +457,7 @@ function ResultFields({ form }: { form: ToleranceFormState }) {
     <FormSection variant="result">
       <FormNumberField
         label="Upper"
+        tooltip={toleranceTooltips.upper_um}
         unit="um"
         field={form.fields.upper_um}
         readonly
@@ -459,6 +465,7 @@ function ResultFields({ form }: { form: ToleranceFormState }) {
       />
       <FormNumberField
         label="Lower"
+        tooltip={toleranceTooltips.lower_um}
         unit="um"
         field={form.fields.lower_um}
         readonly
@@ -466,6 +473,7 @@ function ResultFields({ form }: { form: ToleranceFormState }) {
       />
       <FormNumberField
         label="Minimum"
+        tooltip={toleranceTooltips.min_mm}
         unit="mm"
         field={form.fields.min_mm}
         readonly
@@ -473,6 +481,7 @@ function ResultFields({ form }: { form: ToleranceFormState }) {
       />
       <FormNumberField
         label="Maximum"
+        tooltip={toleranceTooltips.max_mm}
         unit="mm"
         field={form.fields.max_mm}
         readonly
