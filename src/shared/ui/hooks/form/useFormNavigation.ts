@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useRef } from "react";
 
+type FormNavigationControl = HTMLInputElement | HTMLButtonElement;
+
+function isReadOnlyControl(el: FormNavigationControl) {
+  return el instanceof HTMLInputElement && el.readOnly;
+}
+
 export function useFormNavigation<K extends string>(options: {
   keys: readonly K[];
   autoFocusOnMount?: boolean;
@@ -8,13 +14,14 @@ export function useFormNavigation<K extends string>(options: {
 }) {
   const { keys, autoFocusOnMount = false, onSubmit, activePath } = options;
 
-  const refs = useRef<Partial<Record<K, HTMLInputElement>>>({});
+  const refs = useRef<Partial<Record<K, FormNavigationControl>>>({});
+  const submitActionRef = useRef<HTMLButtonElement | null>(null);
   const lastFocused = useRef<K | undefined>(undefined);
   const didAutoFocus = useRef(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const register = useCallback(
-    (key: K) => (el: HTMLInputElement | null) => {
+    (key: K) => (el: FormNavigationControl | null) => {
       if (el) refs.current[key] = el;
     },
     []
@@ -30,6 +37,18 @@ export function useFormNavigation<K extends string>(options: {
     lastFocused.current = key;
   }, []);
 
+  const registerSubmitAction = useCallback((el: HTMLButtonElement | null) => {
+    submitActionRef.current = el;
+  }, []);
+
+  const focusSubmitAction = useCallback(() => {
+    const el = submitActionRef.current;
+    if (!el || el.disabled || el.tabIndex === -1) return false;
+
+    el.focus();
+    return true;
+  }, []);
+
   const focusAfterRender = useCallback(
     (key?: K) => {
       if (!key) return;
@@ -43,7 +62,7 @@ export function useFormNavigation<K extends string>(options: {
   const focusFirst = useCallback(() => {
     for (const key of keys) {
       const el = refs.current[key];
-      if (el && !el.disabled && el.tabIndex !== -1 && !el.readOnly) {
+      if (el && !el.disabled && el.tabIndex !== -1 && !isReadOnlyControl(el)) {
         focus(key);
         return true;
       }
@@ -52,11 +71,11 @@ export function useFormNavigation<K extends string>(options: {
   }, [focus, keys]);
 
   const focusFirstMatching = useCallback(
-    (match: (key: K, el: HTMLInputElement) => boolean) => {
+    (match: (key: K, el: FormNavigationControl) => boolean) => {
       for (const key of keys) {
         const el = refs.current[key];
         if (!el) continue;
-        if (el.disabled || el.readOnly || el.tabIndex === -1) continue;
+        if (el.disabled || isReadOnlyControl(el) || el.tabIndex === -1) continue;
         if (el.offsetParent === null) continue;
         if (!match(key, el)) continue;
         focus(key);
@@ -68,7 +87,7 @@ export function useFormNavigation<K extends string>(options: {
   );
 
   const focusFirstMatchingAfterRender = useCallback(
-    (match: (key: K, el: HTMLInputElement) => boolean) => {
+    (match: (key: K, el: FormNavigationControl) => boolean) => {
       requestAnimationFrame(() => {
         focusFirstMatching(match);
       });
@@ -77,11 +96,11 @@ export function useFormNavigation<K extends string>(options: {
   );
 
   const focusFirstInOrder = useCallback(
-    (order: readonly K[], match?: (key: K, el: HTMLInputElement) => boolean) => {
+    (order: readonly K[], match?: (key: K, el: FormNavigationControl) => boolean) => {
       for (const key of order) {
         const el = refs.current[key];
         if (!el) continue;
-        if (el.disabled || el.readOnly || el.tabIndex === -1) continue;
+        if (el.disabled || isReadOnlyControl(el) || el.tabIndex === -1) continue;
         if (el.offsetParent === null) continue;
         if (match && !match(key, el)) continue;
         focus(key);
@@ -93,7 +112,7 @@ export function useFormNavigation<K extends string>(options: {
   );
 
   const focusFirstInOrderAfterRender = useCallback(
-    (order: readonly K[], match?: (key: K, el: HTMLInputElement) => boolean) => {
+    (order: readonly K[], match?: (key: K, el: FormNavigationControl) => boolean) => {
       requestAnimationFrame(() => {
         focusFirstInOrder(order, match);
       });
@@ -112,7 +131,7 @@ export function useFormNavigation<K extends string>(options: {
       for (const key of keys) {
         const el = refs.current[key];
         if (!el) continue;
-        if (el.disabled || el.readOnly || el.tabIndex === -1) continue;
+        if (el.disabled || isReadOnlyControl(el) || el.tabIndex === -1) continue;
         if (!hasError(key)) continue;
         focus(key);
         return key;
@@ -167,7 +186,7 @@ export function useFormNavigation<K extends string>(options: {
   );
 
   const handleKeyDown = useCallback(
-    (key: K) => (e: React.KeyboardEvent<HTMLInputElement>) => {
+    (key: K) => (e: React.KeyboardEvent<FormNavigationControl>) => {
       if (e.key === "Enter") {
         e.preventDefault();
 
@@ -190,7 +209,11 @@ export function useFormNavigation<K extends string>(options: {
       if (e.key === "ArrowDown") {
         e.preventDefault();
         const next = findNext(key, 1);
-        focus(next);
+        if (next) {
+          focus(next);
+          return;
+        }
+        focusSubmitAction();
         return;
       }
 
@@ -200,7 +223,21 @@ export function useFormNavigation<K extends string>(options: {
         focus(prev);
       }
     },
-    [findNext, focus, isLastFocusable, onSubmit]
+    [findNext, focus, focusSubmitAction, isLastFocusable, onSubmit]
+  );
+
+  const handleSubmitActionKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLButtonElement>) => {
+      if (e.key !== "ArrowUp") return;
+
+      e.preventDefault();
+      const lastKey = keys.findLast((key) => {
+        const el = refs.current[key];
+        return Boolean(el && !el.disabled && el.tabIndex !== -1);
+      });
+      focus(lastKey);
+    },
+    [focus, keys]
   );
 
   useEffect(() => {
@@ -230,6 +267,7 @@ export function useFormNavigation<K extends string>(options: {
 
   return {
     register,
+    registerSubmitAction,
     focus,
     focusAfterRender,
     focusFirst,
@@ -243,6 +281,7 @@ export function useFormNavigation<K extends string>(options: {
     hasFocusWithin,
     containerRef,
     handleKeyDown,
+    handleSubmitActionKeyDown,
     restoreLast: () => focus(lastFocused.current),
   };
 }

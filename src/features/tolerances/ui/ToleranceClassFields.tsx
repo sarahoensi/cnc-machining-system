@@ -1,3 +1,4 @@
+import type { KeyboardEventHandler, Ref } from "react";
 import { FormSelectMenuField } from "@shared/ui/components/form/fields/FormSelectMenuField";
 
 import type { ToleranceObjectType, ToleranceOption } from "../api/types";
@@ -11,6 +12,10 @@ export function ToleranceClassFields({
   disabled,
   onLetterChange,
   onGradeChange,
+  letterRef,
+  gradeRef,
+  onLetterKeyDown,
+  onGradeKeyDown,
 }: {
   feature: ToleranceObjectType;
   options: ToleranceOption[];
@@ -19,6 +24,10 @@ export function ToleranceClassFields({
   disabled: boolean;
   onLetterChange: (value: string) => void;
   onGradeChange: (value: string) => void;
+  letterRef?: Ref<HTMLButtonElement>;
+  gradeRef?: Ref<HTMLButtonElement>;
+  onLetterKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
+  onGradeKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
 }) {
   const grades = gradesForZone(options, letter);
   const title = feature === "hole" ? "Hole" : "Shaft";
@@ -35,6 +44,8 @@ export function ToleranceClassFields({
         }))}
         onSelect={onLetterChange}
         disabled={disabled}
+        ref={letterRef}
+        onKeyDown={onLetterKeyDown}
       />
 
       <FormSelectMenuField
@@ -47,6 +58,8 @@ export function ToleranceClassFields({
         }))}
         onSelect={onGradeChange}
         disabled={disabled || grades.length === 0}
+        ref={gradeRef}
+        onKeyDown={onGradeKeyDown}
       />
     </>
   );

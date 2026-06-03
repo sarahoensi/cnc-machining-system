@@ -67,7 +67,8 @@
   cursor: pointer;
 }
 
-.app-select-option:hover {
+.app-select-option:hover,
+.app-select-option.is-active {
   background: var(--surface-hover);
 }
 

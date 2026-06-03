@@ -26,6 +26,14 @@ const modeOptions = [
   { value: "shaft", label: "Shaft" },
 ] as const;
 
+const toleranceNavigationKeys = [
+  "nominal",
+  "toleranceLetter",
+  "toleranceGrade",
+] as const;
+
+type ToleranceNavigationKey = (typeof toleranceNavigationKeys)[number];
+
 export function TolerancesPage() {
   usePageTitle("Tolerances");
 
@@ -42,8 +50,8 @@ export function TolerancesPage() {
     loadingOptions,
   } = form.extras;
 
-  const navigation = useFormNavigation({
-    keys: toleranceInputFieldConfig.map((field) => field.key),
+  const navigation = useFormNavigation<ToleranceNavigationKey>({
+    keys: toleranceNavigationKeys,
     autoFocusOnMount: true,
     activePath: "/tolerances",
     onSubmit: onCalculate,
@@ -53,7 +61,9 @@ export function TolerancesPage() {
     const errors = await controller.calculate();
 
     if (Object.keys(errors).length > 0) {
-      navigation.focusFirstInvalidAfterRender((key) => Boolean(errors[key]));
+      navigation.focusFirstInvalidAfterRender(
+        (key) => key === "nominal" && Boolean(errors.nominal)
+      );
     }
   }
 
@@ -99,6 +109,10 @@ export function TolerancesPage() {
           onGradeChange={(value) =>
             controller.onToleranceGradeChange("hole", value)
           }
+          letterRef={navigation.register("toleranceLetter")}
+          gradeRef={navigation.register("toleranceGrade")}
+          onLetterKeyDown={navigation.handleKeyDown("toleranceLetter")}
+          onGradeKeyDown={navigation.handleKeyDown("toleranceGrade")}
         />
       )}
 
@@ -115,13 +129,24 @@ export function TolerancesPage() {
           onGradeChange={(value) =>
             controller.onToleranceGradeChange("shaft", value)
           }
+          letterRef={navigation.register("toleranceLetter")}
+          gradeRef={navigation.register("toleranceGrade")}
+          onLetterKeyDown={navigation.handleKeyDown("toleranceLetter")}
+          onGradeKeyDown={navigation.handleKeyDown("toleranceGrade")}
         />
       )}
     </FormSection>
   );
 
   const error = form.formError ? <FormError error={form.formError} /> : null;
-  const actions = <FormActions onCalculate={onCalculate} onReset={onReset} />;
+  const actions = (
+    <FormActions
+      onCalculate={onCalculate}
+      onReset={onReset}
+      calculateRef={navigation.registerSubmitAction}
+      onCalculateKeyDown={navigation.handleSubmitActionKeyDown}
+    />
+  );
 
   return (
     <>
