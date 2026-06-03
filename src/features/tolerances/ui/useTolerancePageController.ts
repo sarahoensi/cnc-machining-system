@@ -139,12 +139,17 @@ export function useTolerancePageController() {
   }, [shaftGrade, shaftGrades, setForm]);
 
   function onModeChange(value: ToleranceMode) {
-    setForm((prev) =>
-      handleModeChange(prev, {
+    setForm((prev) => {
+      const next = handleModeChange(prev, {
         ...prev.extras,
         mode: value,
-      }),
-    );
+      });
+
+      return {
+        ...next,
+        fields: preserveEquivalentToleranceSelection(next, prev.extras.mode),
+      };
+    });
   }
 
   function onFieldChange(key: ToleranceKey, value: string) {
@@ -344,6 +349,42 @@ function gradesForZone(options: ToleranceOption[], zone: string) {
   return (
     options.find((option) => option.zone === zone)?.grades.map(String) ?? []
   );
+}
+
+function preserveEquivalentToleranceSelection(
+  form: ToleranceFormState,
+  previousMode: ToleranceMode,
+): ToleranceFormState["fields"] {
+  if (previousMode === form.extras.mode) return form.fields;
+
+  const sourcePrefix = previousMode;
+  const targetPrefix = form.extras.mode;
+  const sourceLetterKey = `${sourcePrefix}_letter` as ToleranceKey;
+  const sourceGradeKey = `${sourcePrefix}_grade` as ToleranceKey;
+  const targetLetterKey = `${targetPrefix}_letter` as ToleranceKey;
+  const targetGradeKey = `${targetPrefix}_grade` as ToleranceKey;
+  const targetOptions =
+    targetPrefix === "hole" ? form.extras.options.holes : form.extras.options.shafts;
+
+  const sourceLetter = form.fields[sourceLetterKey].value;
+  const sourceGrade = form.fields[sourceGradeKey].value;
+  const equivalentLetter =
+    targetPrefix === "hole" ? sourceLetter.toUpperCase() : sourceLetter.toLowerCase();
+  const targetOption = targetOptions.find(
+    (option) => option.zone === equivalentLetter,
+  );
+
+  if (!targetOption) return form.fields;
+
+  const nextGrade = targetOption.grades.includes(Number(sourceGrade))
+    ? sourceGrade
+    : form.fields[targetGradeKey].value;
+
+  return {
+    ...form.fields,
+    [targetLetterKey]: userField(equivalentLetter),
+    [targetGradeKey]: userField(nextGrade),
+  };
 }
 
 function clearResultFields(

@@ -121,7 +121,7 @@ export function TolerancesPage() {
         {mode === "hole" && (
           <>
             <FormSelectMenuField
-              label="Hole class"
+              label="Class"
               tooltip={toleranceClassFieldConfig.classTooltip}
               valueLabel={holeLetter || "-"}
               options={options.holes.map((option) => ({
@@ -137,7 +137,7 @@ export function TolerancesPage() {
             />
 
             <FormSelectMenuField
-              label="Hole grade"
+              label="Grade"
               tooltip={toleranceClassFieldConfig.gradeTooltip}
               valueLabel={holeGrade || "-"}
               options={gradesForZone(options.holes, holeLetter).map((value) => ({
@@ -159,7 +159,7 @@ export function TolerancesPage() {
         {mode === "shaft" && (
           <>
             <FormSelectMenuField
-              label="Shaft class"
+              label="Class"
               tooltip={toleranceClassFieldConfig.classTooltip}
               valueLabel={shaftLetter || "-"}
               options={options.shafts.map((option) => ({
@@ -175,7 +175,7 @@ export function TolerancesPage() {
             />
 
             <FormSelectMenuField
-              label="Shaft grade"
+              label="Grade"
               tooltip={toleranceClassFieldConfig.gradeTooltip}
               valueLabel={shaftGrade || "-"}
               options={gradesForZone(options.shafts, shaftLetter).map((value) => ({
