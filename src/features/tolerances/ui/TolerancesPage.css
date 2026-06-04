@@ -2,17 +2,9 @@
   --split-form-input-width: 8rem;
   --split-form-output-width: 7.5rem;
   --split-form-gap: var(--space-3);
-  height: 100%;
-  min-height: 0;
 }
 
-.tolerances-page-layout .fsl-form,
-.tolerances-page-layout .fsl-sidebar {
-  height: 100%;
-  min-height: 0;
-}
-
-.tolerances-page-layout .fsl-form > div {
+.tolerances-form-container {
   display: flex;
   flex-direction: column;
   height: 100%;
