@@ -5,7 +5,7 @@ import {
   handleCalculateAsync,
 } from "@shared/form/engine/formEngine";
 
-import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
+import { CalculatorNumberFields } from "@shared/ui/components/form/fields";
 import { useFormNavigation } from "@shared/ui";
 
 import {
@@ -126,26 +126,13 @@ export function CuttingDataPage() {
   ========================= */
 
   const fields = (
-    <>
-      {cuttingDataFieldConfig.map((f) => {
-        const fieldState = form.fields[f.key];
-
-        return (
-          <FormNumberField
-            key={f.key}
-            label={f.label}
-            unit={f.unit}
-            tooltip={f.tooltip}
-            field={fieldState}
-            disabled={fieldState.locked || f.readOnly}
-            autoFocus={f.autoFocus}
-            onChange={(value) => onFieldChange(f.key, value)}
-            ref={navigation.register(f.key)}
-            onKeyDown={navigation.handleKeyDown(f.key)}
-          />
-        );
-      })}
-    </>
+    <CalculatorNumberFields
+      configs={cuttingDataFieldConfig}
+      fields={form.fields}
+      onChange={onFieldChange}
+      register={navigation.register}
+      onKeyDown={navigation.handleKeyDown}
+    />
   );
 
 
