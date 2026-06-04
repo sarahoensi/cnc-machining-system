@@ -6,41 +6,34 @@ import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { useSavedResults } from "@shared/savedResults";
 import { getTauriCommandError } from "@shared/api/tauriError";
 import {
-  clearMachineFields,
   handleCalculateAsync,
   handleModeChange,
-  handleUserEdit,
 } from "@shared/form/engine/formEngine";
-import { machineField, userField } from "@shared/form/types/fields";
 
-import { listIso286ToleranceOptionsApi } from "../api/client";
-import { solveTolerance } from "../api/solveTolerance";
-import type { ToleranceMode, ToleranceObjectType } from "../api/types";
+import { listIso286ToleranceOptionsApi } from "../../api/client";
+import { solveTolerance } from "../../api/solveTolerance";
+import type { ToleranceMode, ToleranceObjectType } from "../../api/types";
 
 import {
   createInitialToleranceForm,
   type ToleranceFormState,
   type ToleranceKey,
-} from "../domain/toleranceForm";
-import { parseTolerance } from "../domain/parseTolerance";
-import { validateToleranceForm } from "../domain/validateToleranceForm";
+} from "../../domain/toleranceForm";
+import { parseTolerance } from "../../domain/parseTolerance";
+import { validateToleranceForm } from "../../domain/validateToleranceForm";
 
 import {
   gradesForZone,
   preserveEquivalentToleranceSelection,
   reconcileSelectionFields,
-} from "../domain/toleranceOptions";
+} from "../../domain/toleranceOptions";
 
-const validInputSets: readonly (readonly ToleranceKey[])[] = [
-  ["nominal", "hole_letter", "hole_grade", "shaft_letter", "shaft_grade"],
-];
-
-const mutuallyExclusivePairs: readonly (readonly [
-  ToleranceKey,
-  ToleranceKey,
-])[] = [];
-
-const resultKeys = ["upper_um", "lower_um", "min_mm", "max_mm"] as const;
+import {
+  applyToleranceGradeChange,
+  applyToleranceLetterChange,
+  applyToleranceUserEdit,
+  patchSelectionFields,
+} from "../../domain/toleranceSelection";
 
 export function useTolerancePageController() {
   const [form, setForm] = useFeatureForm(
@@ -155,29 +148,21 @@ export function useTolerancePageController() {
   useEffect(() => {
     if (holeGrades.length === 0 || holeGrades.includes(holeGrade)) return;
 
-    setForm((prev) => ({
-      ...prev,
-      status: "editing",
-      fields: {
-        ...clearResultFields(prev),
-        hole_grade: userField(holeGrades[0]),
-      },
-      formError: undefined,
-    }));
+    setForm((prev) =>
+      patchSelectionFields(prev, {
+        hole_grade: holeGrades[0],
+      }),
+    );
   }, [holeGrade, holeGrades, setForm]);
 
   useEffect(() => {
     if (shaftGrades.length === 0 || shaftGrades.includes(shaftGrade)) return;
 
-    setForm((prev) => ({
-      ...prev,
-      status: "editing",
-      fields: {
-        ...clearResultFields(prev),
-        shaft_grade: userField(shaftGrades[0]),
-      },
-      formError: undefined,
-    }));
+    setForm((prev) =>
+      patchSelectionFields(prev, {
+        shaft_grade: shaftGrades[0],
+      }),
+    );
   }, [shaftGrade, shaftGrades, setForm]);
 
   function onModeChange(value: ToleranceMode) {
@@ -196,13 +181,7 @@ export function useTolerancePageController() {
 
   function onFieldChange(key: ToleranceKey, value: string) {
     setForm((prev) =>
-      handleUserEdit(
-        prev,
-        key,
-        value,
-        validInputSets,
-        mutuallyExclusivePairs,
-      ),
+      applyToleranceUserEdit(prev, key, value),
     );
   }
 
@@ -210,21 +189,13 @@ export function useTolerancePageController() {
     feature: ToleranceObjectType,
     value: string,
   ) {
-    const nextGrades =
-      feature === "hole"
-        ? gradesForZone(options.holes, value)
-        : gradesForZone(options.shafts, value);
-
-    updateEditingFields(
-      feature === "hole"
-        ? {
-            hole_letter: value,
-            hole_grade: nextGrades[0] ?? "",
-          }
-        : {
-            shaft_letter: value,
-            shaft_grade: nextGrades[0] ?? "",
-          },
+    setForm((prev) =>
+      applyToleranceLetterChange(
+        prev,
+        options,
+        feature,
+        value,
+      ),
     );
   }
 
@@ -232,10 +203,12 @@ export function useTolerancePageController() {
     feature: ToleranceObjectType,
     value: string,
   ) {
-    updateEditingFields(
-      feature === "hole"
-        ? { hole_grade: value }
-        : { shaft_grade: value },
+    setForm((prev) =>
+      applyToleranceGradeChange(
+        prev,
+        feature,
+        value,
+      ),
     );
   }
 
@@ -247,18 +220,8 @@ export function useTolerancePageController() {
       validateToleranceForm,
     );
 
-    if (next.status !== "solved") {
-      setForm(next);
-      return next;
-    }
-
-    const solvedForm = {
-      ...next,
-      fields: markResultFieldsAsMachineFields(next.fields),
-    };
-
-    setForm(solvedForm);
-    return solvedForm;
+    setForm(next);
+    return next;
   }
 
   function resetForm() {
@@ -283,26 +246,6 @@ export function useTolerancePageController() {
 
   function load(entry: (typeof savedResults.history)[number]) {
     setForm(savedResults.load(entry));
-  }
-
-  function updateEditingFields(
-    patch: Partial<Record<ToleranceKey, string>>,
-  ) {
-    setForm((prev) => {
-      const fields = clearResultFields(prev);
-
-      for (const key in patch) {
-        const typedKey = key as ToleranceKey;
-        fields[typedKey] = userField(patch[typedKey] ?? "");
-      }
-
-      return {
-        ...prev,
-        status: "editing",
-        fields,
-        formError: undefined,
-      };
-    });
   }
 
   return {
@@ -334,43 +277,6 @@ export function useTolerancePageController() {
     remove: savedResults.remove,
     clear: savedResults.clear,
   };
-}
-
-function clearResultFields(
-  form: ToleranceFormState,
-): ToleranceFormState["fields"] {
-  const fields = clearMachineFields(form.fields);
-
-  return {
-    ...fields,
-    nominal: {
-      ...fields.nominal,
-      invalid: false,
-      error: undefined,
-    },
-  };
-}
-
-function markResultFieldsAsMachineFields(
-  fields: ToleranceFormState["fields"],
-): ToleranceFormState["fields"] {
-  const nextFields = { ...fields };
-
-  for (const key of resultKeys) {
-    const field = nextFields[key];
-
-    const value =
-      field.machineValue != null ? String(field.machineValue) : field.value;
-
-    if (value.trim() === "") continue;
-
-    nextFields[key] = machineField(value, {
-      ...field,
-      source: "machine",
-    });
-  }
-
-  return nextFields;
 }
 
 function getToleranceErrorMessage(error: unknown) {
