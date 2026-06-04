@@ -1,7 +1,7 @@
 // features/tolerances/domain/toleranceForm.ts
 
 import type { FormState } from "@shared/form/types/forms";
-import { emptyField, userField } from "@shared/form/types/fields";
+import { emptyField, resultField, userField } from "@shared/form/types/fields";
 
 import type { ToleranceMode, ToleranceOptionsResponse } from "../api/types";
 
@@ -51,6 +51,3 @@ export function createInitialToleranceForm(): ToleranceFormState {
   };
 }
 
-function resultField() {
-  return emptyField({ locked: true });
-}

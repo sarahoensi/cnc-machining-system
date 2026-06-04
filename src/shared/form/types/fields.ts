@@ -66,7 +66,7 @@ export const resultField = (
   value: "",
   source: "empty",
   kind: "result",
-  locked: false,
+  locked: true,
   invalid: false,
   machineValue: undefined,
   error: undefined,
