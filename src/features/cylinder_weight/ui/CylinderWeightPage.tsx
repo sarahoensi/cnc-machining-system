@@ -138,7 +138,7 @@ export function CylinderWeightPage() {
     <>
       <div className="cylinder-weight-page-layout">
         <div ref={navigation.containerRef}>
-          <SingleFormLayout form={formContent} />
+          <SingleFormLayout form={formContent} formWidth="md" />
         </div>
       </div>
 

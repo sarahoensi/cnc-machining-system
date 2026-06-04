@@ -2,7 +2,7 @@
 
 .form-sidebar-layout {
   display: grid;
-  grid-template-columns: var(--layout-form-width) minmax(20rem, 1fr);
+  grid-template-columns: var(--page-form-grid-width) minmax(20rem, 1fr);
   gap: var(--layout-form-figure-gap);
 
   max-width: var(--layout-content-max-width);

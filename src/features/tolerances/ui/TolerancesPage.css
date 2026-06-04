@@ -1,5 +1,4 @@
 .tolerances-page-layout {
-  --layout-form-width: clamp(17.5rem, 34vw, 19rem);
   --split-form-input-width: 8rem;
   --split-form-output-min-width: 7.5rem;
   --split-form-output-width: 7.5rem;

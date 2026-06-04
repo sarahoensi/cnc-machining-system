@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { FormLayout } from "../container/FormLayout/FormLayout";
 import { SplitFormLayout } from "../container/SplitFormLayout/SplitFormLayout";
+import { FormFigureLayout } from "./FormFigureLayout/FormFigureLayout";
 import { FormSidebarLayout } from "./FormSidebarLayout/FormSidebarLayout";
 import { SingleFormLayout } from "./SingleFormLayout/SingleFormLayout";
 
@@ -36,6 +37,7 @@ describe("form page layouts", () => {
   it("renders form and aside in the sidebar layout", () => {
     const markup = renderToStaticMarkup(
       <FormSidebarLayout
+        formWidth="lg"
         form={<div>Form content</div>}
         sidebar={<div>Aside content</div>}
       />,
@@ -44,15 +46,29 @@ describe("form page layouts", () => {
     expect(markup).toContain("Form content");
     expect(markup).toContain("Aside content");
     expect(markup).toContain("<aside");
+    expect(markup).toContain("form-width--lg");
+  });
+
+  it("renders a width variant on the figure layout", () => {
+    const markup = renderToStaticMarkup(
+      <FormFigureLayout
+        form={<div>Form content</div>}
+        figure={<div>Figure content</div>}
+        formWidth="fluid"
+      />,
+    );
+
+    expect(markup).toContain("form-width--fluid");
   });
 
   it("renders a single form without a figure slot", () => {
     const markup = renderToStaticMarkup(
-      <SingleFormLayout form={<div>Single form</div>} />,
+      <SingleFormLayout form={<div>Single form</div>} formWidth="md" />,
     );
 
     expect(markup).toContain("Single form");
     expect(markup).toContain('class="single-form-panel"');
+    expect(markup).toContain("form-width--md");
     expect(markup).not.toContain("figure-panel");
   });
 });

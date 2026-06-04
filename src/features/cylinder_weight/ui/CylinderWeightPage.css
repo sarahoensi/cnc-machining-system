@@ -1,7 +1,3 @@
-.cylinder-weight-page-layout {
-  --layout-form-width: min(20rem, 100%);
-}
-
 .cylinder-weight-material-field {
   display: grid;
   gap: var(--space-1);
