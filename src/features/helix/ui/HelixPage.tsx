@@ -32,6 +32,7 @@ import { usePageTitle } from "@app/providers/TitleContextProvider";
 import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
+import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
 import { helixTooltips } from "./helixTooltip";
 import { HelixFigure } from "./helixFigure/HelixFigure";
 import { useState } from "react";
@@ -132,7 +133,7 @@ export function HelixPage() {
 
   const fields = (
   <>
-    <div className="form-section">
+    <FormSection>
       <FormModeField
         label="Mode"
         tooltip={helixTooltips.mode}
@@ -143,9 +144,9 @@ export function HelixPage() {
           { value: "Inner", label: "Inner" },
         ]}
       />
-    </div>
+    </FormSection>
 
-    <div className="form-section">
+    <FormSection>
       {helixFieldConfig.map((f) => {
         const fieldState = form.fields[f.key];
 
@@ -168,7 +169,7 @@ export function HelixPage() {
           />
         );
       })}
-    </div>
+    </FormSection>
   </>
 );
 

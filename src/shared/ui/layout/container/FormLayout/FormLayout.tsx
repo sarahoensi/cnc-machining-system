@@ -21,7 +21,7 @@ export function FormLayout({
         </div>
       )}
 
-      <div className="form-actions">
+      <div className="form-layout-actions-slot">
         {actions}
       </div>
     </div>

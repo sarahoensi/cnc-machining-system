@@ -16,6 +16,7 @@ import { createInitialFinishingForm, FinishingKey } from "../domain/finishingFor
 import { mutuallyExclusiveFinishingPairs, validFinishingInputSets } from "../domain/finishingConstraints";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
+import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
 import { finishingTooltips } from "./finishingPlanTooltip";
 
 type Props = {
@@ -83,7 +84,7 @@ export function PlanForm({
 
   const fields = (
     <>
-      <div className="form-section">
+      <FormSection>
         <FormModeField
           label="Mode"
           tooltip={finishingTooltips.mode}
@@ -101,9 +102,9 @@ export function PlanForm({
             { value: "Outer", label: "Outer" },
           ]}
         />
-      </div>
+      </FormSection>
 
-      <div className="form-section">
+      <FormSection>
         {finishingFieldConfig.map((f) => {
           const fieldState = form.fields[f.key];
 
@@ -125,7 +126,7 @@ export function PlanForm({
             />
           );
         })}
-      </div>
+      </FormSection>
     </>
   );
 

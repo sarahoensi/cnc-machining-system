@@ -23,6 +23,6 @@
   min-height: 0;
 }
 
-.cutting-form > .form-layout > .form-actions {
+.cutting-form > .form-layout > .form-layout-actions-slot {
   margin-top: auto;
 }

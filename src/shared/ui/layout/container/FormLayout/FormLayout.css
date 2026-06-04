@@ -28,7 +28,7 @@
    ACTIONS
 ========================= */
 
-.form-actions {
+.form-layout-actions-slot {
   display: flex;
   gap: var(--form-actions-gap);
 }
