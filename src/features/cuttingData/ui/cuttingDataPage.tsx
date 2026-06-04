@@ -31,7 +31,6 @@ import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { CuttingHistoryPanel } from "./history/CuttingHistoryPanel";
 import { useCuttingPageController } from "./useCuttingPageController";
 import { Button } from "@shared/ui/primitives/Button/Button";
-import "./cuttingDataPage.css";
 
 
 
@@ -183,13 +182,13 @@ const error = form.formError ? (
 
 
  const formContent = (
-    <div className="cutting-form" ref={navigation.containerRef}>
-      <FormLayout
-        fields={fields}
-        error={error}
-        actions={actions}
-      />
-    </div>
+    <FormLayout
+      fields={fields}
+      error={error}
+      actions={actions}
+      actionsPlacement="bottom"
+      containerRef={navigation.containerRef}
+    />
   );
 
   /* =========================
@@ -198,7 +197,7 @@ const error = form.formError ? (
 
 return (
   <FormSidebarLayout
-      className="cutting-data-layout"
+      fillHeight
       form={formContent}
       sidebar={
         <CuttingHistoryPanel

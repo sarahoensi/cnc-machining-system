@@ -256,6 +256,7 @@ export function TolerancesPage() {
     <FormSidebarLayout
       className="tolerances-page-layout"
       formWidth="lg"
+      fillHeight
       form={<div ref={navigation.containerRef}>{formContent}</div>}
       sidebar={
         <ToleranceSavedResultsPanel

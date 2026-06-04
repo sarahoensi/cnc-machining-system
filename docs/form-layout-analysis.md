@@ -1,42 +1,58 @@
-# Analyse av form-layout
+# Oppdatert analyse av form-layout
 
 ## Kort konklusjon
 
-Formsystemet har allerede flere gode byggeklosser, men ansvaret er fordelt på en
-måte som gjør den faktiske layouten vanskelig å lese fra én fil:
+Form-layouten er tydeligere enn ved forrige analyse:
 
-- Side-layout bestemmer normalt formområdets bredde.
-- Input-primitivene bruker normalt `width: 100%` og arver derfor bredden.
-- Feature-CSS overstyrer globale CSS-variabler for spesielle skjermer.
-- Formskjermene blander rendering, navigation/fokus, state-overganger og
-  business-orientert orkestrering.
-- Flere komponenter og CSS-klasser uttrykker nesten samme konsept, mens enkelte
-  skjermer bruker globale klassenavn direkte i stedet for komponentene.
+- Page-layouts har et felles, typed `formWidth`-API.
+- `SingleFormLayout` uttrykker nå single-form-sider uten å reservere en tom
+  figure- eller aside-kolonne.
+- `FormLayout` og `SplitFormLayout` har eksplisitte actions-slots som er
+  kolonneorienterte og fullbredde.
+- Triangle og Helix deler nå rendering av number fields gjennom
+  `CalculatorNumberFields`.
+- Triangle og Helix deler calculate/reset-fokus og aktivt figur-felt gjennom
+  `useCalculatorFormNavigation`.
+- Helix og PlanForm bruker `FormSection` i stedet for å være avhengige av
+  klassenavnet direkte.
 
-Den viktigste implisitte regelen er:
+Den sentrale breddekontrakten er nå:
 
-> Et felt fyller bredden til nærmeste layoutkolonne. Kolonnebredden bestemmes av
-> side-layout, globale tokens og eventuelle feature-overstyringer.
+> Page-layout og `formWidth` bestemmer formkolonnens bredde. Field- og
+> input-laget fyller deretter tilgjengelig bredde med `width: 100%`.
+
+De viktigste gjenværende skjulte koblingene er ikke lenger page-bredde, men:
+
+- feature-CSS som styrer høyde og actions-plassering gjennom interne
+  layout-klasser
+- Tolerances som setter interne `SplitFormLayout`-variabler
+- hardkodede breakpoints i flere layout-lag
+- ulik fordeling av state, calculate/reset, navigation og field-rendering
+  mellom features
 
 ## Relevant filkart
 
-### App-ramme og overordnet størrelse
+### App-ramme og tokens
 
 - `src/app/shell/AppShell.tsx`
 - `src/app/shell/AppShell.css`
-- `src/styles/tokens/primitive.css`
 - `src/styles/tokens/semantic.v2.css`
 
-### Side-layouts
+### Page-layouts og bredde
 
+- `src/shared/ui/layout/page/formWidth.ts`
+- `src/shared/ui/layout/page/formWidth.css`
+- `src/shared/ui/layout/page/SingleFormLayout/SingleFormLayout.tsx`
+- `src/shared/ui/layout/page/SingleFormLayout/SingleFormLayout.css`
 - `src/shared/ui/layout/page/FormFigureLayout/FormFigureLayout.tsx`
 - `src/shared/ui/layout/page/FormFigureLayout/FormFigureLayout.css`
 - `src/shared/ui/layout/page/FormSidebarLayout/FormSidebarLayout.tsx`
 - `src/shared/ui/layout/page/FormSidebarLayout/FormSidebarLayout.css`
 - `src/shared/ui/layout/page/StackedLayout/StackedLayout.tsx`
 - `src/shared/ui/layout/page/StackedLayout/StackedLayout.css`
+- `src/shared/ui/layout/page/layouts.test.tsx`
 
-### Form-layouts og wrappers
+### Form-layouts
 
 - `src/shared/ui/layout/container/FormLayout/FormLayout.tsx`
 - `src/shared/ui/layout/container/FormLayout/FormLayout.css`
@@ -47,7 +63,7 @@ Den viktigste implisitte regelen er:
 - `src/shared/ui/layout/container/FormStack/FormStack.tsx`
 - `src/shared/ui/layout/container/FormStack/FormStack.css`
 
-### Felt og input
+### Field- og input-lag
 
 - `src/shared/ui/components/form/Field/Field.tsx`
 - `src/shared/ui/components/form/Field/Field.css`
@@ -55,456 +71,497 @@ Den viktigste implisitte regelen er:
 - `src/shared/ui/components/form/fields/FormTextField.tsx`
 - `src/shared/ui/components/form/fields/FormSelectMenuField.tsx`
 - `src/shared/ui/components/form/fields/FormModeField.tsx`
+- `src/shared/ui/components/form/fields/CalculatorNumberFields.tsx`
+- `src/shared/ui/primitives/input/InputBase/InputBase.tsx`
 - `src/shared/ui/primitives/input/InputControl/InputControl.css`
+- `src/shared/ui/primitives/input/NumberInput/NumberInput.tsx`
 - `src/shared/ui/primitives/input/NumberInput/NumberInput.base.css`
 - `src/shared/ui/primitives/input/TextInput/TextInput.css`
+- `src/shared/ui/primitives/Select/SelectMenu.tsx`
 - `src/shared/ui/primitives/Select/SelectMenu.css`
 
-### Representative skjermer
-
-- `src/features/right_triangle/TrianglePage.tsx`
-- `src/features/helix/ui/HelixPage.tsx`
-- `src/features/cuttingData/ui/cuttingDataPage.tsx`
-- `src/features/cuttingData/ui/cuttingDataPage.css`
-- `src/features/tolerances/ui/TolerancesPage.tsx`
-- `src/features/tolerances/ui/TolerancesPage.css`
-- `src/features/cylinder_weight/ui/CylinderWeightPage.tsx`
-- `src/features/cylinder_weight/ui/CylinderWeightPage.css`
-- `src/features/finishing/page/FinishingPage.tsx`
-- `src/features/finishing/plan/ui/PlanForm.tsx`
-
-### State, form-logikk og navigation
+### State og navigation
 
 - `src/app/providers/FormStateProvider.tsx`
-- `src/shared/form/types/forms.ts`
-- `src/shared/form/types/fields.ts`
 - `src/shared/form/engine/formEngine.ts`
 - `src/shared/ui/hooks/form/useFormNavigation.ts`
-- feature-spesifikke `use*PageController.ts`
-- feature-spesifikke `*FieldConfig.ts`
+- `src/shared/ui/hooks/form/useCalculatorFormNavigation.ts`
 
-## 1. Hvor størrelsen på formområdet bestemmes
+### Representative features
 
-### App-rammen
+- `src/features/right_triangle/TrianglePage.tsx`
+- `src/features/right_triangle/ui/triangleFieldConfig.ts`
+- `src/features/helix/ui/HelixPage.tsx`
+- `src/features/helix/ui/helixFieldConfig.ts`
+- `src/features/cuttingData/ui/cuttingDataPage.tsx`
+- `src/features/cuttingData/ui/cuttingDataPage.css`
+- `src/features/cuttingData/ui/useCuttingPageController.ts`
+- `src/features/tolerances/ui/TolerancesPage.tsx`
+- `src/features/tolerances/ui/TolerancesPage.css`
+- `src/features/tolerances/ui/useTolerancePageController.ts`
+- `src/features/cylinder_weight/ui/CylinderWeightPage.tsx`
+- `src/features/cylinder_weight/ui/CylinderWeightPage.css`
+- `src/features/cylinder_weight/ui/useCylinderWeightPageController.ts`
+- `src/features/finishing/page/FinishingPage.tsx`
+- `src/features/finishing/page/useFinishingPageController.ts`
+- `src/features/finishing/plan/ui/PlanForm.tsx`
 
-`AppShell` fyller hele viewporten. Sidebarbredden kommer fra
-`--sidebar-width`, mens hovedområdet tar resten av gridet. `shell-main` scroller,
-og `shell-content` tilfører `--layout-padding`.
+## 1. Page-layout-laget
 
-Dette betyr at tilgjengelig bredde først reduseres av:
+### Felles `formWidth`
 
-1. sidebar
-2. side-padding
-3. side-layoutens `max-width`
-4. formkolonnens bredde
+Alle tre formorienterte page-layouts tar `formWidth?: FormWidth` og bruker
+`sm` som default:
 
-### Standard formbredde
-
-Standardbredden uttrykkes nå eksplisitt med `formWidth="sm"`:
-
-```css
---page-form-grid-width: 200px;
---layout-content-max-width: 1100px;
+```ts
+type FormWidth = "sm" | "md" | "lg" | "fluid";
 ```
 
-`FormFigureLayout` bruker:
+Verdiene mappes til modifier-klasser og CSS-variablene `--page-form-width` og
+`--page-form-grid-width`.
+
+| Variant | Verdi | Hensikt | Bruk i features |
+| --- | --- | --- | --- |
+| `sm` | `200px` | Standard calculator-form | Triangle, Helix, Cutting Data, Finishing |
+| `md` | `min(20rem, 100%)` | Bredere, avgrenset single form | Cylinder Weight |
+| `lg` | `clamp(17.5rem, 34vw, 19rem)` | Responsiv bred form for tett innhold | Tolerances |
+| `fluid` | `100%` / `minmax(0, 1fr)` | Fyll tilgjengelig layoutplass | Kun layout-test |
+
+Det finnes ikke lenger feature-overstyringer av `--layout-form-width`.
+Page-breddene er synlige i JSX.
+
+### `SingleFormLayout`
+
+`SingleFormLayout` rendrer:
+
+```text
+.single-form-layout
+  -> .single-form-panel
+```
+
+Den har bare én form-slot og reserverer ingen figure- eller aside-kolonne.
+Wrapperen er fullbredde, sentrert og begrenset av
+`--layout-content-max-width`. Panelet bruker `--page-form-width`.
+
+Under `50rem` settes panelet til `width: 100%`. Dette betyr at både standard-
+og `md`-former fyller tilgjengelig mobilbredde.
+
+Brukes av:
+
+- Finishing plan med default `sm`
+- Cylinder Weight med `formWidth="md"`
+
+### `FormFigureLayout`
+
+`FormFigureLayout` rendrer alltid to slots:
+
+```text
+.form-figure-layout
+  -> .form-panel
+  -> .figure-panel
+```
+
+Desktop-grid:
 
 ```css
 grid-template-columns: var(--page-form-grid-width) 1fr;
-max-width: var(--layout-content-max-width);
 ```
 
-`FormSidebarLayout` bruker:
+Under `50rem` blir layouten én kolonne. Triangle og Helix bruker default
+`formWidth="sm"`. Ingen features bruker lenger `figure={null}`.
+
+De generiske klassenavnene `.form-panel` og `.figure-panel` er fortsatt
+globale, men ingen feature-CSS peker på dem nå.
+
+### `FormSidebarLayout`
+
+Default-varianten bruker:
 
 ```css
 grid-template-columns: var(--page-form-grid-width) minmax(20rem, 1fr);
-max-width: var(--layout-content-max-width);
 ```
 
-Dermed er standardformene i Triangle, Helix og Finishing i praksis 200 px
-brede. Cutting Data bruker også standardbredden, men med saved-results-panel som
-andre kolonne.
+Den har typed formbredde, form-slot og semantisk `<aside>`. Den støtter også
+`formClassName`, `sidebarClassName`, `className` og en `compact`-variant.
 
-### Feature-spesifikke bredder
+Default-varianten stacker under `50rem`. Da får sidebaren også
+`min-height: 20rem`.
 
-- Tolerances bruker `formWidth="lg"`.
-- Cylinder Weight bruker `formWidth="md"`.
-- Tolerances setter i tillegg egne bredder for kolonnene inni
-  `SplitFormLayout`: 8 rem input og 7.5 rem output.
+Compact-varianten ignorerer `--page-form-grid-width` og bruker to eksplisitte
+kolonner mellom `18rem` og `22rem`. Den stacker under `760px`. Ingen av de
+analyserte feature-sidene bruker compact-varianten.
 
-Breddene på page-layout-nivå er dermed synlige i komponent-props. De interne
-kolonnene i `SplitFormLayout` styres fortsatt av feature-CSS.
+Brukes av:
 
-### Høyde
+- Cutting Data med default `sm`
+- Tolerances med `formWidth="lg"`
 
-`FormSidebarLayout` og enkelte feature-wrappers bruker `height: 100%` og
-`min-height: 0`. Cutting Data bruker denne kjeden for å skyve actions ned med
-`margin-top: auto`.
+### App-ramme og høyde
 
-Dette er indirekte og skjørt fordi `shell-content` ikke selv etablerer en
-eksplisitt høyde/flex-fill-kontrakt. Resultatet av `height: 100%` avhenger derfor
-av ancestor-kjeden og innholdet.
+`AppShell` bruker CSS grid for topbar/sidebar/main. `shell-main` scroller og
+`shell-content` tilfører `--layout-padding`, men `shell-content` etablerer ikke
+en eksplisitt full-height-kontrakt.
 
-### Responsive regler
+Dette er viktig fordi `FormSidebarLayout`, Cutting Data og Tolerances bruker
+`height: 100%`. Den faktiske høyden avhenger dermed fortsatt av ancestor-kjeden
+og innholdet.
 
-- `FormFigureLayout`: én kolonne under `50rem`.
-- `FormSidebarLayout`: én kolonne under `50rem`.
-- `SplitFormLayout`: én kolonne under `42rem`.
-- `FormSidebarLayout` compact-variant: én kolonne under `760px`.
+## 2. Form-layout-laget
 
-Breakpointene er hardkodet i tre ulike layoutfiler. Tolerances kan derfor være
-én outer-kolonne, men fortsatt to inner-kolonner mellom 42 og 50 rem.
+### `FormLayout`
 
-## 2. Hvor inputbredden bestemmes
-
-Inputbredden bestemmes nesten aldri av feltkomponenten selv.
-
-Flyten er:
-
-1. Side-layout bestemmer formkolonnens bredde.
-2. `FormLayout`, `FormSection`, `Field` og `.field-control` lar barnet fylle
-   tilgjengelig bredde.
-3. `.input-control`, `.number-input`, `.ni-input-wrapper` og text-input-wrapper
-   bruker `width: 100%`.
-4. Inputen ender derfor med samme bredde som nærmeste layoutkolonne.
-
-`min-width: 0` brukes flere steder for å tillate at grid/flex-barn krymper uten
-overflow. Dette er riktig, men bidrar til at bredden må forstås gjennom hele
-ancestor-kjeden.
-
-### Unntak
-
-- `TextInput` har en `size`-prop, men denne endrer kontrollhøyde/font, ikke
-  bredde.
-- `NumberInput` setter en inline CSS-variabel basert på enhetens tekstlengde.
-  Dette endrer intern padding/enhetsplass, ikke total inputbredde.
-- Søkefelt i Cylinder Weight-modaler begrenses av feature-CSS til
-  `max-width: 320px`.
-- Tolerances gjør inputfeltene smale gjennom nested grid-kolonner, ikke gjennom
-  field- eller input-props.
-
-## 3. Hvordan layouten bestemmes
-
-### Dagens layoutnivåer
-
-| Nivå | Ansvar | Teknikk |
-| --- | --- | --- |
-| App shell | viewport, sidebar, scrolling, padding | CSS grid + flex |
-| Page layout | form + figur/sidebar eller stacked view | CSS grid/flex |
-| Form layout | fields, error, actions | flex column |
-| Form section | grupper og resultatseparator | flex column |
-| Field | label, control, error | flex column |
-| Input | fyller parent | width 100% |
-
-### Skjermvarianter
-
-- Triangle og Helix: `FormFigureLayout` med form + figur.
-- Finishing plan: `FormFigureLayout` med `figure={null}`.
-- Cylinder Weight: `FormFigureLayout` med `figure={null}` og feature-overstyrt
-  formbredde.
-- Cutting Data: `FormSidebarLayout` med form + saved results.
-- Tolerances: `FormSidebarLayout`, med `SplitFormLayout` inni formkolonnen.
-- Finishing execution: `StackedLayout`, ikke vanlig form-layout.
-
-`figure={null}` reserverer fortsatt den andre gridkolonnen. Det brukes dermed
-som en indirekte "single form"-template, men uttrykker ikke intensjonen tydelig.
-
-### Én og flere kolonner
-
-- Vanlige fields er alltid én kolonne.
-- `FormStack` er også eksplisitt én kolonne og brukes hovedsakelig i modal.
-- Tolerances er den eneste reelle tokolonne-formen, gjennom `SplitFormLayout`.
-- Det finnes ingen generell field-grid med `columns`/`span`-API.
-
-### Spacing, labels og actions
-
-- Spacing styres hovedsakelig av globale tokens som `--form-gap`,
-  `--form-fields-gap`, `--form-section-gap` og `--form-actions-gap`.
-- `Field` eier label/control/error-layout.
-- `FormActions` legger Calculate i full bredde og Reset/ekstra actions til
-  høyre under.
-- Cutting Data overstyrer action-posisjon indirekte med en descendant-selector
-  og `margin-top: auto`.
-
-### Saved results
-
-- Cutting Data bruker den generelle `SavedResultsPanel`.
-- Tolerances har et eget saved-results-panel med egen grid/tabell-CSS.
-- Sidepanelets bredde kommer fra `FormSidebarLayout`, ikke panelkomponenten.
-- Begge paneltypene har egen `max-height: 28rem`, selv om parent-layout prøver å
-  etablere full høyde.
-
-## 4. State- og prop-flyt
-
-### Eier av form-state
-
-`FormStateProvider` eier en global, in-memory map av forms keyed med strings.
-`useFeatureForm` gir hver feature et state-par og gjør at formverdier beholdes
-ved navigering mellom routes.
-
-Denne state-eieren kjenner ikke layout, men den gjør forms globale og
-string-keyed. Det er derfor vanskeligere å se levetid og reset-regler lokalt.
-
-### Delt ansvar per skjerm
-
-- Triangle og Helix eier orkestrering direkte i page-komponenten:
-  form-state, calculate, reset, navigation og aktivt figur-felt.
-- Cutting Data deler ansvar mellom page og controller. Controller eier saved
-  results, mens page fortsatt eier calculate/edit/navigation.
-- Tolerances legger mest business/UI-orkestrering i controller, men page eier
-  navigation og felt-rendering.
-- Cylinder Weight-controlleren eier form-state, API-data, modal-state,
-  create/edit/import/export-state og actions. Page mapper hele controllerens
-  store API til felter og modaler.
-- Finishing deler state mellom controller og `PlanForm`, og bruker `any` for
-  setter-kontrakten.
-
-### Props gjennom field-laget
-
-Feature page/controller lager props fra:
-
-- field config: label, unit, tooltip, readOnly, autoFocus
-- form state: value/source/locked/error
-- navigation: ref og keydown-handler
-- page/controller: onChange
-
-`FormNumberField` kobler deretter `FieldState`, display settings, lock/readOnly,
-formattering og primitive input sammen. Komponenten er gjenbrukbar, men er
-bundet til den spesifikke `FieldState`-modellen.
-
-### Layout-relaterte avhengigheter i state/rendering
-
-- Read-only/result-felter filtreres og plasseres av pages, ikke av en generell
-  renderer.
-- Mode bestemmer hvilke felt som rendres i Tolerances.
-- Aktivt felt styrer figurhighlight i Triangle/Helix.
-- Fokusrekkefølge dupliserer ofte field config eller defineres separat.
-- Navigation krever refs og handlers på hvert enkelt felt, noe som gjør
-  rendering verbose og binder feltlisten til sidekomponenten.
-
-## 5. Mønstre og problemer
-
-### Dagens implisitte regler
-
-1. Felt fyller alltid parentbredden.
-2. Formbredde uttrykkes med `formWidth` på page-layouten.
-3. Feature-wrapper kan overstyre delte layout-komponenter via arvede
-   CSS-variabler.
-4. Fields listes sekvensielt og blir én kolonne med mindre de pakkes i en
-   særskilt nested layout.
-5. Resultatfelt skilles gjennom config-filtering og manuell plassering.
-6. Action-layout kan endres gjennom descendant-selectors fra feature-CSS.
-
-### Duplisering
-
-- Triangle, Helix, Cutting Data og PlanForm gjentar:
-  field mapping, calculate, error-fokus, reset-fokus, error og actions.
-- Field config-typene er nesten identiske, men definert per feature.
-- Helix og PlanForm bruker `<div className="form-section">` direkte, mens
-  Tolerances og Cylinder Weight bruker `FormSection`.
-- `FormLayout` og `SplitFormLayout` dupliserer struktur for error/actions og
-  tilhørende spacing.
-- Saved-results-panelene har overlappende struktur og høydebegrensning.
-
-### Tett kobling og skjulte kontrakter
-
-- Globale, generiske klassenavn som `.form-actions`, `.form-section`,
-  `.form-panel` og `.figure-panel` kan kollidere eller påvirkes utenfor eier.
-- `FormLayout` og `SplitFormLayout` har nå eksplisitte actions-slot-klasser,
-  mens `FormActions` beholder sin egen interne `.form-actions`-klasse.
-- Helix og PlanForm bruker nå `FormSection` direkte.
-- Den tidligere ubrukte `--split-form-output-min-width`-overstyringen i
-  Tolerances er fjernet.
-- `formClassName`, `sidebarClassName` og compact-variant finnes i
-  `FormSidebarLayout`, men er ikke del av et tydelig template-system.
-- Single-column-form bruker nå `SingleFormLayout` uten tom figure-kolonne.
-- Full-height-atferd styres gjennom flere feature-selectors og en uklar
-  ancestor-kontrakt.
-
-### Hvorfor gjenbrukbare form-maler er vanskelige nå
-
-- Page-layout og field-layout har ingen eksplisitt, typed variantmodell.
-- Layoutvalg uttrykkes dels med komponentvalg, dels med CSS-variabler, dels med
-  wrapper-klasser og descendant-selectors.
-- Field config beskriver metadata, men ikke gruppering, kolonne/span eller
-  result-seksjon.
-- En generell renderer mangler, så hver page må koble state, navigation og
-  felter manuelt.
-- Controllers har ulikt ansvar og ulik returform.
-
-## 6. Foreslått enklere arkitektur
-
-Målet bør være fire tydelige lag:
+`FormLayout` eier tre tydelige slots:
 
 ```text
-Page template
-  -> Form composition
-    -> Field renderer
-      -> Field/control primitives
-
-Feature controller
-  -> form state + actions + business orchestration
+.form-layout
+  -> .form-fields
+  -> .form-error-block, hvis error finnes
+  -> .form-layout-actions-slot
 ```
 
-### A. Eksplisitte page templates
+- Root er en flex-kolonne med `--form-gap`.
+- Fields er en flex-kolonne med `--form-fields-gap`.
+- Error reserverer `--form-error-min-height` bare når error-slot rendres.
+- Actions-slot er eksplisitt `display: flex`, `flex-direction: column`,
+  `gap: var(--form-actions-gap)` og `width: 100%`.
 
-Lag et lite, lukket API for de faktiske variantene:
+Actions-slot-kontrakten er derfor nå tydelig og fullbredde. `FormActions` har
+fortsatt sin egen interne `.form-actions`-klasse, men den kolliderer ikke lenger
+med slot-navnet.
 
-```tsx
-<FormPage width="sm">{form}</FormPage>
+### `SplitFormLayout`
 
-<FormPageWithAside
-  formWidth="sm"
-  form={form}
-  aside={savedResults}
-/>
+`SplitFormLayout` er en spesialisert to-kolonne-form:
 
-<FormPageWithFigure
-  formWidth="sm"
-  form={form}
-  figure={figure}
-/>
+```text
+.split-form-layout
+  -> .split-form-input-panel
+     -> input
+     -> error
+     -> actions
+  -> output
 ```
 
-`width` bør mappe til dokumenterte tokens, for eksempel `sm`, `md`, `lg`, i
-stedet for at features setter interne layoutvariabler. Templates bør eie
-responsive regler og høydekontrakt.
+Den eier input/output/error/actions, og actions-slot er også eksplisitt
+kolonne/fullbredde. Default er to like kolonner. Under `42rem` blir den én
+kolonne.
 
-### B. Én form-composition
-
-La én komponent eie slots for fields/error/actions:
-
-```tsx
-<FormShell
-  fields={<FormGrid columns={1}>{fields}</FormGrid>}
-  error={error}
-  actions={actions}
-/>
-```
-
-`FormGrid` kan støtte `columns={1 | 2}` og responsiv fallback. `FormSection`
-brukes for semantiske grupper og resultater. Da kan `SplitFormLayout` enten
-fjernes senere eller bli en ren `FormGrid`-variant.
-
-### C. Felles field-definisjon og renderer
-
-Utvid en felles field-definisjon med kun presentasjonsmetadata:
-
-```ts
-type FormFieldDefinition<K extends string> = {
-  key: K;
-  label: string;
-  unit?: string;
-  tooltip?: string;
-  readOnly?: boolean;
-  section?: "input" | "result";
-  span?: 1 | 2;
-};
-```
-
-En `NumberFieldList`/`FormFieldRenderer` kan koble config, field state,
-navigation og `onChange`. Feature-spesielle felter som Material og tolerance
-selects forblir eksplisitte children.
-
-### D. Konsistent controller-kontrakt
-
-Controllers bør eie:
-
-- form state
-- field/mode changes
-- calculate/generate/reset
-- feature-data og sideeffekter
-
-Pages bør eie:
-
-- valg av page template
-- komposisjon av form, figur og aside
-- eventuelt rent visuelt aktivt felt
-
-Navigation kan samles i en gjenbrukbar `useCalculatorFormNavigation` som tar
-field definitions og resultatet fra calculate. Det reduserer duplisert
-fokuslogikk uten å blande den inn i business-controlleren.
-
-## 7. Små refaktoreringssteg i trygg rekkefølge
-
-### Steg 1: Dokumenter og navngi eksisterende bredder
-
-Introduser semantiske tokens som:
+Tolerances overstyrer fortsatt:
 
 ```css
---form-page-width-sm: 12.5rem;
---form-page-width-md: 20rem;
---page-content-max-width: 68.75rem;
+--split-form-input-width: 8rem;
+--split-form-output-width: 7.5rem;
+--split-form-gap: var(--space-3);
 ```
 
-Map dagens verdier til disse uten visuell endring. Dette gjør det mulig å finne
-alle størrelsesvalg.
+Dette er en bevisst, men skjult kontrakt mellom feature-CSS og
+`SplitFormLayout`.
 
-### Steg 2: Fjern tvetydige globale klassenavn
+### `FormSection`
 
-Gi slot-wrapperne egne navn, for eksempel:
+`FormSection` er en flex-kolonne med `--form-section-gap`.
+`variant="result"` legger til toppmargin, padding og separator. Helix,
+Tolerances, Cylinder Weight og PlanForm bruker komponenten direkte.
 
-- `.form-layout-actions-slot`
-- `.form-layout-fields-slot`
-- `.form-section`
+Triangle og Cutting Data har flate field-lister og trenger ingen eksplisitt
+seksjon.
 
-Start med `.form-actions`, fordi den i dag brukes både av `FormLayout` og
-`FormActions`. Dette er en liten CSS/markup-endring med lav funksjonell risiko.
+### `FormStack`
 
-### Steg 3: Bruk `FormSection` konsekvent
+`FormStack` er en enkel én-kolonne-grid med kompakt gap. Den brukes i
+Cylinder Weight sin `NewMaterialModal`, ikke som page-form-layout.
 
-Erstatt direkte `<div className="form-section">` i Helix og PlanForm med
-`FormSection`. Dette fjerner en skjult global CSS-avhengighet uten å endre
-layout.
+### Spacing og actions
 
-### Steg 4: Lag en ekte single-form page-layout
+Global spacing kommer hovedsakelig fra:
 
-Erstatt bruk av `FormFigureLayout` med `figure={null}` i Finishing og Cylinder
-Weight med en `FormPage`/`SingleFormLayout`. Dette fjerner tom gridkolonne og
-gjør intensjonen eksplisitt.
+- `--form-gap`
+- `--form-fields-gap`
+- `--form-actions-gap`
+- `--form-section-gap`
+- `--form-label-control-gap`
+- `--layout-form-figure-gap`
 
-### Steg 5: Samle page-width-varianter i props
+`FormActions` eier intern action-layout:
 
-La page-layouts ta `formWidth="sm" | "md"` og mappe dette til modifier-klasser.
-Flytt deretter Tolerances- og Cylinder Weight-overstyringene fra feature-CSS til
-det eksplisitte API-et.
+- primary action fyller bredden
+- Calculate-knappen fyller primary-slot
+- secondary actions ligger høyrejustert under
 
-### Steg 6: Etabler én høyde- og scroll-kontrakt
+Cutting Data flytter fortsatt hele actions-slot til bunnen med en
+feature-spesifikk descendant-selector.
 
-Bestem om siden eller sidepanelet skal scrolle. Gjør `shell-content` og page
-template ansvarlige for dette. Fjern deretter feature-spesifikke kjeder av
-`height: 100%` og descendant-selectors gradvis.
+## 3. Felt- og input-laget
 
-### Steg 7: Ekstraher felles field renderer
+### Hvor inputbredden bestemmes
 
-Start med Triangle og Helix, siden de har enkel og lik mapping. Behold
-calculate/state-logikk uendret. Renderer bør først kun redusere JSX-duplisering.
+Inputbredden bestemmes fortsatt hovedsakelig av parent-layout:
 
-### Steg 8: Ekstraher felles calculator-navigation
+1. Page-layout velger formkolonnens bredde.
+2. `FormLayout`, `FormSection` eller `SplitFormLayout` arrangerer fields.
+3. `Field` og `.field-control` tillater krymping med `min-width: 0`.
+4. Input-primitivene fyller tilgjengelig bredde.
 
-Samle gjentatt fokus etter calculate/reset. Gjør dette etter field renderer, så
-navigation kan baseres på samme field definitions.
+Eksplisitt `width: 100%` finnes blant annet i:
 
-### Steg 9: Standardiser controllers
+- `.input-control`
+- `.number-input`
+- `.ni-input-wrapper`
+- `.app-text-input-wrapper`
+- select-options/labels der full bredde er nødvendig
+- `FormActions` sin primary-slot og Calculate-knapp
 
-Flytt calculate/edit/reset fra de enkle pages til små controllers én feature om
-gangen. Ikke flytt layout inn i controllerne.
+`TextInput.size` endrer kontrollstørrelse, ikke total bredde.
+`NumberInput` setter en inline CSS-variabel basert på enhetens tekstlengde,
+men dette påvirker intern padding/enhetsplass, ikke total bredde.
 
-### Steg 10: Generaliser to-kolonne-form
+### Komponentkjeden
 
-Når én-kolonne-rendering og templates er stabile, erstatt Tolerances sin
-spesialtilpassede `SplitFormLayout` med et generelt responsivt `FormGrid`.
+Number field-kjeden er:
 
-## Anbefalt første implementeringspakke
+```text
+Feature/page eller CalculatorNumberFields
+  -> FormNumberField
+    -> Field
+      -> NumberInput
+        -> InputBase
+          -> input.input-control
+```
 
-Den første pakken bør kun:
+`Field` eier label, control-wrapper og error. `FormNumberField` kobler
+`FieldState`, display-formattering, lock/disabled/readonly og `NumberInput`.
 
-1. bytte Helix og PlanForm til `FormSection`
-2. gi `FormLayout` sin actions-slot et unikt klassenavn
-3. legge til en eksplisitt single-form page-layout og bruke den i Finishing og
-   Cylinder Weight
-4. legge til enkle layout-tester eller Storybook-lignende render-tester for
-   standard, sidebar og responsiv stacking
+`CalculatorNumberFields` er en liten renderer som:
 
-Dette angriper de mest skjulte kontraktene uten å endre form-state,
-beregningslogikk eller field-komponentenes offentlige API.
+- mapper config-rekkefølge til eksisterende `FormNumberField`
+- kobler `fields`, `onChange`, refs, keydown, focus og blur
+- sender field-key tilbake til callbacks
+- behandler config-`readOnly` som disabled/result-field
+
+Den henter ikke global state og bestemmer ikke layout, calculate eller
+navigation.
+
+## 4. State, rendering og navigation
+
+### Global form-state
+
+`FormStateProvider` eier en in-memory `Record<string, unknown>`.
+`useFeatureForm(key, createInitial)` gir features et state-par og beholder
+formverdier ved route-navigering.
+
+Provideren kjenner ikke layout, men string-keyed global levetid gjør fortsatt
+eierskap og reset-regler mindre synlige lokalt.
+
+### Delt formmotor
+
+`formEngine.ts` eier delte state-overganger som:
+
+- user edit og constraint-anvendelse
+- clearing/unlocking av fields
+- calculate/generate
+- field- og form-errors
+
+Feature-pages eller controllers bestemmer fortsatt når disse funksjonene
+kalles.
+
+### Navigation
+
+`useFormNavigation` er den generelle primitive hooken. Den eier refs,
+Enter/piltast-navigation, submit-action-ref, autofocus og hjelpefunksjoner for
+fokus etter render.
+
+`useCalculatorFormNavigation` bygger på denne og brukes kun av Triangle og
+Helix. Den legger til:
+
+- fokus på første inline-error etter calculate
+- fokus på første tomme input ved form-error
+- fokus på første input etter reset
+- valgfri active-field-sporing
+
+Triangle og Helix setter `trackActiveField: true` for figure-highlight.
+Hooken eier ikke figur-rendering eller business-logikk.
+
+### Hva som fortsatt er lokalt
+
+- Triangle og Helix eier calculate/reset/state-overganger i page-komponenten.
+- Cutting Data, Cylinder Weight og PlanForm har fortsatt egen, nesten lik
+  calculate/reset-fokuslogikk rundt `useFormNavigation`.
+- Tolerances har mode- og select-spesifikk navigation.
+- Controllers har forskjellige ansvar og returformer.
+- Field-seksjoner, input/result-plassering og spesialfelter komponeres fortsatt
+  eksplisitt per feature.
+
+## 5. Feature-status
+
+| Feature | Page-layout / bredde | Field-rendering | Actions | Indirekte feature-layout |
+| --- | --- | --- | --- | --- |
+| Triangle | `FormFigureLayout`, default `sm` | `CalculatorNumberFields`, flat liste | `FormLayout` + `FormActions` | Ingen feature-CSS mot layout-internals |
+| Helix | `FormFigureLayout`, default `sm` | Mode-field + `CalculatorNumberFields` i `FormSection` | `FormLayout` + `FormActions` | Ingen feature-CSS mot layout-internals |
+| Cutting Data | `FormSidebarLayout`, default `sm` | Manuell config-map til `FormNumberField` | `FormLayout` + `FormActions`, actions skyves ned | Ja: `.fsl-*`, `.form-layout` og `.form-layout-actions-slot` |
+| Tolerances | `FormSidebarLayout`, `lg`, med `SplitFormLayout` | Manuell input/output-rendering, mode og selects | `SplitFormLayout` + `FormActions` | Ja: `.fsl-*`, child-selector, `.form-actions-secondary` og split-variabler |
+| Cylinder Weight | `SingleFormLayout`, `md` | Manuell input/result-filtering i `FormSection` | `FormLayout` + `FormActions` | Page-CSS styrer ikke page-layout-bredde; modal/table-regler finnes |
+| Finishing plan | `SingleFormLayout`, default `sm` | Manuell mode + config-map i `FormSection` | `FormLayout` + `FormActions` | Ingen feature-CSS mot page/form-layout-internals |
+| Finishing execution | `StackedLayout` | Execution-komponenter, ikke vanlig form | Footer-slot | Egen execution-layout |
+
+### Triangle
+
+- `useFeatureForm` eier state via global provider.
+- Page eier edit/calculate/reset.
+- `CalculatorNumberFields` kobler config, state og navigation.
+- `useCalculatorFormNavigation` kobler error/reset-fokus og active field.
+- Figuren får kun `activeField`.
+
+### Helix
+
+- Samme hovedmønster som Triangle.
+- Mode-field rendres eksplisitt i egen `FormSection`.
+- Number fields bruker delt renderer/navigation.
+- Page eier fortsatt mode-change, calculate og reset.
+
+### Cutting Data
+
+- Controller eier form-state og saved-results-operasjoner.
+- Page eier edit, calculate, reset-fokus, field-map og layout.
+- Field config-rekkefølge og egen `focusOrder` er separate kontrakter.
+- Feature-CSS etablerer full-height-kjede og skyver actions ned.
+
+### Tolerances
+
+- Controller eier mest business- og dataorkestrering, inkludert API-options og
+  saved results.
+- Page eier navigation, mode-avhengig rendering og input/output-komposisjon.
+- `SplitFormLayout` gir to interne kolonner inne i `FormSidebarLayout` sin
+  formkolonne.
+- Feature-CSS styrer split-kolonnebredde, høyde og wrapping av secondary
+  actions.
+
+### Cylinder Weight
+
+- Controlleren eier form-state, materialdata, API-kall og flere modal-states.
+- Page rendrer materialfelt, input/result-seksjoner, navigation og modaler.
+- `SingleFormLayout formWidth="md"` gjør bredden eksplisitt.
+- Page-CSS inneholder fortsatt feature-layout for modal/table/search, men peker
+  ikke på page-layout-internals.
+
+### Finishing / PlanForm
+
+- `FinishingPage` velger mellom single-form-plan og execution-view.
+- Planen bruker `SingleFormLayout` med default `sm`.
+- `PlanForm` eier field-rendering og navigation; controller eier form,
+  execution og generate/reset.
+- Setter-kontrakten bruker fortsatt `any`.
+- Execution bruker `StackedLayout`, ikke vanlig form-layout.
+
+## 6. Gjenværende skjulte koblinger
+
+### Feature-CSS mot layout-internals
+
+Cutting Data:
+
+```css
+.cutting-data-layout .fsl-form
+.cutting-data-layout .fsl-sidebar
+.cutting-form > .form-layout
+.cutting-form > .form-layout > .form-layout-actions-slot
+```
+
+Tolerances:
+
+```css
+.tolerances-page-layout .fsl-form
+.tolerances-page-layout .fsl-sidebar
+.tolerances-page-layout .fsl-form > div
+.tolerances-page-layout .form-actions-secondary
+```
+
+Disse selectorene gjør features avhengige av intern markup og klassenavn i
+delte komponenter.
+
+### CSS-variabler fra features
+
+Det finnes ingen gjenværende feature-overstyring av page-formbredde.
+
+Tolerances setter fortsatt tre variabler som leses av `SplitFormLayout`:
+
+- `--split-form-input-width`
+- `--split-form-output-width`
+- `--split-form-gap`
+
+### Hardkodede responsive grenser
+
+- AppShell åpner/lukker sidebar ved `768px` i JavaScript.
+- `SingleFormLayout`, `FormFigureLayout` og default `FormSidebarLayout`
+  reagerer ved `50rem`.
+- `SplitFormLayout` stacker ved `42rem`.
+- Compact `FormSidebarLayout` stacker ved `760px`.
+
+Breakpointene er ikke samlet i én kontrakt. Tolerances kan derfor få outer- og
+inner-stacking ved forskjellige bredder.
+
+### Gjenværende duplisering
+
+- Cutting Data, Cylinder Weight og PlanForm dupliserer manuell number-field-map.
+- Cutting Data, Cylinder Weight og PlanForm dupliserer inline-error,
+  form-error og reset-fokus.
+- Tolerances har tilsvarende, men mer feature-spesifikk fokuslogikk.
+- Cylinder Weight og Tolerances filtrerer input/result-fields manuelt.
+- Field config-typer er fortsatt feature-spesifikke.
+- Controllers har ulikt ansvar.
+
+Dette er ikke nødvendigvis feil. Tolerances og Cylinder Weight har nok
+spesiallogikk til at de ikke bør presses inn i Triangle/Helix-abstraksjonene
+uten en egen vurdering.
+
+## 7. Oppdatert vurdering
+
+### Hva som nå er ryddigere
+
+1. Page-bredde er eksplisitt, typed og testet.
+2. Single-form-sider uttrykkes uten tom gridkolonne.
+3. Actions-slot og `FormActions` har separate navn og tydelige breddeansvar.
+4. `FormSection` brukes konsistent i de analyserte seksjonerte formene.
+5. Triangle og Helix deler smale abstraheringer for number-field-rendering og
+   calculator-navigation.
+6. De tidligere døde/misvisende page-width-kontraktene er borte.
+
+### Hva som fortsatt er uklart eller skjørt
+
+1. Full-height og scroll er fortsatt en indirekte ancestor-kontrakt.
+2. Cutting Data styrer actions-plassering gjennom intern descendant-selector.
+3. Tolerances styrer både page-layout-internals og split-grid via feature-CSS.
+4. `FormSidebarLayout` har mange utvidelsespunkter, men ingen eksplisitt
+   full-height/scroll-kontrakt.
+5. Navigation og controller-ansvar varierer betydelig mellom features.
+6. Responsive breakpoints er hardkodet og ukoordinert.
+
+## Anbefalt neste lille refaktoreringspakke
+
+Neste pakke bør avgrenses til Cutting Data sin full-height/actions-kontrakt:
+
+1. Dokumenter først hvilken container som skal scrolle og om actions faktisk
+   skal ligge nederst ved høy side.
+2. Gi `FormLayout` en liten eksplisitt variant/prop for bottom-aligned actions,
+   eller en layout-eid modifier-klasse.
+3. Bruk eksisterende `formClassName`/`sidebarClassName` eller en liten
+   `FormSidebarLayout`-variant for full-height-behovet.
+4. Fjern Cutting Data-selectorene som peker direkte på `.fsl-*`,
+   `.form-layout` og `.form-layout-actions-slot`.
+5. Behold state, calculate, field-rendering og saved results uendret.
+
+Dette er en liten pakke fordi den erstatter én konkret skjult kontrakt uten å
+generalisere Tolerances eller endre feature-logikk.
+
+## Hva som bør vente
+
+- Generell `FormGrid`/kolonne- og span-arkitektur
+- Erstatning av `SplitFormLayout`
+- Standardisering av alle controllers
+- Migrering av Tolerances til calculator-renderer/navigation
+- Sammenslåing av saved-results-panelene
+- Samlet breakpoint-system
+- Full opprydding av global form-state
+
+Etter at høyde/actions-kontrakten er tydelig, kan en separat liten pakke vurdere
+om Cutting Data kan bruke `CalculatorNumberFields`. Navigation bør vurderes
+separat fordi Cutting Data har en egen `focusOrder` som ikke er identisk med
+config-rekkefølgen.

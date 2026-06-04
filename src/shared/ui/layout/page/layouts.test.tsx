@@ -21,6 +21,18 @@ describe("form page layouts", () => {
     expect(markup).toContain('class="form-layout-actions-slot"');
   });
 
+  it("renders bottom actions with an explicit form layout modifier", () => {
+    const markup = renderToStaticMarkup(
+      <FormLayout
+        fields={<div>Form fields</div>}
+        actions={<button type="button">Calculate</button>}
+        actionsPlacement="bottom"
+      />,
+    );
+
+    expect(markup).toContain("form-layout--actions-bottom");
+  });
+
   it("renders actions in the split form actions slot", () => {
     const markup = renderToStaticMarkup(
       <SplitFormLayout
@@ -38,6 +50,7 @@ describe("form page layouts", () => {
     const markup = renderToStaticMarkup(
       <FormSidebarLayout
         formWidth="lg"
+        fillHeight
         form={<div>Form content</div>}
         sidebar={<div>Aside content</div>}
       />,
@@ -47,6 +60,7 @@ describe("form page layouts", () => {
     expect(markup).toContain("Aside content");
     expect(markup).toContain("<aside");
     expect(markup).toContain("form-width--lg");
+    expect(markup).toContain("form-sidebar-layout--fill-height");
   });
 
   it("renders a width variant on the figure layout", () => {

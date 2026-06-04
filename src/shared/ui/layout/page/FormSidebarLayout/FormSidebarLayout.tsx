@@ -14,6 +14,7 @@ type Props = {
   sidebar: ReactNode;
   formWidth?: FormWidth;
   variant?: "default" | "compact";
+  fillHeight?: boolean;
 
   className?: string;
 
@@ -26,6 +27,7 @@ export function FormSidebarLayout({
   sidebar,
   formWidth = "sm",
   variant = "default",
+  fillHeight = false,
   className,
   formClassName,
   sidebarClassName,
@@ -36,6 +38,7 @@ export function FormSidebarLayout({
         "form-sidebar-layout",
         formWidthClassName(formWidth),
         variant === "compact" && "form-sidebar-layout--compact",
+        fillHeight && "form-sidebar-layout--fill-height",
         className
       )}
     >
