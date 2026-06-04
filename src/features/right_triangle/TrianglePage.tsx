@@ -5,7 +5,7 @@ import {
   handleCalculateAsync,
 } from "@shared/form/engine/formEngine";
 
-import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
+import { CalculatorNumberFields } from "@shared/ui/components/form/fields";
 
 import {
   createInitialTriangleForm,
@@ -118,31 +118,16 @@ export function TrianglePage() {
   ========================= */
 
   const fields = (
-  <>
-    {triangleFieldConfig.map((f) => {
-      const fieldState = form.fields[f.key];
-
-      return (
-        <FormNumberField
-          key={f.key}
-          label={f.label}
-          tooltip={f.tooltip}
-          unit={f.unit}
-          field={fieldState}
-          disabled={fieldState.locked}
-          autoFocus={f.autoFocus}
-          onChange={(value) =>
-            onFieldChange(f.key, value)
-          }
-          ref={navigation.register(f.key)}
-          onKeyDown={navigation.handleKeyDown(f.key)}
-          onFocus={() => setActiveField(f.key)}
-          onBlur={() => setActiveField(null)}
-        />
-      );
-    })}
-  </>
-);
+    <CalculatorNumberFields
+      configs={triangleFieldConfig}
+      fields={form.fields}
+      onChange={onFieldChange}
+      register={navigation.register}
+      onKeyDown={navigation.handleKeyDown}
+      onFocus={setActiveField}
+      onBlur={() => setActiveField(null)}
+    />
+  );
 
 const error = form.formError ? (
   <FormError error={form.formError} />

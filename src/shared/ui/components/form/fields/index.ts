@@ -7,6 +7,7 @@
 */
 
 export {FormNumberField} from "./FormNumberField";
+export {CalculatorNumberFields} from "./CalculatorNumberFields";
 export {FormModeField} from "./FormModeField";
 export {FormSelectMenuField} from "./FormSelectMenuField";
 export {FormTextField} from "./FormTextField";
