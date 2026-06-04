@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import "./SplitFormLayout.css";
 
 type SplitFormLayoutProps = {
@@ -7,6 +7,9 @@ type SplitFormLayoutProps = {
   output: ReactNode;
   error?: ReactNode;
   actions: ReactNode;
+  inputWidth?: string;
+  outputWidth?: string;
+  gap?: string;
   className?: string;
 };
 
@@ -15,10 +18,19 @@ export function SplitFormLayout({
   output,
   error,
   actions,
+  inputWidth,
+  outputWidth,
+  gap,
   className,
 }: SplitFormLayoutProps) {
+  const style = {
+    "--split-form-input-width": inputWidth,
+    "--split-form-output-width": outputWidth,
+    "--split-form-gap": gap,
+  } as CSSProperties;
+
   return (
-    <div className={clsx("split-form-layout", className)}>
+    <div className={clsx("split-form-layout", className)} style={style}>
       <div className="split-form-input-panel">
         <div className="split-form-input">{input}</div>
 

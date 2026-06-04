@@ -249,6 +249,9 @@ export function TolerancesPage() {
       output={output}
       error={error}
       actions={actions}
+      inputWidth="8rem"
+      outputWidth="7.5rem"
+      gap="var(--space-3)"
     />
   );
 

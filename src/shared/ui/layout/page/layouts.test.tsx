@@ -46,6 +46,23 @@ describe("form page layouts", () => {
     expect(markup).toContain('class="split-form-actions"');
   });
 
+  it("renders explicit split form column and gap values", () => {
+    const markup = renderToStaticMarkup(
+      <SplitFormLayout
+        input={<div>Input fields</div>}
+        output={<div>Output fields</div>}
+        actions={<button type="button">Calculate</button>}
+        inputWidth="8rem"
+        outputWidth="7.5rem"
+        gap="var(--space-3)"
+      />,
+    );
+
+    expect(markup).toContain("--split-form-input-width:8rem");
+    expect(markup).toContain("--split-form-output-width:7.5rem");
+    expect(markup).toContain("--split-form-gap:var(--space-3)");
+  });
+
   it("renders form and aside in the sidebar layout", () => {
     const markup = renderToStaticMarkup(
       <FormSidebarLayout
