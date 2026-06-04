@@ -13,9 +13,7 @@ import {
 } from "@shared/form/engine/formEngine";
 import { machineField, userField } from "@shared/form/types/fields";
 
-import {
-  listIso286ToleranceOptionsApi,
-} from "../api/client";
+import { listIso286ToleranceOptionsApi } from "../api/client";
 import { solveTolerance } from "../api/solveTolerance";
 import type {
   ToleranceMode,
@@ -24,9 +22,8 @@ import type {
 
 import {
   createInitialToleranceForm,
-  migrateToleranceForm,
-  ToleranceFormState,
-  ToleranceKey,
+  type ToleranceFormState,
+  type ToleranceKey,
 } from "../domain/toleranceForm";
 import { parseTolerance } from "../domain/parseTolerance";
 import { validateToleranceForm } from "../domain/validateToleranceForm";
@@ -37,43 +34,29 @@ import {
   reconcileSelectionFields,
 } from "../domain/toleranceOptions";
 
-
 const validInputSets: readonly (readonly ToleranceKey[])[] = [
   ["nominal", "hole_letter", "hole_grade", "shaft_letter", "shaft_grade"],
 ];
-const mutuallyExclusivePairs: readonly (readonly [ToleranceKey, ToleranceKey])[] =
-  [];
+
+const mutuallyExclusivePairs: readonly (readonly [
+  ToleranceKey,
+  ToleranceKey,
+])[] = [];
+
 const resultKeys = ["upper_um", "lower_um", "min_mm", "max_mm"] as const;
 
 export function useTolerancePageController() {
-  const [storedForm, setForm] = useFeatureForm(
+  const [form, setForm] = useFeatureForm(
     "tolerances",
     createInitialToleranceForm,
   );
-  const form = useMemo(() => migrateToleranceForm(storedForm), [storedForm]);
+
   const savedResults = useSavedResults<ToleranceFormState>({
     storageKey: "tolerances-history",
-    normalizeLoadedForm: (loadedForm) => {
-      const migrated = migrateToleranceForm(loadedForm);
-
-      return {
-        ...migrated,
-        extras: {
-          ...migrated.extras,
-          options: form.extras.options,
-          loadingOptions: form.extras.loadingOptions,
-        },
-      };
-    },
   });
 
-  useEffect(() => {
-    if (form !== storedForm) {
-      setForm(form);
-    }
-  }, [form, setForm, storedForm]);
-
   const { options } = form.extras;
+
   const holeLetter = form.fields.hole_letter.value;
   const holeGrade = form.fields.hole_grade.value;
   const shaftLetter = form.fields.shaft_letter.value;
@@ -83,6 +66,7 @@ export function useTolerancePageController() {
     () => gradesForZone(options.holes, holeLetter),
     [holeLetter, options.holes],
   );
+
   const shaftGrades = useMemo(
     () => gradesForZone(options.shafts, shaftLetter),
     [shaftLetter, options.shafts],
@@ -115,16 +99,16 @@ export function useTolerancePageController() {
           },
         }));
       } catch (error) {
-        if (!cancelled) {
-          setForm((prev) => ({
-            ...prev,
-            extras: {
-              ...prev.extras,
-              loadingOptions: false,
-            },
-            formError: getToleranceErrorMessage(error),
-          }));
-        }
+        if (cancelled) return;
+
+        setForm((prev) => ({
+          ...prev,
+          extras: {
+            ...prev.extras,
+            loadingOptions: false,
+          },
+          formError: getToleranceErrorMessage(error),
+        }));
       }
     }
 
@@ -178,17 +162,15 @@ export function useTolerancePageController() {
   }
 
   function onFieldChange(key: ToleranceKey, value: string) {
-    setForm((prev) => {
-      const next = handleUserEdit(
+    setForm((prev) =>
+      handleUserEdit(
         prev,
         key,
         value,
         validInputSets,
         mutuallyExclusivePairs,
-      );
-
-      return next;
-    });
+      ),
+    );
   }
 
   function onToleranceLetterChange(
@@ -232,41 +214,45 @@ export function useTolerancePageController() {
       validateToleranceForm,
     );
 
-    if (next.status === "solved") {
-      const fields = { ...next.fields };
-
-      for (const key of resultKeys) {
-        const resultField = fields[key];
-        const hasMachineValue =
-          resultField.machineValue != null || resultField.value.trim() !== "";
-
-        if (!hasMachineValue) continue;
-
-        fields[key] = machineField(
-          resultField.machineValue != null
-            ? String(resultField.machineValue)
-            : resultField.value,
-          {
-            ...resultField,
-            source: "machine",
-          },
-        );
-      }
-
-      setForm({
-        ...next,
-        fields,
-      });
+    if (next.status !== "solved") {
+      setForm(next);
       return next;
     }
 
-    setForm(next);
-    return next;
+    const fields = { ...next.fields };
+
+    for (const key of resultKeys) {
+      const resultField = fields[key];
+
+      const hasMachineValue =
+        resultField.machineValue != null || resultField.value.trim() !== "";
+
+      if (!hasMachineValue) continue;
+
+      fields[key] = machineField(
+        resultField.machineValue != null
+          ? String(resultField.machineValue)
+          : resultField.value,
+        {
+          ...resultField,
+          source: "machine",
+        },
+      );
+    }
+
+    const solvedForm = {
+      ...next,
+      fields,
+    };
+
+    setForm(solvedForm);
+    return solvedForm;
   }
 
   function resetForm() {
     setForm((prev) => {
       const initial = createInitialToleranceForm();
+
       const extras = {
         ...initial.extras,
         options: prev.extras.options,
@@ -317,6 +303,7 @@ export function useTolerancePageController() {
     onToleranceGradeChange,
     calculate,
     resetForm,
+
     history: savedResults.history,
     save,
     load,
@@ -324,7 +311,6 @@ export function useTolerancePageController() {
     clear: savedResults.clear,
   };
 }
-
 
 function clearResultFields(
   form: ToleranceFormState,
@@ -343,8 +329,10 @@ function clearResultFields(
 
 function getToleranceErrorMessage(error: unknown) {
   const commandError = getTauriCommandError(error);
+
   if (commandError?.message) return commandError.message;
   if (typeof error === "string") return error;
   if (error instanceof Error && error.message) return error.message;
+
   return "ISO 286 calculation failed";
 }
