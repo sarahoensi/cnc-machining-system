@@ -5,21 +5,13 @@
 //! This module defines the frontend integration boundary for right-triangle
 //! geometry requests and standardized error mapping.
 
-
 use tauri::command;
 
-use crate::interface::tauri::error::{
-    TauriError,
-    map_application_error,
-};
+use crate::interface::tauri::error::{map_application_error, TauriError};
 
 use crate::application::SolveRightTriangleUseCase;
 
-
-use super::{
-    SolveRightTriangleRequest,
-    SolveRightTriangleResponse,
-};
+use super::{SolveRightTriangleRequest, SolveRightTriangleResponse};
 
 /// Frontend-safe error payload returned by right-triangle commands.
 ///
@@ -29,7 +21,6 @@ use super::{
 /// Message safety:
 /// - Message content is produced from application errors intended for UI
 ///   handling and display/logging.
-
 
 // ---------------------------------------------------------
 // Command
@@ -60,7 +51,6 @@ use super::{
 pub fn solve_right_triangle(
     request: SolveRightTriangleRequest,
 ) -> Result<SolveRightTriangleResponse, TauriError> {
-
     let use_case = SolveRightTriangleUseCase;
     let input = request.into();
 
@@ -69,6 +59,3 @@ pub fn solve_right_triangle(
         .map(Into::into)
         .map_err(map_application_error)
 }
-
-
-

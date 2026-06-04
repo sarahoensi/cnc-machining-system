@@ -35,7 +35,6 @@ pub struct SolveCuttingDataInput {
     pub diameter_mm: Option<f64>,
 }
 
-
 /// Output DTO containing the solved cutting-data state.
 ///
 /// This output returns all values that could be validated or derived from the
@@ -51,4 +50,3 @@ pub struct SolveCuttingDataOutput {
     /// Resolved feed rate in millimeters per minute (`mm/min`), when available.
     pub feed_rate_mm_per_min: Option<f64>,
 }
-

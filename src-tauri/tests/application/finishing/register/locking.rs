@@ -3,15 +3,13 @@
 use cnc_machining_system_lib::{
     application::finishing::{
         dto::{GenerateFinishingPlanInput, RegisterFinishingMeasurementInput},
-        GenerateFinishingPlanUseCase,
-        RegisterFinishingMeasurementUseCase,
+        GenerateFinishingPlanUseCase, RegisterFinishingMeasurementUseCase,
     },
     domain::machining::finishing::FinishingMode,
 };
 
 #[test]
 fn edit_previous_step_after_later_measurement_fails() {
-
     let generate = GenerateFinishingPlanUseCase::new();
     let register = RegisterFinishingMeasurementUseCase::new();
 
@@ -24,21 +22,25 @@ fn edit_previous_step_after_later_measurement_fails() {
         })
         .unwrap();
 
-    register.execute(
-        &mut execution,
-        RegisterFinishingMeasurementInput {
-            step_number: 1,
-            measurement_mm: 9.6,
-        },
-    ).unwrap();
+    register
+        .execute(
+            &mut execution,
+            RegisterFinishingMeasurementInput {
+                step_number: 1,
+                measurement_mm: 9.6,
+            },
+        )
+        .unwrap();
 
-    register.execute(
-        &mut execution,
-        RegisterFinishingMeasurementInput {
-            step_number: 2,
-            measurement_mm: 8.9,
-        },
-    ).unwrap();
+    register
+        .execute(
+            &mut execution,
+            RegisterFinishingMeasurementInput {
+                step_number: 2,
+                measurement_mm: 8.9,
+            },
+        )
+        .unwrap();
 
     let result = register.execute(
         &mut execution,
@@ -53,7 +55,6 @@ fn edit_previous_step_after_later_measurement_fails() {
 
 #[test]
 fn edit_last_measured_step_is_allowed() {
-
     let generate = GenerateFinishingPlanUseCase::new();
     let register = RegisterFinishingMeasurementUseCase::new();
 
@@ -66,21 +67,25 @@ fn edit_last_measured_step_is_allowed() {
         })
         .unwrap();
 
-    register.execute(
-        &mut execution,
-        RegisterFinishingMeasurementInput {
-            step_number: 1,
-            measurement_mm: 9.6,
-        },
-    ).unwrap();
+    register
+        .execute(
+            &mut execution,
+            RegisterFinishingMeasurementInput {
+                step_number: 1,
+                measurement_mm: 9.6,
+            },
+        )
+        .unwrap();
 
-    register.execute(
-        &mut execution,
-        RegisterFinishingMeasurementInput {
-            step_number: 2,
-            measurement_mm: 8.9,
-        },
-    ).unwrap();
+    register
+        .execute(
+            &mut execution,
+            RegisterFinishingMeasurementInput {
+                step_number: 2,
+                measurement_mm: 8.9,
+            },
+        )
+        .unwrap();
 
     let result = register.execute(
         &mut execution,

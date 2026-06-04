@@ -19,7 +19,6 @@ use serde::Deserialize;
 #[derive(Deserialize)]
 #[serde(tag = "type")]
 pub enum SolveHelixRequest {
-
     /// Solve helix values when pitch is known.
     Pitch {
         /// Path mode controlling effective-diameter offset direction.

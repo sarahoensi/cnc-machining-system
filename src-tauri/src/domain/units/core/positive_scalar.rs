@@ -6,7 +6,6 @@ use crate::domain::units::core::NumericError;
 pub struct PositiveScalar(f64);
 
 impl PositiveScalar {
-
     /// Internal constructor used by domain math.
     pub(crate) fn new_unchecked(value: f64) -> Self {
         debug_assert!(value.is_finite());

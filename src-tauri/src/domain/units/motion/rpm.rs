@@ -1,8 +1,6 @@
 // domain/units/motion/rpm.rs
 
-use crate::domain::units::{
-    PositiveScalar, UnitsError,
-};
+use crate::domain::units::{PositiveScalar, UnitsError};
 
 /// Represents rotational speed in revolutions per minute (RPM).
 ///
@@ -12,7 +10,6 @@ use crate::domain::units::{
 pub struct Rpm(PositiveScalar);
 
 impl Rpm {
-
     /// Internal constructor used by domain math.
     #[allow(dead_code)]
     pub(crate) fn new_unchecked(value: f64) -> Self {
@@ -63,11 +60,7 @@ mod tests {
     fn value_round_trip() {
         let r = Rpm::new(1200.0).unwrap();
 
-        assert!(approx_eq(
-            r.value(),
-            1200.0,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(r.value(), 1200.0, DEFAULT_EPS));
     }
 
     // --- Ordering ---

@@ -1,15 +1,14 @@
 // domain/units/length/mod.rs
 #![allow(clippy::module_inception)]
 
-mod length;
 mod diameter;
-mod radius;
-mod pitch;
 mod error;
+mod length;
+mod pitch;
+mod radius;
 
-pub use length::{Length, PositiveLength};
 pub use diameter::Diameter;
-pub use radius::Radius;
-pub use pitch::Pitch;
 pub use error::LengthUnitError;
-
+pub use length::{Length, PositiveLength};
+pub use pitch::Pitch;
+pub use radius::Radius;

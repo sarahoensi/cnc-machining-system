@@ -8,10 +8,10 @@
 //! boundary contract used by UI clients.
 
 // interface/tauri/finishing/mod.rs
+mod command;
+mod mapping;
 mod request;
 mod response;
-mod mapping;
-mod command;
 
 // Public command surface
 pub use command::*;

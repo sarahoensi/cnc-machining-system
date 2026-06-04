@@ -1,7 +1,7 @@
 // domain/units/core/mod.rs
 
-mod positive_scalar;
 mod numeric_error;
+mod positive_scalar;
 
-pub use positive_scalar::PositiveScalar;
 pub use numeric_error::NumericError;
+pub use positive_scalar::PositiveScalar;

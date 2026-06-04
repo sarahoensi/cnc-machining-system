@@ -5,15 +5,9 @@
 
 // interface/tauri/cutting_data/mapping.rs
 
-use crate::application::{
-    SolveCuttingDataInput,
-    SolveCuttingDataOutput,
-};
+use crate::application::{SolveCuttingDataInput, SolveCuttingDataOutput};
 
-use super::{
-    SolveCuttingDataRequest,
-    SolveCuttingDataResponse,
-};
+use super::{SolveCuttingDataRequest, SolveCuttingDataResponse};
 
 // ---------------------------------------------------------
 // Request → Application Input

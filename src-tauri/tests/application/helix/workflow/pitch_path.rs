@@ -1,10 +1,8 @@
 use cnc_machining_system_lib::application::{SolveHelixInput, SolveHelixUseCase};
 use cnc_machining_system_lib::domain::HelixMode;
 
-
 #[test]
 fn pitch_input_preserves_pitch() {
-
     let uc = SolveHelixUseCase;
 
     let input = SolveHelixInput::Pitch {

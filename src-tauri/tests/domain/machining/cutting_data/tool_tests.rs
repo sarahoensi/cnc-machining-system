@@ -15,10 +15,7 @@ fn tooth_count_rejects_zero() {
 
 #[test]
 fn tool_stores_properties() {
-    let tool = Tool::new(
-        Diameter::mm(10.0).unwrap(),
-        ToothCount::new(4).unwrap(),
-    );
+    let tool = Tool::new(Diameter::mm(10.0).unwrap(), ToothCount::new(4).unwrap());
 
     assert_eq!(tool.teeth().value(), 4);
     assert_eq!(tool.diameter().mm_value(), 10.0);

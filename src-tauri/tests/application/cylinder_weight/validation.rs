@@ -1,7 +1,7 @@
 use cnc_machining_system_lib::application::{
-    ApplicationError,
-    CreateCylinderMaterialInput, CreateCylinderMaterialUseCase, CylinderMaterialRecord,
-    CylinderMaterialRepository, SolveCylinderWeightInput, SolveCylinderWeightUseCase,
+    ApplicationError, CreateCylinderMaterialInput, CreateCylinderMaterialUseCase,
+    CylinderMaterialRecord, CylinderMaterialRepository, SolveCylinderWeightInput,
+    SolveCylinderWeightUseCase,
 };
 use cnc_machining_system_lib::domain::machining::Material;
 
@@ -53,7 +53,10 @@ impl CylinderMaterialRepository for FakeRepo {
             return Err("material_not_found".to_string());
         };
         row.material = material.clone();
-        Ok(CylinderMaterialRecord { id: id.to_string(), material })
+        Ok(CylinderMaterialRecord {
+            id: id.to_string(),
+            material,
+        })
     }
 
     fn delete(&mut self, id: &str) -> Result<(), String> {

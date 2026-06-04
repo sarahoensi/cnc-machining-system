@@ -4,5 +4,5 @@
 mod angle;
 mod error;
 
-pub use angle::{Angle, AcuteAngle};
+pub use angle::{AcuteAngle, Angle};
 pub use error::AngleError;

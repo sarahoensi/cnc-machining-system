@@ -1,9 +1,9 @@
 // domain/units/motion/mod.rs
 
-mod rpm;
-mod feed_rate;
 mod error;
+mod feed_rate;
+mod rpm;
 
-pub use rpm::Rpm;
-pub use feed_rate::FeedRate;
 pub use error::MotionUnitError;
+pub use feed_rate::FeedRate;
+pub use rpm::Rpm;

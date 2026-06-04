@@ -1,4 +1,3 @@
-
 //! Frontend response DTOs for finishing commands.
 //!
 //! These types define the serialized response contract returned
@@ -15,7 +14,6 @@ use serde::Serialize;
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FinishingExecutionResponse {
-
     /// Index of the next step expecting a measurement.
     pub active_step: Option<u32>,
 
@@ -35,7 +33,6 @@ pub struct FinishingExecutionResponse {
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FinishingStepResponse {
-
     /// Step index (1-based).
     pub index: u32,
 

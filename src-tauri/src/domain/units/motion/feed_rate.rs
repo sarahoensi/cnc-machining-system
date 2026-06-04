@@ -1,8 +1,6 @@
 // domain/units/motion/feed_rate.rs
 
-use crate::domain::units::{
-    PositiveScalar, UnitsError,
-};
+use crate::domain::units::{PositiveScalar, UnitsError};
 
 /// Represents linear feed rate.
 ///
@@ -13,7 +11,6 @@ use crate::domain::units::{
 pub struct FeedRate(PositiveScalar);
 
 impl FeedRate {
-
     /// Internal constructor used by domain math.
     #[allow(dead_code)]
     pub(crate) fn mm_per_min_unchecked(value: f64) -> Self {
@@ -63,11 +60,7 @@ mod tests {
     fn value_round_trip() {
         let f = FeedRate::mm_per_min(150.0).unwrap();
 
-        assert!(approx_eq(
-            f.mm_per_min_value(),
-            150.0,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(f.mm_per_min_value(), 150.0, DEFAULT_EPS));
     }
 
     // --- Ordering ---

@@ -1,4 +1,3 @@
-
 // application/helix/solve_helix_use_case.rs
 
 use crate::application::{

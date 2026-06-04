@@ -1,15 +1,11 @@
 // mapping.rs
 
-use cnc_machining_system_lib::interface::tauri::helix::{
-    SolveHelixRequest,
-    HelixMode,
-};
+use cnc_machining_system_lib::interface::tauri::helix::{HelixMode, SolveHelixRequest};
 
 use cnc_machining_system_lib::application::SolveHelixInput;
 
 #[test]
 fn request_maps_to_application_input() {
-
     let request = SolveHelixRequest::Pitch {
         mode: HelixMode::Outer,
         diameter: 10.0,

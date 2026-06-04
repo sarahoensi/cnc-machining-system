@@ -1,4 +1,6 @@
 .number-input {
+  --number-input-unit-width: var(--input-unit-width);
+
   width: 100%;
 }
 
@@ -27,7 +29,7 @@
   position: absolute;
   right: 0;
 
-  min-width: var(--input-unit-width);
+  min-width: var(--number-input-unit-width);
   text-align: right;
   font-family: var(--font-family-mono);
   font-size: var(--form-unit-size);
@@ -39,9 +41,9 @@
   white-space: nowrap;
 }
 
-.number-input--form .ni-input {
+.number-input--form.has-unit .ni-input {
   padding-inline-end: calc(
-    var(--input-padding-x-form) + var(--input-unit-width) + var(--input-unit-gap)
+    var(--input-padding-x-form) + var(--number-input-unit-width) + var(--input-unit-gap)
   );
 }
 

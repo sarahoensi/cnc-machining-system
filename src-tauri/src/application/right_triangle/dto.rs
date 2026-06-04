@@ -18,11 +18,9 @@ use crate::domain::RightTriangle;
 /// - Lengths in millimeters (`mm`).
 /// - Angles in degrees (`deg`).
 pub enum SolveRightTriangleInput {
-
     // ---------------------------------------------------------
     // SIDE + SIDE
     // ---------------------------------------------------------
-
     /// Solve from both legs.
     Legs {
         /// First leg (`mm`).
@@ -50,7 +48,6 @@ pub enum SolveRightTriangleInput {
     // ---------------------------------------------------------
     // SIDE + ANGLE
     // ---------------------------------------------------------
-
     /// Solve from leg `a` and angle alpha.
     LegAAndAlpha {
         /// Known leg `a` (`mm`).

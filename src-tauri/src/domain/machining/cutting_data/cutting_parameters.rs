@@ -1,11 +1,6 @@
 // domain/machining/cutting_data/cutting_parameters.rs
 
-use crate::domain::units::{
-    ChipLoad,
-    CuttingSpeed,
-    FeedRate,
-    Rpm,
-};
+use crate::domain::units::{ChipLoad, CuttingSpeed, FeedRate, Rpm};
 
 /// Represents a mathematically consistent set of machining parameters.
 ///

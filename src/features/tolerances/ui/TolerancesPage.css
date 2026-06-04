@@ -1,0 +1,26 @@
+.tolerances-page-layout {
+  --layout-form-width: clamp(17.5rem, 34vw, 19rem);
+  --split-form-input-width: 8rem;
+  --split-form-output-min-width: 7.5rem;
+  --split-form-output-width: 7.5rem;
+  --split-form-gap: var(--space-3);
+  height: 100%;
+  min-height: 0;
+}
+
+.tolerances-page-layout .fsl-form,
+.tolerances-page-layout .fsl-sidebar {
+  height: 100%;
+  min-height: 0;
+}
+
+.tolerances-page-layout .fsl-form > div {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.tolerances-page-layout .form-actions-secondary {
+  flex-wrap: wrap;
+}

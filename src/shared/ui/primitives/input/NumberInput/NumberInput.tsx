@@ -69,6 +69,10 @@ ref
 
   const generatedId = useId();
   const inputId = id ?? generatedId;
+  const unitWidth = unit ? `${Math.max(unit.length, 1)}ch` : undefined;
+  const style = unitWidth
+    ? ({ "--number-input-unit-width": unitWidth } as React.CSSProperties)
+    : undefined;
 
   const isDisplayOnly = displayOnly;
   const isDisabled = disabled;
@@ -102,12 +106,14 @@ ref
     <div
       className={clsx(
         "number-input",
+        unit && "has-unit",
         isDisabled && "is-disabled",
         isReadOnly && "readonly",
         isDisplayOnly && "is-display-only",
         `number-input--${appearance}`,
         className
       )}
+      style={style}
     >
       <InputBase
         wrapperClassName="ni-input-wrapper"

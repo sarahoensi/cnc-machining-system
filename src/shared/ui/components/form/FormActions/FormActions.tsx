@@ -10,6 +10,7 @@ import {
   CalculateButton,
   ResetButton,
 } from "@shared/ui/primitives/Button/Button";
+import type { KeyboardEventHandler, Ref } from "react";
 
 import "./FormActions.css";
 
@@ -18,6 +19,8 @@ type Props = {
   onReset: () => void;
   disabled?: boolean;
   children?: React.ReactNode;
+  calculateRef?: Ref<HTMLButtonElement>;
+  onCalculateKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
 };
 
 export function FormActions({
@@ -25,13 +28,17 @@ export function FormActions({
   onReset,
   disabled,
   children,
+  calculateRef,
+  onCalculateKeyDown,
 }: Props) {
   return (
     <div className="form-actions">
 
       <div className="form-actions-primary">
         <CalculateButton
+          ref={calculateRef}
           onClick={onCalculate}
+          onKeyDown={onCalculateKeyDown}
           disabled={disabled}
         />
       </div>

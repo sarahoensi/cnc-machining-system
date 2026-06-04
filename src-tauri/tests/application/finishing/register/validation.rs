@@ -3,15 +3,13 @@
 use cnc_machining_system_lib::{
     application::finishing::{
         dto::{GenerateFinishingPlanInput, RegisterFinishingMeasurementInput},
-        GenerateFinishingPlanUseCase,
-        RegisterFinishingMeasurementUseCase,
+        GenerateFinishingPlanUseCase, RegisterFinishingMeasurementUseCase,
     },
     domain::machining::finishing::FinishingMode,
 };
 
 #[test]
 fn register_fails_when_step_number_is_zero() {
-
     let generate = GenerateFinishingPlanUseCase::new();
     let register = RegisterFinishingMeasurementUseCase::new();
 
@@ -37,7 +35,6 @@ fn register_fails_when_step_number_is_zero() {
 
 #[test]
 fn register_fails_when_step_number_out_of_range() {
-
     let generate = GenerateFinishingPlanUseCase::new();
     let register = RegisterFinishingMeasurementUseCase::new();
 
@@ -63,7 +60,6 @@ fn register_fails_when_step_number_out_of_range() {
 
 #[test]
 fn register_fails_when_measurement_passes_target() {
-
     let generate = GenerateFinishingPlanUseCase::new();
     let register = RegisterFinishingMeasurementUseCase::new();
 

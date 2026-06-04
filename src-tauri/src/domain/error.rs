@@ -1,13 +1,10 @@
-// domain/error.rs 
+// domain/error.rs
 
 use thiserror::Error;
 
 use crate::domain::{
-    machining::finishing::FinishingError, 
-    machining::CylinderWeightError,
-    geometry::GeometryError, 
-    machining::CuttingError, 
-    units::UnitsError
+    geometry::GeometryError, machining::finishing::FinishingError, machining::CuttingError,
+    machining::CylinderWeightError, units::UnitsError,
 };
 
 /// Root error type for the entire domain layer.
@@ -15,7 +12,6 @@ use crate::domain::{
 /// All domain-level failures are wrapped in this enum.
 #[derive(Debug, Error)]
 pub enum DomainError {
-
     #[error(transparent)]
     Units(#[from] UnitsError),
 

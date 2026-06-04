@@ -6,66 +6,36 @@ use serde::Deserialize;
 #[derive(Deserialize, Clone)]
 #[serde(tag = "type")]
 pub enum SolveRightTriangleRequest {
-
     // ---------------------------------------------------------
     // SIDE + SIDE
     // ---------------------------------------------------------
-
     /// Solve from two known legs.
-    Legs {
-        a_mm: f64,
-        b_mm: f64,
-    },
+    Legs { a_mm: f64, b_mm: f64 },
 
     /// Solve from leg `a` and hypotenuse.
-    LegAAndHypotenuse {
-        a_mm: f64,
-        c_mm: f64,
-    },
+    LegAAndHypotenuse { a_mm: f64, c_mm: f64 },
 
     /// Solve from leg `b` and hypotenuse.
-    LegBAndHypotenuse {
-        b_mm: f64,
-        c_mm: f64,
-    },
+    LegBAndHypotenuse { b_mm: f64, c_mm: f64 },
 
     // ---------------------------------------------------------
     // SIDE + ANGLE
     // ---------------------------------------------------------
-
     /// Solve from leg `a` and alpha angle.
-    LegAAndAlpha {
-        a_mm: f64,
-        alpha_deg: f64,
-    },
+    LegAAndAlpha { a_mm: f64, alpha_deg: f64 },
 
     /// Solve from leg `a` and beta angle.
-    LegAAndBeta {
-        a_mm: f64,
-        beta_deg: f64,
-    },
+    LegAAndBeta { a_mm: f64, beta_deg: f64 },
 
     /// Solve from leg `b` and alpha angle.
-    LegBAndAlpha {
-        b_mm: f64,
-        alpha_deg: f64,
-    },
+    LegBAndAlpha { b_mm: f64, alpha_deg: f64 },
 
     /// Solve from leg `b` and beta angle.
-    LegBAndBeta {
-        b_mm: f64,
-        beta_deg: f64,
-    },
+    LegBAndBeta { b_mm: f64, beta_deg: f64 },
 
     /// Solve from hypotenuse and alpha angle.
-    HypotenuseAndAlpha {
-        c_mm: f64,
-        alpha_deg: f64,
-    },
+    HypotenuseAndAlpha { c_mm: f64, alpha_deg: f64 },
 
     /// Solve from hypotenuse and beta angle.
-    HypotenuseAndBeta {
-        c_mm: f64,
-        beta_deg: f64,
-    },
+    HypotenuseAndBeta { c_mm: f64, beta_deg: f64 },
 }
