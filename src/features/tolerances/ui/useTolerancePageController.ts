@@ -1,6 +1,6 @@
-// features/tolerances/ui/useTolerancePageController.ts
+// features/tolerances/ui/toleranceMenu/useTolerancePageController.ts
 
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { useSavedResults } from "@shared/savedResults";
@@ -10,30 +10,30 @@ import {
   handleModeChange,
 } from "@shared/form/engine/formEngine";
 
-import { listIso286ToleranceOptionsApi } from "../../api/client";
-import { solveTolerance } from "../../api/solveTolerance";
-import type { ToleranceMode, ToleranceObjectType } from "../../api/types";
+import { listIso286ToleranceOptionsApi } from "../api/client";
+import { solveTolerance } from "../api/solveTolerance";
+import type { ToleranceMode, ToleranceObjectType } from "../api/types";
 
 import {
   createInitialToleranceForm,
   type ToleranceFormState,
   type ToleranceKey,
-} from "../../domain/toleranceForm";
-import { parseTolerance } from "../../domain/parseTolerance";
-import { validateToleranceForm } from "../../domain/validateToleranceForm";
+} from "../domain/toleranceForm";
+import { parseTolerance } from "../domain/parseTolerance";
+import { validateToleranceForm } from "../domain/validateToleranceForm";
 
 import {
-  gradesForZone,
   preserveEquivalentToleranceSelection,
   reconcileSelectionFields,
-} from "../../domain/toleranceOptions";
+} from "../domain/toleranceOptions";
 
 import {
   applyToleranceGradeChange,
   applyToleranceLetterChange,
   applyToleranceUserEdit,
-  patchSelectionFields,
-} from "../../domain/toleranceSelection";
+} from "../domain/toleranceSelection";
+
+import { getToleranceSelectState } from "./toleranceSelectState";
 
 export function useTolerancePageController() {
   const [form, setForm] = useFeatureForm(
@@ -45,58 +45,9 @@ export function useTolerancePageController() {
     storageKey: "tolerances-history",
   });
 
-  const { mode, options, loadingOptions } = form.extras;
+  const { mode, loadingOptions } = form.extras;
 
-  const holeLetter = form.fields.hole_letter.value;
-  const holeGrade = form.fields.hole_grade.value;
-  const shaftLetter = form.fields.shaft_letter.value;
-  const shaftGrade = form.fields.shaft_grade.value;
-
-  const holeGrades = useMemo(
-    () => gradesForZone(options.holes, holeLetter),
-    [holeLetter, options.holes],
-  );
-
-  const shaftGrades = useMemo(
-    () => gradesForZone(options.shafts, shaftLetter),
-    [shaftLetter, options.shafts],
-  );
-
-  const holeLetterOptions = useMemo(
-    () =>
-      options.holes.map((option) => ({
-        value: option.zone,
-        label: option.zone,
-      })),
-    [options.holes],
-  );
-
-  const shaftLetterOptions = useMemo(
-    () =>
-      options.shafts.map((option) => ({
-        value: option.zone,
-        label: option.zone,
-      })),
-    [options.shafts],
-  );
-
-  const holeGradeOptions = useMemo(
-    () =>
-      holeGrades.map((value) => ({
-        value,
-        label: value,
-      })),
-    [holeGrades],
-  );
-
-  const shaftGradeOptions = useMemo(
-    () =>
-      shaftGrades.map((value) => ({
-        value,
-        label: value,
-      })),
-    [shaftGrades],
-  );
+  const toleranceSelects = getToleranceSelectState(form);
 
   useEffect(() => {
     let cancelled = false;
@@ -113,6 +64,7 @@ export function useTolerancePageController() {
 
       try {
         const response = await listIso286ToleranceOptionsApi();
+
         if (cancelled) return;
 
         setForm((prev) => ({
@@ -145,26 +97,6 @@ export function useTolerancePageController() {
     };
   }, [setForm]);
 
-  useEffect(() => {
-    if (holeGrades.length === 0 || holeGrades.includes(holeGrade)) return;
-
-    setForm((prev) =>
-      patchSelectionFields(prev, {
-        hole_grade: holeGrades[0],
-      }),
-    );
-  }, [holeGrade, holeGrades, setForm]);
-
-  useEffect(() => {
-    if (shaftGrades.length === 0 || shaftGrades.includes(shaftGrade)) return;
-
-    setForm((prev) =>
-      patchSelectionFields(prev, {
-        shaft_grade: shaftGrades[0],
-      }),
-    );
-  }, [shaftGrade, shaftGrades, setForm]);
-
   function onModeChange(value: ToleranceMode) {
     setForm((prev) => {
       const next = handleModeChange(prev, {
@@ -192,7 +124,7 @@ export function useTolerancePageController() {
     setForm((prev) =>
       applyToleranceLetterChange(
         prev,
-        options,
+        prev.extras.options,
         feature,
         value,
       ),
@@ -204,11 +136,7 @@ export function useTolerancePageController() {
     value: string,
   ) {
     setForm((prev) =>
-      applyToleranceGradeChange(
-        prev,
-        feature,
-        value,
-      ),
+      applyToleranceGradeChange(prev, feature, value),
     );
   }
 
@@ -254,15 +182,7 @@ export function useTolerancePageController() {
     mode,
     loadingOptions,
 
-    holeLetter,
-    holeGrade,
-    shaftLetter,
-    shaftGrade,
-
-    holeLetterOptions,
-    holeGradeOptions,
-    shaftLetterOptions,
-    shaftGradeOptions,
+    ...toleranceSelects,
 
     onModeChange,
     onFieldChange,

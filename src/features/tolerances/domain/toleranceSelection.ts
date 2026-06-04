@@ -1,5 +1,3 @@
-// domain/toleranceSelection.ts
-
 import {
   clearMachineFields,
   handleUserEdit,
@@ -12,9 +10,7 @@ import type {
   ToleranceOptionsResponse,
 } from "../api/types";
 
-import {
-  gradesForZone,
-} from "./toleranceOptions";
+import { gradesForZone } from "./toleranceOptions";
 
 import type {
   ToleranceFormState,
@@ -50,29 +46,21 @@ export function applyToleranceLetterChange(
   feature: ToleranceObjectType,
   value: string,
 ) {
-  const nextGrades =
-    feature === "hole"
-      ? gradesForZone(options.holes, value)
-      : gradesForZone(options.shafts, value);
+  const isHole = feature === "hole";
+
+  const nextGrades = isHole
+    ? gradesForZone(options.holes, value)
+    : gradesForZone(options.shafts, value);
 
   const next = applyToleranceUserEdit(
     form,
-    feature === "hole"
-      ? "hole_letter"
-      : "shaft_letter",
+    isHole ? "hole_letter" : "shaft_letter",
     value,
   );
 
-  return patchSelectionFields(
-    next,
-    feature === "hole"
-      ? {
-          hole_grade: nextGrades[0] ?? "",
-        }
-      : {
-          shaft_grade: nextGrades[0] ?? "",
-        },
-  );
+  return patchSelectionFields(next, {
+    [isHole ? "hole_grade" : "shaft_grade"]: nextGrades[0] ?? "",
+  });
 }
 
 export function applyToleranceGradeChange(
@@ -82,9 +70,7 @@ export function applyToleranceGradeChange(
 ) {
   return applyToleranceUserEdit(
     form,
-    feature === "hole"
-      ? "hole_grade"
-      : "shaft_grade",
+    feature === "hole" ? "hole_grade" : "shaft_grade",
     value,
   );
 }
@@ -98,9 +84,7 @@ export function patchSelectionFields(
   for (const key in patch) {
     const typedKey = key as ToleranceKey;
 
-    fields[typedKey] = userField(
-      patch[typedKey] ?? "",
-    );
+    fields[typedKey] = userField(patch[typedKey] ?? "");
   }
 
   return {

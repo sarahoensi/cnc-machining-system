@@ -1,41 +1,38 @@
-// features/tolerances/domain/toleranceOptions.ts
-
 import { userField } from "@shared/form/types/fields";
 
 import type {
   ToleranceMode,
   ToleranceOption,
 } from "../api/types";
-import type {
-  ToleranceFormState,
-  ToleranceKey,
-} from "./toleranceForm";
 
-export function gradesForZone(options: ToleranceOption[], zone: string) {
-  return (
-    options.find((option) => option.zone === zone)?.grades.map(String) ?? []
-  );
+import type { ToleranceFormState } from "./toleranceForm";
+
+export function gradesForZone(
+  options: ToleranceOption[],
+  zone: string,
+) {
+  return options.find((option) => option.zone === zone)?.grades.map(String) ?? [];
 }
 
 export function reconcileSelectionFields(
   fields: ToleranceFormState["fields"],
   options: ToleranceFormState["extras"]["options"],
 ): ToleranceFormState["fields"] {
-  const hole = validSelection(
-    options.holes,
-    fields.hole_letter.value,
-    fields.hole_grade.value,
-    "H",
-    "7",
-  );
+  const hole = getValidSelection({
+    options: options.holes,
+    currentZone: fields.hole_letter.value,
+    currentGrade: fields.hole_grade.value,
+    preferredZone: "H",
+    preferredGrade: "7",
+  });
 
-  const shaft = validSelection(
-    options.shafts,
-    fields.shaft_letter.value,
-    fields.shaft_grade.value,
-    "g",
-    "6",
-  );
+  const shaft = getValidSelection({
+    options: options.shafts,
+    currentZone: fields.shaft_letter.value,
+    currentGrade: fields.shaft_grade.value,
+    preferredZone: "h",
+    preferredGrade: "7",
+  });
 
   return {
     ...fields,
@@ -50,60 +47,78 @@ export function preserveEquivalentToleranceSelection(
   form: ToleranceFormState,
   previousMode: ToleranceMode,
 ): ToleranceFormState["fields"] {
-  if (previousMode === form.extras.mode) return form.fields;
+  const nextMode = form.extras.mode;
 
-  const sourcePrefix = previousMode;
-  const targetPrefix = form.extras.mode;
+  if (previousMode === nextMode) return form.fields;
 
-  const sourceLetterKey = `${sourcePrefix}_letter` as ToleranceKey;
-  const sourceGradeKey = `${sourcePrefix}_grade` as ToleranceKey;
-  const targetLetterKey = `${targetPrefix}_letter` as ToleranceKey;
-  const targetGradeKey = `${targetPrefix}_grade` as ToleranceKey;
+  const source =
+    previousMode === "hole"
+      ? {
+          letter: form.fields.hole_letter.value,
+          grade: form.fields.hole_grade.value,
+        }
+      : {
+          letter: form.fields.shaft_letter.value,
+          grade: form.fields.shaft_grade.value,
+        };
 
-  const targetOptions =
-    targetPrefix === "hole"
-      ? form.extras.options.holes
-      : form.extras.options.shafts;
+  const target =
+    nextMode === "hole"
+      ? {
+          letterKey: "hole_letter" as const,
+          gradeKey: "hole_grade" as const,
+          options: form.extras.options.holes,
+          equivalentLetter: source.letter.toUpperCase(),
+        }
+      : {
+          letterKey: "shaft_letter" as const,
+          gradeKey: "shaft_grade" as const,
+          options: form.extras.options.shafts,
+          equivalentLetter: source.letter.toLowerCase(),
+        };
 
-  const sourceLetter = form.fields[sourceLetterKey].value;
-  const sourceGrade = form.fields[sourceGradeKey].value;
-
-  const equivalentLetter =
-    targetPrefix === "hole"
-      ? sourceLetter.toUpperCase()
-      : sourceLetter.toLowerCase();
-
-  const targetOption = targetOptions.find(
-    (option) => option.zone === equivalentLetter,
+  const targetOption = target.options.find(
+    (option) => option.zone === target.equivalentLetter,
   );
 
   if (!targetOption) return form.fields;
 
-  const nextGrade = targetOption.grades.includes(Number(sourceGrade))
-    ? sourceGrade
-    : form.fields[targetGradeKey].value;
+  const nextGrade = targetOption.grades.includes(Number(source.grade))
+    ? source.grade
+    : form.fields[target.gradeKey].value;
 
   return {
     ...form.fields,
-    [targetLetterKey]: userField(equivalentLetter),
-    [targetGradeKey]: userField(nextGrade),
+    [target.letterKey]: userField(target.equivalentLetter),
+    [target.gradeKey]: userField(nextGrade),
   };
 }
 
-function validSelection(
-  options: ToleranceOption[],
-  currentZone: string,
-  currentGrade: string,
-  preferredZone: string,
-  preferredGrade: string,
-) {
-  const current = options.find((row) => row.zone === currentZone);
+type GetValidSelectionInput = {
+  options: ToleranceOption[];
+  currentZone: string;
+  currentGrade: string;
+  preferredZone: string;
+  preferredGrade: string;
+};
+
+function getValidSelection({
+  options,
+  currentZone,
+  currentGrade,
+  preferredZone,
+  preferredGrade,
+}: GetValidSelectionInput) {
+  const current = options.find((option) => option.zone === currentZone);
 
   if (current?.grades.includes(Number(currentGrade))) {
-    return { zone: currentZone, grade: currentGrade };
+    return {
+      zone: currentZone,
+      grade: currentGrade,
+    };
   }
 
-  const preferred = options.find((row) => row.zone === preferredZone);
+  const preferred = options.find((option) => option.zone === preferredZone);
 
   if (preferred) {
     return {
