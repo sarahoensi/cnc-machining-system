@@ -15,17 +15,18 @@ Form-layouten er tydeligere enn ved forrige analyse:
   `useCalculatorFormNavigation`.
 - Helix og PlanForm bruker `FormSection` i stedet for å være avhengige av
   klassenavnet direkte.
+- Cutting Data bruker eksplisitte `fillHeight`- og `actionsPlacement`-props i
+  stedet for feature-selectors mot layout-internals.
+- Tolerances angir full høyde og split-kolonner gjennom eksplisitte props.
 
 Den sentrale breddekontrakten er nå:
 
 > Page-layout og `formWidth` bestemmer formkolonnens bredde. Field- og
 > input-laget fyller deretter tilgjengelig bredde med `width: 100%`.
 
-De viktigste gjenværende skjulte koblingene er ikke lenger page-bredde, men:
+De viktigste gjenværende uklare eller tverrgående kontraktene er:
 
-- feature-CSS som styrer høyde og actions-plassering gjennom interne
-  layout-klasser
-- Tolerances som setter interne `SplitFormLayout`-variabler
+- full-height som fortsatt krever en høyde fra ancestor-kjeden
 - hardkodede breakpoints i flere layout-lag
 - ulik fordeling av state, calculate/reset, navigation og field-rendering
   mellom features
@@ -202,9 +203,9 @@ Brukes av:
 `shell-content` tilfører `--layout-padding`, men `shell-content` etablerer ikke
 en eksplisitt full-height-kontrakt.
 
-Dette er viktig fordi `FormSidebarLayout`, Cutting Data og Tolerances bruker
-`height: 100%`. Den faktiske høyden avhenger dermed fortsatt av ancestor-kjeden
-og innholdet.
+Cutting Data og Tolerances bruker nå eksplisitt `fillHeight` på
+`FormSidebarLayout`. Propen gir root-, form- og sidebar-slot full høyde, men den
+faktiske høyden avhenger fortsatt av ancestor-kjeden og innholdet.
 
 ## 2. Form-layout-laget
 
@@ -229,6 +230,10 @@ Actions-slot-kontrakten er derfor nå tydelig og fullbredde. `FormActions` har
 fortsatt sin egen interne `.form-actions`-klasse, men den kolliderer ikke lenger
 med slot-navnet.
 
+`actionsPlacement="bottom"` gjør `FormLayout` full-height/flex-fill og flytter
+actions-slot til bunnen med `margin-top: auto`. Cutting Data bruker denne
+eksplisitte varianten.
+
 ### `SplitFormLayout`
 
 `SplitFormLayout` er en spesialisert to-kolonne-form:
@@ -246,16 +251,21 @@ Den eier input/output/error/actions, og actions-slot er også eksplisitt
 kolonne/fullbredde. Default er to like kolonner. Under `42rem` blir den én
 kolonne.
 
-Tolerances overstyrer fortsatt:
+`SplitFormLayout` har tre valgfrie props:
 
-```css
---split-form-input-width: 8rem;
---split-form-output-width: 7.5rem;
---split-form-gap: var(--space-3);
+```tsx
+<SplitFormLayout
+  inputWidth="8rem"
+  outputWidth="7.5rem"
+  gap="var(--space-3)"
+  {...slots}
+/>
 ```
 
-Dette er en bevisst, men skjult kontrakt mellom feature-CSS og
-`SplitFormLayout`.
+Propsene mappes internt til layoutens CSS-variabler. Når props ikke oppgis,
+brukes dagens defaults med to like kolonner og `--layout-form-figure-gap`.
+Tolerances bruker propsene og setter ikke lenger interne split-variabler i
+feature-CSS.
 
 ### `FormSection`
 
@@ -288,8 +298,8 @@ Global spacing kommer hovedsakelig fra:
 - Calculate-knappen fyller primary-slot
 - secondary actions ligger høyrejustert under
 
-Cutting Data flytter fortsatt hele actions-slot til bunnen med en
-feature-spesifikk descendant-selector.
+Cutting Data flytter actions-slot til bunnen gjennom
+`actionsPlacement="bottom"`, ikke gjennom feature-CSS.
 
 ## 3. Felt- og input-laget
 
@@ -397,8 +407,8 @@ Hooken eier ikke figur-rendering eller business-logikk.
 | --- | --- | --- | --- | --- |
 | Triangle | `FormFigureLayout`, default `sm` | `CalculatorNumberFields`, flat liste | `FormLayout` + `FormActions` | Ingen feature-CSS mot layout-internals |
 | Helix | `FormFigureLayout`, default `sm` | Mode-field + `CalculatorNumberFields` i `FormSection` | `FormLayout` + `FormActions` | Ingen feature-CSS mot layout-internals |
-| Cutting Data | `FormSidebarLayout`, default `sm` | Manuell config-map til `FormNumberField` | `FormLayout` + `FormActions`, actions skyves ned | Ja: `.fsl-*`, `.form-layout` og `.form-layout-actions-slot` |
-| Tolerances | `FormSidebarLayout`, `lg`, med `SplitFormLayout` | Manuell input/output-rendering, mode og selects | `SplitFormLayout` + `FormActions` | Ja: `.fsl-*`, child-selector, `.form-actions-secondary` og split-variabler |
+| Cutting Data | `FormSidebarLayout`, default `sm`, `fillHeight` | Manuell config-map til `FormNumberField` | `FormLayout actionsPlacement="bottom"` + `FormActions` | Ingen feature-CSS mot layout-internals |
+| Tolerances | `FormSidebarLayout`, `lg`, `fillHeight`, med `SplitFormLayout` | Manuell input/output-rendering, mode og selects | `SplitFormLayout` + `FormActions` | Kun feature-wrapper og wrapping av secondary actions |
 | Cylinder Weight | `SingleFormLayout`, `md` | Manuell input/result-filtering i `FormSection` | `FormLayout` + `FormActions` | Page-CSS styrer ikke page-layout-bredde; modal/table-regler finnes |
 | Finishing plan | `SingleFormLayout`, default `sm` | Manuell mode + config-map i `FormSection` | `FormLayout` + `FormActions` | Ingen feature-CSS mot page/form-layout-internals |
 | Finishing execution | `StackedLayout` | Execution-komponenter, ikke vanlig form | Footer-slot | Egen execution-layout |
@@ -423,7 +433,9 @@ Hooken eier ikke figur-rendering eller business-logikk.
 - Controller eier form-state og saved-results-operasjoner.
 - Page eier edit, calculate, reset-fokus, field-map og layout.
 - Field config-rekkefølge og egen `focusOrder` er separate kontrakter.
-- Feature-CSS etablerer full-height-kjede og skyver actions ned.
+- `fillHeight` og `actionsPlacement="bottom"` uttrykker full-height og
+  bunnstilte actions eksplisitt.
+- Cutting Data har ikke lenger egen layout-CSS.
 
 ### Tolerances
 
@@ -432,8 +444,10 @@ Hooken eier ikke figur-rendering eller business-logikk.
 - Page eier navigation, mode-avhengig rendering og input/output-komposisjon.
 - `SplitFormLayout` gir to interne kolonner inne i `FormSidebarLayout` sin
   formkolonne.
-- Feature-CSS styrer split-kolonnebredde, høyde og wrapping av secondary
-  actions.
+- `fillHeight` uttrykker page-layoutens høydekontrakt.
+- `inputWidth`, `outputWidth` og `gap` uttrykker split-kolonnene eksplisitt.
+- Feature-CSS eier kun den eksplisitte `.tolerances-form-container`-wrapperen
+  og wrapping av secondary actions.
 
 ### Cylinder Weight
 
@@ -456,36 +470,25 @@ Hooken eier ikke figur-rendering eller business-logikk.
 
 ### Feature-CSS mot layout-internals
 
-Cutting Data:
+Cutting Data har ingen gjenværende feature-CSS mot layout-internals.
+
+Tolerances peker ikke lenger på `.fsl-form`, `.fsl-sidebar` eller intern
+`SplitFormLayout`-markup. Den gjenværende regelen:
 
 ```css
-.cutting-data-layout .fsl-form
-.cutting-data-layout .fsl-sidebar
-.cutting-form > .form-layout
-.cutting-form > .form-layout > .form-layout-actions-slot
-```
-
-Tolerances:
-
-```css
-.tolerances-page-layout .fsl-form
-.tolerances-page-layout .fsl-sidebar
-.tolerances-page-layout .fsl-form > div
 .tolerances-page-layout .form-actions-secondary
 ```
 
-Disse selectorene gjør features avhengige av intern markup og klassenavn i
-delte komponenter.
+wrapper secondary actions for den smale Tolerances-formen. Dette er en reell
+feature-style, men den er fortsatt koblet til `FormActions` sitt interne
+klassenavn.
 
 ### CSS-variabler fra features
 
 Det finnes ingen gjenværende feature-overstyring av page-formbredde.
 
-Tolerances setter fortsatt tre variabler som leses av `SplitFormLayout`:
-
-- `--split-form-input-width`
-- `--split-form-output-width`
-- `--split-form-gap`
+Det finnes heller ingen feature-CSS som setter `SplitFormLayout` sine interne
+variabler. Tolerances angir kolonnebredde og gap gjennom props.
 
 ### Hardkodede responsive grenser
 
@@ -523,33 +526,30 @@ uten en egen vurdering.
 5. Triangle og Helix deler smale abstraheringer for number-field-rendering og
    calculator-navigation.
 6. De tidligere døde/misvisende page-width-kontraktene er borte.
+7. Cutting Data og Tolerances bruker eksplisitte full-height-kontrakter.
+8. Tolerances sine split-kolonner er synlige i JSX i stedet for feature-CSS.
 
 ### Hva som fortsatt er uklart eller skjørt
 
-1. Full-height og scroll er fortsatt en indirekte ancestor-kontrakt.
-2. Cutting Data styrer actions-plassering gjennom intern descendant-selector.
-3. Tolerances styrer både page-layout-internals og split-grid via feature-CSS.
-4. `FormSidebarLayout` har mange utvidelsespunkter, men ingen eksplisitt
-   full-height/scroll-kontrakt.
-5. Navigation og controller-ansvar varierer betydelig mellom features.
-6. Responsive breakpoints er hardkodet og ukoordinert.
+1. `fillHeight` krever fortsatt at ancestor-kjeden tilbyr en bestemt høyde.
+2. Scroll-eierskap er ikke uttrykt eksplisitt.
+3. Tolerances sin action-wrapping peker fortsatt på `FormActions` sitt interne
+   klassenavn.
+4. Navigation og controller-ansvar varierer betydelig mellom features.
+5. Responsive breakpoints er hardkodet og ukoordinert.
 
 ## Anbefalt neste lille refaktoreringspakke
 
-Neste pakke bør avgrenses til Cutting Data sin full-height/actions-kontrakt:
+Neste pakke bør avgrenses til `CalculatorNumberFields` for Cutting Data:
 
-1. Dokumenter først hvilken container som skal scrolle og om actions faktisk
-   skal ligge nederst ved høy side.
-2. Gi `FormLayout` en liten eksplisitt variant/prop for bottom-aligned actions,
-   eller en layout-eid modifier-klasse.
-3. Bruk eksisterende `formClassName`/`sidebarClassName` eller en liten
-   `FormSidebarLayout`-variant for full-height-behovet.
-4. Fjern Cutting Data-selectorene som peker direkte på `.fsl-*`,
-   `.form-layout` og `.form-layout-actions-slot`.
-5. Behold state, calculate, field-rendering og saved results uendret.
+1. Erstatt kun den manuelle config-mappingen med den eksisterende rendereren.
+2. Behold Cutting Data sin egen `focusOrder` og `useFormNavigation`.
+3. Behold calculate/reset, saved results, controller og layout uendret.
+4. Verifiser eksplisitt at `readOnly` fortsatt behandles som disabled/result.
 
-Dette er en liten pakke fordi den erstatter én konkret skjult kontrakt uten å
-generalisere Tolerances eller endre feature-logikk.
+Dette er mindre risikabelt enn breakpoint-opprydding, som berører flere
+page-layouts og responsive kontrakter samtidig. En ny samlet layout-analyse er
+heller ikke nødvendig nå; rapporten og API-ene beskriver dagens status.
 
 ## Hva som bør vente
 
@@ -561,7 +561,6 @@ generalisere Tolerances eller endre feature-logikk.
 - Samlet breakpoint-system
 - Full opprydding av global form-state
 
-Etter at høyde/actions-kontrakten er tydelig, kan en separat liten pakke vurdere
-om Cutting Data kan bruke `CalculatorNumberFields`. Navigation bør vurderes
-separat fordi Cutting Data har en egen `focusOrder` som ikke er identisk med
+Cutting Data sin navigation bør fortsatt vurderes separat etter en eventuell
+field-renderer-migrering, fordi `focusOrder` ikke er identisk med
 config-rekkefølgen.
