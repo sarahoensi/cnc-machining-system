@@ -1,3 +1,5 @@
+// features/tolerances/ui/toleranceHistoryRows.ts
+
 import { formatNumber } from "@shared/ui/format/formatNumber";
 
 import type { SavedResultEntry } from "@shared/savedResults";

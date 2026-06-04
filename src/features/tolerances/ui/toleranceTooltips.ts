@@ -1,3 +1,5 @@
+// features/tolerances/ui/toleranceTooltips.ts
+
 export const toleranceTooltips = {
   mode: "Velger om oppslaget gjelder hull eller aksel.",
   nominal: "Nominell diameter eller storrelse i millimeter.",

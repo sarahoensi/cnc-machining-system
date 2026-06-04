@@ -1,3 +1,5 @@
+// features/tolerances/ui/toleranceFieldConfig.ts
+
 import type { ToleranceKey } from "../domain/toleranceForm";
 import { toleranceTooltips } from "./toleranceTooltips";
 

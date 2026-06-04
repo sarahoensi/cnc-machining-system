@@ -1,3 +1,5 @@
+// features/cuttingData/ui/history/CuttingHistoryPanel.tsx
+
 import { cuttingDataFieldConfig } from "../cuttingDataFieldConfig";
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 import { buildFieldHistoryItems } from "@shared/savedResults";

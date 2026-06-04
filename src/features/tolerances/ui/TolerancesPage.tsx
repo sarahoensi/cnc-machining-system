@@ -1,3 +1,5 @@
+//features/tolerances/ui/TolerancesPage.tsx
+
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
