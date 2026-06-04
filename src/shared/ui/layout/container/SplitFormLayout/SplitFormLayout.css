@@ -36,7 +36,9 @@
 
 .split-form-actions {
   display: flex;
+  flex-direction: column;
   gap: var(--form-actions-gap);
+  width: 100%;
 }
 
 @media (max-width: 42rem) {

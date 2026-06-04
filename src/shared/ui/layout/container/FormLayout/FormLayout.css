@@ -30,5 +30,7 @@
 
 .form-layout-actions-slot {
   display: flex;
+  flex-direction: column;
   gap: var(--form-actions-gap);
+  width: 100%;
 }
