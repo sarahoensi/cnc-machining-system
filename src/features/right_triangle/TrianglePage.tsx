@@ -17,7 +17,7 @@ import { solveTriangle } from "./api/solveTriangle";
 import { triangleFieldConfig } from "./ui/triangleFieldConfig";
 
 
-import { useFormNavigation } from "@shared/ui";
+import { useCalculatorFormFocus } from "@shared/ui";
 
 import {
   validTriangleInputSets,
@@ -34,7 +34,6 @@ import { FormError } from "@shared/ui/components/form/FormError/FormError";
 
 import { validateTriangleForm } from "./domain/validateTriangleForm";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
-import { useState } from "react";
 import { TriangleFigure } from "./ui/triangleFigure/TriangleFigure";
 
 export function TrianglePage() {
@@ -46,15 +45,12 @@ export function TrianglePage() {
     createInitialTriangleForm
   );
 
-  const [activeField, setActiveField] = useState<TriangleKey | null>(null);
-
-  const navigation = useFormNavigation({
-    keys: triangleFieldConfig.map(f => f.key),
-    autoFocusOnMount: true,
+  const fieldOrder = triangleFieldConfig.map((f) => f.key);
+  const formFocus = useCalculatorFormFocus({
+    fieldOrder,
     activePath: "/triangle",
     onSubmit: onCalculate,
   });
-  const focusOrder = triangleFieldConfig.map((f) => f.key);
 
   /* =========================
      Field change
@@ -89,19 +85,7 @@ export function TrianglePage() {
     );
 
     setForm(next);
-    const hasInlineError = triangleFieldConfig.some((f) => Boolean(next.fields[f.key].error));
-
-    if (hasInlineError) {
-      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
-      return;
-    }
-
-    if (!next.formError) return;
-
-    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
-      const value = next.fields[key]?.value;
-      return value == null || String(value).trim() === "";
-    });
+    formFocus.focusAfterCalculate(next);
   }
 
   /* =========================
@@ -110,7 +94,7 @@ export function TrianglePage() {
 
   function onReset() {
     setForm(createInitialTriangleForm());
-    navigation.focusFirstAfterRender();
+    formFocus.focusAfterReset();
   }
 
   /* =========================
@@ -122,10 +106,10 @@ export function TrianglePage() {
       configs={triangleFieldConfig}
       fields={form.fields}
       onChange={onFieldChange}
-      register={navigation.register}
-      onKeyDown={navigation.handleKeyDown}
-      onFocus={setActiveField}
-      onBlur={() => setActiveField(null)}
+      register={formFocus.register}
+      onKeyDown={formFocus.handleKeyDown}
+      onFocus={formFocus.onFieldFocus}
+      onBlur={formFocus.onFieldBlur}
     />
   );
 
@@ -141,7 +125,7 @@ const actions = (
 );
   
 const formContent = (
-  <div ref={navigation.containerRef}>
+  <div ref={formFocus.containerRef}>
     <FormLayout
       fields={fields}
       error={error}
@@ -156,7 +140,7 @@ const formContent = (
   <FormFigureLayout
   form={formContent}
   figure={
-    <TriangleFigure activeField={activeField} />
+    <TriangleFigure activeField={formFocus.activeField} />
   }
 />
 );

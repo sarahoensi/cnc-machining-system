@@ -8,7 +8,7 @@ import {
 
 import { CalculatorNumberFields } from "@shared/ui/components/form/fields";
 
-import { useFormNavigation } from "@shared/ui";
+import { useCalculatorFormFocus } from "@shared/ui";
 import { validateHelixForm } from "../domain/validateHelixForm";
 
 import {
@@ -35,7 +35,6 @@ import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
 import { helixTooltips } from "./helixTooltip";
 import { HelixFigure } from "./helixFigure/HelixFigure";
-import { useState } from "react";
 /* ============================================================
    Component
 ============================================================ */
@@ -49,15 +48,12 @@ export function HelixPage() {
     createInitialHelixForm
   );
 
-  const [activeField, setActiveField] = useState<HelixKey | null>(null);
-
-  const navigation = useFormNavigation({
-    keys: helixFieldConfig.map(f => f.key),
-    autoFocusOnMount: true,
+  const fieldOrder = helixFieldConfig.map((f) => f.key);
+  const formFocus = useCalculatorFormFocus({
+    fieldOrder,
     activePath: "/helix",
     onSubmit: onCalculate,
   });
-  const focusOrder = helixFieldConfig.map((f) => f.key);
 
   /* =========================
      Field change
@@ -103,19 +99,7 @@ export function HelixPage() {
     );
 
     setForm(next);
-    const hasInlineError = helixFieldConfig.some((f) => Boolean(next.fields[f.key].error));
-
-    if (hasInlineError) {
-      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
-      return;
-    }
-
-    if (!next.formError) return;
-
-    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
-      const value = next.fields[key]?.value;
-      return value == null || String(value).trim() === "";
-    });
+    formFocus.focusAfterCalculate(next);
   }
 
   /* =========================
@@ -124,7 +108,7 @@ export function HelixPage() {
 
   function onReset() {
     setForm(createInitialHelixForm());
-    navigation.focusFirstAfterRender();
+    formFocus.focusAfterReset();
   }
 
   /* =========================
@@ -151,10 +135,10 @@ export function HelixPage() {
         configs={helixFieldConfig}
         fields={form.fields}
         onChange={onFieldChange}
-        register={navigation.register}
-        onKeyDown={navigation.handleKeyDown}
-        onFocus={setActiveField}
-        onBlur={() => setActiveField(null)}
+        register={formFocus.register}
+        onKeyDown={formFocus.handleKeyDown}
+        onFocus={formFocus.onFieldFocus}
+        onBlur={formFocus.onFieldBlur}
       />
     </FormSection>
   </>
@@ -172,7 +156,7 @@ const actions = (
 );
 
 const formContent = (
-  <div ref={navigation.containerRef}>
+  <div ref={formFocus.containerRef}>
     <FormLayout
       fields={fields}
       error={error}
@@ -188,7 +172,7 @@ const formContent = (
     figure={
       <HelixFigure
         mode={form.extras.mode}
-        activeField={activeField}
+        activeField={formFocus.activeField}
       />
     }
   />
