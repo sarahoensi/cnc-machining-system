@@ -15,10 +15,7 @@ import { machineField, userField } from "@shared/form/types/fields";
 
 import { listIso286ToleranceOptionsApi } from "../api/client";
 import { solveTolerance } from "../api/solveTolerance";
-import type {
-  ToleranceMode,
-  ToleranceObjectType,
-} from "../api/types";
+import type { ToleranceMode, ToleranceObjectType } from "../api/types";
 
 import {
   createInitialToleranceForm,
@@ -55,7 +52,7 @@ export function useTolerancePageController() {
     storageKey: "tolerances-history",
   });
 
-  const { options } = form.extras;
+  const { mode, options, loadingOptions } = form.extras;
 
   const holeLetter = form.fields.hole_letter.value;
   const holeGrade = form.fields.hole_grade.value;
@@ -70,6 +67,42 @@ export function useTolerancePageController() {
   const shaftGrades = useMemo(
     () => gradesForZone(options.shafts, shaftLetter),
     [shaftLetter, options.shafts],
+  );
+
+  const holeLetterOptions = useMemo(
+    () =>
+      options.holes.map((option) => ({
+        value: option.zone,
+        label: option.zone,
+      })),
+    [options.holes],
+  );
+
+  const shaftLetterOptions = useMemo(
+    () =>
+      options.shafts.map((option) => ({
+        value: option.zone,
+        label: option.zone,
+      })),
+    [options.shafts],
+  );
+
+  const holeGradeOptions = useMemo(
+    () =>
+      holeGrades.map((value) => ({
+        value,
+        label: value,
+      })),
+    [holeGrades],
+  );
+
+  const shaftGradeOptions = useMemo(
+    () =>
+      shaftGrades.map((value) => ({
+        value,
+        label: value,
+      })),
+    [shaftGrades],
   );
 
   useEffect(() => {
@@ -219,30 +252,9 @@ export function useTolerancePageController() {
       return next;
     }
 
-    const fields = { ...next.fields };
-
-    for (const key of resultKeys) {
-      const resultField = fields[key];
-
-      const hasMachineValue =
-        resultField.machineValue != null || resultField.value.trim() !== "";
-
-      if (!hasMachineValue) continue;
-
-      fields[key] = machineField(
-        resultField.machineValue != null
-          ? String(resultField.machineValue)
-          : resultField.value,
-        {
-          ...resultField,
-          source: "machine",
-        },
-      );
-    }
-
     const solvedForm = {
       ...next,
-      fields,
+      fields: markResultFieldsAsMachineFields(next.fields),
     };
 
     setForm(solvedForm);
@@ -253,16 +265,14 @@ export function useTolerancePageController() {
     setForm((prev) => {
       const initial = createInitialToleranceForm();
 
-      const extras = {
-        ...initial.extras,
-        options: prev.extras.options,
-        loadingOptions: prev.extras.loadingOptions,
-      };
-
       return {
         ...initial,
-        fields: reconcileSelectionFields(initial.fields, extras.options),
-        extras,
+        fields: reconcileSelectionFields(initial.fields, prev.extras.options),
+        extras: {
+          ...initial.extras,
+          options: prev.extras.options,
+          loadingOptions: prev.extras.loadingOptions,
+        },
       };
     });
   }
@@ -297,6 +307,20 @@ export function useTolerancePageController() {
 
   return {
     form,
+
+    mode,
+    loadingOptions,
+
+    holeLetter,
+    holeGrade,
+    shaftLetter,
+    shaftGrade,
+
+    holeLetterOptions,
+    holeGradeOptions,
+    shaftLetterOptions,
+    shaftGradeOptions,
+
     onModeChange,
     onFieldChange,
     onToleranceLetterChange,
@@ -325,6 +349,28 @@ function clearResultFields(
       error: undefined,
     },
   };
+}
+
+function markResultFieldsAsMachineFields(
+  fields: ToleranceFormState["fields"],
+): ToleranceFormState["fields"] {
+  const nextFields = { ...fields };
+
+  for (const key of resultKeys) {
+    const field = nextFields[key];
+
+    const value =
+      field.machineValue != null ? String(field.machineValue) : field.value;
+
+    if (value.trim() === "") continue;
+
+    nextFields[key] = machineField(value, {
+      ...field,
+      source: "machine",
+    });
+  }
+
+  return nextFields;
 }
 
 function getToleranceErrorMessage(error: unknown) {
