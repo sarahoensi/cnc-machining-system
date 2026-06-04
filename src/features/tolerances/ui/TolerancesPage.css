@@ -1,6 +1,5 @@
 .tolerances-page-layout {
   --split-form-input-width: 8rem;
-  --split-form-output-min-width: 7.5rem;
   --split-form-output-width: 7.5rem;
   --split-form-gap: var(--space-3);
   height: 100%;

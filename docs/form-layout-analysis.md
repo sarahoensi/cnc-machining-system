@@ -100,24 +100,24 @@ Dette betyr at tilgjengelig bredde først reduseres av:
 
 ### Standard formbredde
 
-Det globale tokenet er:
+Standardbredden uttrykkes nå eksplisitt med `formWidth="sm"`:
 
 ```css
---layout-form-width: 200px;
+--page-form-grid-width: 200px;
 --layout-content-max-width: 1100px;
 ```
 
 `FormFigureLayout` bruker:
 
 ```css
-grid-template-columns: var(--layout-form-width) 1fr;
+grid-template-columns: var(--page-form-grid-width) 1fr;
 max-width: var(--layout-content-max-width);
 ```
 
 `FormSidebarLayout` bruker:
 
 ```css
-grid-template-columns: var(--layout-form-width) minmax(20rem, 1fr);
+grid-template-columns: var(--page-form-grid-width) minmax(20rem, 1fr);
 max-width: var(--layout-content-max-width);
 ```
 
@@ -125,15 +125,15 @@ Dermed er standardformene i Triangle, Helix og Finishing i praksis 200 px
 brede. Cutting Data bruker også standardbredden, men med saved-results-panel som
 andre kolonne.
 
-### Feature-spesifikke overstyringer
+### Feature-spesifikke bredder
 
-- Tolerances setter `--layout-form-width: clamp(17.5rem, 34vw, 19rem)`.
-- Cylinder Weight setter `--layout-form-width: min(20rem, 100%)`.
+- Tolerances bruker `formWidth="lg"`.
+- Cylinder Weight bruker `formWidth="md"`.
 - Tolerances setter i tillegg egne bredder for kolonnene inni
   `SplitFormLayout`: 8 rem input og 7.5 rem output.
 
-CSS-variablene arves fra feature-wrapperen og endrer dermed delte layouts uten
-at dette er synlig i komponent-props.
+Breddene på page-layout-nivå er dermed synlige i komponent-props. De interne
+kolonnene i `SplitFormLayout` styres fortsatt av feature-CSS.
 
 ### Høyde
 
@@ -287,7 +287,7 @@ bundet til den spesifikke `FieldState`-modellen.
 ### Dagens implisitte regler
 
 1. Felt fyller alltid parentbredden.
-2. Formbredde betyr normalt `--layout-form-width`.
+2. Formbredde uttrykkes med `formWidth` på page-layouten.
 3. Feature-wrapper kan overstyre delte layout-komponenter via arvede
    CSS-variabler.
 4. Fields listes sekvensielt og blir én kolonne med mindre de pakkes i en
@@ -310,15 +310,14 @@ bundet til den spesifikke `FieldState`-modellen.
 
 - Globale, generiske klassenavn som `.form-actions`, `.form-section`,
   `.form-panel` og `.figure-panel` kan kollidere eller påvirkes utenfor eier.
-- `FormLayout` lager en `.form-actions` wrapper rundt en `FormActions`-komponent
-  som selv har `.form-actions`. Samme klassenavn betyr både slot og komponent.
-- Helix og PlanForm er avhengige av at global `.form-section`-CSS finnes, uten å
-  bruke/importere `FormSection` direkte.
-- `--split-form-output-min-width` settes i Tolerances, men brukes ikke av
-  `SplitFormLayout`.
+- `FormLayout` og `SplitFormLayout` har nå eksplisitte actions-slot-klasser,
+  mens `FormActions` beholder sin egen interne `.form-actions`-klasse.
+- Helix og PlanForm bruker nå `FormSection` direkte.
+- Den tidligere ubrukte `--split-form-output-min-width`-overstyringen i
+  Tolerances er fjernet.
 - `formClassName`, `sidebarClassName` og compact-variant finnes i
   `FormSidebarLayout`, men er ikke del av et tydelig template-system.
-- `figure={null}` brukes for single-column-form, men beholder en tom kolonne.
+- Single-column-form bruker nå `SingleFormLayout` uten tom figure-kolonne.
 - Full-height-atferd styres gjennom flere feature-selectors og en uklar
   ancestor-kontrakt.
 
