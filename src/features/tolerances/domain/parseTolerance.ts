@@ -1,3 +1,5 @@
+// features/tolerances/domain/parseTolerance.ts
+
 import { safeParseDecimal } from "@shared/parsing/decimalParser";
 import type { FieldState } from "@shared/form/types";
 

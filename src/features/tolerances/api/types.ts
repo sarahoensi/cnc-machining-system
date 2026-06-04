@@ -1,3 +1,5 @@
+// features/tolerances/api/types.ts
+
 export type ToleranceObjectType = "hole" | "shaft";
 export type ToleranceMode = ToleranceObjectType;
 
