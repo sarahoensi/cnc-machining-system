@@ -48,8 +48,10 @@ ref
   const id = useId();
   const { decimals } = useDisplaySettings();
 
+  const isResultField = field.kind === "result";
+
   const isDisabled = disabled || field.locked;
-  const isReadonly = readonly && !isDisabled;
+  const isReadonly = (readonly || isResultField) && !isDisabled;
   const inputSource = field.source === "empty" ? "default" : field.source;
 
   const displayValue =
@@ -58,7 +60,7 @@ ref
     ? field.machineValue.toFixed(decimals)
     : field.value ?? "";
 
-    const tabIndex = field.locked ? -1 : undefined;
+    const tabIndex = field.locked || isResultField ? -1 : undefined;
 
   return (
     <Field

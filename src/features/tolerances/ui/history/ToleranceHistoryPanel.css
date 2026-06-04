@@ -1,26 +1,26 @@
-/* features/tolerances/ui/ToleranceSavedResultsPanel.css */
+/* features/tolerances/ui/history/ToleranceHistoryPanel.css */
 
-.tolerance-saved-results {
+.tolerance-history {
   display: flex;
   flex-direction: column;
   gap: var(--stack-header-gap);
 }
 
-.tolerance-saved-results-title {
+.tolerance-history-title {
   margin: 0;
   font-size: var(--heading-size);
   font-weight: var(--heading-weight);
   color: var(--saved-results-title-color, var(--text-primary));
 }
 
-.tolerance-saved-results-scroll {
+.tolerance-history-scroll {
   max-height: 28rem;
   overflow: auto;
   padding-bottom: var(--space-1);
   padding-inline-end: var(--space-1);
 }
 
-.tolerance-saved-results-empty {
+.tolerance-history-empty {
   color: var(--saved-results-empty-color, var(--text-muted));
   font-size: var(--text-label-size);
 }
@@ -63,14 +63,17 @@
   position: relative;
   min-height: 3rem;
   padding: var(--space-0-5) 1.75rem var(--space-0-5) var(--space-1);
+
   background: var(--panel-bg);
   border: var(--panel-border-width) solid var(--panel-border-color);
   border-left-width: var(--space-1);
   border-radius: var(--radius-sm);
+
   color: var(--text-primary);
   cursor: pointer;
   font-size: 1rem;
   font-variant-numeric: tabular-nums;
+
   transition:
     background var(--duration-fast) var(--easing-standard),
     border-color var(--duration-fast) var(--easing-standard),
@@ -136,6 +139,7 @@
 .tolerance-history-delete-cell {
   display: flex;
   justify-content: flex-end;
+
   position: absolute;
   top: var(--space-0-5);
   right: var(--space-0-5);
@@ -145,13 +149,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   width: 1.5rem;
   height: 1.5rem;
   padding: 0;
+
   border: var(--border-width-sm) solid transparent;
   border-radius: var(--control-radius);
+
   background: transparent;
   color: var(--text-muted);
+
   cursor: pointer;
   font: inherit;
   line-height: 1;
@@ -167,7 +175,7 @@
   box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
 }
 
-.tolerance-saved-results-actions {
+.tolerance-history-actions {
   display: flex;
   justify-content: flex-end;
   padding-inline-end: var(--space-1);

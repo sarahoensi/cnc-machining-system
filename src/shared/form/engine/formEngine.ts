@@ -2,7 +2,7 @@
 
 import type { FormState } from "@shared/form/types/forms";
 import type { FieldState } from "@shared/form/types/fields";
-import { emptyField, userField } from "@shared/form/types/fields";
+import { emptyField, resultField, userField } from "@shared/form/types/fields";
 import { applyDriverEngine } from "../constraints";
 
 import { getTauriCommandError } from "@shared/api/tauriError";
@@ -46,7 +46,13 @@ export function resetForm<K extends string, E>(
   const next = {} as Record<K, FieldState>;
 
   for (const key in form.fields) {
-    next[key] = emptyField();
+
+    const field = form.fields[key];
+
+    next[key] =
+      field.kind === "result"
+        ? resultField()
+        : emptyField();
   }
 
   return {
@@ -67,10 +73,22 @@ export function clearMachineFields<K extends string>(
   const next = {} as Record<K, FieldState>;
 
   for (const key in fields) {
+
+    const field = fields[key];
+
+    if (field.source !== "machine") {
+      next[key] = field;
+      continue;
+    }
+
     next[key] =
-      fields[key].source === "machine"
-        ? emptyField({ locked: fields[key].locked })
-        : fields[key];
+      field.kind === "result"
+        ? resultField({
+          locked: field.locked,
+        })
+        : emptyField({
+          locked: field.locked,
+        });
   }
 
   return next;
@@ -92,11 +110,15 @@ export function handleUserEdit<
 ): FormState<K, E> {
 
   const prev = form.fields[key];
+
+  if (prev.kind === "result") {
+    return form;
+  }
   const { normalized } = parseDecimalInput(rawValue);
 
-if (!didUserEdit(prev, normalized)) {
-  return form;
-}
+  if (!didUserEdit(prev, normalized)) {
+    return form;
+  }
 
   let nextFields = form.fields;
 
@@ -272,60 +294,73 @@ export async function handleCalculateAsync<
   ) => Promise<Partial<Record<K, number>>>,
   validate?: FormValidateFn<K, E>,
 ): Promise<FormState<K, E>> {
+  // 0. Frontend validation
+  if (validate) {
+    const errors = validate(form.fields, form.extras);
 
-  // 0️⃣ Frontend validation (form-level)
-if (validate) {
-  const errors = validate(form.fields, form.extras);
-
-  if (errors && errors.length > 0) {
-    return {
-      ...form,
-      status: "editing",
-      formError: errors, // 👈 nå array
-    };
+    if (errors && errors.length > 0) {
+      return {
+        ...form,
+        status: "editing",
+        formError: errors,
+      };
+    }
   }
-}
 
-
-  // 1️⃣ Parse input
+  // 1. Parse input
   const parsed = parse(form.fields, form.extras);
 
   if (!parsed) {
-    return form; // Ingenting å beregne
+    return form;
   }
 
-  // 2️⃣ Clear gamle machine-verdier
+  // 2. Clear old machine values
   const cleanedFields = clearMachineFields(form.fields);
 
   try {
-
-    // 3️⃣ Kjør solver
+    // 3. Run solver
     const result = await solve(parsed, form.extras);
 
     const nextFields: Record<K, FieldState> = {
       ...cleanedFields,
     };
 
-    // 4️⃣ Sett machine-verdier riktig formatert
+    // 4. Apply machine results
     for (const key in result) {
-
       const k = key as K;
       const value = result[k];
 
       if (value === undefined || value === null) continue;
 
-      const wasUser = cleanedFields[k]?.source === "user";
+      const field = cleanedFields[k];
+
+      if (!field) continue;
+
+      if (field.kind === "result") {
+        nextFields[k] = {
+          ...field,
+          value: String(value),
+          source: "machine",
+          machineValue: value,
+          invalid: false,
+          error: undefined,
+        };
+
+        continue;
+      }
+
+      const wasUser = field.source === "user";
 
       if (wasUser) {
         nextFields[k] = {
-          ...cleanedFields[k],
+          ...field,
           machineValue: value,
           invalid: false,
           error: undefined,
         };
       } else {
         nextFields[k] = {
-          ...cleanedFields[k],
+          ...field,
           value: String(value),
           machineValue: value,
           source: "machine",
@@ -341,45 +376,39 @@ if (validate) {
       extras: form.extras,
       formError: undefined,
     };
-
   } catch (error) {
-
     console.error(error);
 
-  const te = getTauriCommandError(error);
+    const te = getTauriCommandError(error);
 
-  // ✅ 1. Backend field errors
-  if (te?.fieldErrors) {
-    const nextFields = applyFieldErrors(cleanedFields, error);
+    if (te?.fieldErrors) {
+      const nextFields = applyFieldErrors(cleanedFields, error);
 
-    return {
-      status: "editing",
-      fields: nextFields,
-      extras: form.extras,
-      formError: undefined,
-    };
-  }
+      return {
+        status: "editing",
+        fields: nextFields,
+        extras: form.extras,
+        formError: undefined,
+      };
+    }
 
-  // ✅ 2. Vanlig frontend error
-  if (error instanceof Error) {
+    if (error instanceof Error) {
+      return {
+        status: "editing",
+        fields: cleanedFields,
+        extras: form.extras,
+        formError: error.message,
+      };
+    }
+
     return {
       status: "editing",
       fields: cleanedFields,
       extras: form.extras,
-      formError: error.message,
+      formError: "Something went wrong",
     };
   }
-
-  // fallback
-  return {
-    status: "editing",
-    fields: cleanedFields,
-    extras: form.extras,
-    formError: "Something went wrong",
-  };
-  }
 }
-
 /* ============================================================
    ASYNC GENERATE
 ============================================================ */
@@ -403,7 +432,7 @@ export async function handleGenerateAsync<
   form: FormState<K, E>;
   execution?: X;
 }> {
-   // 0️⃣ Frontend validation (form-level)
+  // 0️⃣ Frontend validation (form-level)
   if (validate) {
     const error = validate(form.fields, form.extras);
 

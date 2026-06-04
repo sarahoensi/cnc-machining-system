@@ -1,9 +1,9 @@
-// features/tolerances/ui/toleranceHistoryRows.ts
+//features/tolerances/ui/history/buildToleranceHistoryRows.ts
 
 import { formatNumber } from "@shared/ui/format/formatNumber";
 
 import type { SavedResultEntry } from "@shared/savedResults";
-import type { ToleranceFormState } from "../domain/toleranceForm";
+import type { ToleranceFormState } from "../../domain/toleranceForm";
 
 export type ToleranceHistoryRow = {
   id: string;
@@ -23,8 +23,10 @@ export function buildToleranceHistoryRow(
   const { form } = entry;
   const mode = form.extras.mode;
   const isHole = mode === "hole";
+
   const letterKey = isHole ? "hole_letter" : "shaft_letter";
   const gradeKey = isHole ? "hole_grade" : "shaft_grade";
+
   const lowerLabel = isHole ? "EI" : "ei";
   const upperLabel = isHole ? "ES" : "es";
 
