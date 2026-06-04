@@ -1,13 +1,9 @@
 // happy_path.rs
 
-use cnc_machining_system_lib::interface::helix::{
-    SolveHelixRequest, solve_helix, HelixMode
-};
-
+use cnc_machining_system_lib::interface::helix::{solve_helix, HelixMode, SolveHelixRequest};
 
 #[test]
 fn solves_from_pitch_outer() {
-
     let request = SolveHelixRequest::Pitch {
         mode: HelixMode::Outer,
         diameter: 10.0,
@@ -23,7 +19,6 @@ fn solves_from_pitch_outer() {
 
 #[test]
 fn solves_from_angle_inner() {
-
     let request = SolveHelixRequest::Angle {
         mode: HelixMode::Inner,
         diameter: 10.0,

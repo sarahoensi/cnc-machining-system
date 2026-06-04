@@ -294,7 +294,6 @@ Describe UI meaning. Never hardcode values.
   --stack-gap: var(--space-6);
   --stack-header-gap: var(--space-2);
 
-  --layout-form-width: 200px;
   --layout-form-figure-gap: var(--space-8);
   --layout-content-max-width: 1100px;
 

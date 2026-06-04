@@ -3,5 +3,5 @@
 mod happy_path;
 mod mapping;
 mod partial;
-mod validation;
 mod serialization;
+mod validation;

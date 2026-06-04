@@ -1,6 +1,15 @@
 // src/shared/ui/primitives/Select/SelectMenu.tsx
 
-import { ReactNode } from "react";
+import {
+  KeyboardEvent,
+  KeyboardEventHandler,
+  ReactNode,
+  Ref,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import clsx from "clsx";
 import type {
   InputAppearance,
@@ -43,6 +52,8 @@ type SelectMenuProps<T extends string> = {
   source?: InputSource;
   size?: InputSize;
   disabled?: boolean;
+  triggerRef?: Ref<HTMLButtonElement>;
+  onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
 };
 
 export function SelectMenu<T extends string>({
@@ -57,11 +68,202 @@ export function SelectMenu<T extends string>({
   source = "default",
   size = "medium",
   disabled = false,
+  triggerRef,
+  onKeyDown,
 }: SelectMenuProps<T>) {
+  const id = useId();
+  const dropdownId = `${id}-listbox`;
+  const [activeIndex, setActiveIndex] = useState(0);
+  const typeaheadBuffer = useRef("");
+  const lastTypeaheadAt = useRef(0);
+  const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
+
+  const optionCount = options.length;
+  const activeOptionId =
+    open && optionCount > 0 ? getOptionId(dropdownId, activeIndex) : undefined;
+
+  useEffect(() => {
+    if (optionCount === 0) {
+      setActiveIndex(0);
+      return;
+    }
+
+    setActiveIndex((current) => Math.min(current, optionCount - 1));
+  }, [optionCount]);
+
+  useEffect(() => {
+    if (!open) {
+      typeaheadBuffer.current = "";
+      lastTypeaheadAt.current = 0;
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    optionRefs.current[activeIndex]?.scrollIntoView({
+      block: "nearest",
+    });
+  }, [activeIndex, open]);
+
+  function openMenu() {
+    if (!open) {
+      onToggle();
+    }
+  }
+
+  function closeMenu() {
+    if (open) {
+      onToggle();
+    }
+  }
+
+  function selectActiveOption() {
+    const option = options[activeIndex];
+    if (option) {
+      onSelect(option.value);
+    }
+  }
+
+  function moveActiveOption(direction: 1 | -1) {
+    if (optionCount === 0) return;
+
+    setActiveIndex((current) => {
+      const next = current + direction;
+      if (next < 0) return optionCount - 1;
+      if (next >= optionCount) return 0;
+      return next;
+    });
+  }
+
+  function findMatchingOption(search: string, startIndex: number) {
+    if (!search) return -1;
+
+    const normalizedSearch = normalizeSearchText(search);
+
+    for (let offset = 1; offset <= optionCount; offset += 1) {
+      const index = (startIndex + offset + optionCount) % optionCount;
+      const option = options[index];
+      const optionText = normalizeSearchText(getOptionSearchText(option));
+
+      if (optionText.startsWith(normalizedSearch)) {
+        return index;
+      }
+    }
+
+    return -1;
+  }
+
+  function handleTypeahead(key: string) {
+    const now = window.Date.now();
+    const previousBuffer =
+      now - lastTypeaheadAt.current <= TYPEAHEAD_RESET_MS
+        ? typeaheadBuffer.current
+        : "";
+    const nextBuffer = `${previousBuffer}${key}`;
+    const isRepeatedKeySearch =
+      nextBuffer.length > 1 && [...nextBuffer].every((char) => char === key);
+    const search = isRepeatedKeySearch ? key : nextBuffer;
+    const startIndex = isRepeatedKeySearch ? activeIndex : -1;
+    const matchIndex = findMatchingOption(search, startIndex);
+
+    typeaheadBuffer.current = nextBuffer;
+    lastTypeaheadAt.current = now;
+
+    if (matchIndex !== -1) {
+      setActiveIndex(matchIndex);
+      openMenu();
+    }
+  }
+
+  function handleTriggerKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
+    if (disabled) return;
+
+    if (
+      !open &&
+      (
+        event.key === "ArrowDown" ||
+        event.key === "ArrowUp"
+      )
+    ) {
+      onKeyDown?.(event);
+      if (event.defaultPrevented) return;
+    }
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (open) {
+        selectActiveOption();
+      } else {
+        openMenu();
+      }
+      return;
+    }
+
+    if (event.key === " ") {
+      event.preventDefault();
+      if (open) {
+        selectActiveOption();
+      } else {
+        openMenu();
+      }
+      return;
+    }
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      if (!open) {
+        openMenu();
+        return;
+      }
+      moveActiveOption(1);
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      if (!open) {
+        openMenu();
+        return;
+      }
+      moveActiveOption(-1);
+      return;
+    }
+
+    if (event.key === "Home" && open) {
+      event.preventDefault();
+      setActiveIndex(0);
+      return;
+    }
+
+    if (event.key === "End" && open) {
+      event.preventDefault();
+      setActiveIndex(Math.max(0, optionCount - 1));
+      return;
+    }
+
+    if (event.key === "Escape" && open) {
+      event.preventDefault();
+      closeMenu();
+      return;
+    }
+
+    if (
+      event.key.length === 1 &&
+      !event.altKey &&
+      !event.ctrlKey &&
+      !event.metaKey
+    ) {
+      event.preventDefault();
+      handleTypeahead(event.key.toLocaleLowerCase());
+    }
+  }
+
   return (
     <div className={clsx("app-select-menu", open && !disabled && "is-open", className)}>
       <button
         type="button"
+        ref={triggerRef}
         className={clsx(
           "app-select-trigger",
           "input-control",
@@ -75,20 +277,36 @@ export function SelectMenu<T extends string>({
             onToggle();
           }
         }}
+        onKeyDown={handleTriggerKeyDown}
         disabled={disabled}
+        aria-haspopup="listbox"
+        aria-expanded={open && !disabled}
+        aria-controls={dropdownId}
+        aria-activedescendant={activeOptionId}
       >
         <span className="app-select-trigger-content">{valueLabel}</span>
         <span className="app-select-trigger-caret" />
       </button>
 
       {open && !disabled ? (
-        <div className="app-select-dropdown">
-          {options.map((option) => (
+        <div id={dropdownId} className="app-select-dropdown" role="listbox">
+          {options.map((option, index) => (
             <button
               key={option.value}
+              id={getOptionId(dropdownId, index)}
               type="button"
-              className="app-select-option"
+              ref={(element) => {
+                optionRefs.current[index] = element;
+              }}
+              className={clsx(
+                "app-select-option",
+                index === activeIndex && "is-active"
+              )}
+              role="option"
+              aria-selected={index === activeIndex}
+              tabIndex={-1}
               onClick={() => onSelect(option.value)}
+              onMouseEnter={() => setActiveIndex(index)}
             >
               <SelectMenuLabel
                 className="app-select-option-content"
@@ -117,5 +335,23 @@ export function SelectMenu<T extends string>({
       ) : null}
     </div>
   );
+}
+
+const TYPEAHEAD_RESET_MS = 600;
+
+function getOptionId(dropdownId: string, index: number) {
+  return `${dropdownId}-option-${index}`;
+}
+
+function getOptionSearchText<T extends string>(option: SelectOption<T>) {
+  if (typeof option.label === "string" || typeof option.label === "number") {
+    return String(option.label);
+  }
+
+  return option.value;
+}
+
+function normalizeSearchText(value: string) {
+  return value.trim().toLocaleLowerCase();
 }
 

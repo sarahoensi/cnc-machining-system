@@ -4,12 +4,11 @@
 //! and domain-originated failures to external interfaces.
 
 mod error;
+mod input_parser;
 mod result;
 mod validation;
-mod input_parser;
 
 pub use error::ApplicationError;
-pub use result::AppResult;
-pub use validation::{ValidationErrors};
 pub use input_parser::InputParser;
-
+pub use result::AppResult;
+pub use validation::ValidationErrors;

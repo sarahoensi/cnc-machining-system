@@ -13,7 +13,6 @@ use serde::Serialize;
 /// - Serialized as a JSON object with stable field names.
 #[derive(Serialize)]
 pub struct SolveHelixResponse {
-
     pub pitch: f64,
 
     pub angle: f64,

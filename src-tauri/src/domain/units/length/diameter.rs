@@ -1,6 +1,6 @@
 // domain/units/length/diameter.rs
 
-use crate::domain::units::length::{Length, PositiveLength, };
+use crate::domain::units::length::{Length, PositiveLength};
 use crate::domain::units::{Radius, UnitsError};
 
 /// Represents a strictly positive diameter measurement.
@@ -43,8 +43,7 @@ impl Diameter {
     /// Computes corresponding Radius.
     pub fn radius(self) -> Radius {
         // safe: half of positive length is still positive
-        Radius::mm(self.mm_value() / 2.0)
-            .expect("Invariant violation: radius must be positive")
+        Radius::mm(self.mm_value() / 2.0).expect("Invariant violation: radius must be positive")
     }
 }
 
@@ -118,10 +117,9 @@ mod tests {
 
     // -- range --
     #[test]
-fn accepts_min_positive_value() {
-    assert!(Diameter::mm(f64::MIN_POSITIVE).is_ok());
-}
-
+    fn accepts_min_positive_value() {
+        assert!(Diameter::mm(f64::MIN_POSITIVE).is_ok());
+    }
 }
 
 #[cfg(test)]
@@ -176,5 +174,4 @@ mod property_tests {
             prop_assert!(a < b);
         }
     }
-
 }

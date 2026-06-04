@@ -1,0 +1,48 @@
+.split-form-layout {
+  --split-form-column-width: minmax(0, 1fr);
+  --split-form-input-width: var(--split-form-column-width);
+  --split-form-output-width: var(--split-form-column-width);
+  --split-form-gap: var(--layout-form-figure-gap);
+
+  display: grid;
+  grid-template-columns: var(--split-form-input-width) var(--split-form-output-width);
+  gap: var(--split-form-gap);
+  width: 100%;
+  min-width: 0;
+  align-items: start;
+}
+
+.split-form-input-panel,
+.split-form-output-panel {
+  min-width: 0;
+}
+
+.split-form-input-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-gap);
+}
+
+.split-form-input,
+.split-form-output-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-fields-gap);
+}
+
+.split-form-error {
+  min-height: var(--form-error-min-height);
+}
+
+.split-form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-actions-gap);
+  width: 100%;
+}
+
+@media (max-width: 42rem) {
+  .split-form-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

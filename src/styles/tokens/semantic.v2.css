@@ -341,7 +341,6 @@ Describe UI meaning. Never hardcode values.
    LAYOUT PATTERNS
 ===================================================== */
 
---layout-form-width: 200px;
 --layout-form-figure-gap: var(--space-8);
 --layout-content-max-width: 1100px;
 

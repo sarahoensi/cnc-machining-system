@@ -2,7 +2,7 @@
 
 use cnc_machining_system_lib::{
     application::finishing::{
-        dto::{GenerateFinishingPlanInput, FinishingExecutionOutput},
+        dto::{FinishingExecutionOutput, GenerateFinishingPlanInput},
         GenerateFinishingPlanUseCase,
     },
     domain::machining::finishing::FinishingMode,
@@ -10,7 +10,6 @@ use cnc_machining_system_lib::{
 
 #[test]
 fn generated_output_contains_expected_fields() {
-
     let uc = GenerateFinishingPlanUseCase::new();
 
     let execution = uc

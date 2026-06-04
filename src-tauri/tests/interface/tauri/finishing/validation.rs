@@ -3,15 +3,13 @@
 use cnc_machining_system_lib::{
     application::finishing::{
         dto::{GenerateFinishingPlanInput, RegisterFinishingMeasurementInput},
-        GenerateFinishingPlanUseCase,
-        RegisterFinishingMeasurementUseCase,
+        GenerateFinishingPlanUseCase, RegisterFinishingMeasurementUseCase,
     },
     domain::machining::finishing::FinishingMode,
 };
 
 #[test]
 fn fails_when_step_is_out_of_range() {
-
     // ----------------------------------------------------
     // Setup
     // ----------------------------------------------------

@@ -1,6 +1,16 @@
 // src/shared/ui/components/form/fields/FormSelectMenuField.tsx
 
-import { ReactNode, useEffect, useRef, useState } from "react";
+import {
+  ForwardedRef,
+  KeyboardEventHandler,
+  ReactElement,
+  ReactNode,
+  RefAttributes,
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Field } from "../Field/Field";
 import { SelectMenu } from "@shared/ui/primitives/Select";
 import type {
@@ -32,9 +42,10 @@ type Props<T extends string> = {
   source?: InputSource;
   size?: InputSize;
   disabled?: boolean;
+  onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
 };
 
-export function FormSelectMenuField<T extends string>({
+function FormSelectMenuFieldInner<T extends string>({
   label,
   tooltip,
   valueLabel,
@@ -46,7 +57,8 @@ export function FormSelectMenuField<T extends string>({
   source = "default",
   size = "medium",
   disabled = false,
-}: Props<T>) {
+  onKeyDown,
+}: Props<T>, ref: ForwardedRef<HTMLButtonElement>) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -73,6 +85,8 @@ export function FormSelectMenuField<T extends string>({
           valueLabel={valueLabel}
           open={open}
           onToggle={() => setOpen((current) => !current)}
+          triggerRef={ref}
+          onKeyDown={onKeyDown}
           options={options}
           onSelect={(value) => {
             onSelect(value);
@@ -90,4 +104,10 @@ export function FormSelectMenuField<T extends string>({
     </Field>
   );
 }
+
+export const FormSelectMenuField = forwardRef(FormSelectMenuFieldInner) as <
+  T extends string,
+>(
+  props: Props<T> & RefAttributes<HTMLButtonElement>
+) => ReactElement;
 

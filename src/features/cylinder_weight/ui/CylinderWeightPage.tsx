@@ -6,7 +6,7 @@ import { FormActions } from "@shared/ui/components/form/FormActions/FormActions"
 import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
-import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
+import { SingleFormLayout } from "@shared/ui/layout/page/SingleFormLayout/SingleFormLayout";
 import { useFormNavigation } from "@shared/ui";
 import { cylinderWeightFieldConfig } from "./cylinderWeightFieldConfig";
 import { CylinderWeightKey } from "../domain/cylinderWeightForm";
@@ -138,7 +138,7 @@ export function CylinderWeightPage() {
     <>
       <div className="cylinder-weight-page-layout">
         <div ref={navigation.containerRef}>
-          <FormFigureLayout form={formContent} figure={null} />
+          <SingleFormLayout form={formContent} formWidth="md" />
         </div>
       </div>
 

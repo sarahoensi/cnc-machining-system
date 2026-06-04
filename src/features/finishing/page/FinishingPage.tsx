@@ -2,7 +2,7 @@
 
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 
-import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
+import { SingleFormLayout } from "@shared/ui/layout/page/SingleFormLayout/SingleFormLayout";
 
 import { PlanForm } from "../plan/ui/PlanForm";
 import { ExecutionView } from "../execution/ui/ExecutionView/ExecutionView";
@@ -41,9 +41,8 @@ export function FinishingPage() {
 
   if (!finishing.execution) {
     return (
-      <FormFigureLayout
+      <SingleFormLayout
         form={formContent}
-        figure={null}
       />
     );
   }

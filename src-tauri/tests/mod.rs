@@ -1,6 +1,5 @@
 // tests/mod.rs
 
-
-mod domain;
 mod application;
+mod domain;
 mod interface;

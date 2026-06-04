@@ -3,15 +3,9 @@
 //! Translates frontend request variants into application input and
 //! application output into UI responses.
 
-use crate::application::{
-    SolveRightTriangleInput,
-    SolveRightTriangleOutput,
-};
+use crate::application::{SolveRightTriangleInput, SolveRightTriangleOutput};
 
-use super::{
-    SolveRightTriangleRequest,
-    SolveRightTriangleResponse,
-};
+use super::{SolveRightTriangleRequest, SolveRightTriangleResponse};
 
 // ---------------------------------------------------------
 // Request → Application Input
@@ -20,11 +14,9 @@ use super::{
 impl From<SolveRightTriangleRequest> for SolveRightTriangleInput {
     fn from(req: SolveRightTriangleRequest) -> Self {
         match req {
-
             // -------------------------
             // SIDE + SIDE
             // -------------------------
-
             SolveRightTriangleRequest::Legs { a_mm, b_mm } => {
                 SolveRightTriangleInput::Legs { a_mm, b_mm }
             }
@@ -40,7 +32,6 @@ impl From<SolveRightTriangleRequest> for SolveRightTriangleInput {
             // -------------------------
             // SIDE + ANGLE
             // -------------------------
-
             SolveRightTriangleRequest::LegAAndAlpha { a_mm, alpha_deg } => {
                 SolveRightTriangleInput::LegAAndAlpha { a_mm, alpha_deg }
             }

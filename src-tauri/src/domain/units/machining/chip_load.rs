@@ -1,8 +1,6 @@
 // domain/units/machining/chip_load.rs
 
-use crate::domain::units::{
-    PositiveScalar, UnitsError,
-};
+use crate::domain::units::{PositiveScalar, UnitsError};
 
 /// Represents chip load per cutting tooth.
 ///
@@ -13,7 +11,6 @@ use crate::domain::units::{
 pub struct ChipLoad(PositiveScalar);
 
 impl ChipLoad {
-
     /// Internal constructor used by domain math.
     #[allow(dead_code)]
     pub(crate) fn mm_per_tooth_unchecked(value: f64) -> Self {
@@ -65,11 +62,7 @@ mod tests {
     fn value_round_trip() {
         let c = ChipLoad::mm_per_tooth(0.05).unwrap();
 
-        assert!(approx_eq(
-            c.mm_per_tooth_value(),
-            0.05,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(c.mm_per_tooth_value(), 0.05, DEFAULT_EPS));
     }
 
     // --- Ordering ---

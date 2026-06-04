@@ -6,6 +6,12 @@
   gap: var(--form-gap);
 }
 
+.form-layout--actions-bottom {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+}
+
 /* =========================
    FIELDS
 ========================= */
@@ -28,7 +34,13 @@
    ACTIONS
 ========================= */
 
-.form-actions {
+.form-layout-actions-slot {
   display: flex;
+  flex-direction: column;
   gap: var(--form-actions-gap);
+  width: 100%;
+}
+
+.form-layout--actions-bottom > .form-layout-actions-slot {
+  margin-top: auto;
 }

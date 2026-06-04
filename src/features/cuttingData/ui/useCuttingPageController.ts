@@ -1,69 +1,28 @@
-// features/cuttingData/page/useCuttingPageController.ts
-
 import { useFeatureForm } from "@app/providers/FormStateProvider";
+import { useSavedResults } from "@shared/savedResults";
+
 import { createInitialCuttingDataForm } from "../domain/cuttingDataForm";
 
-type SavedEntry = {
-  id: string;
-  form: ReturnType<typeof createInitialCuttingDataForm>;
-  createdAt: number;
-};
-
 export function useCuttingPageController() {
-
   const [form, setForm] = useFeatureForm(
     "cutting",
-    createInitialCuttingDataForm
+    createInitialCuttingDataForm,
   );
 
-  const [history, setHistory] = useFeatureForm<SavedEntry[]>(
-    "cutting-history",
-    () => []
-  );
-
-  /* =========================
-     Save
-  ========================= */
+  const savedResults = useSavedResults<
+    ReturnType<typeof createInitialCuttingDataForm>
+  >({
+    storageKey: "cutting-history",
+  });
 
   function save() {
-    if (form.status !== "solved") return;
-
-    const entry: SavedEntry = {
-      id: crypto.randomUUID(),
-      form: structuredClone(form),
-      createdAt: Date.now(),
-    };
-
-    setHistory(prev => [...prev, entry]);
+    savedResults.save(form);
   }
 
-  /* =========================
-     Load
-  ========================= */
-
-  function load(entry: SavedEntry) {
-    setForm(structuredClone(entry.form));
+  function load(entry: (typeof savedResults.history)[number]) {
+    setForm(savedResults.load(entry));
   }
 
-  /* =========================
-     Delete
-  ========================= */
-
-  function remove(id: string) {
-    setHistory(prev => prev.filter(e => e.id !== id));
-  }
-
-  /* =========================
-     Clear
-  ========================= */
-
-  function clear() {
-    setHistory([]);
-  }
-
-  /* =========================
-     Reset
-  ========================= */
 
   function resetForm() {
     setForm(createInitialCuttingDataForm());
@@ -73,12 +32,12 @@ export function useCuttingPageController() {
     form,
     setForm,
 
-    history,
+    history: savedResults.history,
 
     save,
     load,
-    remove,
-    clear,
+    remove: savedResults.remove,
+    clear: savedResults.clear,
     resetForm,
   };
 }

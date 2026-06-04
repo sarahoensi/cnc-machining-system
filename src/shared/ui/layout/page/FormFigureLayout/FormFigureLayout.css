@@ -3,7 +3,7 @@
 .form-figure-layout {
   display: grid;
 
-  grid-template-columns: var(--layout-form-width) 1fr;
+  grid-template-columns: var(--page-form-grid-width) 1fr;
   gap: var(--layout-form-figure-gap);
 
   max-width: var(--layout-content-max-width);

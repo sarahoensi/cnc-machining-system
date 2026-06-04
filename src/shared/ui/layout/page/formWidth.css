@@ -1,0 +1,19 @@
+.form-width--sm {
+  --page-form-width: 200px;
+  --page-form-grid-width: 200px;
+}
+
+.form-width--md {
+  --page-form-width: min(20rem, 100%);
+  --page-form-grid-width: min(20rem, 100%);
+}
+
+.form-width--lg {
+  --page-form-width: clamp(17.5rem, 34vw, 19rem);
+  --page-form-grid-width: clamp(17.5rem, 34vw, 19rem);
+}
+
+.form-width--fluid {
+  --page-form-width: 100%;
+  --page-form-grid-width: minmax(0, 1fr);
+}

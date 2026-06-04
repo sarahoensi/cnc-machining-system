@@ -22,17 +22,16 @@ pub struct Helix {
 }
 
 impl Helix {
-// ------------ Rules --------------
+    // ------------ Rules --------------
     pub fn validate_tool(
         mode: HelixMode,
         nominal: Diameter,
         tool: Diameter,
     ) -> Result<(), HelixError> {
-
         if matches!(mode, HelixMode::Inner) && tool >= nominal {
             return Err(HelixError::ToolTooLarge {
                 tool_diameter: tool.mm_value(),
-                nominal_diameter: nominal.mm_value()
+                nominal_diameter: nominal.mm_value(),
             });
         }
 
@@ -75,24 +74,23 @@ impl Helix {
     // ---------------- Internal helpers ----------------
 
     fn effective_diameter(
-    mode: HelixMode,
-    nominal: Diameter,
-    tool: Diameter,
-) -> Result<Diameter, GeometryError> {
+        mode: HelixMode,
+        nominal: Diameter,
+        tool: Diameter,
+    ) -> Result<Diameter, GeometryError> {
+        // Kjør domeneregelen først
+        Self::validate_tool(mode, nominal, tool)?;
 
-    // Kjør domeneregelen først
-    Self::validate_tool(mode, nominal, tool)?;
+        let d = nominal.mm_value();
+        let r_tool = tool.mm_value() / 2.0;
 
-    let d = nominal.mm_value();
-    let r_tool = tool.mm_value() / 2.0;
+        let effective = match mode {
+            HelixMode::Inner => d - r_tool,
+            HelixMode::Outer => d + r_tool,
+        };
 
-    let effective = match mode {
-        HelixMode::Inner => d - r_tool,
-        HelixMode::Outer => d + r_tool,
-    };
-
-    Ok(Diameter::mm_unchecked(effective))
-}
+        Ok(Diameter::mm_unchecked(effective))
+    }
 
     // ---------------- Accessors ----------------
 

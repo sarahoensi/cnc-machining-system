@@ -1,9 +1,7 @@
 // domain/machining/finishing/execution/finishing_execution.rs
 
 use crate::domain::{
-    machining::finishing::{FinishingPlan,
-    FinishingStep,
-    FinishingError},
+    machining::finishing::{FinishingError, FinishingPlan, FinishingStep},
     units::{Diameter, PositiveLength},
 };
 
@@ -88,14 +86,12 @@ impl FinishingExecution {
     }
 
     fn last_measured_index(&self) -> Option<usize> {
-        self.steps.iter().rposition(|step| step.measurement().is_some())
+        self.steps
+            .iter()
+            .rposition(|step| step.measurement().is_some())
     }
 
-    fn validate_measurement(
-        &self,
-        idx: usize,
-        measured: Diameter,
-    ) -> Result<(), FinishingError> {
+    fn validate_measurement(&self, idx: usize, measured: Diameter) -> Result<(), FinishingError> {
         let m = measured.mm_value();
         let start = self.plan.start().mm_value();
         let target = self.plan.target().mm_value();
@@ -152,25 +148,21 @@ impl FinishingExecution {
         let remaining_delta = (target - start).abs();
 
         let step_size = remaining_delta / remaining_steps as f64;
-        let planned_delta = PositiveLength::mm(step_size)
-            .map_err(|_| FinishingError::ComputedStepNotPositive { value_mm: step_size })?;
+        let planned_delta =
+            PositiveLength::mm(step_size).map_err(|_| FinishingError::ComputedStepNotPositive {
+                value_mm: step_size,
+            })?;
 
         let mut current = current_start;
 
         for offset in 0..remaining_steps {
             let idx = start_index + offset;
             let end_val = self.plan.mode().apply_delta(current.mm_value(), step_size);
-            let end = Diameter::mm(end_val)
-                .map_err(|_| FinishingError::ImpossiblePlan {
-                    reason: "computed diameter invalid",
-                })?;
+            let end = Diameter::mm(end_val).map_err(|_| FinishingError::ImpossiblePlan {
+                reason: "computed diameter invalid",
+            })?;
 
-            self.steps[idx] = FinishingStep::new(
-                (idx + 1) as u32,
-                current,
-                planned_delta,
-                end,
-            );
+            self.steps[idx] = FinishingStep::new((idx + 1) as u32, current, planned_delta, end);
 
             current = end;
         }
@@ -190,15 +182,13 @@ fn build_initial_steps(plan: FinishingPlan) -> Result<Vec<FinishingStep>, Finish
     let mut current = plan.start();
 
     for i in 0..cuts {
-        let end_val = plan.mode().apply_delta(
-            current.mm_value(),
-            plan.expected_step().mm_value(),
-        );
+        let end_val = plan
+            .mode()
+            .apply_delta(current.mm_value(), plan.expected_step().mm_value());
 
-        let end = Diameter::mm(end_val)
-            .map_err(|_| FinishingError::ImpossiblePlan {
-                reason: "computed diameter invalid",
-            })?;
+        let end = Diameter::mm(end_val).map_err(|_| FinishingError::ImpossiblePlan {
+            reason: "computed diameter invalid",
+        })?;
 
         steps.push(FinishingStep::new(
             i + 1,

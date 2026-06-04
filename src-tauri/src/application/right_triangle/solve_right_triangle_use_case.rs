@@ -1,29 +1,22 @@
 // application/right_triangle/solve_right_triangle_use_case.rs
 use crate::application::{
-    shared::{AppResult, InputParser},
     right_triangle::dto::{SolveRightTriangleInput, SolveRightTriangleOutput},
+    shared::{AppResult, InputParser},
 };
 
 use crate::domain::{
+    units::{AcuteAngle, PositiveLength},
     RightTriangle,
-    units::{PositiveLength, AcuteAngle},
 };
 
 pub struct SolveRightTriangleUseCase;
 
 impl SolveRightTriangleUseCase {
-
-    pub fn execute(
-        &self,
-        input: SolveRightTriangleInput,
-    ) -> AppResult<SolveRightTriangleOutput> {
-
+    pub fn execute(&self, input: SolveRightTriangleInput) -> AppResult<SolveRightTriangleOutput> {
         let mut p = InputParser::new();
 
         let triangle = match input {
-
             SolveRightTriangleInput::Legs { a_mm, b_mm } => {
-
                 let a = p.value("a", PositiveLength::mm(a_mm));
                 let b = p.value("b", PositiveLength::mm(b_mm));
 
@@ -31,7 +24,6 @@ impl SolveRightTriangleUseCase {
             }
 
             SolveRightTriangleInput::LegAAndHypotenuse { a_mm, c_mm } => {
-
                 let a = p.value("a", PositiveLength::mm(a_mm));
                 let c = p.value("c", PositiveLength::mm(c_mm));
 
@@ -39,7 +31,6 @@ impl SolveRightTriangleUseCase {
             }
 
             SolveRightTriangleInput::LegBAndHypotenuse { b_mm, c_mm } => {
-
                 let b = p.value("b", PositiveLength::mm(b_mm));
                 let c = p.value("c", PositiveLength::mm(c_mm));
 
@@ -47,7 +38,6 @@ impl SolveRightTriangleUseCase {
             }
 
             SolveRightTriangleInput::HypotenuseAndAlpha { c_mm, alpha_deg } => {
-
                 let c = p.value("c", PositiveLength::mm(c_mm));
                 let alpha = p.value("alpha", AcuteAngle::degrees(alpha_deg));
 
@@ -55,7 +45,6 @@ impl SolveRightTriangleUseCase {
             }
 
             SolveRightTriangleInput::HypotenuseAndBeta { c_mm, beta_deg } => {
-
                 let c = p.value("c", PositiveLength::mm(c_mm));
                 let beta = p.value("beta", AcuteAngle::degrees(beta_deg));
 
@@ -63,15 +52,18 @@ impl SolveRightTriangleUseCase {
             }
 
             SolveRightTriangleInput::LegAAndAlpha { a_mm, alpha_deg } => {
-
                 let a = p.value("a", PositiveLength::mm(a_mm));
                 let alpha = p.value("alpha", AcuteAngle::degrees(alpha_deg));
 
-                p.combine("alpha", a, alpha, RightTriangle::from_leg_and_opposite_angle)
+                p.combine(
+                    "alpha",
+                    a,
+                    alpha,
+                    RightTriangle::from_leg_and_opposite_angle,
+                )
             }
 
             SolveRightTriangleInput::LegAAndBeta { a_mm, beta_deg } => {
-
                 let a = p.value("a", PositiveLength::mm(a_mm));
                 let beta = p.value("beta", AcuteAngle::degrees(beta_deg));
 
@@ -79,15 +71,18 @@ impl SolveRightTriangleUseCase {
             }
 
             SolveRightTriangleInput::LegBAndAlpha { b_mm, alpha_deg } => {
-
                 let b = p.value("b", PositiveLength::mm(b_mm));
                 let alpha = p.value("alpha", AcuteAngle::degrees(alpha_deg));
 
-                p.combine("alpha", b, alpha, RightTriangle::from_adjacent_leg_and_angle)
+                p.combine(
+                    "alpha",
+                    b,
+                    alpha,
+                    RightTriangle::from_adjacent_leg_and_angle,
+                )
             }
 
             SolveRightTriangleInput::LegBAndBeta { b_mm, beta_deg } => {
-
                 let b = p.value("b", PositiveLength::mm(b_mm));
                 let beta = p.value("beta", AcuteAngle::degrees(beta_deg));
 

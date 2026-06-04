@@ -1,22 +1,14 @@
 // domain/machining/finishing/mod.rs
 
-mod finishing_mode;
 pub mod error;
+mod finishing_mode;
 
-pub mod planning;
 pub mod execution;
+pub mod planning;
 
-pub use finishing_mode::FinishingMode;
 pub use error::FinishingError;
+pub use finishing_mode::FinishingMode;
 
-pub use planning::{
-    FinishingPlan,
-    FinishingPlanner,
-    FinishingPlanning,
-    FinishingRequest,
-};
+pub use planning::{FinishingPlan, FinishingPlanner, FinishingPlanning, FinishingRequest};
 
-pub use execution::{
-    FinishingExecution,
-    FinishingStep,
-};
+pub use execution::{FinishingExecution, FinishingStep};

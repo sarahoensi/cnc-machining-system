@@ -19,13 +19,13 @@
 //! Note: documentation focuses on domain semantics and invariants rather than
 //! implementation details.
 
-mod right_triangle;
 mod circle;
 mod helix;
+mod right_triangle;
 
 mod error;
 
-pub use right_triangle::*;
 pub use circle::*;
-pub use helix::*;
 pub use error::*;
+pub use helix::*;
+pub use right_triangle::*;

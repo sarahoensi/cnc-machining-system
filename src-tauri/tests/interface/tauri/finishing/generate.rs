@@ -1,16 +1,12 @@
 // tests/integration/finishing/generate.rs
 
 use cnc_machining_system_lib::{
-    application::finishing::{
-        dto::GenerateFinishingPlanInput,
-        GenerateFinishingPlanUseCase,
-    },
+    application::finishing::{dto::GenerateFinishingPlanInput, GenerateFinishingPlanUseCase},
     domain::machining::finishing::FinishingMode,
 };
 
 #[test]
 fn generates_plan_via_use_case() {
-
     let uc = GenerateFinishingPlanUseCase::new();
 
     let input = GenerateFinishingPlanInput::ByCuts {

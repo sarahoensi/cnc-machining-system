@@ -1,8 +1,9 @@
 // domain/units/length/pitch.rs
 
-use crate::domain::units::{UnitsError, length::{
-    Length, PositiveLength
-}};
+use crate::domain::units::{
+    length::{Length, PositiveLength},
+    UnitsError,
+};
 
 /// Represents a strictly positive linear pitch (mm per revolution).
 ///
@@ -17,7 +18,7 @@ impl Pitch {
     pub(crate) fn mm_per_rev_unchecked(value: f64) -> Self {
         Self(PositiveLength::mm_unchecked(value))
     }
-    
+
     /// Creates a Pitch from millimeters per revolution.
     ///
     /// # Errors

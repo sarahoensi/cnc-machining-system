@@ -4,8 +4,8 @@ use thiserror::Error;
 
 use crate::domain::units::UnitsError;
 
-use super::right_triangle::RightTriangleError;
 use super::helix::HelixError;
+use super::right_triangle::RightTriangleError;
 
 #[derive(Debug, Error, Clone, PartialEq)]
 pub enum GeometryError {
@@ -17,6 +17,4 @@ pub enum GeometryError {
 
     #[error(transparent)]
     Helix(#[from] HelixError),
-
-    
 }

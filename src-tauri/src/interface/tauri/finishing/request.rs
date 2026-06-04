@@ -23,7 +23,6 @@ use serde::Deserialize;
 #[derive(Debug, Deserialize)]
 #[serde(tag = "type")]
 pub enum GenerateFinishingPlanRequest {
-
     /// Request planning by a fixed number of cuts.
     ByCuts {
         /// Finishing mode (`Inner` or `Outer`).

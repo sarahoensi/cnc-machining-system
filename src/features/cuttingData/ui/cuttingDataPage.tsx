@@ -5,7 +5,7 @@ import {
   handleCalculateAsync,
 } from "@shared/form/engine/formEngine";
 
-import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
+import { CalculatorNumberFields } from "@shared/ui/components/form/fields";
 import { useFormNavigation } from "@shared/ui";
 
 import {
@@ -31,7 +31,6 @@ import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
 import { CuttingHistoryPanel } from "./history/CuttingHistoryPanel";
 import { useCuttingPageController } from "./useCuttingPageController";
 import { Button } from "@shared/ui/primitives/Button/Button";
-import "./cuttingDataPage.css";
 
 
 
@@ -127,26 +126,13 @@ export function CuttingDataPage() {
   ========================= */
 
   const fields = (
-    <>
-      {cuttingDataFieldConfig.map((f) => {
-        const fieldState = form.fields[f.key];
-
-        return (
-          <FormNumberField
-            key={f.key}
-            label={f.label}
-            unit={f.unit}
-            tooltip={f.tooltip}
-            field={fieldState}
-            disabled={fieldState.locked || f.readOnly}
-            autoFocus={f.autoFocus}
-            onChange={(value) => onFieldChange(f.key, value)}
-            ref={navigation.register(f.key)}
-            onKeyDown={navigation.handleKeyDown(f.key)}
-          />
-        );
-      })}
-    </>
+    <CalculatorNumberFields
+      configs={cuttingDataFieldConfig}
+      fields={form.fields}
+      onChange={onFieldChange}
+      register={navigation.register}
+      onKeyDown={navigation.handleKeyDown}
+    />
   );
 
 
@@ -183,13 +169,13 @@ const error = form.formError ? (
 
 
  const formContent = (
-    <div className="cutting-form" ref={navigation.containerRef}>
-      <FormLayout
-        fields={fields}
-        error={error}
-        actions={actions}
-      />
-    </div>
+    <FormLayout
+      fields={fields}
+      error={error}
+      actions={actions}
+      actionsPlacement="bottom"
+      containerRef={navigation.containerRef}
+    />
   );
 
   /* =========================
@@ -198,7 +184,7 @@ const error = form.formError ? (
 
 return (
   <FormSidebarLayout
-      className="cutting-data-layout"
+      fillHeight
       form={formContent}
       sidebar={
         <CuttingHistoryPanel

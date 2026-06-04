@@ -6,4 +6,3 @@
 fn main() {
     cnc_machining_system_lib::run()
 }
-

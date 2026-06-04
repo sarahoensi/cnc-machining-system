@@ -1,10 +1,6 @@
 // domain/units/length/radius.rs
 
-use crate::domain::units::length::{
-    Length,
-    PositiveLength,
-    
-};
+use crate::domain::units::length::{Length, PositiveLength};
 
 use crate::domain::units::{Diameter, UnitsError};
 
@@ -22,7 +18,7 @@ impl Radius {
     pub(crate) fn mm_unchecked(value: f64) -> Self {
         Self(PositiveLength::mm_unchecked(value))
     }
-    
+
     /// Creates a Radius from millimeters.
     ///
     /// # Errors
@@ -49,8 +45,7 @@ impl Radius {
     /// Computes corresponding Diameter.
     pub fn diameter(self) -> Diameter {
         // 2 * positive > 0
-        Diameter::mm(self.mm_value() * 2.0)
-            .expect("Invariant violation: diameter must be positive")
+        Diameter::mm(self.mm_value() * 2.0).expect("Invariant violation: diameter must be positive")
     }
 }
 
@@ -89,11 +84,7 @@ mod tests {
     fn mm_value_round_trip() {
         let r = Radius::mm(5.0).unwrap();
 
-        assert!(approx_eq(
-            r.mm_value(),
-            5.0,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(r.mm_value(), 5.0, DEFAULT_EPS));
     }
 
     // --- Conversion to Length ---
@@ -103,11 +94,7 @@ mod tests {
         let r = Radius::mm(3.0).unwrap();
         let l = r.as_length();
 
-        assert!(approx_eq(
-            l.mm_value(),
-            3.0,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(l.mm_value(), 3.0, DEFAULT_EPS));
     }
 
     // --- Conversion to Diameter ---
@@ -117,11 +104,7 @@ mod tests {
         let r = Radius::mm(4.0).unwrap();
         let d = r.diameter();
 
-        assert!(approx_eq(
-            d.mm_value(),
-            8.0,
-            DEFAULT_EPS
-        ));
+        assert!(approx_eq(d.mm_value(), 8.0, DEFAULT_EPS));
     }
 
     // --- Ordering ---
@@ -199,4 +182,3 @@ mod property_tests {
         }
     }
 }
-

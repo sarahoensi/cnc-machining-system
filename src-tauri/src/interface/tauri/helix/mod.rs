@@ -6,9 +6,9 @@
 // interface/tauri/helix/mod.rs
 
 mod command;
+mod mapping;
 mod request;
 mod response;
-mod mapping;
 
 pub use command::*;
 pub use request::*;

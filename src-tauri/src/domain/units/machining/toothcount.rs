@@ -1,15 +1,12 @@
 // domain/units/machining/toothcount.rs
 
-use crate::domain::units::{
-    UnitsError, core::NumericError,
-};
+use crate::domain::units::{core::NumericError, UnitsError};
 
 #[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct ToothCount(i32);
 
 impl ToothCount {
-
     /// Internal constructor used by domain math.
     #[allow(dead_code)]
     pub(crate) fn new_unchecked(value: i32) -> Self {

@@ -1,11 +1,20 @@
 // shared/ui/layout/page/FormSidebarLayout/FormSidebarLayout.tsx
 
 import clsx from "clsx";
+import type { ReactNode } from "react";
+import {
+  formWidthClassName,
+  type FormWidth,
+} from "../formWidth";
+import "../formWidth.css";
 import "./FormSidebarLayout.css";
 
 type Props = {
-  form: React.ReactNode;
-  sidebar: React.ReactNode;
+  form: ReactNode;
+  sidebar: ReactNode;
+  formWidth?: FormWidth;
+  variant?: "default" | "compact";
+  fillHeight?: boolean;
 
   className?: string;
 
@@ -16,12 +25,23 @@ type Props = {
 export function FormSidebarLayout({
   form,
   sidebar,
+  formWidth = "sm",
+  variant = "default",
+  fillHeight = false,
   className,
   formClassName,
   sidebarClassName,
 }: Props) {
   return (
-    <div className={clsx("form-sidebar-layout", className)}>
+    <div
+      className={clsx(
+        "form-sidebar-layout",
+        formWidthClassName(formWidth),
+        variant === "compact" && "form-sidebar-layout--compact",
+        fillHeight && "form-sidebar-layout--fill-height",
+        className
+      )}
+    >
       <div className={clsx("fsl-form", formClassName)}>
         {form}
       </div>

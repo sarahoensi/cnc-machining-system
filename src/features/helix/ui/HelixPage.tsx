@@ -6,9 +6,9 @@ import {
   handleModeChange,
 } from "@shared/form/engine/formEngine";
 
-import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
+import { CalculatorNumberFields } from "@shared/ui/components/form/fields";
 
-import { useFormNavigation } from "@shared/ui";
+import { useCalculatorFormNavigation } from "@shared/ui";
 import { validateHelixForm } from "../domain/validateHelixForm";
 
 import {
@@ -32,9 +32,9 @@ import { usePageTitle } from "@app/providers/TitleContextProvider";
 import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
 import { FormError } from "@shared/ui/components/form/FormError/FormError";
 import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
+import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
 import { helixTooltips } from "./helixTooltip";
 import { HelixFigure } from "./helixFigure/HelixFigure";
-import { useState } from "react";
 /* ============================================================
    Component
 ============================================================ */
@@ -48,15 +48,13 @@ export function HelixPage() {
     createInitialHelixForm
   );
 
-  const [activeField, setActiveField] = useState<HelixKey | null>(null);
-
-  const navigation = useFormNavigation({
-    keys: helixFieldConfig.map(f => f.key),
-    autoFocusOnMount: true,
+  const fieldOrder = helixFieldConfig.map((f) => f.key);
+  const formFocus = useCalculatorFormNavigation({
+    fieldOrder,
     activePath: "/helix",
     onSubmit: onCalculate,
+    trackActiveField: true,
   });
-  const focusOrder = helixFieldConfig.map((f) => f.key);
 
   /* =========================
      Field change
@@ -102,19 +100,7 @@ export function HelixPage() {
     );
 
     setForm(next);
-    const hasInlineError = helixFieldConfig.some((f) => Boolean(next.fields[f.key].error));
-
-    if (hasInlineError) {
-      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
-      return;
-    }
-
-    if (!next.formError) return;
-
-    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
-      const value = next.fields[key]?.value;
-      return value == null || String(value).trim() === "";
-    });
+    formFocus.focusAfterCalculate(next);
   }
 
   /* =========================
@@ -123,7 +109,7 @@ export function HelixPage() {
 
   function onReset() {
     setForm(createInitialHelixForm());
-    navigation.focusFirstAfterRender();
+    formFocus.focusAfterReset();
   }
 
   /* =========================
@@ -132,7 +118,7 @@ export function HelixPage() {
 
   const fields = (
   <>
-    <div className="form-section">
+    <FormSection>
       <FormModeField
         label="Mode"
         tooltip={helixTooltips.mode}
@@ -143,32 +129,19 @@ export function HelixPage() {
           { value: "Inner", label: "Inner" },
         ]}
       />
-    </div>
+    </FormSection>
 
-    <div className="form-section">
-      {helixFieldConfig.map((f) => {
-        const fieldState = form.fields[f.key];
-
-        return (
-          <FormNumberField
-            key={f.key}
-            label={f.label}
-            unit={f.unit}
-            tooltip={f.tooltip}
-            field={fieldState}
-            disabled={fieldState.locked || f.readOnly}
-            autoFocus={f.autoFocus}
-            onChange={(value) =>
-              onFieldChange(f.key, value)
-            }
-            ref={navigation.register(f.key)}
-            onKeyDown={navigation.handleKeyDown(f.key)}
-            onFocus={() => setActiveField(f.key)}
-          onBlur={() => setActiveField(null)}
-          />
-        );
-      })}
-    </div>
+    <FormSection>
+      <CalculatorNumberFields
+        configs={helixFieldConfig}
+        fields={form.fields}
+        onChange={onFieldChange}
+        register={formFocus.register}
+        onKeyDown={formFocus.handleKeyDown}
+        onFocus={formFocus.onFieldFocus}
+        onBlur={formFocus.onFieldBlur}
+      />
+    </FormSection>
   </>
 );
 
@@ -184,7 +157,7 @@ const actions = (
 );
 
 const formContent = (
-  <div ref={navigation.containerRef}>
+  <div ref={formFocus.containerRef}>
     <FormLayout
       fields={fields}
       error={error}
@@ -200,7 +173,7 @@ const formContent = (
     figure={
       <HelixFigure
         mode={form.extras.mode}
-        activeField={activeField}
+        activeField={formFocus.activeField}
       />
     }
   />
