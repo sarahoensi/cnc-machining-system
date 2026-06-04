@@ -18,7 +18,7 @@ import {
   toleranceModeConfig,
 } from "./toleranceFieldConfig";
 import { useTolerancePageController } from "./useTolerancePageController";
-import { ToleranceSavedResultsPanel } from "./ToleranceSavedResultsPanel";
+import { ToleranceHistoryPanel } from "./history/ToleranceHistoryPanel";
 import type { ToleranceKey } from "../domain/toleranceForm";
 import type { ToleranceOption } from "../api/types";
 import "./TolerancesPage.css";
@@ -271,7 +271,7 @@ export function TolerancesPage() {
         </div>
       }
       sidebar={
-        <ToleranceSavedResultsPanel
+        <ToleranceHistoryPanel
           history={controller.history}
           onLoad={controller.load}
           onDelete={controller.remove}

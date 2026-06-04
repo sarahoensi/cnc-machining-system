@@ -6,7 +6,7 @@ import {
   migrateToleranceForm,
 } from "../domain/toleranceForm";
 import { validateToleranceForm } from "../domain/validateToleranceForm";
-import { buildToleranceHistoryRow } from "../ui/toleranceHistoryRows";
+import { buildToleranceHistoryRow } from "../ui/history/toleranceHistoryRows";
 
 describe("tolerance frontend mapping", () => {
   it("creates the initial persisted tolerance form", () => {

@@ -1,4 +1,4 @@
-// features/tolerances/ui/ToleranceSavedResultsPanel.tsx
+// features/tolerances/ui/history/ToleranceHistoryPanel.tsx
 
 import type { KeyboardEvent, MouseEvent } from "react";
 
@@ -7,9 +7,9 @@ import type { SavedResultEntry } from "@shared/savedResults";
 import { Button } from "@shared/ui/primitives/Button/Button";
 import { ScrollArea } from "@shared/ui/layout/container/ScrollArea/ScrollArea";
 
-import type { ToleranceFormState } from "../domain/toleranceForm";
-import { buildToleranceHistoryRow } from "./toleranceHistoryRows";
-import "./ToleranceSavedResultsPanel.css";
+import type { ToleranceFormState } from "../../domain/toleranceForm";
+import { buildToleranceHistoryRow } from "./buildToleranceHistoryRow";
+import "./ToleranceHistoryPanel.css";
 
 type Props = {
   history: SavedResultEntry<ToleranceFormState>[];
@@ -18,7 +18,7 @@ type Props = {
   onClear(): void;
 };
 
-export function ToleranceSavedResultsPanel({
+export function ToleranceHistoryPanel({
   history,
   onLoad,
   onDelete,
@@ -45,12 +45,12 @@ export function ToleranceSavedResultsPanel({
   }
 
   return (
-    <section className="tolerance-saved-results">
-      <h3 className="tolerance-saved-results-title">Saved results</h3>
+    <section className="tolerance-history">
+      <h3 className="tolerance-history-title">Saved results</h3>
 
-      <ScrollArea className="tolerance-saved-results-scroll">
+      <ScrollArea className="tolerance-history-scroll">
         {history.length === 0 && (
-          <div className="tolerance-saved-results-empty">
+          <div className="tolerance-history-empty">
             No saved results yet
           </div>
         )}
@@ -87,15 +87,19 @@ export function ToleranceSavedResultsPanel({
                       </span>
                       {row.modeLabel}
                     </span>
+
                     <span className="tolerance-history-class" role="cell">
                       {row.toleranceClass}
                     </span>
+
                     <span className="tolerance-history-nominal" role="cell">
                       {row.nominal}
                     </span>
+
                     <span className="tolerance-history-deviations" role="cell">
                       {row.deviations}
                     </span>
+
                     <span className="tolerance-history-delete-cell" role="cell">
                       <button
                         className="tolerance-history-delete"
@@ -115,7 +119,7 @@ export function ToleranceSavedResultsPanel({
       </ScrollArea>
 
       {history.length > 0 && (
-        <div className="tolerance-saved-results-actions">
+        <div className="tolerance-history-actions">
           <Button variant="secondary" size="small" onClick={onClear}>
             Clear all results
           </Button>
