@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { emptyField } from "@shared/form/types/fields";
-import { getCalculatorFocusIntent } from "./useCalculatorFormFocus";
+import { getCalculatorFocusIntent } from "./useCalculatorFormNavigation";
 
 const fieldOrder = ["first", "second"] as const;
 

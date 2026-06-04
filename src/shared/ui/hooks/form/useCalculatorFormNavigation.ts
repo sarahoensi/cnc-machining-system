@@ -21,14 +21,16 @@ export function getCalculatorFocusIntent<K extends string>(
   return form.formError ? "form-error" : "none";
 }
 
-export function useCalculatorFormFocus<K extends string>({
+export function useCalculatorFormNavigation<K extends string>({
   fieldOrder,
   activePath,
   onSubmit,
+  trackActiveField = false,
 }: {
   fieldOrder: readonly K[];
   activePath: string;
   onSubmit: () => void;
+  trackActiveField?: boolean;
 }) {
   const [activeField, setActiveField] = useState<K | null>(null);
   const navigation = useFormNavigation({
@@ -62,9 +64,9 @@ export function useCalculatorFormFocus<K extends string>({
 
   return {
     ...navigation,
-    activeField,
-    onFieldFocus: setActiveField,
-    onFieldBlur: () => setActiveField(null),
+    activeField: trackActiveField ? activeField : null,
+    onFieldFocus: trackActiveField ? setActiveField : undefined,
+    onFieldBlur: trackActiveField ? () => setActiveField(null) : undefined,
     focusAfterCalculate,
     focusAfterReset,
   };

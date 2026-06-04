@@ -12,6 +12,10 @@ export type CalculatorNumberFieldConfig<K extends string> = {
   tooltip?: string;
   unit?: string;
   autoFocus?: boolean;
+  /**
+   * Rendered as a disabled result field by this calculator-specific helper.
+   * TODO: Rename to `disabled` or `isDisabled` when feature configs are standardized.
+   */
   readOnly?: boolean;
 };
 

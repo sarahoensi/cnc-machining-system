@@ -17,7 +17,7 @@ import { solveTriangle } from "./api/solveTriangle";
 import { triangleFieldConfig } from "./ui/triangleFieldConfig";
 
 
-import { useCalculatorFormFocus } from "@shared/ui";
+import { useCalculatorFormNavigation } from "@shared/ui";
 
 import {
   validTriangleInputSets,
@@ -46,10 +46,11 @@ export function TrianglePage() {
   );
 
   const fieldOrder = triangleFieldConfig.map((f) => f.key);
-  const formFocus = useCalculatorFormFocus({
+  const formFocus = useCalculatorFormNavigation({
     fieldOrder,
     activePath: "/triangle",
     onSubmit: onCalculate,
+    trackActiveField: true,
   });
 
   /* =========================

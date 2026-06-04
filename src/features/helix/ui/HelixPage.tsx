@@ -8,7 +8,7 @@ import {
 
 import { CalculatorNumberFields } from "@shared/ui/components/form/fields";
 
-import { useCalculatorFormFocus } from "@shared/ui";
+import { useCalculatorFormNavigation } from "@shared/ui";
 import { validateHelixForm } from "../domain/validateHelixForm";
 
 import {
@@ -49,10 +49,11 @@ export function HelixPage() {
   );
 
   const fieldOrder = helixFieldConfig.map((f) => f.key);
-  const formFocus = useCalculatorFormFocus({
+  const formFocus = useCalculatorFormNavigation({
     fieldOrder,
     activePath: "/helix",
     onSubmit: onCalculate,
+    trackActiveField: true,
   });
 
   /* =========================
