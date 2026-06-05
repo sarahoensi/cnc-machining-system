@@ -19,6 +19,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--form-gap);
+  width: 500px;
+  max-width: 100%;
 }
 
 .tolerances-form-content {
@@ -37,7 +39,7 @@
 
 .tolerances-input-row-fields {
   display: grid;
-  grid-template-columns: repeat(3, minmax(9rem, 12rem));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-3);
   min-width: 0;
   flex: 1 1 auto;
@@ -71,12 +73,6 @@
   justify-content: flex-end;
   gap: var(--space-2);
   flex-wrap: wrap;
-}
-
-@media (max-width: 64rem) {
-  .tolerances-input-row-fields {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 48rem) {

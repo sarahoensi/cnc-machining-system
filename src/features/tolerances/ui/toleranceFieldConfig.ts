@@ -15,7 +15,7 @@ type ToleranceFieldConfig = {
 export const toleranceFieldConfig: ToleranceFieldConfig[] = [
   {
     key: "nominal",
-    label: "Nominal size",
+    label: "Nominal Ø",
     unit: "mm",
     tooltip: toleranceTooltips.nominal,
     autoFocus: true,
