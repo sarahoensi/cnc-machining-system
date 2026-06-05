@@ -5,6 +5,26 @@
   max-width: 720px;
 }
 
+.execution-view-stack {
+  gap: var(--stack-gap);
+}
+
+.execution-view-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-header-gap);
+}
+
+.execution-view-content {
+  min-width: 0;
+}
+
+.execution-view-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
 .execution-edit-link {
   background: none;
   border: none;

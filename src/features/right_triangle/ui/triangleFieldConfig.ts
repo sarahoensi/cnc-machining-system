@@ -9,6 +9,7 @@ export type TriangleFieldConfig = {
   unit?: string;
   tooltip?: string;
   autoFocus?: boolean;
+  readOnly?: boolean;
 };
 
 export const triangleFieldConfig: TriangleFieldConfig[] = [

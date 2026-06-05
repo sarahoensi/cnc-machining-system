@@ -1,0 +1,9 @@
+.stack {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--form-field-gap-compact);
+}
+
+.stack--form-section {
+  gap: var(--form-section-gap);
+}

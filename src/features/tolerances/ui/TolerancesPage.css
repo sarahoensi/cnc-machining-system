@@ -3,10 +3,99 @@
 .tolerances-form-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
   min-height: 0;
 }
 
-.tolerances-page-layout .form-actions-secondary {
+.tolerances-page-stack {
+  gap: var(--layout-section-gap);
+}
+
+.tolerances-page-form,
+.tolerances-page-history {
+  min-width: 0;
+}
+
+.tolerances-page-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-gap);
+}
+
+.tolerances-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-fields-gap);
+}
+
+.tolerances-input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  width: 100%;
+  min-width: 0;
+}
+
+.tolerances-input-row-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(9rem, 12rem));
+  gap: var(--space-3);
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.tolerances-input-field {
+  min-width: 0;
+}
+
+.tolerances-calculate-slot {
+  display: flex;
+  align-items: flex-end;
+  flex: 0 0 auto;
+}
+
+.tolerances-calculate-slot .app-button {
+  width: auto;
+}
+
+.tolerances-deviation-row,
+.tolerances-limit-row {
+  gap: var(--space-2);
+}
+
+.tolerances-limit-row {
+  margin-top: calc(var(--space-2) * -1);
+}
+
+.tolerances-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
   flex-wrap: wrap;
+}
+
+@media (max-width: 64rem) {
+  .tolerances-input-row-fields {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 48rem) {
+  .tolerances-input-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tolerances-calculate-slot {
+    width: 100%;
+  }
+
+  .tolerances-calculate-slot .app-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 36rem) {
+  .tolerances-input-row-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

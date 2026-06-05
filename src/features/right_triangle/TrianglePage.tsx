@@ -5,8 +5,6 @@ import {
   handleCalculateAsync,
 } from "@shared/form/engine/formEngine";
 
-import { CalculatorNumberFields } from "@shared/ui/components/form/fields";
-
 import {
   createInitialTriangleForm,
   TriangleKey,
@@ -17,7 +15,7 @@ import { solveTriangle } from "./api/solveTriangle";
 import { triangleFieldConfig } from "./ui/triangleFieldConfig";
 
 
-import { useCalculatorFormNavigation } from "@shared/ui";
+import { useCalculatorFormNavigation } from "@shared/hooks";
 
 import {
   validTriangleInputSets,
@@ -26,14 +24,16 @@ import {
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 
-import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
+import { FormActions } from "@shared/ui/form/FormActions";
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 
-import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
-import { FormError } from "@shared/ui/components/form/FormError/FormError";
+import { FormError } from "@shared/ui/form/FormError";
 
 import { validateTriangleForm } from "./domain/validateTriangleForm";
-import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
+import { FormLayout } from "@shared/ui/form/FormLayout";
+import { FormNumberField } from "@shared/ui/form/fields/FormNumberField";
+import { Split } from "@shared/ui/primitives/Split/Split";
+import { PageShell } from "@shared/ui/page/PageShell";
 import { TriangleFigure } from "./ui/triangleFigure/TriangleFigure";
 
 export function TrianglePage() {
@@ -103,15 +103,36 @@ export function TrianglePage() {
   ========================= */
 
   const fields = (
-    <CalculatorNumberFields
-      configs={triangleFieldConfig}
-      fields={form.fields}
-      onChange={onFieldChange}
-      register={formFocus.register}
-      onKeyDown={formFocus.handleKeyDown}
-      onFocus={formFocus.onFieldFocus}
-      onBlur={formFocus.onFieldBlur}
-    />
+    <>
+      {triangleFieldConfig.map((config) => {
+        const fieldState = form.fields[config.key];
+
+        return (
+          <FormNumberField
+            key={config.key}
+            label={config.label}
+            tooltip={config.tooltip}
+            unit={config.unit}
+            field={fieldState}
+            disabled={fieldState.locked || config.readOnly}
+            autoFocus={config.autoFocus}
+            onChange={(value) => onFieldChange(config.key, value)}
+            ref={formFocus.register(config.key)}
+            onKeyDown={formFocus.handleKeyDown(config.key)}
+            onFocus={
+              formFocus.onFieldFocus
+                ? () => formFocus.onFieldFocus!(config.key)
+                : undefined
+            }
+            onBlur={
+              formFocus.onFieldBlur
+                ? () => formFocus.onFieldBlur!()
+                : undefined
+            }
+          />
+        );
+      })}
+    </>
   );
 
 const error = form.formError ? (
@@ -128,22 +149,24 @@ const actions = (
 const formContent = (
   <div ref={formFocus.containerRef}>
     <FormLayout
-      fields={fields}
       error={error}
       actions={actions}
-    />
+    >
+      {fields}
+    </FormLayout>
   </div>
 );
 
 
 
   return (
-  <FormFigureLayout
-  form={formContent}
-  figure={
-    <TriangleFigure activeField={formFocus.activeField} />
-  }
-/>
-);
-  
+  <PageShell>
+    <Split
+      primaryWidth="200px"
+      primary={formContent}
+      secondary={<TriangleFigure activeField={formFocus.activeField} />}
+    />
+  </PageShell>
+  );
 }
+

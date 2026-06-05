@@ -1,6 +1,7 @@
 // src/app/layout/Topbar.tsx
 
-import { SettingsButton } from "@shared/ui/primitives/Button/Button";
+import { Button } from "@shared/ui/primitives/Button/Button";
+import SettingsIcon from "@assets/settings-icon.svg";
 import { SettingsMenu } from "../settings/SettingsMenu";
 import "./Topbar.css";
 import { useRef, useState } from "react";
@@ -31,10 +32,18 @@ export function Topbar({ toggleSidebar }: Props) {
       </h1>
 
       <div className="topbar-right">
-        <SettingsButton
+        <Button
           ref={buttonRef}
+          variant="icon"
+          size="icon"
           onClick={() => setIsSettingsOpen(prev => !prev)}
-        />
+        >
+          <img
+            src={SettingsIcon}
+            alt="settings"
+            className="icon-img"
+          />
+        </Button>
 
 
         {isSettingsOpen && (

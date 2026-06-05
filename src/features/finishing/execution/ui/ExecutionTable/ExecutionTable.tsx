@@ -4,8 +4,7 @@ import { useState, useRef } from "react";
 
 import {useExecutionFocus} from "./useExecutionFocus";
 
-import { Table } from "@shared/ui/components/table/Table/Table";
-import { TableHeaderSelect } from "@shared/ui/components/table/Table";
+import { Table } from "@shared/ui/table/Table/Table";
 
 import type { ExecutionState } from "@shared/execution";
 
@@ -13,6 +12,7 @@ import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 
 import { ExecutionTableRow } from "./ExecutionTableRow";
 import { useExecutionEditing } from "./useExecutionEditing";
+import { TableHeaderSelect } from "./TableHeaderSelect";
 
 import "./ExecutionTable.css";
 import clsx from "clsx";
@@ -194,4 +194,5 @@ export function FinishingExecutionTable({
     </Table.Root>
   );
 }
+
 

@@ -1,6 +1,6 @@
 //features/tolerances/ui/history/buildToleranceHistoryRows.ts
 
-import { formatNumber } from "@shared/ui/format/formatNumber";
+import { formatNumber } from "@shared/lib/format/formatNumber";
 
 import type { SavedResultEntry } from "@shared/savedResults";
 import type { ToleranceFormState } from "../../domain/toleranceForm";

@@ -4,7 +4,7 @@ import { cuttingDataFieldConfig } from "../cuttingDataFieldConfig";
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 import { buildFieldHistoryItems } from "@shared/savedResults";
 import type { SavedResultEntry } from "@shared/savedResults";
-import { SavedResultsPanel } from "@shared/ui/components/history/SavedResultsPanel";
+import { SavedResultsPanel } from "./SavedResultsPanel/SavedResultsPanel";
 import type { createInitialCuttingDataForm } from "../../domain/cuttingDataForm";
 
 type Props = {
@@ -34,3 +34,4 @@ export function CuttingHistoryPanel({
     />
   );
 }
+

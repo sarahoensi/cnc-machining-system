@@ -1,8 +1,8 @@
 // src/features/cylinder_weight/ui/materials/export/ExportMaterialsModal.tsx
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Modal, ModalScrollArea } from "@shared/ui/components/overlay/Modal/Modal";
-import { DialogActions } from "@shared/ui/components/overlay/DialogActions/DialogActions";
+import { Modal, ModalScrollArea } from "@shared/ui/overlay/Modal/Modal";
+import { DialogActions } from "@shared/ui/overlay/DialogActions/DialogActions";
 import { Button } from "@shared/ui/primitives/Button/Button";
 import { TextInput } from "@shared/ui/primitives/input";
 import SearchIcon from "@assets/search-icon.svg";
@@ -115,4 +115,5 @@ export function ExportMaterialsModal({
     </Modal>
   );
 }
+
 

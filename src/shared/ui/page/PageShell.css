@@ -1,0 +1,5 @@
+.page-shell {
+  width: 100%;
+  max-width: var(--layout-content-max-width);
+  margin: 0 auto;
+}

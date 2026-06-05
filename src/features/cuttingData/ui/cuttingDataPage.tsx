@@ -5,8 +5,7 @@ import {
   handleCalculateAsync,
 } from "@shared/form/engine/formEngine";
 
-import { CalculatorNumberFields } from "@shared/ui/components/form/fields";
-import { useFormNavigation } from "@shared/ui";
+import { useFormNavigation } from "@shared/hooks";
 
 import {
   CuttingDataKey,
@@ -21,16 +20,19 @@ import {
   validCuttingDataInputSets,
 } from "../domain/cuttingDataConstraints";
 
-import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
+import { FormActions } from "@shared/ui/form/FormActions";
 import { usePageTitle } from "@app/providers/TitleContextProvider";
-import { FormSidebarLayout } from "@shared/ui/layout/page/FormSidebarLayout/FormSidebarLayout";
-import { FormError } from "@shared/ui/components/form/FormError/FormError";
+import { FormError } from "@shared/ui/form/FormError";
 import { validateCuttingDataForm } from "../domain/validateCuttingForm";
 
-import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
+import { FormLayout } from "@shared/ui/form/FormLayout";
+import { FormNumberField } from "@shared/ui/form/fields/FormNumberField";
+import { Split } from "@shared/ui/primitives/Split/Split";
+import { PageShell } from "@shared/ui/page/PageShell";
 import { CuttingHistoryPanel } from "./history/CuttingHistoryPanel";
 import { useCuttingPageController } from "./useCuttingPageController";
 import { Button } from "@shared/ui/primitives/Button/Button";
+import "./CuttingDataPage.css";
 
 
 
@@ -126,13 +128,26 @@ export function CuttingDataPage() {
   ========================= */
 
   const fields = (
-    <CalculatorNumberFields
-      configs={cuttingDataFieldConfig}
-      fields={form.fields}
-      onChange={onFieldChange}
-      register={navigation.register}
-      onKeyDown={navigation.handleKeyDown}
-    />
+    <>
+      {cuttingDataFieldConfig.map((config) => {
+        const fieldState = form.fields[config.key];
+
+        return (
+          <FormNumberField
+            key={config.key}
+            label={config.label}
+            tooltip={config.tooltip}
+            unit={config.unit}
+            field={fieldState}
+            disabled={fieldState.locked || config.readOnly}
+            autoFocus={config.autoFocus}
+            onChange={(value) => onFieldChange(config.key, value)}
+            ref={navigation.register(config.key)}
+            onKeyDown={navigation.handleKeyDown(config.key)}
+          />
+        );
+      })}
+    </>
   );
 
 
@@ -170,12 +185,12 @@ const error = form.formError ? (
 
  const formContent = (
     <FormLayout
-      fields={fields}
       error={error}
       actions={actions}
       actionsPlacement="bottom"
-      containerRef={navigation.containerRef}
-    />
+    >
+      {fields}
+    </FormLayout>
   );
 
   /* =========================
@@ -183,10 +198,19 @@ const error = form.formError ? (
   ========================= */
 
 return (
-  <FormSidebarLayout
+  <PageShell>
+    <Split
+      primaryWidth="200px"
       fillHeight
-      form={formContent}
-      sidebar={
+      align="stretch"
+      secondaryWidth="minmax(20rem, 1fr)"
+      secondaryMinHeightOnCollapse="20rem"
+      primary={
+        <div ref={navigation.containerRef} className="cutting-data-form-root">
+          {formContent}
+        </div>
+      }
+      secondary={
         <CuttingHistoryPanel
           history={history}
           onLoad={load}
@@ -194,6 +218,8 @@ return (
           onClear={clear}
         />
       }
-  />
+    />
+  </PageShell>
 );
 }
+

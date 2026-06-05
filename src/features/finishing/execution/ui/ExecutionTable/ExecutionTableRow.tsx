@@ -1,10 +1,8 @@
 // features/finishing/ui/execution/ExecutionTableRow.tsx
 
-import { Table } from "@shared/ui/components/table/Table/Table";
-import { ExecutionInput } from "@shared/ui/components/execution/ExecutionInput";
-import { ExecutionValue } from "@shared/ui/components/execution/ExecutionValue";
+import { Table } from "@shared/ui/table/Table/Table";
 import { RefObject } from "react";
-import { formatNumber } from "@shared/ui/format/formatNumber";
+import { formatNumber } from "@shared/lib/format/formatNumber";
 
 import type { ExecutionStep } from "@shared/execution";
 import {
@@ -14,7 +12,9 @@ import {
 } from "@shared/execution/executionState";
 
 import { ExecutionRowActions } from "./ExecutionRowActions";
-import { ExecutionDisplay } from "@shared/ui/components/execution/ExecutionDisplay";
+import { ExecutionDisplay } from "../ExecutionField/ExecutionDisplay";
+import { ExecutionInput } from "../ExecutionField/ExecutionInput";
+import { ExecutionValue } from "../ExecutionField/ExecutionValue";
 
 type CutMode = "deltaD" | "ae";
 

@@ -5,18 +5,18 @@ import {
   handleModeChange,
 } from "@shared/form/engine/formEngine";
 
-import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
-import { FormModeField } from "@shared/ui/components/form/fields/FormModeField";
+import { FormNumberField } from "@shared/ui/form/fields/FormNumberField";
+import { FormModeField } from "@shared/ui/form/fields/FormModeField";
 
-import { useFormNavigation } from "@shared/ui";
+import { useFormNavigation } from "@shared/hooks";
 
 import { finishingFieldConfig } from "./finishingFieldConfig";
-import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
+import { FormActions } from "@shared/ui/form/FormActions";
 import { createInitialFinishingForm, FinishingKey } from "../domain/finishingForm";
 import { mutuallyExclusiveFinishingPairs, validFinishingInputSets } from "../domain/finishingConstraints";
-import { FormError } from "@shared/ui/components/form/FormError/FormError";
-import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
-import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
+import { FormError } from "@shared/ui/form/FormError";
+import { FormLayout } from "@shared/ui/form/FormLayout";
+import { Stack } from "@shared/ui/primitives/Stack/Stack";
 import { finishingTooltips } from "./finishingPlanTooltip";
 
 type Props = {
@@ -84,7 +84,7 @@ export function PlanForm({
 
   const fields = (
     <>
-      <FormSection>
+      <Stack className="stack--form-section">
         <FormModeField
           label="Mode"
           tooltip={finishingTooltips.mode}
@@ -102,9 +102,9 @@ export function PlanForm({
             { value: "Outer", label: "Outer" },
           ]}
         />
-      </FormSection>
+      </Stack>
 
-      <FormSection>
+      <Stack className="stack--form-section">
         {finishingFieldConfig.map((f) => {
           const fieldState = form.fields[f.key];
 
@@ -126,7 +126,7 @@ export function PlanForm({
             />
           );
         })}
-      </FormSection>
+      </Stack>
     </>
   );
 
@@ -144,10 +144,12 @@ export function PlanForm({
   return (
     <div ref={navigation.containerRef}>
       <FormLayout
-        fields={fields}
         error={error}
         actions={actions}
-      />
+      >
+        {fields}
+      </FormLayout>
     </div>
   );
 }
+

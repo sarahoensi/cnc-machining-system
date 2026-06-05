@@ -6,9 +6,7 @@ import {
   handleModeChange,
 } from "@shared/form/engine/formEngine";
 
-import { CalculatorNumberFields } from "@shared/ui/components/form/fields";
-
-import { useCalculatorFormNavigation } from "@shared/ui";
+import { useCalculatorFormNavigation } from "@shared/hooks";
 import { validateHelixForm } from "../domain/validateHelixForm";
 
 import {
@@ -19,7 +17,8 @@ import {
 import { parseHelix } from "../domain/parseHelix";
 import { solveHelix } from "../api/solveHelix";
 import { helixFieldConfig } from "./helixFieldConfig";
-import { FormModeField } from "@shared/ui/components/form/fields/FormModeField";
+import { FormModeField } from "@shared/ui/form/fields/FormModeField";
+import { FormNumberField } from "@shared/ui/form/fields/FormNumberField";
 
 import {
   validHelixInputSets,
@@ -27,12 +26,13 @@ import {
 } from "../domain/helixConstraints"
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
-import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
+import { FormActions } from "@shared/ui/form/FormActions";
 import { usePageTitle } from "@app/providers/TitleContextProvider";
-import { FormFigureLayout } from "@shared/ui/layout/page/FormFigureLayout/FormFigureLayout";
-import { FormError } from "@shared/ui/components/form/FormError/FormError";
-import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
-import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
+import { FormError } from "@shared/ui/form/FormError";
+import { FormLayout } from "@shared/ui/form/FormLayout";
+import { Split } from "@shared/ui/primitives/Split/Split";
+import { Stack } from "@shared/ui/primitives/Stack/Stack";
+import { PageShell } from "@shared/ui/page/PageShell";
 import { helixTooltips } from "./helixTooltip";
 import { HelixFigure } from "./helixFigure/HelixFigure";
 /* ============================================================
@@ -118,7 +118,7 @@ export function HelixPage() {
 
   const fields = (
   <>
-    <FormSection>
+    <Stack className="stack--form-section">
       <FormModeField
         label="Mode"
         tooltip={helixTooltips.mode}
@@ -129,19 +129,38 @@ export function HelixPage() {
           { value: "Inner", label: "Inner" },
         ]}
       />
-    </FormSection>
+    </Stack>
 
-    <FormSection>
-      <CalculatorNumberFields
-        configs={helixFieldConfig}
-        fields={form.fields}
-        onChange={onFieldChange}
-        register={formFocus.register}
-        onKeyDown={formFocus.handleKeyDown}
-        onFocus={formFocus.onFieldFocus}
-        onBlur={formFocus.onFieldBlur}
-      />
-    </FormSection>
+    <Stack className="stack--form-section">
+      {helixFieldConfig.map((config) => {
+        const fieldState = form.fields[config.key];
+
+        return (
+          <FormNumberField
+            key={config.key}
+            label={config.label}
+            tooltip={config.tooltip}
+            unit={config.unit}
+            field={fieldState}
+            disabled={fieldState.locked || config.readOnly}
+            autoFocus={config.autoFocus}
+            onChange={(value) => onFieldChange(config.key, value)}
+            ref={formFocus.register(config.key)}
+            onKeyDown={formFocus.handleKeyDown(config.key)}
+            onFocus={
+              formFocus.onFieldFocus
+                ? () => formFocus.onFieldFocus!(config.key)
+                : undefined
+            }
+            onBlur={
+              formFocus.onFieldBlur
+                ? () => formFocus.onFieldBlur!()
+                : undefined
+            }
+          />
+        );
+      })}
+    </Stack>
   </>
 );
 
@@ -159,23 +178,28 @@ const actions = (
 const formContent = (
   <div ref={formFocus.containerRef}>
     <FormLayout
-      fields={fields}
       error={error}
       actions={actions}
-    />
+    >
+      {fields}
+    </FormLayout>
   </div>
 );
 
 
   return (
-  <FormFigureLayout
-    form={formContent}
-    figure={
-      <HelixFigure
-        mode={form.extras.mode}
-        activeField={formFocus.activeField}
-      />
-    }
-  />
+  <PageShell>
+    <Split
+      primaryWidth="200px"
+      primary={formContent}
+      secondary={
+        <HelixFigure
+          mode={form.extras.mode}
+          activeField={formFocus.activeField}
+        />
+      }
+    />
+  </PageShell>
 );
 }
+

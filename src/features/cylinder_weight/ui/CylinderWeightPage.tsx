@@ -1,13 +1,13 @@
 // src/features/cylinder_weight/ui/CylinderWeightPage.tsx
 
 import { usePageTitle } from "@app/providers/TitleContextProvider";
-import { FormError } from "@shared/ui/components/form/FormError/FormError";
-import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
-import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
-import { FormLayout } from "@shared/ui/layout/container/FormLayout/FormLayout";
-import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
-import { SingleFormLayout } from "@shared/ui/layout/page/SingleFormLayout/SingleFormLayout";
-import { useFormNavigation } from "@shared/ui";
+import { FormError } from "@shared/ui/form/FormError";
+import { FormActions } from "@shared/ui/form/FormActions";
+import { FormNumberField } from "@shared/ui/form/fields/FormNumberField";
+import { FormLayout } from "@shared/ui/form/FormLayout";
+import { FormPage } from "@shared/ui/page/FormPage";
+import { Stack } from "@shared/ui/primitives/Stack/Stack";
+import { useFormNavigation } from "@shared/hooks";
 import { cylinderWeightFieldConfig } from "./cylinderWeightFieldConfig";
 import { CylinderWeightKey } from "../domain/cylinderWeightForm";
 import { useCylinderWeightPageController } from "./useCylinderWeightPageController";
@@ -59,7 +59,7 @@ export function CylinderWeightPage() {
 
   const fields = (
     <>
-      <FormSection>
+      <Stack className="stack--form-section">
         <MaterialField
           materials={controller.materials}
           selectedMaterial={controller.selectedMaterial}
@@ -89,9 +89,9 @@ export function CylinderWeightPage() {
               />
             );
           })}
-      </FormSection>
+      </Stack>
 
-      <FormSection variant="result">
+      <div className="cylinder-weight-result-section">
         {cylinderWeightFieldConfig
           .filter((f) => f.readOnly)
           .map((f) => {
@@ -110,7 +110,7 @@ export function CylinderWeightPage() {
               />
             );
           })}
-      </FormSection>
+      </div>
     </>
   );
 
@@ -128,17 +128,18 @@ export function CylinderWeightPage() {
 
   const formContent = (
     <FormLayout
-      fields={fields}
       error={error}
       actions={actions}
-    />
+    >
+      {fields}
+    </FormLayout>
   );
 
   return (
     <>
       <div className="cylinder-weight-page-layout">
         <div ref={navigation.containerRef}>
-          <SingleFormLayout form={formContent} formWidth="md" />
+          <FormPage form={formContent} panelWidth="320px" />
         </div>
       </div>
 
@@ -203,4 +204,5 @@ export function CylinderWeightPage() {
     </>
   );
 }
+
 

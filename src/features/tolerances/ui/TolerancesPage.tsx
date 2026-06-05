@@ -1,16 +1,15 @@
 // features/tolerances/ui/TolerancesPage.tsx
 
 import { usePageTitle } from "@app/providers/TitleContextProvider";
-import { FormActions } from "@shared/ui/components/form/FormActions/FormActions";
-import { FormError } from "@shared/ui/components/form/FormError/FormError";
-import { FormModeField } from "@shared/ui/components/form/fields/FormModeField";
-import { FormNumberField } from "@shared/ui/components/form/fields/FormNumberField";
-import { FormSelectMenuField } from "@shared/ui/components/form/fields/FormSelectMenuField";
-import { FormSection } from "@shared/ui/layout/container/FormSection/FormSection";
-import { SplitFormLayout } from "@shared/ui/layout/container/SplitFormLayout/SplitFormLayout";
-import { FormSidebarLayout } from "@shared/ui/layout/page/FormSidebarLayout/FormSidebarLayout";
+import { FormError } from "@shared/ui/form/FormError";
+import { FormModeField } from "@shared/ui/form/fields/FormModeField";
+import { FormNumberField } from "@shared/ui/form/fields/FormNumberField";
+import { FormSelectMenuField } from "@shared/ui/form/fields/FormSelectMenuField";
+import { PageShell } from "@shared/ui/page/PageShell";
+import { Row } from "@shared/ui/primitives/Row/Row";
+import { Stack } from "@shared/ui/primitives/Stack/Stack";
 import { Button } from "@shared/ui/primitives/Button/Button";
-import { useFormNavigation } from "@shared/ui";
+import { useFormNavigation } from "@shared/hooks";
 
 import {
   toleranceClassFieldConfig,
@@ -90,8 +89,39 @@ export function TolerancesPage() {
     navigation.focusFirstAfterRender();
   }
 
-  const input = (
-    <FormSection>
+  function renderNumberField(key: ToleranceKey) {
+    const fieldConfig = toleranceFieldConfig.find(
+      (candidate) => candidate.key === key,
+    )!;
+    const fieldState = form.fields[fieldConfig.key];
+
+    return (
+      <FormNumberField
+        key={fieldConfig.key}
+        label={fieldConfig.label}
+        tooltip={fieldConfig.tooltip}
+        unit={fieldConfig.unit}
+        field={fieldState}
+        autoFocus={fieldConfig.autoFocus}
+        disabled={fieldState.locked}
+        readonly={fieldConfig.readOnly}
+        onChange={(value) => controller.onFieldChange(fieldConfig.key, value)}
+        ref={
+          fieldConfig.key === "nominal"
+            ? navigation.register("nominal")
+            : undefined
+        }
+        onKeyDown={
+          fieldConfig.key === "nominal"
+            ? navigation.handleKeyDown("nominal")
+            : undefined
+        }
+      />
+    );
+  }
+
+  const modeField = (
+    <Row columns={1} className="tolerances-mode-row">
       <FormModeField
         label={toleranceModeConfig.label}
         tooltip={toleranceModeConfig.tooltip}
@@ -99,121 +129,109 @@ export function TolerancesPage() {
         options={modeOptions}
         onChange={controller.onModeChange}
       />
-
-      {toleranceFieldConfig
-        .filter((fieldConfig) => !fieldConfig.readOnly)
-        .map((fieldConfig) => {
-          const fieldState = form.fields[fieldConfig.key];
-
-          return (
-            <FormNumberField
-              key={fieldConfig.key}
-              label={fieldConfig.label}
-              tooltip={fieldConfig.tooltip}
-              unit={fieldConfig.unit}
-              field={fieldState}
-              autoFocus={fieldConfig.autoFocus}
-              disabled={fieldState.locked}
-              readonly={fieldConfig.readOnly}
-              onChange={(value) =>
-                controller.onFieldChange(fieldConfig.key, value)
-              }
-              ref={navigation.register(
-                fieldConfig.key as ToleranceNavigationKey,
-              )}
-              onKeyDown={navigation.handleKeyDown(
-                fieldConfig.key as ToleranceNavigationKey,
-              )}
-            />
-          );
-        })}
-
-      {mode === "hole" && (
-        <>
-          <FormSelectMenuField
-            label="Class"
-            tooltip={toleranceClassFieldConfig.classTooltip}
-            valueLabel={holeLetter || "-"}
-            options={holeLetterOptions}
-            onSelect={(value) =>
-              controller.onToleranceLetterChange("hole", value)
-            }
-            disabled={loadingOptions}
-            ref={navigation.register("hole_letter")}
-            onKeyDown={navigation.handleKeyDown("hole_letter")}
-          />
-
-          <FormSelectMenuField
-            label="Grade"
-            tooltip={toleranceClassFieldConfig.gradeTooltip}
-            valueLabel={holeGrade || "-"}
-            options={holeGradeOptions}
-            onSelect={(value) =>
-              controller.onToleranceGradeChange("hole", value)
-            }
-            disabled={loadingOptions || holeGradeOptions.length === 0}
-            ref={navigation.register("hole_grade")}
-            onKeyDown={navigation.handleKeyDown("hole_grade")}
-          />
-        </>
-      )}
-
-      {mode === "shaft" && (
-        <>
-          <FormSelectMenuField
-            label="Class"
-            tooltip={toleranceClassFieldConfig.classTooltip}
-            valueLabel={shaftLetter || "-"}
-            options={shaftLetterOptions}
-            onSelect={(value) =>
-              controller.onToleranceLetterChange("shaft", value)
-            }
-            disabled={loadingOptions}
-            ref={navigation.register("shaft_letter")}
-            onKeyDown={navigation.handleKeyDown("shaft_letter")}
-          />
-
-          <FormSelectMenuField
-            label="Grade"
-            tooltip={toleranceClassFieldConfig.gradeTooltip}
-            valueLabel={shaftGrade || "-"}
-            options={shaftGradeOptions}
-            onSelect={(value) =>
-              controller.onToleranceGradeChange("shaft", value)
-            }
-            disabled={loadingOptions || shaftGradeOptions.length === 0}
-            ref={navigation.register("shaft_grade")}
-            onKeyDown={navigation.handleKeyDown("shaft_grade")}
-          />
-        </>
-      )}
-    </FormSection>
+    </Row>
   );
 
-  const output = (
-    <FormSection>
-      {toleranceFieldConfig
-        .filter((fieldConfig) => fieldConfig.readOnly)
-        .map((fieldConfig) => {
-          const fieldState = form.fields[fieldConfig.key];
+  const inputRow = (
+    <div className="tolerances-input-row">
+      <div className="tolerances-input-row-fields">
+        <div className="tolerances-input-field">
+          {renderNumberField("nominal")}
+        </div>
+        {mode === "hole" && (
+          <>
+            <div className="tolerances-input-field">
+              <FormSelectMenuField
+                label="Class"
+                tooltip={toleranceClassFieldConfig.classTooltip}
+                valueLabel={holeLetter || "-"}
+                options={holeLetterOptions}
+                onSelect={(value) =>
+                  controller.onToleranceLetterChange("hole", value)
+                }
+                disabled={loadingOptions}
+                ref={navigation.register("hole_letter")}
+                onKeyDown={navigation.handleKeyDown("hole_letter")}
+              />
+            </div>
 
-          return (
-            <FormNumberField
-              key={fieldConfig.key}
-              label={fieldConfig.label}
-              tooltip={fieldConfig.tooltip}
-              unit={fieldConfig.unit}
-              field={fieldState}
-              autoFocus={fieldConfig.autoFocus}
-              disabled={fieldState.locked}
-              readonly={fieldConfig.readOnly}
-              onChange={(value) =>
-                controller.onFieldChange(fieldConfig.key, value)
-              }
-            />
-          );
-        })}
-    </FormSection>
+            <div className="tolerances-input-field">
+              <FormSelectMenuField
+                label="Grade"
+                tooltip={toleranceClassFieldConfig.gradeTooltip}
+                valueLabel={holeGrade || "-"}
+                options={holeGradeOptions}
+                onSelect={(value) =>
+                  controller.onToleranceGradeChange("hole", value)
+                }
+                disabled={loadingOptions || holeGradeOptions.length === 0}
+                ref={navigation.register("hole_grade")}
+                onKeyDown={navigation.handleKeyDown("hole_grade")}
+              />
+            </div>
+          </>
+        )}
+
+        {mode === "shaft" && (
+          <>
+            <div className="tolerances-input-field">
+              <FormSelectMenuField
+                label="Class"
+                tooltip={toleranceClassFieldConfig.classTooltip}
+                valueLabel={shaftLetter || "-"}
+                options={shaftLetterOptions}
+                onSelect={(value) =>
+                  controller.onToleranceLetterChange("shaft", value)
+                }
+                disabled={loadingOptions}
+                ref={navigation.register("shaft_letter")}
+                onKeyDown={navigation.handleKeyDown("shaft_letter")}
+              />
+            </div>
+
+            <div className="tolerances-input-field">
+              <FormSelectMenuField
+                label="Grade"
+                tooltip={toleranceClassFieldConfig.gradeTooltip}
+                valueLabel={shaftGrade || "-"}
+                options={shaftGradeOptions}
+                onSelect={(value) =>
+                  controller.onToleranceGradeChange("shaft", value)
+                }
+                disabled={loadingOptions || shaftGradeOptions.length === 0}
+                ref={navigation.register("shaft_grade")}
+                onKeyDown={navigation.handleKeyDown("shaft_grade")}
+              />
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="tolerances-calculate-slot">
+        <Button
+          ref={navigation.registerSubmitAction}
+          variant="primary"
+          size="large"
+          onClick={onCalculate}
+          onKeyDown={navigation.handleSubmitActionKeyDown}
+        >
+          Calculate
+        </Button>
+      </div>
+    </div>
+  );
+
+  const outputRows = (
+    <>
+      <Row columns={2} className="tolerances-deviation-row">
+        {renderNumberField("upper_um")}
+        {renderNumberField("lower_um")}
+      </Row>
+      <Row columns={2} className="tolerances-limit-row">
+        {renderNumberField("max_mm")}
+        {renderNumberField("min_mm")}
+      </Row>
+    </>
   );
 
   const error = form.formError ? <FormError error={form.formError} /> : null;
@@ -230,49 +248,43 @@ export function TolerancesPage() {
   );
 
   const actions = (
-    <FormActions
-      onCalculate={onCalculate}
-      onReset={onReset}
-      calculateRef={navigation.registerSubmitAction}
-      onCalculateKeyDown={navigation.handleSubmitActionKeyDown}
-    >
+    <div className="tolerances-actions">
       {saveButton}
-    </FormActions>
+      <Button variant="danger" size="medium" onClick={onReset}>
+        Clear form
+      </Button>
+    </div>
   );
 
   const formContent = (
-    <SplitFormLayout
-      input={input}
-      output={output}
-      error={error}
-      actions={actions}
-      inputWidth="8rem"
-      outputWidth="7.5rem"
-      gap="var(--space-3)"
-    />
+    <div className="tolerances-form-content">
+      {modeField}
+      {inputRow}
+      {outputRows}
+      {error}
+      {actions}
+    </div>
   );
 
   return (
-    <FormSidebarLayout
-      className="tolerances-page-layout"
-      formWidth="lg"
-      fillHeight
-      form={
+    <PageShell className="tolerances-page-layout">
+      <Stack className="tolerances-page-stack">
         <div
-          className="tolerances-form-container"
+          className="tolerances-page-form tolerances-form-container"
           ref={navigation.containerRef}
         >
           {formContent}
         </div>
-      }
-      sidebar={
+        <div className="tolerances-page-history">
         <ToleranceHistoryPanel
           history={controller.history}
           onLoad={controller.load}
           onDelete={controller.remove}
           onClear={controller.clear}
         />
-      }
-    />
+        </div>
+      </Stack>
+    </PageShell>
   );
 }
+

@@ -2,7 +2,7 @@
 
 // ExecutionFinisheNotice.tsx
 
-import { Panel } from "@shared/ui/layout/container/Panel/Panel";
+import { Panel } from "@shared/ui/surfaces/Panel/Panel";
 import { Button } from "@shared/ui/primitives/Button/Button";
 
 type Props = {
@@ -27,3 +27,4 @@ export function ExecutionFinishedNotice({
     </Panel>
   );
 }
+
