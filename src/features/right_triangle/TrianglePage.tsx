@@ -31,7 +31,7 @@ import { FormError } from "@shared/ui/form/FormError";
 
 import { validateTriangleForm } from "./domain/validateTriangleForm";
 import { FormLayout } from "@shared/ui/form/FormLayout";
-import { FormNumberField } from "@shared/ui/form/fields/FormNumberField";
+import { FormNumberFields } from "@shared/ui/form/fields/FormNumberFields";
 import { FormWithSidePanel } from "@shared/ui/patterns/FormWithSidePanel/FormWithSidePanel";
 import { TriangleFigure } from "./ui/triangleFigure/TriangleFigure";
 
@@ -102,36 +102,15 @@ export function TrianglePage() {
   ========================= */
 
   const fields = (
-    <>
-      {triangleFieldConfig.map((config) => {
-        const fieldState = form.fields[config.key];
-
-        return (
-          <FormNumberField
-            key={config.key}
-            label={config.label}
-            tooltip={config.tooltip}
-            unit={config.unit}
-            field={fieldState}
-            disabled={fieldState.locked || config.readOnly}
-            autoFocus={config.autoFocus}
-            onChange={(value) => onFieldChange(config.key, value)}
-            ref={formFocus.register(config.key)}
-            onKeyDown={formFocus.handleKeyDown(config.key)}
-            onFocus={
-              formFocus.onFieldFocus
-                ? () => formFocus.onFieldFocus!(config.key)
-                : undefined
-            }
-            onBlur={
-              formFocus.onFieldBlur
-                ? () => formFocus.onFieldBlur!()
-                : undefined
-            }
-          />
-        );
-      })}
-    </>
+    <FormNumberFields
+      configs={triangleFieldConfig}
+      fields={form.fields}
+      onChange={onFieldChange}
+      register={formFocus.register}
+      onKeyDown={formFocus.handleKeyDown}
+      onFocusField={formFocus.onFieldFocus}
+      onBlurFields={formFocus.onFieldBlur}
+    />
   );
 
 const error = form.formError ? (

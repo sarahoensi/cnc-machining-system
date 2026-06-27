@@ -3,7 +3,7 @@
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 import { FormError } from "@shared/ui/form/FormError";
 import { FormActions } from "@shared/ui/form/FormActions";
-import { FormNumberField } from "@shared/ui/form/fields/FormNumberField";
+import { FormNumberFields } from "@shared/ui/form/fields/FormNumberFields";
 import { FormLayout } from "@shared/ui/form/FormLayout";
 import { FormPage } from "@shared/ui/page/FormPage";
 import { Stack } from "@shared/ui/primitives/Stack/Stack";
@@ -57,6 +57,18 @@ export function CylinderWeightPage() {
     navigation.focusFirstAfterRender();
   }
 
+  const inputFieldConfigs = cylinderWeightFieldConfig.filter(
+    (fieldConfig) => !fieldConfig.readOnly,
+  ) as Array<
+    (typeof cylinderWeightFieldConfig)[number] & {
+      key: Exclude<CylinderWeightKey, "mass_kg">;
+    }
+  >;
+
+  const resultFieldConfigs = cylinderWeightFieldConfig.filter(
+    (fieldConfig) => fieldConfig.readOnly,
+  );
+
   const fields = (
     <>
       <Stack className="stack--form-section">
@@ -69,47 +81,21 @@ export function CylinderWeightPage() {
           materialLoadError={controller.materialLoadError}
         />
 
-        {cylinderWeightFieldConfig
-          .filter((f) => !f.readOnly)
-          .map((f) => {
-            const fieldState = controller.form.fields[f.key];
-            return (
-              <FormNumberField
-                key={f.key}
-                label={f.label}
-                tooltip={f.tooltip}
-                unit={f.unit}
-                field={fieldState}
-                autoFocus={f.autoFocus}
-                disabled={fieldState.locked}
-                readonly={f.readOnly}
-                onChange={(value) => controller.onFieldChange(f.key, value)}
-                ref={navigation.register(f.key as Exclude<CylinderWeightKey, "mass_kg">)}
-                onKeyDown={navigation.handleKeyDown(f.key as Exclude<CylinderWeightKey, "mass_kg">)}
-              />
-            );
-          })}
+        <FormNumberFields
+          configs={inputFieldConfigs}
+          fields={controller.form.fields}
+          onChange={controller.onFieldChange}
+          register={navigation.register}
+          onKeyDown={navigation.handleKeyDown}
+        />
       </Stack>
 
       <div className="cylinder-weight-result-section">
-        {cylinderWeightFieldConfig
-          .filter((f) => f.readOnly)
-          .map((f) => {
-            const fieldState = controller.form.fields[f.key];
-            return (
-              <FormNumberField
-                key={f.key}
-                label={f.label}
-                tooltip={f.tooltip}
-                unit={f.unit}
-                field={fieldState}
-                autoFocus={f.autoFocus}
-                disabled={fieldState.locked}
-                readonly={f.readOnly}
-                onChange={(value) => controller.onFieldChange(f.key, value)}
-              />
-            );
-          })}
+        <FormNumberFields
+          configs={resultFieldConfigs}
+          fields={controller.form.fields}
+          onChange={controller.onFieldChange}
+        />
       </div>
     </>
   );

@@ -18,7 +18,7 @@ import { parseHelix } from "../domain/parseHelix";
 import { solveHelix } from "../api/solveHelix";
 import { helixFieldConfig } from "./helixFieldConfig";
 import { FormModeField } from "@shared/ui/form/fields/FormModeField";
-import { FormNumberField } from "@shared/ui/form/fields/FormNumberField";
+import { FormNumberFields } from "@shared/ui/form/fields/FormNumberFields";
 
 import {
   validHelixInputSets,
@@ -131,34 +131,15 @@ export function HelixPage() {
     </Stack>
 
     <Stack className="stack--form-section">
-      {helixFieldConfig.map((config) => {
-        const fieldState = form.fields[config.key];
-
-        return (
-          <FormNumberField
-            key={config.key}
-            label={config.label}
-            tooltip={config.tooltip}
-            unit={config.unit}
-            field={fieldState}
-            disabled={fieldState.locked || config.readOnly}
-            autoFocus={config.autoFocus}
-            onChange={(value) => onFieldChange(config.key, value)}
-            ref={formFocus.register(config.key)}
-            onKeyDown={formFocus.handleKeyDown(config.key)}
-            onFocus={
-              formFocus.onFieldFocus
-                ? () => formFocus.onFieldFocus!(config.key)
-                : undefined
-            }
-            onBlur={
-              formFocus.onFieldBlur
-                ? () => formFocus.onFieldBlur!()
-                : undefined
-            }
-          />
-        );
-      })}
+      <FormNumberFields
+        configs={helixFieldConfig}
+        fields={form.fields}
+        onChange={onFieldChange}
+        register={formFocus.register}
+        onKeyDown={formFocus.handleKeyDown}
+        onFocusField={formFocus.onFieldFocus}
+        onBlurFields={formFocus.onFieldBlur}
+      />
     </Stack>
   </>
 );

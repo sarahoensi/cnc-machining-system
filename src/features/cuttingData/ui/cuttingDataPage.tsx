@@ -26,7 +26,7 @@ import { FormError } from "@shared/ui/form/FormError";
 import { validateCuttingDataForm } from "../domain/validateCuttingForm";
 
 import { FormLayout } from "@shared/ui/form/FormLayout";
-import { FormNumberField } from "@shared/ui/form/fields/FormNumberField";
+import { FormNumberFields } from "@shared/ui/form/fields/FormNumberFields";
 import { FormWithSidePanel } from "@shared/ui/patterns/FormWithSidePanel/FormWithSidePanel";
 import { CuttingHistoryPanel } from "./history/CuttingHistoryPanel";
 import { useCuttingPageController } from "./useCuttingPageController";
@@ -127,26 +127,13 @@ export function CuttingDataPage() {
   ========================= */
 
   const fields = (
-    <>
-      {cuttingDataFieldConfig.map((config) => {
-        const fieldState = form.fields[config.key];
-
-        return (
-          <FormNumberField
-            key={config.key}
-            label={config.label}
-            tooltip={config.tooltip}
-            unit={config.unit}
-            field={fieldState}
-            disabled={fieldState.locked || config.readOnly}
-            autoFocus={config.autoFocus}
-            onChange={(value) => onFieldChange(config.key, value)}
-            ref={navigation.register(config.key)}
-            onKeyDown={navigation.handleKeyDown(config.key)}
-          />
-        );
-      })}
-    </>
+    <FormNumberFields
+      configs={cuttingDataFieldConfig}
+      fields={form.fields}
+      onChange={onFieldChange}
+      register={navigation.register}
+      onKeyDown={navigation.handleKeyDown}
+    />
   );
 
 
