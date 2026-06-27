@@ -6,6 +6,7 @@ import { Split } from "../primitives/Split/Split";
 import { Stack } from "../primitives/Stack/Stack";
 import { FormActions } from "../form/FormActions";
 import { FormLayout } from "../form/FormLayout";
+import { FormWithSidePanel } from "../patterns/FormWithSidePanel/FormWithSidePanel";
 import { FormPage } from "./FormPage";
 import { PageShell } from "./PageShell";
 
@@ -84,6 +85,27 @@ describe("form page layouts", () => {
     expect(markup).toContain('class="page-shell form-page"');
     expect(markup).toContain('class="form-page-panel"');
     expect(markup).toContain("--form-page-panel-width:320px");
+  });
+
+  it("renders a form with side panel using split page regions", () => {
+    const markup = renderToStaticMarkup(
+      <FormWithSidePanel
+        form={<div>Calculator form</div>}
+        sidePanel={<div>Side panel</div>}
+        fillHeight
+        align="stretch"
+        secondaryWidth="minmax(20rem, 1fr)"
+        secondaryMinHeightOnCollapse="20rem"
+      />,
+    );
+
+    expect(markup).toContain("Calculator form");
+    expect(markup).toContain("Side panel");
+    expect(markup).toContain("form-with-side-panel");
+    expect(markup).toContain("split--fill-height");
+    expect(markup).toContain("split--align-stretch");
+    expect(markup).toContain("--split-secondary-width:minmax(20rem, 1fr)");
+    expect(markup).toContain("--split-secondary-min-height-on-collapse:20rem");
   });
 
   it("renders a responsive row with the requested column count", () => {

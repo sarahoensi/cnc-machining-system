@@ -32,8 +32,7 @@ import { FormError } from "@shared/ui/form/FormError";
 import { validateTriangleForm } from "./domain/validateTriangleForm";
 import { FormLayout } from "@shared/ui/form/FormLayout";
 import { FormNumberField } from "@shared/ui/form/fields/FormNumberField";
-import { Split } from "@shared/ui/primitives/Split/Split";
-import { PageShell } from "@shared/ui/page/PageShell";
+import { FormWithSidePanel } from "@shared/ui/patterns/FormWithSidePanel/FormWithSidePanel";
 import { TriangleFigure } from "./ui/triangleFigure/TriangleFigure";
 
 export function TrianglePage() {
@@ -160,13 +159,10 @@ const formContent = (
 
 
   return (
-  <PageShell>
-    <Split
-      primaryWidth="200px"
-      primary={formContent}
-      secondary={<TriangleFigure activeField={formFocus.activeField} />}
+    <FormWithSidePanel
+      form={formContent}
+      sidePanel={<TriangleFigure activeField={formFocus.activeField} />}
     />
-  </PageShell>
   );
 }
 

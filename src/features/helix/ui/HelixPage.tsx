@@ -30,9 +30,8 @@ import { FormActions } from "@shared/ui/form/FormActions";
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 import { FormError } from "@shared/ui/form/FormError";
 import { FormLayout } from "@shared/ui/form/FormLayout";
-import { Split } from "@shared/ui/primitives/Split/Split";
 import { Stack } from "@shared/ui/primitives/Stack/Stack";
-import { PageShell } from "@shared/ui/page/PageShell";
+import { FormWithSidePanel } from "@shared/ui/patterns/FormWithSidePanel/FormWithSidePanel";
 import { helixTooltips } from "./helixTooltip";
 import { HelixFigure } from "./helixFigure/HelixFigure";
 /* ============================================================
@@ -188,18 +187,15 @@ const formContent = (
 
 
   return (
-  <PageShell>
-    <Split
-      primaryWidth="200px"
-      primary={formContent}
-      secondary={
+    <FormWithSidePanel
+      form={formContent}
+      sidePanel={
         <HelixFigure
           mode={form.extras.mode}
           activeField={formFocus.activeField}
         />
       }
     />
-  </PageShell>
-);
+  );
 }
 

@@ -27,8 +27,7 @@ import { validateCuttingDataForm } from "../domain/validateCuttingForm";
 
 import { FormLayout } from "@shared/ui/form/FormLayout";
 import { FormNumberField } from "@shared/ui/form/fields/FormNumberField";
-import { Split } from "@shared/ui/primitives/Split/Split";
-import { PageShell } from "@shared/ui/page/PageShell";
+import { FormWithSidePanel } from "@shared/ui/patterns/FormWithSidePanel/FormWithSidePanel";
 import { CuttingHistoryPanel } from "./history/CuttingHistoryPanel";
 import { useCuttingPageController } from "./useCuttingPageController";
 import { Button } from "@shared/ui/primitives/Button/Button";
@@ -198,19 +197,17 @@ const error = form.formError ? (
   ========================= */
 
 return (
-  <PageShell>
-    <Split
-      primaryWidth="200px"
-      fillHeight
-      align="stretch"
-      secondaryWidth="minmax(20rem, 1fr)"
-      secondaryMinHeightOnCollapse="20rem"
-      primary={
+  <FormWithSidePanel
+    fillHeight
+    align="stretch"
+    secondaryWidth="minmax(20rem, 1fr)"
+    secondaryMinHeightOnCollapse="20rem"
+    form={
         <div ref={navigation.containerRef} className="cutting-data-form-root">
           {formContent}
         </div>
       }
-      secondary={
+    sidePanel={
         <CuttingHistoryPanel
           history={history}
           onLoad={load}
@@ -219,7 +216,6 @@ return (
         />
       }
     />
-  </PageShell>
 );
 }
 
