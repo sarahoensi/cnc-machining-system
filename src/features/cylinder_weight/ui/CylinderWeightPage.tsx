@@ -1,132 +1,26 @@
 // src/features/cylinder_weight/ui/CylinderWeightPage.tsx
 
 import { usePageTitle } from "@app/providers/TitleContextProvider";
-import { FormError } from "@shared/ui/form/FormError";
-import { FormActions } from "@shared/ui/form/FormActions";
-import { FormNumberFields } from "@shared/ui/form/fields/FormNumberFields";
-import { FormLayout } from "@shared/ui/form/FormLayout";
 import { FormPage } from "@shared/ui/page/FormPage";
-import { Stack } from "@shared/ui/primitives/Stack/Stack";
-import { useFormNavigation } from "@shared/hooks";
-import { cylinderWeightFieldConfig } from "./cylinderWeightFieldConfig";
-import { CylinderWeightKey } from "../domain/cylinderWeightForm";
 import { useCylinderWeightPageController } from "./useCylinderWeightPageController";
-import { MaterialField } from "./materials/field/MaterialField";
 import { ManageMaterialsModal } from "./materials/manage/ManageMaterialsModal";
 import { NewMaterialModal } from "./materials/create/NewMaterialModal";
 import { MaterialResultDialogs } from "./materials/feedback/MaterialResultDialogs";
 import "./CylinderWeightPage.css";
 import { ExportMaterialsModal } from "./materials";
+import { CylinderWeightForm } from "./form/CylinderWeightForm";
 
 export function CylinderWeightPage() {
   usePageTitle("Cylinder Weight");
   const controller = useCylinderWeightPageController();
 
-  const navigation = useFormNavigation({
-    keys: ["outer_diameter_mm", "inner_diameter_mm", "length_mm"],
-    autoFocusOnMount: true,
-    activePath: "/cylinder-weight",
-    onSubmit: onCalculate,
-  });
-
-  async function onCalculate() {
-    const next = await controller.calculate();
-    if (!next) return;
-    const focusOrder: Exclude<CylinderWeightKey, "mass_kg">[] = [
-      "outer_diameter_mm",
-      "inner_diameter_mm",
-      "length_mm",
-    ];
-    const hasInlineError = focusOrder.some((key) => Boolean(next.fields[key].error));
-
-    if (hasInlineError) {
-      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
-      return;
-    }
-
-    if (!next.formError) return;
-
-    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
-      const value = next.fields[key]?.value;
-      return value == null || String(value).trim() === "";
-    });
-  }
-
-  function onReset() {
-    controller.resetForm();
-    navigation.focusFirstAfterRender();
-  }
-
-  const inputFieldConfigs = cylinderWeightFieldConfig.filter(
-    (fieldConfig) => !fieldConfig.readOnly,
-  ) as Array<
-    (typeof cylinderWeightFieldConfig)[number] & {
-      key: Exclude<CylinderWeightKey, "mass_kg">;
-    }
-  >;
-
-  const resultFieldConfigs = cylinderWeightFieldConfig.filter(
-    (fieldConfig) => fieldConfig.readOnly,
-  );
-
-  const fields = (
-    <>
-      <Stack className="stack--form-section">
-        <MaterialField
-          materials={controller.materials}
-          selectedMaterial={controller.selectedMaterial}
-          onMaterialChange={controller.onMaterialChange}
-          onOpenManage={() => controller.manageModal.setOpen(true)}
-          onOpenCreate={() => controller.manageModal.setNewMaterialOpen(true)}
-          materialLoadError={controller.materialLoadError}
-        />
-
-        <FormNumberFields
-          configs={inputFieldConfigs}
-          fields={controller.form.fields}
-          onChange={controller.onFieldChange}
-          register={navigation.register}
-          onKeyDown={navigation.handleKeyDown}
-        />
-      </Stack>
-
-      <div className="cylinder-weight-result-section">
-        <FormNumberFields
-          configs={resultFieldConfigs}
-          fields={controller.form.fields}
-          onChange={controller.onFieldChange}
-        />
-      </div>
-    </>
-  );
-
-  const error = controller.form.formError ? (
-    <FormError error={controller.form.formError} />
-  ) : null;
-
-  const actions = (
-    <FormActions
-      onCalculate={onCalculate}
-      onReset={onReset}
-      disabled={controller.loadingMaterials}
-    />
-  );
-
-  const formContent = (
-    <FormLayout
-      error={error}
-      actions={actions}
-    >
-      {fields}
-    </FormLayout>
-  );
-
   return (
     <>
       <div className="cylinder-weight-page-layout">
-        <div ref={navigation.containerRef}>
-          <FormPage form={formContent} panelWidth="320px" />
-        </div>
+        <FormPage
+          form={<CylinderWeightForm controller={controller} />}
+          panelWidth="320px"
+        />
       </div>
 
       <ManageMaterialsModal

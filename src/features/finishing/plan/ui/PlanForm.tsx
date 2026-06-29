@@ -15,8 +15,8 @@ import { FormActions } from "@shared/ui/form/FormActions";
 import { createInitialFinishingForm, FinishingKey } from "../domain/finishingForm";
 import { mutuallyExclusiveFinishingPairs, validFinishingInputSets } from "../domain/finishingConstraints";
 import { FormError } from "@shared/ui/form/FormError";
+import { FormGrid } from "@shared/ui/form/FormGrid";
 import { FormLayout } from "@shared/ui/form/FormLayout";
-import { Stack } from "@shared/ui/primitives/Stack/Stack";
 import { finishingTooltips } from "./finishingPlanTooltip";
 
 type Props = {
@@ -83,8 +83,8 @@ export function PlanForm({
   }
 
   const fields = (
-    <>
-      <Stack className="stack--form-section">
+    <FormGrid areas={[["mode"], ["fields"]]}>
+      <FormGrid.Area name="mode" className="stack--form-section">
         <FormModeField
           label="Mode"
           tooltip={finishingTooltips.mode}
@@ -102,9 +102,9 @@ export function PlanForm({
             { value: "Outer", label: "Outer" },
           ]}
         />
-      </Stack>
+      </FormGrid.Area>
 
-      <Stack className="stack--form-section">
+      <FormGrid.Area name="fields" className="stack--form-section">
         {finishingFieldConfig.map((f) => {
           const fieldState = form.fields[f.key];
 
@@ -126,8 +126,8 @@ export function PlanForm({
             />
           );
         })}
-      </Stack>
-    </>
+      </FormGrid.Area>
+    </FormGrid>
   );
 
   const error = form.formError ? (
