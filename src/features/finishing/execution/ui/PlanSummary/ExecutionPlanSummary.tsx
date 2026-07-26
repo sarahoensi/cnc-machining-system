@@ -2,9 +2,9 @@
 
 // ExecutionPlanSummary.tsx
 
-import { Panel } from "@shared/ui/layout/container/Panel/Panel";
-import { FieldDisplay } from "@shared/ui/components/display/FieldDisplay";
+import { Panel } from "@shared/ui/surfaces/Panel/Panel";
 import { Button } from "@shared/ui/primitives/Button/Button";
+import { FieldDisplay } from "./FieldDisplay/FieldDisplay";
 import "./ExecutionPlanSummary.css";
 
 type Props = {
@@ -44,3 +44,4 @@ export function ExecutionPlanSummary({
     </Panel>
   );
 }
+

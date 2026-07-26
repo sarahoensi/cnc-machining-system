@@ -1,5 +1,5 @@
 import type { FieldState } from "@shared/form/types/fields";
-import { formatNumber } from "@shared/ui/format/formatNumber";
+import { formatNumber } from "@shared/lib/format/formatNumber";
 
 export type HistoryFieldConfig<K extends string> = {
   key: K;

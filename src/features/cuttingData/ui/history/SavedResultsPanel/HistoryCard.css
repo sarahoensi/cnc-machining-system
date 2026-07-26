@@ -1,0 +1,50 @@
+.history-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  padding: var(--history-item-padding);
+
+  background: var(--panel-bg);
+  border: var(--panel-border-width) solid var(--panel-border-color);
+  border-radius: var(--panel-radius);
+
+  cursor: pointer;
+}
+
+.history-card-content {
+  display: grid;
+  grid-template-columns: repeat(var(--history-card-columns, 2), 1fr);
+  gap: var(--space-2) var(--space-3);
+
+  flex: 1;
+}
+
+.history-card-item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+
+  font-size: var(--history-item-text-size);
+  font-variant-numeric: tabular-nums;
+}
+
+.history-card-delete {
+  margin-left: var(--space-2);
+  flex-shrink: 0;
+}
+
+.hc-label {
+  color: var(--history-item-label-color, var(--text-muted));
+  font-size: inherit;
+}
+
+.hc-value {
+  color: var(--history-item-value-color, var(--text-primary));
+  font-weight: var(--history-item-value-weight);
+}
+
+.hc-unit {
+  color: var(--history-item-unit-color, var(--text-muted));
+  margin-left: var(--space-1);
+}

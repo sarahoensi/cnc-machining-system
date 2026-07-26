@@ -1,10 +1,10 @@
 // src/features/cylinder_weight/ui/materials/manage/MaterialLibraryTable.tsx
 
-import { Table } from "@shared/ui/components/table/Table";
+import { Table } from "@shared/ui/table/Table";
 import { Button } from "@shared/ui/primitives/Button/Button";
 import { NumberInput } from "@shared/ui/primitives/input";
 import { TextInput } from "@shared/ui/primitives/input";
-import { DialogActions } from "@shared/ui/components/overlay/DialogActions/DialogActions";
+import { DialogActions } from "@shared/ui/overlay/DialogActions/DialogActions";
 import { CylinderMaterial, MaterialEditState } from "../types";
 import { sortCylinderMaterials } from "../sortMaterials";
 
@@ -118,5 +118,6 @@ function ReadonlyMaterialRow({
     </Table.BodyRow>
   );
 }
+
 
 

@@ -15,9 +15,9 @@
 
 .tolerance-history-scroll {
   max-height: 28rem;
-  overflow: auto;
-  padding-bottom: var(--space-1);
-  padding-inline-end: var(--space-1);
+  overflow-y: auto;
+  padding-bottom: var(--space-2);
+  padding-inline-end: var(--space-2);
 }
 
 .tolerance-history-empty {
@@ -178,5 +178,5 @@
 .tolerance-history-actions {
   display: flex;
   justify-content: flex-end;
-  padding-inline-end: var(--space-1);
+  padding-inline-end: var(--space-2);
 }

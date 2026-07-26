@@ -1,12 +1,12 @@
 // src/features/cylinder_weight/ui/materials/create/NewMaterialModal.tsx
 
 import { useRef } from "react";
-import { Field } from "@shared/ui/components/form/Field/Field";
-import { FormError } from "@shared/ui/components/form/FormError/FormError";
-import { FormTextField } from "@shared/ui/components/form/fields";
-import { Modal } from "@shared/ui/components/overlay/Modal/Modal";
-import { DialogActions } from "@shared/ui/components/overlay/DialogActions/DialogActions";
-import { FormStack } from "@shared/ui/layout/container/FormStack/FormStack";
+import { Field } from "@shared/ui/form/Field";
+import { FormError } from "@shared/ui/form/FormError";
+import { FormTextField } from "@shared/ui/form/fields";
+import { Modal } from "@shared/ui/overlay/Modal/Modal";
+import { DialogActions } from "@shared/ui/overlay/DialogActions/DialogActions";
+import { Stack } from "@shared/ui/primitives/Stack/Stack";
 import { Button } from "@shared/ui/primitives/Button/Button";
 import { NumberInput } from "@shared/ui/primitives/input";
 
@@ -37,7 +37,7 @@ export function NewMaterialModal({
 
   return (
     <Modal title="New Material" size="sm" onClose={onClose}>
-      <FormStack>
+      <Stack>
         <FormTextField
           label="Name"
           value={name}
@@ -81,9 +81,10 @@ export function NewMaterialModal({
             Save
           </Button>
         </DialogActions>
-      </FormStack>
+      </Stack>
     </Modal>
   );
 }
+
 
 

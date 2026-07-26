@@ -2,7 +2,7 @@
 
 import { usePageTitle } from "@app/providers/TitleContextProvider";
 
-import { SingleFormLayout } from "@shared/ui/layout/page/SingleFormLayout/SingleFormLayout";
+import { FormPage } from "@shared/ui/page/FormPage";
 
 import { PlanForm } from "../plan/ui/PlanForm";
 import { ExecutionView } from "../execution/ui/ExecutionView/ExecutionView";
@@ -41,7 +41,7 @@ export function FinishingPage() {
 
   if (!finishing.execution) {
     return (
-      <SingleFormLayout
+      <FormPage
         form={formContent}
       />
     );
@@ -57,3 +57,4 @@ export function FinishingPage() {
     />
   );
 }
+

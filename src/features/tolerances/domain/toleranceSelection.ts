@@ -58,8 +58,13 @@ export function applyToleranceLetterChange(
     value,
   );
 
+  const currentGrade = isHole
+    ? form.fields.hole_grade.value
+    : form.fields.shaft_grade.value;
+  const nextGrade = pickGradeForClassChange(nextGrades, currentGrade);
+
   return patchSelectionFields(next, {
-    [isHole ? "hole_grade" : "shaft_grade"]: nextGrades[0] ?? "",
+    [isHole ? "hole_grade" : "shaft_grade"]: nextGrade,
   });
 }
 
@@ -93,4 +98,14 @@ export function patchSelectionFields(
     fields,
     formError: undefined,
   };
+}
+
+function pickGradeForClassChange(
+  availableGrades: string[],
+  currentGrade: string,
+) {
+  if (availableGrades.includes(currentGrade)) return currentGrade;
+  if (availableGrades.includes("7")) return "7";
+
+  return availableGrades[0] ?? "";
 }

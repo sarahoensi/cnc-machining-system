@@ -1,12 +1,18 @@
 /* features/tolerances/ui/TolerancesPage.css */
 
-.tolerances-form-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0;
+.tolerances-page-stack {
+  gap: var(--layout-section-gap);
 }
 
-.tolerances-page-layout .form-actions-secondary {
-  flex-wrap: wrap;
+.tolerances-page-form,
+.tolerances-page-history {
+  min-width: 0;
+}
+
+.tolerances-page-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-gap);
+  width: 500px;
+  max-width: 100%;
 }

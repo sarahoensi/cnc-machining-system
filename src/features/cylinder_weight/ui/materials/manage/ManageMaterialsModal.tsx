@@ -3,9 +3,9 @@
 //ManageMaterialsModal.tsx
 
 import { useMemo, useRef, useState } from "react";
-import { Modal, ModalScrollArea } from "@shared/ui/components/overlay/Modal/Modal";
-import { DialogActions } from "@shared/ui/components/overlay/DialogActions/DialogActions";
-import { FormError } from "@shared/ui/components/form/FormError/FormError";
+import { Modal, ModalScrollArea } from "@shared/ui/overlay/Modal/Modal";
+import { DialogActions } from "@shared/ui/overlay/DialogActions/DialogActions";
+import { FormError } from "@shared/ui/form/FormError";
 import { Button } from "@shared/ui/primitives/Button/Button";
 import { TextInput } from "@shared/ui/primitives/input";
 import SearchIcon from "@assets/search-icon.svg";
@@ -101,4 +101,5 @@ export function ManageMaterialsModal({
     </Modal>
   );
 }
+
 

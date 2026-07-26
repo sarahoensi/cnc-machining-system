@@ -4,8 +4,8 @@ import type { KeyboardEvent, MouseEvent } from "react";
 
 import { useDisplaySettings } from "@app/providers/DisplaySettingProvider";
 import type { SavedResultEntry } from "@shared/savedResults";
+import { ScrollArea } from "@shared/ui/surfaces/ScrollArea/ScrollArea";
 import { Button } from "@shared/ui/primitives/Button/Button";
-import { ScrollArea } from "@shared/ui/layout/container/ScrollArea/ScrollArea";
 
 import type { ToleranceFormState } from "../../domain/toleranceForm";
 import { buildToleranceHistoryRow } from "./buildToleranceHistoryRow";
@@ -128,3 +128,4 @@ export function ToleranceHistoryPanel({
     </section>
   );
 }
+

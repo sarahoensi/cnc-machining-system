@@ -1,6 +1,6 @@
 // src/features/cylinder_weight/ui/materials/feedback/MaterialResultDialogs.tsx
 
-import { InfoDialog } from "@shared/ui/components/overlay/InfoDialog/InfoDialog";
+import { InfoDialog } from "@shared/ui/overlay/InfoDialog/InfoDialog";
 import { Button } from "@shared/ui/primitives/Button/Button";
 import { useEffect, useState } from "react";
 import { ExportSummary, ImportSummary } from "../types";
@@ -133,4 +133,5 @@ export function MaterialResultDialogs({
     </>
   );
 }
+
 

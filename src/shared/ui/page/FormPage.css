@@ -1,0 +1,13 @@
+.form-page-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-section-gap);
+  width: var(--form-page-panel-width, 200px);
+  max-width: 100%;
+}
+
+@media (max-width: 50rem) {
+  .form-page-panel {
+    width: 100%;
+  }
+}

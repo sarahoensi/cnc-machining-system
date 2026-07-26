@@ -8,7 +8,8 @@ import { ExecutionPlanSummary } from "../PlanSummary";
 import { FinishingExecutionTable } from "../ExecutionTable";
 import { ExecutionFinishedNotice } from "../ExecutionFinishedNotice/ExecutionFinishedNotice";
 
-import { StackedLayout } from "@shared/ui/layout/page/StackedLayout/StackedLayout";
+import { PageShell } from "@shared/ui/page/PageShell";
+import { Stack } from "@shared/ui/primitives/Stack/Stack";
 
 import "./ExecutionView.css";
 
@@ -42,30 +43,31 @@ export function ExecutionView({
     execution.activeIndex === execution.steps.length;
 
   return (
-    <StackedLayout
-      className="execution-view"
+    <PageShell className="execution-view">
+      <Stack className="execution-view-stack">
+        <div className="execution-view-header">
+          <ExecutionPlanSummary
+            {...summary}
+            onEdit={onEditPlan}
+          />
+        </div>
 
-     header={
-  <ExecutionPlanSummary
-    {...summary}
-    onEdit={onEditPlan}
-  />
-}
-
-      content={
+        <div className="execution-view-content">
         <FinishingExecutionTable
           execution={execution}
           onRegisterMeasurement={onRegisterMeasurement}
         />
-      }
+        </div>
 
-      footer={
-        finished ? (
-          <ExecutionFinishedNotice
-            onCreateNewPlan={onReset}
-          />
-        ) : null
-      }
-    />
+        {finished ? (
+          <div className="execution-view-footer">
+            <ExecutionFinishedNotice
+              onCreateNewPlan={onReset}
+            />
+          </div>
+        ) : null}
+      </Stack>
+    </PageShell>
   );
 }
+

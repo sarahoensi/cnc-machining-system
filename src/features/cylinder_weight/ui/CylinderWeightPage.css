@@ -3,6 +3,15 @@
   gap: var(--space-1);
 }
 
+.cylinder-weight-result-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-section-gap);
+  margin-top: var(--form-fields-gap);
+  padding-top: var(--form-section-spacing);
+  border-top: var(--border-width-sm) solid var(--border-muted);
+}
+
 .cylinder-weight-manage-link {
   justify-self: start;
   padding: 0;

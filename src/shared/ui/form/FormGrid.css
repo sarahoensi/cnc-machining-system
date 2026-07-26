@@ -1,0 +1,23 @@
+/* shared/ui/form/FormGrid.css */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: var(--form-grid-columns, 1fr);
+  grid-template-areas: var(--form-grid-areas);
+  row-gap: var(--form-grid-row-gap, var(--form-grid-gap, var(--form-fields-gap)));
+  column-gap: var(--form-grid-column-gap, var(--form-grid-gap, var(--form-fields-gap)));
+  align-items: var(--form-grid-align);
+  width: 100%;
+  min-width: 0;
+}
+
+.form-grid-area {
+  min-width: 0;
+}
+
+@media (max-width: 48rem) {
+  .form-grid--collapse {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: var(--form-grid-collapsed-areas);
+  }
+}

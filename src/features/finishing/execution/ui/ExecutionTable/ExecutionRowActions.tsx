@@ -1,11 +1,6 @@
 // finishing/ui/execution/ExecutionRowActions.tsx
 
-import {
-  CancelButton,
-  OkButton,
-  RegisterButton,
-  EditButton,
-} from "@shared/ui/primitives/Button/Button";
+import { Button } from "@shared/ui/primitives/Button/Button";
 
 type Props = {
   stepIndex: number;
@@ -44,30 +39,40 @@ export function ExecutionRowActions({
   if (isEditing) {
     return (
       <>
-        <OkButton onClick={() => onConfirm(stepIndex)} />
-        <CancelButton onClick={onCancelEdit} />
+        <Button variant="primary" size="small" onClick={() => onConfirm(stepIndex)}>
+          OK
+        </Button>
+        <Button variant="secondary" size="small" onClick={onCancelEdit}>
+          Cancel
+        </Button>
       </>
     );
   }
 
   if (isActive) {
     return (
-      <RegisterButton
+      <Button
+        variant="primary"
+        size="small"
         disabled={!value}
         onClick={() => onConfirm(stepIndex)}
-      />
+      >
+        Registrer
+      </Button>
     );
   }
 
   if (isEditableCompleted) {
     return (
-      <EditButton
+      <Button
+        variant="secondary"
+        size="small"
         onClick={() =>
           onStartEdit(stepIndex, measurementValue ?? "")
         }
       >
         Edit
-      </EditButton>
+      </Button>
     );
   }
 
