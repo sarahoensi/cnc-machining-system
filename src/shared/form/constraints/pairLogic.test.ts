@@ -34,7 +34,7 @@ describe("pairLogic", () => {
     expect(result.y.value).toBe("");
   });
 
-  it("conflict → editedKey wins", () => {
+  it("lets editedKey win conflicts", () => {
     const fields = createInitial();
     fields.x = userField("5");
     fields.y = userField("10");

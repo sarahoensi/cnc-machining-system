@@ -1,4 +1,4 @@
-// shared/core/drivers/pairLogic.ts
+// shared/form/constraints/pairLogic.ts
 
 import type { FieldState } from "@shared/form/types/fields";
 import { emptyField } from "@shared/form/types/fields";
@@ -21,7 +21,7 @@ export function applyPairLogic<K extends string>(
   mode: "editing" | "solved"
 ): Record<K, FieldState> {
 
-  // 🔵 No locking in solved mode
+  // No locking in solved mode.
   if (mode === "solved") {
     return fields;
   }
@@ -34,7 +34,7 @@ export function applyPairLogic<K extends string>(
     const bIsUser = next[b].source === "user";
 
     /* ============================================================
-       1️⃣ Conflict: both are user
+       1. Conflict: both are user.
        editedKey wins
     ============================================================ */
 
@@ -48,7 +48,7 @@ export function applyPairLogic<K extends string>(
     }
 
     /* ============================================================
-       2️⃣ Normal driver locking
+       2. Normal driver locking.
     ============================================================ */
 
     if (aIsUser && !bIsUser) {

@@ -1,4 +1,4 @@
-// shared/core/drivers/constraintLogic.ts
+// shared/form/constraints/constraintLogic.ts
 
 import type { FieldState } from "@shared/form/types/fields";
 import { emptyField } from "@shared/form/types/fields";
@@ -24,13 +24,13 @@ export function evaluateConstraints<K extends string>(
   const keys = Object.keys(fields) as K[];
   let next: Record<K, FieldState> = { ...fields };
 
-  // 🔎 Identify user-driven keys
+  // Identify user-driven keys.
   const userKeys = keys.filter(
     k => next[k].source === "user"
   );
 
   /* ============================================================
-     1️⃣ No user input → everything unlocked
+     1. No user input: everything unlocked.
   ============================================================ */
 
   if (userKeys.length === 0) {
@@ -49,7 +49,7 @@ export function evaluateConstraints<K extends string>(
   }
 
   /* ============================================================
-     2️⃣ Find compatible sets
+     2. Find compatible sets.
   ============================================================ */
 
   const possibleSets = validSets.filter(set =>
@@ -57,7 +57,7 @@ export function evaluateConstraints<K extends string>(
   );
 
   /* ============================================================
-     3️⃣ Conflict → editedKey wins
+     3. Conflict: editedKey wins.
   ============================================================ */
 
   if (possibleSets.length === 0 && editedKey) {
@@ -73,7 +73,7 @@ export function evaluateConstraints<K extends string>(
   }
 
   /* ============================================================
-     4️⃣ Determine allowed keys (union of possible sets)
+     4. Determine allowed keys from the union of possible sets.
   ============================================================ */
 
   const allowed = new Set<K>();
@@ -85,17 +85,17 @@ export function evaluateConstraints<K extends string>(
   }
 
   /* ============================================================
-     5️⃣ Apply locking rule
+     5. Apply locking rule.
      Locked fields must always be empty
   ============================================================ */
 
   for (const k of keys) {
 
     if (!allowed.has(k)) {
-      // Locked ⇒ empty
+      // Locked means empty.
       next[k] = emptyField({ locked: true });
     } else {
-      // Allowed ⇒ unlocked
+      // Allowed means unlocked.
       next[k] = {
         ...next[k],
         locked: false,
@@ -105,7 +105,7 @@ export function evaluateConstraints<K extends string>(
   }
 
   /* ============================================================
-     6️⃣ Determine active set
+     6. Determine active set.
   ============================================================ */
 
   const activeSet =

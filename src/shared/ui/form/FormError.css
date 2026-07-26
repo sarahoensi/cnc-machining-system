@@ -16,10 +16,10 @@
 }
 
 .form-error ul {
-  margin: 0;              /* 🔥 fjerner ekstra topp/bunn spacing */
-  padding-left: var(--space-3); /* kontroller indent selv */
+  margin: 0;
+  padding-left: var(--space-3);
 }
 
 .form-error li {
-  margin: 0;              /* fjerner ekstra spacing */
+  margin: 0;
 }

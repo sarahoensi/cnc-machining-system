@@ -1,4 +1,4 @@
-// shared/engine/drivers/driverEngine.ts
+// shared/form/constraints/driverEngine.ts
 
 import type { FieldState } from "@shared/form/types/fields";
 import { evaluateConstraints } from "./constraintLogic";
@@ -31,7 +31,7 @@ export function applyDriverEngine<K extends string>(
 
   const { validSets, pairs = [], editedKey, mode } = options;
 
-  // 🔵 In solved mode → no driver logic
+  // In solved mode, driver logic does not change fields.
   if (mode === "solved") {
     return {
       fields,
@@ -39,14 +39,14 @@ export function applyDriverEngine<K extends string>(
     };
   }
 
-  // 1️⃣ Structural constraints
+  // 1. Structural constraints.
   const structural = evaluateConstraints(
     fields,
     validSets,
     editedKey
   );
 
-  // 2️⃣ Pair constraints
+  // 2. Pair constraints.
   const paired = applyPairLogic(
     structural.fields,
     pairs,

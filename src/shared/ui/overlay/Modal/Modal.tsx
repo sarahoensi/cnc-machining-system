@@ -1,4 +1,4 @@
-// src/shared/ui/components/overlay/Modal/Modal.tsx
+// src/shared/ui/overlay/Modal/Modal.tsx
 
 import { ReactNode } from "react";
 import clsx from "clsx";
@@ -49,7 +49,7 @@ export function Modal({
               aria-label={closeLabel}
               title={closeLabel}
             >
-              ×
+              x
             </button>
           ) : null}
         </div>

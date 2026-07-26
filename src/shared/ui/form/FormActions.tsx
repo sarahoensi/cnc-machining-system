@@ -1,9 +1,8 @@
-// shared/ui/components/form/FormActions/FormActions.tsx
+// shared/ui/form/FormActions.tsx
 
 /**
  * Form-level UI
- * Vet hva som kan gjøres med hele formatet.
- * Kjenner ikke enkeltfelter
+ * Knows form-level actions, but not individual field behavior.
  */
 
 import { Button } from "@shared/ui/primitives/Button/Button";

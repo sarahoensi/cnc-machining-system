@@ -90,15 +90,15 @@ finished: boolean): ExecutionState<T> {
    Helpers
 ============================================================ */
 
-export function isStepActive(step: ExecutionStep<any>) {
+export function isStepActive<T>(step: ExecutionStep<T>) {
   return step.status === "active";
 }
 
-export function isStepCompleted(step: ExecutionStep<any>) {
+export function isStepCompleted<T>(step: ExecutionStep<T>) {
   return step.status === "completed";
 }
 
-export function isStepPending(step: ExecutionStep<any>) {
+export function isStepPending<T>(step: ExecutionStep<T>) {
   return step.status === "pending";
 }
 

@@ -1,4 +1,4 @@
-// shared/core/constraintLogic.test.ts
+// shared/form/constraints/constraintLogic.test.ts
 
 import { describe, it, expect } from "vitest";
 import { evaluateConstraints } from "./constraintLogic";
@@ -21,7 +21,7 @@ function createInitial() {
 
 describe("constraintLogic", () => {
 
-  it("no user input → no locks", () => {
+  it("does not lock fields when there is no user input", () => {
     const fields = createInitial();
 
     const result = evaluateConstraints(
@@ -52,7 +52,7 @@ describe("constraintLogic", () => {
     expect(result.fields.c.value).toBe("");
   });
 
-  it("conflict → editedKey wins", () => {
+  it("lets editedKey win conflicts", () => {
     const fields = createInitial();
     fields.a = userField("10");
     fields.c = userField("20"); // not compatible
