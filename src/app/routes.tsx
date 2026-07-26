@@ -2,9 +2,9 @@
 
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import { TrianglePage } from "@features/right_triangle/TrianglePage";
+import { TrianglePage } from "@features/right_triangle/ui/TrianglePage";
 import { HelixPage } from "@features/helix/ui/HelixPage";
-import  {CuttingDataPage} from "@features/cuttingData/ui/cuttingDataPage";
+import { CuttingDataPage } from "@features/cuttingData/ui/CuttingDataPage";
 import { FinishingPage } from "@features/finishing/page/FinishingPage";
 import { CylinderWeightPage } from "@features/cylinder_weight/ui/CylinderWeightPage";
 import { TolerancesPage } from "@features/tolerances/ui/TolerancesPage";

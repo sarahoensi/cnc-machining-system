@@ -1,4 +1,4 @@
-// src/features/cylinder_weight/domain/buildSolveRequest.ts
+// src/features/cylinder_weight/domain/buildRequest.ts
 
 import { SolveCylinderWeightRequest } from "../api/types";
 import { CylinderWeightExtras, CylinderWeightKey } from "./cylinderWeightForm";

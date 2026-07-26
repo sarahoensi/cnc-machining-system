@@ -1,4 +1,4 @@
-// features/finishing/domain/plan/buildFinishingRequest.ts
+// features/finishing/plan/domain/buildRequest.ts
 
 import type { GenerateFinishingPlanRequest } from "../../api/types";
 import { FinishingExtras, FinishingKey } from "./finishingForm";
