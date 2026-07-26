@@ -22,6 +22,7 @@ use crate::interface::{
     finishing::{generate_finishing_plan, register_finishing_measurement},
     helix::solve_helix,
     right_triangle::solve_right_triangle,
+    thread::{list_thread_options, solve_thread},
     tolerance::{calculate_iso286_fit, list_iso286_tolerance_options, lookup_iso286_tolerance},
 };
 
@@ -62,6 +63,9 @@ pub fn run() {
             calculate_iso286_fit,
             lookup_iso286_tolerance,
             list_iso286_tolerance_options,
+            // threads
+            list_thread_options,
+            solve_thread,
             // cylinder_weight
             list_cylinder_materials,
             create_cylinder_material,
