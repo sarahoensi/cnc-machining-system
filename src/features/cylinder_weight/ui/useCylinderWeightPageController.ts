@@ -5,6 +5,7 @@ import {
   clearMachineFields,
   handleCalculateAsync,
 } from "@shared/form/engine/formEngine";
+import { useFormNavigation } from "@shared/hooks";
 import { getTauriCommandError } from "@shared/api/tauriError";
 import { safeParseDecimal } from "@shared/parsing/decimalParser";
 import { useEffect, useMemo, useState } from "react";
@@ -33,6 +34,12 @@ const validInputSets = [
 
 const mutuallyExclusivePairs = [] as const;
 
+const focusOrder: Exclude<CylinderWeightKey, "mass_kg">[] = [
+  "outer_diameter_mm",
+  "inner_diameter_mm",
+  "length_mm",
+];
+
 export function useCylinderWeightPageController() {
   const [form, setForm] = useFeatureForm(
     "cylinder_weight",
@@ -59,6 +66,13 @@ export function useCylinderWeightPageController() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [selectedExportIds, setSelectedExportIds] = useState<string[]>([]);
+
+  const navigation = useFormNavigation({
+    keys: focusOrder,
+    autoFocusOnMount: true,
+    activePath: "/cylinder-weight",
+    onSubmit: calculate,
+  });
 
   useEffect(() => {
     void loadMaterials();
@@ -299,11 +313,13 @@ export function useCylinderWeightPageController() {
             ),
           },
         });
+        focusAfterCalculate(next);
         return next;
       }
     }
 
     setForm(next);
+    focusAfterCalculate(next);
     return next;
   }
 
@@ -320,6 +336,29 @@ export function useCylinderWeightPageController() {
         },
       };
     });
+    navigation.focusFirstAfterRender();
+  }
+
+  function focusAfterCalculate(
+    next: ReturnType<typeof createInitialCylinderWeightForm>,
+  ) {
+    const hasInlineError = focusOrder.some((key) =>
+      Boolean(next.fields[key].error),
+    );
+
+    if (hasInlineError) {
+      navigation.focusFirstInvalidAfterRender((key) =>
+        Boolean(next.fields[key].error),
+      );
+      return;
+    }
+
+    if (!next.formError) return;
+
+    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
+      const value = next.fields[key]?.value;
+      return value == null || String(value).trim() === "";
+    });
   }
 
   const selectedMaterial = useMemo(
@@ -329,6 +368,7 @@ export function useCylinderWeightPageController() {
 
   return {
     form,
+    navigation,
     onFieldChange,
     calculate,
     resetForm,

@@ -1,4 +1,3 @@
-import { useFormNavigation } from "@shared/hooks";
 import { FormActions } from "@shared/ui/form/FormActions";
 import { FormError } from "@shared/ui/form/FormError";
 import { FormGrid } from "@shared/ui/form/FormGrid";
@@ -14,12 +13,6 @@ type Props = {
   controller: ReturnType<typeof useCylinderWeightPageController>;
 };
 
-const focusOrder: Exclude<CylinderWeightKey, "mass_kg">[] = [
-  "outer_diameter_mm",
-  "inner_diameter_mm",
-  "length_mm",
-];
-
 const inputFieldConfigs = cylinderWeightFieldConfig.filter(
   (fieldConfig) => !fieldConfig.readOnly,
 ) as Array<
@@ -33,40 +26,7 @@ const resultFieldConfigs = cylinderWeightFieldConfig.filter(
 );
 
 export function CylinderWeightForm({ controller }: Props) {
-  const navigation = useFormNavigation({
-    keys: focusOrder,
-    autoFocusOnMount: true,
-    activePath: "/cylinder-weight",
-    onSubmit: onCalculate,
-  });
-
-  async function onCalculate() {
-    const next = await controller.calculate();
-    if (!next) return;
-
-    const hasInlineError = focusOrder.some((key) =>
-      Boolean(next.fields[key].error),
-    );
-
-    if (hasInlineError) {
-      navigation.focusFirstInvalidAfterRender((key) =>
-        Boolean(next.fields[key].error),
-      );
-      return;
-    }
-
-    if (!next.formError) return;
-
-    navigation.focusFirstInOrderAfterRender(focusOrder, (key) => {
-      const value = next.fields[key]?.value;
-      return value == null || String(value).trim() === "";
-    });
-  }
-
-  function onReset() {
-    controller.resetForm();
-    navigation.focusFirstAfterRender();
-  }
+  const { navigation } = controller;
 
   const error = controller.form.formError ? (
     <FormError error={controller.form.formError} />
@@ -78,8 +38,8 @@ export function CylinderWeightForm({ controller }: Props) {
         error={error}
         actions={(
           <FormActions
-            onCalculate={onCalculate}
-            onReset={onReset}
+            onCalculate={controller.calculate}
+            onReset={controller.resetForm}
             disabled={controller.loadingMaterials}
           />
         )}
