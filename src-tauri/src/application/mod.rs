@@ -15,6 +15,7 @@ pub mod finishing;
 mod helix;
 mod right_triangle;
 pub mod shared;
+pub mod thread;
 mod tolerance;
 
 pub use shared::{ApplicationError, ValidationErrors};
@@ -44,4 +45,9 @@ pub use tolerance::{
     list_tolerance_options_with_connection, lookup_tolerance, lookup_tolerance_with_connection,
     parse_tolerance_code, FitResult, FitSummary, Iso286Error, ToleranceOption, ToleranceOptions,
     ToleranceResult,
+};
+
+pub use thread::{
+    ListThreadOptionsUseCase, SolveThreadInput, SolveThreadOutput, SolveThreadUseCase,
+    ThreadOptionsOutput, ThreadPitchOptionOutput, ThreadSizeOptionOutput, ThreadTypeOptionOutput,
 };

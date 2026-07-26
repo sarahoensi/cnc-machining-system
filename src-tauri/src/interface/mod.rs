@@ -6,4 +6,6 @@
 
 pub mod tauri;
 
-pub use tauri::{cutting_data, cylinder_weight, finishing, helix, right_triangle, tolerance};
+pub use tauri::{
+    cutting_data, cylinder_weight, finishing, helix, right_triangle, thread, tolerance,
+};

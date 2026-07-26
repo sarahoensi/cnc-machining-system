@@ -1,0 +1,25 @@
+.threads-form-root {
+  height: 100%;
+  min-height: 0;
+}
+
+.threads-selection-grid,
+.threads-result-grid {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.threads-selection-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.threads-result-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.threads-pitch-meta {
+  margin-top: calc(-1 * var(--space-2));
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+}
