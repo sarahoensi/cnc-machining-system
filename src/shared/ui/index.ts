@@ -1,2 +1,24 @@
-// src/shared/ui/index.ts
+export * from "./form/Field";
+export * from "./form/FormActions";
+export * from "./form/FormError";
+export * from "./form/FormGrid";
+export * from "./form/FormLayout";
+export * from "./form/fields";
+export * from "./overlay/DialogActions/DialogActions";
+export * from "./overlay/InfoDialog/InfoDialog";
+export * from "./overlay/Modal/Modal";
+export * from "./page/FormPage";
+export * from "./page/PageShell";
+export * from "./patterns/FormWithSidePanel/FormWithSidePanel";
+export * from "./primitives/Button/Button";
+export * from "./primitives/RadioGroup/RadioGroup";
+export * from "./primitives/Row/Row";
+export * from "./primitives/Select";
+export * from "./primitives/Split/Split";
+export * from "./primitives/Stack/Stack";
+export * from "./primitives/TextWithTooltip/TextWithTooltip";
+export * from "./primitives/input";
+export * from "./surfaces/Panel/Panel";
+export * from "./surfaces/ScrollArea/ScrollArea";
+export * from "./table/Table";
 

@@ -1,4 +1,4 @@
-// shared/engine/formEngine.ts
+// shared/form/engine/formEngine.ts
 
 import type { FormState } from "@shared/form/types/forms";
 import type { FieldState } from "@shared/form/types/fields";
@@ -122,7 +122,7 @@ export function handleUserEdit<
 
   let nextFields = form.fields;
 
-  // If editing after solved → remove machine values
+  // If editing after solved, remove machine values.
   if (form.status === "solved") {
     nextFields = clearMachineFields(nextFields);
   }
@@ -432,7 +432,7 @@ export async function handleGenerateAsync<
   form: FormState<K, E>;
   execution?: X;
 }> {
-  // 0️⃣ Frontend validation (form-level)
+  // 0. Frontend validation.
   if (validate) {
     const error = validate(form.fields, form.extras);
 
@@ -472,7 +472,7 @@ export async function handleGenerateAsync<
 
     const te = getTauriCommandError(error);
 
-    // ✅ Backend field errors
+    // Backend field errors.
     if (te?.fieldErrors) {
       const nextFields = applyFieldErrors(
         form.fields,
@@ -488,7 +488,7 @@ export async function handleGenerateAsync<
       };
     }
 
-    // ✅ Frontend / domain errors
+    // Frontend or domain errors.
     if (error instanceof Error) {
       return {
         form: {

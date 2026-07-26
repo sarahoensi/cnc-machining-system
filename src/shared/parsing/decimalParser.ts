@@ -1,4 +1,4 @@
-// shared/engine/parsing/decimalParcer.ts
+// shared/parsing/decimalParser.ts
 
 // Strict decimal format:
 // - optional leading "-"

@@ -19,17 +19,11 @@ export function useSavedResults<TForm extends SavedResultForm>({
   function save(form: TForm) {
     if (form.status !== "solved") return;
 
-    const entry: SavedResultEntry<TForm> = {
-      id: crypto.randomUUID(),
-      form: structuredClone(form),
-      createdAt: Date.now(),
-    };
-
-    setHistory((prev) => [...prev, entry]);
+    setHistory((prev) => [...prev, createSavedResultEntry(form)]);
   }
 
   function load(entry: SavedResultEntry<TForm>) {
-    const form = structuredClone(entry.form);
+    const form = cloneSavedResultForm(entry.form);
     return normalizeLoadedForm ? normalizeLoadedForm(form) : form;
   }
 
@@ -48,4 +42,24 @@ export function useSavedResults<TForm extends SavedResultForm>({
     remove,
     clear,
   };
+}
+
+export function createSavedResultEntry<TForm extends SavedResultForm>(
+  form: TForm,
+  options?: {
+    id?: string;
+    createdAt?: number;
+  },
+): SavedResultEntry<TForm> {
+  return {
+    id: options?.id ?? crypto.randomUUID(),
+    form: cloneSavedResultForm(form),
+    createdAt: options?.createdAt ?? Date.now(),
+  };
+}
+
+export function cloneSavedResultForm<TForm extends SavedResultForm>(
+  form: TForm,
+): TForm {
+  return structuredClone(form);
 }

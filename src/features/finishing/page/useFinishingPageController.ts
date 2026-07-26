@@ -15,7 +15,7 @@ import { mapFinishingExecution } from "../execution/domain/mapExecution";
 
 import type { ExecutionState } from "@shared/execution";
 import type { FinishingStepData } from "../execution/domain/mapExecution";
-import { validateFinishingForm } from "../plan/domain/ValidateFinishingForm";
+import { validateFinishingForm } from "../plan/domain/validateFinishingForm";
 
 
 export function useFinishingPageController() {

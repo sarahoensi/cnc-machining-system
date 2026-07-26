@@ -3,7 +3,7 @@
 import { generateFinishingPlanApi } from "../../api/finishingApi";
 
 import type { FinishingExecutionResponse } from "../../api/types";
-import { buildFinishingRequest } from "../domain/buildGenerateRequest";
+import { buildFinishingRequest } from "../domain/buildRequest";
 import { FinishingExtras, FinishingKey } from "../domain/finishingForm";
 
 export async function generateFinishingPlan(
