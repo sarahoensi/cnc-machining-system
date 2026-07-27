@@ -11,6 +11,12 @@ use crate::domain::{
 
 pub struct GenerateFinishingPlanUseCase;
 
+impl Default for GenerateFinishingPlanUseCase {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl GenerateFinishingPlanUseCase {
     pub fn new() -> Self {
         Self
@@ -32,7 +38,7 @@ impl GenerateFinishingPlanUseCase {
 
                 p.domain("cuts", FinishingPlanner::validate_cuts(cuts));
 
-                if let (Some(s), Some(t)) = (start.clone(), target.clone()) {
+                if let (Some(s), Some(t)) = (start, target) {
                     p.domain(
                         "target_diameter_mm",
                         FinishingPlanner::validate_direction(mode, s, t),
@@ -64,7 +70,7 @@ impl GenerateFinishingPlanUseCase {
                     );
                 }
 
-                if let (Some(s), Some(t)) = (start.clone(), target.clone()) {
+                if let (Some(s), Some(t)) = (start, target) {
                     p.domain(
                         "target_diameter_mm",
                         FinishingPlanner::validate_direction(mode, s, t),

@@ -23,14 +23,12 @@ impl SolveHelixUseCase {
                 tool_diameter,
                 pitch,
             } => {
-                let mode = mode.into();
-
                 // felles parsing
                 let diameter = p.value("diameter", Diameter::mm(diameter));
                 let tool = p.value("tool_diameter", Diameter::mm(tool_diameter));
 
                 // geometriregel skal alltid kjøres hvis mulig
-                if let (Some(d), Some(t)) = (diameter.clone(), tool.clone()) {
+                if let (Some(d), Some(t)) = (diameter, tool) {
                     p.domain("tool_diameter", Helix::validate_tool(mode, d, t));
                 }
 
@@ -50,12 +48,10 @@ impl SolveHelixUseCase {
                 tool_diameter,
                 angle,
             } => {
-                let mode = mode.into();
-
                 let diameter = p.value("diameter", Diameter::mm(diameter));
                 let tool = p.value("tool_diameter", Diameter::mm(tool_diameter));
 
-                if let (Some(d), Some(t)) = (diameter.clone(), tool.clone()) {
+                if let (Some(d), Some(t)) = (diameter, tool) {
                     p.domain("tool_diameter", Helix::validate_tool(mode, d, t));
                 }
 

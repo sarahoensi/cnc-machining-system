@@ -6,6 +6,12 @@ pub struct InputParser {
     errors: ValidationErrors,
 }
 
+impl Default for InputParser {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl InputParser {
     pub fn new() -> Self {
         Self {

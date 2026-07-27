@@ -10,6 +10,12 @@ use crate::domain::{machining::finishing::FinishingExecution, units::Diameter};
 
 pub struct RegisterFinishingMeasurementUseCase;
 
+impl Default for RegisterFinishingMeasurementUseCase {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl RegisterFinishingMeasurementUseCase {
     pub fn new() -> Self {
         Self

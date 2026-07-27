@@ -6,7 +6,6 @@ use crate::domain::units::{core::NumericError, UnitsError};
 ///
 /// Stored internally in millimeters (mm).
 /// Values must be finite, but may be negative.
-
 #[must_use]
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
 pub struct Length(f64);
