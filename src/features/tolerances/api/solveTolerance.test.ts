@@ -28,7 +28,7 @@ describe("tolerance frontend mapping", () => {
 
   it("parses persisted form state into lookup input", () => {
     const form = createInitialToleranceForm();
-    form.fields.nominal.value = "42.0";
+    form.fields.nominal.value = " 42,0 ";
     form.extras.mode = "shaft";
 
     expect(parseTolerance(form.fields, form.extras)).toEqual({
@@ -36,6 +36,26 @@ describe("tolerance frontend mapping", () => {
       nominalMm: 42,
       code: "h7",
     });
+  });
+
+  it("rejects unsupported decimal formats consistently", () => {
+    const form = createInitialToleranceForm();
+    form.fields.nominal.value = "1e3";
+
+    expect(parseTolerance(form.fields, form.extras)).toBeNull();
+    expect(validateToleranceForm(form.fields, form.extras)).toEqual([
+      "Nominal size must be greater than zero",
+    ]);
+    expect(
+      buildLookupIso286ToleranceRequest({
+        nominal: "1e3",
+        mode: "hole",
+        holeLetter: "H",
+        holeGrade: "7",
+        shaftLetter: "h",
+        shaftGrade: "6",
+      }),
+    ).toBeNull();
   });
 
   it("maps form values into single tolerance lookup requests", () => {

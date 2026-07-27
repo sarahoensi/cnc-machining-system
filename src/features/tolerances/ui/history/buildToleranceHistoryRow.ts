@@ -1,6 +1,5 @@
-//features/tolerances/ui/history/buildToleranceHistoryRows.ts
-
 import { formatNumber } from "@shared/lib/format/formatNumber";
+import { parseDecimalInput } from "@shared/parsing/decimalParser";
 
 import type { SavedResultEntry } from "@shared/savedResults";
 import type { ToleranceFormState } from "../../domain/toleranceForm";
@@ -74,7 +73,7 @@ function getNumericFieldValue(
   if (rawValue == null || rawValue === "") return null;
 
   const numericValue =
-    typeof rawValue === "number" ? rawValue : Number(rawValue.replace(",", "."));
+    typeof rawValue === "number" ? rawValue : parseDecimalInput(rawValue).number;
 
-  return Number.isNaN(numericValue) ? null : numericValue;
+  return numericValue;
 }
