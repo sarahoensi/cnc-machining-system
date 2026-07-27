@@ -22,7 +22,7 @@ export function evaluateConstraints<K extends string>(
 } {
 
   const keys = Object.keys(fields) as K[];
-  let next: Record<K, FieldState> = { ...fields };
+  const next: Record<K, FieldState> = { ...fields };
 
   // Identify user-driven keys.
   const userKeys = keys.filter(

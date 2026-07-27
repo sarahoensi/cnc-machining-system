@@ -26,7 +26,7 @@ export function applyPairLogic<K extends string>(
     return fields;
   }
 
-  let next: Record<K, FieldState> = { ...fields };
+  const next: Record<K, FieldState> = { ...fields };
 
   for (const [a, b] of pairs) {
 
