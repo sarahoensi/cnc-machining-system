@@ -22,14 +22,13 @@ export type FinishingExtras = {
   planning: "ByCuts" | "ByRadialEngagement";
 };
 
+export type FinishingFormState = FormState<FinishingKey, FinishingExtras>;
+
 /* ============================================================
    Factory
 ============================================================ */
 
-export function createInitialFinishingForm(): FormState<
-  FinishingKey,
-  FinishingExtras
-> {
+export function createInitialFinishingForm(): FinishingFormState {
   return {
     status: "editing",
     fields: {

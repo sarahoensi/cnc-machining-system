@@ -3,7 +3,10 @@
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { handleGenerateAsync } from "@shared/form";
 
-import { createInitialFinishingForm } from "../plan/domain/finishingForm";
+import {
+  createInitialFinishingForm,
+  type FinishingFormState,
+} from "../plan/domain/finishingForm";
 import { parseFinishingPlan } from "../plan/domain/parseFinishingPlan";
 
 import { buildRegisterRequest } from "../execution/domain/buildRegisterRequest";
@@ -17,6 +20,9 @@ import type { ExecutionState } from "@shared/execution";
 import type { FinishingStepData } from "../execution/domain/mapExecution";
 import { validateFinishingForm } from "../plan/domain/validateFinishingForm";
 
+type FinishingFormUpdate =
+  | FinishingFormState
+  | ((prev: FinishingFormState) => FinishingFormState);
 
 export function useFinishingPageController() {
 
@@ -73,7 +79,7 @@ export function useFinishingPageController() {
      Form update
   ============================================================ */
 
-  function updateForm(nextForm: any) {
+  function updateForm(nextForm: FinishingFormUpdate) {
 
     if (execution && !confirmExecutionReset()) {
       return;

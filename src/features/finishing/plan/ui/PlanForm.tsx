@@ -12,17 +12,21 @@ import { useFormNavigation } from "@shared/hooks";
 
 import { finishingFieldConfig } from "./finishingFieldConfig";
 import { FormActions } from "@shared/ui/form/FormActions";
-import { createInitialFinishingForm, FinishingKey } from "../domain/finishingForm";
+import type { FinishingFormState, FinishingKey } from "../domain/finishingForm";
 import { mutuallyExclusiveFinishingPairs, validFinishingInputSets } from "../domain/finishingConstraints";
 import { FormError } from "@shared/ui/form/FormError";
 import { FormGrid } from "@shared/ui/form/FormGrid";
 import { FormLayout } from "@shared/ui/form/FormLayout";
 import { finishingTooltips } from "./finishingPlanTooltip";
 
+type SetFinishingForm = (
+  value: FinishingFormState | ((prev: FinishingFormState) => FinishingFormState),
+) => void;
+
 type Props = {
-  form: ReturnType<typeof createInitialFinishingForm>;
-  setForm: (v: any) => void;
-  onGenerate: () => Promise<ReturnType<typeof createInitialFinishingForm> | void> | ReturnType<typeof createInitialFinishingForm> | void;
+  form: FinishingFormState;
+  setForm: SetFinishingForm;
+  onGenerate: () => Promise<FinishingFormState | void> | FinishingFormState | void;
   onReset: () => void;
   onEdit: () => void;
   readOnly: boolean;
@@ -71,7 +75,7 @@ export function PlanForm({
     key: FinishingKey,
     value: string
   ) {
-    setForm((prev: any) =>
+    setForm((prev) =>
       handleUserEdit(
         prev,
         key,
@@ -90,7 +94,7 @@ export function PlanForm({
           tooltip={finishingTooltips.mode}
           value={form.extras.mode}
           onChange={(newMode) =>
-            setForm((prev: any) =>
+            setForm((prev) =>
               handleModeChange(prev, {
                 ...prev.extras,
                 mode: newMode,
