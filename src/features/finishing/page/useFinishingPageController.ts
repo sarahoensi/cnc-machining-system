@@ -1,4 +1,4 @@
-// features/finishing/pagee/useFinishingPageController.ts
+// features/finishing/page/useFinishingPageController.ts
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { handleGenerateAsync } from "@shared/form";

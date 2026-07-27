@@ -1,5 +1,5 @@
 // tests/application/cutting_data/mod.rs
 
-mod concistency;
+mod consistency;
 mod partial;
 mod validation;

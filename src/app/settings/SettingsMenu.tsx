@@ -13,8 +13,8 @@ type SettingsItem = {
 };
 
 const SETTINGS_MENU: readonly SettingsItem[] = [
-  { key: "theme", label: "🎨 Tema", component: ThemeSettings },
-  { key: "decimals", label: "🔢 Desimaler", component: DecimalSettings },
+  { key: "theme", label: "Tema", component: ThemeSettings },
+  { key: "decimals", label: "Desimaler", component: DecimalSettings },
 ] as const;
 
 type Props = {
@@ -27,7 +27,7 @@ export function SettingsMenu({ onClose, triggerRef }: Props) {
   const [activeKey, setActiveKey] = useState<string | null>(null);
 
   /* --------------------------------------------
-     Close on click outside (FIXED)
+     Close on click outside
   -------------------------------------------- */
   useEffect(() => {
     function handlePointerDown(e: MouseEvent) {
@@ -43,7 +43,6 @@ export function SettingsMenu({ onClose, triggerRef }: Props) {
       }
     }
 
-    // IMPORTANT: use mousedown instead of click
     document.addEventListener("mousedown", handlePointerDown);
 
     return () => document.removeEventListener("mousedown", handlePointerDown);
@@ -81,7 +80,7 @@ export function SettingsMenu({ onClose, triggerRef }: Props) {
               onMouseEnter={() => setActiveKey(item.key)}
             >
               {item.label}
-              <span className="chevron">›</span>
+              <span className="chevron">&gt;</span>
             </div>
           ))}
         </div>
