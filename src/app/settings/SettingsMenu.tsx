@@ -47,7 +47,7 @@ export function SettingsMenu({ onClose, triggerRef }: Props) {
     document.addEventListener("mousedown", handlePointerDown);
 
     return () => document.removeEventListener("mousedown", handlePointerDown);
-  }, [onClose]);
+  }, [onClose, triggerRef]);
 
   /* --------------------------------------------
      Close on Escape

@@ -8,7 +8,7 @@ import {
 import { useFormNavigation } from "@shared/hooks";
 import { getTauriCommandError } from "@shared/api/tauriError";
 import { safeParseDecimal } from "@shared/parsing/decimalParser";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   createCylinderMaterialApi,
   deleteCylinderMaterialApi,
@@ -74,25 +74,21 @@ export function useCylinderWeightPageController() {
     onSubmit: calculate,
   });
 
-  useEffect(() => {
-    void loadMaterials();
-  }, []);
-
-  async function loadMaterials() {
+  const loadMaterials = useCallback(async () => {
     setLoadingMaterials(true);
     setMaterialLoadError(undefined);
     try {
       const rows = await listCylinderMaterialsApi();
       setMaterials(sortCylinderMaterials(rows));
 
-      if (!form.extras.materialId && rows.length > 0) {
+      if (rows.length > 0) {
         setForm((prev) => ({
           ...prev,
           extras: {
             ...prev.extras,
-            materialId: rows[0].id,
-            materialName: rows[0].name,
-            densityKgM3: rows[0].density_kg_m3,
+            materialId: prev.extras.materialId || rows[0].id,
+            materialName: prev.extras.materialName || rows[0].name,
+            densityKgM3: prev.extras.densityKgM3 ?? rows[0].density_kg_m3,
           },
         }));
       }
@@ -102,7 +98,11 @@ export function useCylinderWeightPageController() {
     } finally {
       setLoadingMaterials(false);
     }
-  }
+  }, [setForm]);
+
+  useEffect(() => {
+    void loadMaterials();
+  }, [loadMaterials]);
 
   function onFieldChange(key: CylinderWeightKey, value: string) {
     setForm((prev) =>

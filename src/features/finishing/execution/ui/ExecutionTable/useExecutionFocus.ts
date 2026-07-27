@@ -1,6 +1,6 @@
 // features/finishing/execution/ui/ExecutionTable/useExecutionFocus.ts
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 export function useExecutionFocus<K extends number>(options: {
   inputRefs: React.RefObject<Record<K, HTMLInputElement | null>>;
@@ -9,16 +9,19 @@ export function useExecutionFocus<K extends number>(options: {
 }) {
   const { inputRefs, activeIndex, editingIndex } = options;
 
-  const focus = (index: K | null) => {
-    if (index == null) return;
+  const focus = useCallback(
+    (index: K | null) => {
+      if (index == null) return;
 
-    requestAnimationFrame(() => {
-      const el = inputRefs.current[index];
-      if (el && !el.disabled && el.tabIndex !== -1) {
-        el.focus();
-      }
-    });
-  };
+      requestAnimationFrame(() => {
+        const el = inputRefs.current[index];
+        if (el && !el.disabled && el.tabIndex !== -1) {
+          el.focus();
+        }
+      });
+    },
+    [inputRefs],
+  );
 
   useEffect(() => {
     if (editingIndex !== null) {
@@ -27,5 +30,5 @@ export function useExecutionFocus<K extends number>(options: {
     }
 
     focus(activeIndex);
-  }, [editingIndex, activeIndex]);
+  }, [editingIndex, activeIndex, focus]);
 }
