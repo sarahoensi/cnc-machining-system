@@ -6,12 +6,7 @@ import { NumberInput } from "./NumberInput";
 describe("NumberInput", () => {
   it("renders decimal input attributes and unit text", () => {
     const markup = renderToStaticMarkup(
-      <NumberInput
-        id="feed"
-        value="12.5"
-        unit="mm"
-        onChange={() => undefined}
-      />,
+      <NumberInput id="feed" value="12.5" unit="mm" onChange={() => undefined} />,
     );
 
     expect(markup).toContain('inputMode="decimal"');
@@ -22,11 +17,7 @@ describe("NumberInput", () => {
 
   it("renders source and disabled modifiers", () => {
     const markup = renderToStaticMarkup(
-      <NumberInput
-        value="1200"
-        source="machine"
-        disabled
-      />,
+      <NumberInput value="1200" source="machine" disabled />,
     );
 
     expect(markup).toContain("input-control--machine");

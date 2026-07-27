@@ -18,22 +18,14 @@ type HistoryCardStyle = CSSProperties & {
   "--history-card-columns": number;
 };
 
-export function HistoryCard({
-  items,
-  columns = 2,
-  onClick,
-  onDelete,
-}: Props) {
+export function HistoryCard({ items, columns = 2, onClick, onDelete }: Props) {
   const contentStyle: HistoryCardStyle = {
     "--history-card-columns": columns,
   };
 
   return (
     <div className="history-card" onClick={onClick}>
-      <div
-        className="history-card-content"
-        style={contentStyle}
-      >
+      <div className="history-card-content" style={contentStyle}>
         {items.map((item, i) => (
           <div key={i} className="history-card-item">
             <span className="hc-label">{item.label}</span>

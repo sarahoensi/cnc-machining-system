@@ -1,7 +1,6 @@
 /* styles/themes/pink.css */
 
 [data-theme="pink"] {
-
   /* =====================================================
      DRAGONFRUIT SCALE (SOURCE OF TRUTH)
   ===================================================== */
@@ -18,7 +17,6 @@
   --color-dragonfruit-900: #330017;
   --color-dragonfruit-950: #240010;
 
-
   /* =====================================================
      SURFACES
   ===================================================== */
@@ -28,7 +26,6 @@
   --color-surface-elevated: #ffffff;
   --color-surface-hover: var(--color-dragonfruit-100);
   --color-surface-muted: var(--color-dragonfruit-100);
-
 
   /* =====================================================
      TEXT
@@ -41,7 +38,6 @@
   --color-text-placeholder: var(--color-dragonfruit-500);
   --color-text-inverse: #ffffff;
 
-
   /* =====================================================
      BORDERS
   ===================================================== */
@@ -49,7 +45,6 @@
   --color-border: var(--color-dragonfruit-200);
   --color-border-strong: var(--color-dragonfruit-300);
   --color-border-muted: var(--color-dragonfruit-100);
-
 
   /* =====================================================
      BRAND / PRIMARY
@@ -60,21 +55,20 @@
   --color-primary-soft: rgba(255, 0, 115, 0.18); /* 500 */
   --color-on-primary: #ffffff;
 
-/* =====================================================
+  /* =====================================================
    BRAND / SECONDARY
 ===================================================== */
 
---color-secondary: var(--color-dragonfruit-100);
---color-secondary-hover: var(--color-dragonfruit-200);
---color-secondary-soft: rgba(255, 0, 115, 0.10);
---color-on-secondary: var(--color-dragonfruit-800);
+  --color-secondary: var(--color-dragonfruit-100);
+  --color-secondary-hover: var(--color-dragonfruit-200);
+  --color-secondary-soft: rgba(255, 0, 115, 0.1);
+  --color-on-secondary: var(--color-dragonfruit-800);
 
   /* =====================================================
      FOCUS
   ===================================================== */
 
   --color-focus: rgba(255, 0, 115, 0.35);
-
 
   /* =====================================================
      FEEDBACK
@@ -87,13 +81,12 @@
   --color-warning: #f59e0b;
   --color-info: #0ea5e9;
 
-
   /* =====================================================
      STATE / SPECIAL
   ===================================================== */
 
   --color-user: rgba(255, 0, 115, 0.12);
-  --color-machine: rgba(51, 0, 23, 0.06);   /* 900 */
+  --color-machine: rgba(51, 0, 23, 0.06); /* 900 */
   --color-disabled: rgba(51, 0, 23, 0.12);
   --color-locked: rgba(245, 158, 11, 0.14);
 

@@ -4,11 +4,7 @@ import { resultField, userField } from "@shared/form/types/fields";
 import type { ThreadOptionsResponse, ThreadType } from "../api/types";
 import { emptyThreadOptions } from "./threadOptions";
 
-export type ThreadKey =
-  | "size"
-  | "pitch"
-  | "drill_diameter"
-  | "thread_depth";
+export type ThreadKey = "size" | "pitch" | "drill_diameter" | "thread_depth";
 
 export type ThreadExtras = {
   type: ThreadType;

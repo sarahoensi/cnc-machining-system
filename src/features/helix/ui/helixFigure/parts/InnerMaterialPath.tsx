@@ -2,35 +2,33 @@
 /* InnerMaterial */
 /* --------------------------------------------- */
 export function buildInnerMaterialPath({
-    centerBottom,
+  centerBottom,
 
-    baseWidth,
-    baseHeight,
+  baseWidth,
+  baseHeight,
 
-    materialTopY,
-    centerRadius,    
+  materialTopY,
+  centerRadius,
 }: {
-    centerBottom: {x: number, y: number};
-    baseWidth: number;
-    baseHeight: number;
+  centerBottom: { x: number; y: number };
+  baseWidth: number;
+  baseHeight: number;
 
-    materialTopY: number;
-    centerRadius: number;
-    
+  materialTopY: number;
+  centerRadius: number;
 }) {
-    const materialLeft = centerBottom.x - baseWidth / 2;
-    const materialRight = centerBottom.x + baseWidth / 2;
+  const materialLeft = centerBottom.x - baseWidth / 2;
+  const materialRight = centerBottom.x + baseWidth / 2;
 
-    const baseBottom = centerBottom.y;
-    const baseTop = centerBottom.y - baseHeight;
+  const baseBottom = centerBottom.y;
+  const baseTop = centerBottom.y - baseHeight;
 
-    const topY = materialTopY;
+  const topY = materialTopY;
 
-    const topLeftX = centerBottom.x - centerRadius; 
-    const topRightX = centerBottom.x + centerRadius; 
+  const topLeftX = centerBottom.x - centerRadius;
+  const topRightX = centerBottom.x + centerRadius;
 
-
-    return `
+  return `
         M ${materialLeft} ${topY}
 
         L ${materialLeft} ${baseBottom}

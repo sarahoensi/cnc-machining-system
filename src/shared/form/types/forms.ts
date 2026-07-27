@@ -2,12 +2,9 @@
 
 import type { FieldState } from "@shared/form/types/fields";
 
-export type FormStatus =
-  | "editing"
-  | "solved";
+export type FormStatus = "editing" | "solved";
 
-
-  export type FormState<K extends string, E = undefined> = {
+export type FormState<K extends string, E = undefined> = {
   status: FormStatus;
   fields: Record<K, FieldState>;
   extras: E;

@@ -38,6 +38,4 @@ export const helixFieldConfig: HelixFieldConfig[] = [
     unit: "°",
     tooltip: helixTooltips.angle,
   },
-
-  
 ];

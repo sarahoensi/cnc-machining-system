@@ -1,20 +1,14 @@
 // features/finishing/domain/execution/buildRegisterRequest.ts
 
-import type {
-  RegisterFinishingMeasurementRequest,
-} from "../../api/types";
+import type { RegisterFinishingMeasurementRequest } from "../../api/types";
 
 export function buildRegisterRequest(
   step: number,
-  measurement: number
+  measurement: number,
 ): RegisterFinishingMeasurementRequest {
+  if (step <= 0) throw new Error("Invalid step number");
 
-
-  if (step <= 0)
-    throw new Error("Invalid step number");
-
-  if (!Number.isFinite(measurement))
-    throw new Error("Invalid measurement");
+  if (!Number.isFinite(measurement)) throw new Error("Invalid measurement");
 
   return {
     step_number: step,

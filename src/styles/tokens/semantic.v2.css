@@ -6,8 +6,7 @@ Describe UI meaning. Never hardcode values.
 */
 
 :root {
-
-/* =====================================================
+  /* =====================================================
    FOUNDATION: SURFACES
 ===================================================== */
 
@@ -17,8 +16,7 @@ Describe UI meaning. Never hardcode values.
   --surface-muted: var(--color-surface-muted);
   --surface-hover: var(--color-surface-hover);
 
-
-/* =====================================================
+  /* =====================================================
    FOUNDATION: TEXT
 ===================================================== */
 
@@ -31,8 +29,7 @@ Describe UI meaning. Never hardcode values.
 
   --text-interactive-hover: var(--color-primary);
 
-
-/* =====================================================
+  /* =====================================================
    FOUNDATION: BORDERS
 ===================================================== */
 
@@ -41,8 +38,7 @@ Describe UI meaning. Never hardcode values.
   --border-muted: var(--color-border-muted);
   --border-focus: var(--color-focus);
 
-
-/* =====================================================
+  /* =====================================================
    FOUNDATION: BRAND
 ===================================================== */
 
@@ -51,8 +47,7 @@ Describe UI meaning. Never hardcode values.
   --brand-primary-soft: var(--color-primary-soft);
   --brand-on-primary: var(--color-on-primary);
 
-
-/* =====================================================
+  /* =====================================================
    FOUNDATION: FEEDBACK
 ===================================================== */
 
@@ -61,8 +56,7 @@ Describe UI meaning. Never hardcode values.
   --feedback-warning: var(--color-warning);
   --feedback-info: var(--color-info);
 
-
-/* =====================================================
+  /* =====================================================
    STATE (GLOBAL UI STATES)
 ===================================================== */
 
@@ -81,8 +75,7 @@ Describe UI meaning. Never hardcode values.
   --state-success: var(--feedback-success);
   --state-warning: var(--feedback-warning);
 
-
-/* =====================================================
+  /* =====================================================
    ROLE: INTERACTIONS (MID-LAYER 🔥)
 ===================================================== */
 
@@ -98,15 +91,13 @@ Describe UI meaning. Never hardcode values.
   --interactive-neutral-bg-hover: var(--state-hover-bg);
   --interactive-neutral-text: var(--text-primary);
 
-
-/* =====================================================
+  /* =====================================================
    FOCUS
 ===================================================== */
 
   --focus-ring-color: var(--color-focus);
 
-
-/* =====================================================
+  /* =====================================================
    TYPOGRAPHY (ROLES)
 ===================================================== */
 
@@ -128,8 +119,7 @@ Describe UI meaning. Never hardcode values.
   --text-numeric-size-md: var(--font-size-md);
   --text-numeric-weight: var(--font-weight-medium);
 
-
-/* =====================================================
+  /* =====================================================
    TYPOGRAPHY: FORM (CONTEXT)
 ===================================================== */
 
@@ -140,13 +130,12 @@ Describe UI meaning. Never hardcode values.
 
   --form-sm-text-size: var(--font-size-sm);
   --form-md-text-size: var(--font-size-md);
-   --form-sm-label-size: var(--font-size-sm);
+  --form-sm-label-size: var(--font-size-sm);
 
   --form-lg-text-size: var(--font-size-lg);
   --form-lg-label-size: var(--font-size-md);
 
-
-/* =====================================================
+  /* =====================================================
    LAYOUT (GLOBAL)
 ===================================================== */
 
@@ -156,8 +145,7 @@ Describe UI meaning. Never hardcode values.
   --topbar-height: var(--size-topbar-height);
   --sidebar-width: var(--size-sidebar-width);
 
-
-/* =====================================================
+  /* =====================================================
    LAYOUT PATTERNS
 ===================================================== */
 
@@ -169,8 +157,7 @@ Describe UI meaning. Never hardcode values.
   --panel-border-color: var(--border-default);
   --panel-border-width: var(--border-width-sm);
 
-
-/* =====================================================
+  /* =====================================================
    CONTROLS (BASE COMPONENT)
 ===================================================== */
 
@@ -196,8 +183,7 @@ Describe UI meaning. Never hardcode values.
   --control-text: var(--interactive-neutral-text);
   --control-text-disabled: var(--text-secondary);
 
-
-/* =====================================================
+  /* =====================================================
    INPUTS
 ===================================================== */
 
@@ -228,53 +214,45 @@ Describe UI meaning. Never hardcode values.
   --input-padding-x-form: var(--space-3);
   --input-padding-y-form: 0.35em;
 
-
-/* =====================================================
+  /* =====================================================
    BUTTONS (SEMANTIC → BRAND MAPPED)
 ===================================================== */
 
-/* Primary */
---button-primary-bg: var(--color-primary);
---button-primary-bg-hover: var(--color-primary-hover);
---button-primary-text: var(--color-on-primary);
+  /* Primary */
+  --button-primary-bg: var(--color-primary);
+  --button-primary-bg-hover: var(--color-primary-hover);
+  --button-primary-text: var(--color-on-primary);
 
+  /* Secondary */
+  --button-secondary-bg: var(--color-secondary);
+  --button-secondary-bg-hover: var(--color-secondary-hover);
+  --button-secondary-text: var(--color-on-secondary);
 
-/* Secondary */
---button-secondary-bg: var(--color-secondary);
---button-secondary-bg-hover: var(--color-secondary-hover);
---button-secondary-text: var(--color-on-secondary);
+  /* Danger (tonet ned – ikke primary) */
+  --button-danger-bg: transparent;
+  --button-danger-bg-hover: var(--color-danger-soft, rgba(220, 38, 38, 0.08));
+  --button-danger-text: var(--color-danger);
 
+  /* Disabled */
+  --button-bg-disabled: var(--state-disabled-bg);
+  --button-text-disabled: var(--state-disabled-text);
 
-/* Danger (tonet ned – ikke primary) */
---button-danger-bg: transparent;
---button-danger-bg-hover: var(--color-danger-soft, rgba(220, 38, 38, 0.08));
---button-danger-text: var(--color-danger);
+  /* Icon */
+  --button-icon-hover-bg: var(--state-hover-bg);
 
+  /* Link */
+  --button-link-text: var(--color-primary);
+  --button-link-text-hover: var(--color-primary-hover);
+  --button-link-text-disabled: var(--state-disabled-text);
 
-/* Disabled */
---button-bg-disabled: var(--state-disabled-bg);
---button-text-disabled: var(--state-disabled-text);
-
-
-/* Icon */
---button-icon-hover-bg: var(--state-hover-bg);
-
-
-/* Link */
---button-link-text: var(--color-primary);
---button-link-text-hover: var(--color-primary-hover);
---button-link-text-disabled: var(--state-disabled-text);
-
-
-/* =====================================================
+  /* =====================================================
    OVERLAY / MODAL
 ===================================================== */
 
   --overlay-backdrop: var(--color-backdrop);
   --overlay-surface: var(--surface-elevated);
 
-
-/* =====================================================
+  /* =====================================================
    FEATURE: TABLE
 ===================================================== */
 
@@ -288,8 +266,7 @@ Describe UI meaning. Never hardcode values.
   --table-header-size: var(--font-size-lg);
   --table-caption-size: var(--font-size-sm);
 
-
-/* =====================================================
+  /* =====================================================
    FEATURE: SIDEBAR
 ===================================================== */
 
@@ -305,8 +282,7 @@ Describe UI meaning. Never hardcode values.
 
   --sidebar-text-size: var(--font-size-lg);
 
-
-/* =====================================================
+  /* =====================================================
    FEATURE: TOPBAR
 ===================================================== */
 
@@ -314,8 +290,7 @@ Describe UI meaning. Never hardcode values.
   --topbar-border: var(--border-default);
   --topbar-text: var(--text-primary);
 
-
-/* =====================================================
+  /* =====================================================
    FEATURE: DIAGRAM
 ===================================================== */
 
@@ -329,7 +304,7 @@ Describe UI meaning. Never hardcode values.
   --diagram-disabled-opacity: var(--state-disabled-opacity);
 
   --diagram-fill: var(--color-primary-soft);
---diagram-fill-muted: var(--surface-muted);
+  --diagram-fill-muted: var(--surface-muted);
   --diagram-dash-pattern: 4 4;
 
   --diagram-label-size: var(--font-size-xs);
@@ -337,63 +312,60 @@ Describe UI meaning. Never hardcode values.
   --diagram-stroke-width: var(--border-width-xs);
   --diagram-stroke-width-active: var(--border-width-lg);
 
-/* =====================================================
+  /* =====================================================
    LAYOUT PATTERNS
 ===================================================== */
 
---layout-form-figure-gap: var(--space-8);
---layout-content-max-width: 1100px;
+  --layout-form-figure-gap: var(--space-8);
+  --layout-content-max-width: 1100px;
 
-/* =====================================================
+  /* =====================================================
    LAYOUT PATTERNS
 ===================================================== */
 
---stack-gap: var(--space-6);
---stack-header-gap: var(--space-2);
+  --stack-gap: var(--space-6);
+  --stack-header-gap: var(--space-2);
 
-/* =====================================================
+  /* =====================================================
    FORM LAYOUT
 ===================================================== */
 
---form-gap: var(--space-4);
---form-fields-gap: var(--space-4);
---form-actions-gap: var(--space-2);
---form-label-control-gap: var(--space-0);
---form-label-icon-gap: var(--space-1-5);
---form-field-gap-compact: var(--space-2);
+  --form-gap: var(--space-4);
+  --form-fields-gap: var(--space-4);
+  --form-actions-gap: var(--space-2);
+  --form-label-control-gap: var(--space-0);
+  --form-label-icon-gap: var(--space-1-5);
+  --form-field-gap-compact: var(--space-2);
 
---form-error-min-height: 1.4em;
+  --form-error-min-height: 1.4em;
 
---form-section-gap: var(--space-4);
---form-section-spacing: var(--space-6);
+  --form-section-gap: var(--space-4);
+  --form-section-spacing: var(--space-6);
 
+  --history-item-text-size: var(--font-size-lg);
+  --history-item-padding: var(--space-3);
 
-
---history-item-text-size: var(--font-size-lg);
---history-item-padding: var(--space-3);
-
-/* =====================================================
+  /* =====================================================
    EXECUTION
 ===================================================== */
 
---execution-gap: var(--space-2);
---execution-text-size: var(--text-numeric-size-md);
---execution-caption-size: var(--form-caption-size);
---execution-padding-x: var(--control-padding-x-sm);
---execution-height: var(--control-height-md);
---execution-error-color: var(--state-error);
+  --execution-gap: var(--space-2);
+  --execution-text-size: var(--text-numeric-size-md);
+  --execution-caption-size: var(--form-caption-size);
+  --execution-padding-x: var(--control-padding-x-sm);
+  --execution-height: var(--control-height-md);
+  --execution-error-color: var(--state-error);
 
-/* =====================================================
+  /* =====================================================
    FIELD DISPLAY
 ===================================================== */
 
---field-display-gap: var(--space-2);
---field-display-value-weight: var(--font-weight-medium);
+  --field-display-gap: var(--space-2);
+  --field-display-value-weight: var(--font-weight-medium);
 
-/* =====================================================
+  /* =====================================================
    FEATURE: DIAGRAM / TOOLTIP
 ===================================================== */
 
---tooltip-icon-size: var(--size-icon-md);
-
+  --tooltip-icon-size: var(--size-icon-md);
 }

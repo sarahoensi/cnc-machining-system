@@ -10,12 +10,7 @@ type Props = {
   className?: string;
 };
 
-export function Panel({
-  title,
-  children,
-  actions,
-  className,
-}: Props) {
+export function Panel({ title, children, actions, className }: Props) {
   return (
     <div className={clsx("panel", className)}>
       {title && <div className="panel-title">{title}</div>}

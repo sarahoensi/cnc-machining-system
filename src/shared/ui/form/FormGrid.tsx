@@ -54,11 +54,7 @@ function FormGridRoot({
 
   return (
     <div
-      className={clsx(
-        "form-grid",
-        collapse && "form-grid--collapse",
-        className,
-      )}
+      className={clsx("form-grid", collapse && "form-grid--collapse", className)}
       style={style}
     >
       {children}
@@ -66,11 +62,7 @@ function FormGridRoot({
   );
 }
 
-function FormGridArea({
-  name,
-  children,
-  className,
-}: FormGridAreaProps) {
+function FormGridArea({ name, children, className }: FormGridAreaProps) {
   const style = {
     gridArea: name,
   } as CSSProperties;

@@ -121,12 +121,12 @@ type FormWidth = "sm" | "md" | "lg" | "fluid";
 Verdiene mappes til modifier-klasser og CSS-variablene `--page-form-width` og
 `--page-form-grid-width`.
 
-| Variant | Verdi | Hensikt | Bruk i features |
-| --- | --- | --- | --- |
-| `sm` | `200px` | Standard calculator-form | Triangle, Helix, Cutting Data, Finishing |
-| `md` | `min(20rem, 100%)` | Bredere, avgrenset single form | Cylinder Weight |
-| `lg` | `clamp(17.5rem, 34vw, 19rem)` | Responsiv bred form for tett innhold | Tolerances |
-| `fluid` | `100%` / `minmax(0, 1fr)` | Fyll tilgjengelig layoutplass | Kun layout-test |
+| Variant | Verdi                         | Hensikt                              | Bruk i features                          |
+| ------- | ----------------------------- | ------------------------------------ | ---------------------------------------- |
+| `sm`    | `200px`                       | Standard calculator-form             | Triangle, Helix, Cutting Data, Finishing |
+| `md`    | `min(20rem, 100%)`            | Bredere, avgrenset single form       | Cylinder Weight                          |
+| `lg`    | `clamp(17.5rem, 34vw, 19rem)` | Responsiv bred form for tett innhold | Tolerances                               |
+| `fluid` | `100%` / `minmax(0, 1fr)`     | Fyll tilgjengelig layoutplass        | Kun layout-test                          |
 
 Det finnes ikke lenger feature-overstyringer av `--layout-form-width`.
 Page-breddene er synlige i JSX.
@@ -403,15 +403,15 @@ Hooken eier ikke figur-rendering eller business-logikk.
 
 ## 5. Feature-status
 
-| Feature | Page-layout / bredde | Field-rendering | Actions | Indirekte feature-layout |
-| --- | --- | --- | --- | --- |
-| Triangle | `FormFigureLayout`, default `sm` | `CalculatorNumberFields`, flat liste | `FormLayout` + `FormActions` | Ingen feature-CSS mot layout-internals |
-| Helix | `FormFigureLayout`, default `sm` | Mode-field + `CalculatorNumberFields` i `FormSection` | `FormLayout` + `FormActions` | Ingen feature-CSS mot layout-internals |
-| Cutting Data | `FormSidebarLayout`, default `sm`, `fillHeight` | Manuell config-map til `FormNumberField` | `FormLayout actionsPlacement="bottom"` + `FormActions` | Ingen feature-CSS mot layout-internals |
-| Tolerances | `FormSidebarLayout`, `lg`, `fillHeight`, med `SplitFormLayout` | Manuell input/output-rendering, mode og selects | `SplitFormLayout` + `FormActions` | Kun feature-wrapper og wrapping av secondary actions |
-| Cylinder Weight | `SingleFormLayout`, `md` | Manuell input/result-filtering i `FormSection` | `FormLayout` + `FormActions` | Page-CSS styrer ikke page-layout-bredde; modal/table-regler finnes |
-| Finishing plan | `SingleFormLayout`, default `sm` | Manuell mode + config-map i `FormSection` | `FormLayout` + `FormActions` | Ingen feature-CSS mot page/form-layout-internals |
-| Finishing execution | `StackedLayout` | Execution-komponenter, ikke vanlig form | Footer-slot | Egen execution-layout |
+| Feature             | Page-layout / bredde                                           | Field-rendering                                       | Actions                                                | Indirekte feature-layout                                           |
+| ------------------- | -------------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------ |
+| Triangle            | `FormFigureLayout`, default `sm`                               | `CalculatorNumberFields`, flat liste                  | `FormLayout` + `FormActions`                           | Ingen feature-CSS mot layout-internals                             |
+| Helix               | `FormFigureLayout`, default `sm`                               | Mode-field + `CalculatorNumberFields` i `FormSection` | `FormLayout` + `FormActions`                           | Ingen feature-CSS mot layout-internals                             |
+| Cutting Data        | `FormSidebarLayout`, default `sm`, `fillHeight`                | Manuell config-map til `FormNumberField`              | `FormLayout actionsPlacement="bottom"` + `FormActions` | Ingen feature-CSS mot layout-internals                             |
+| Tolerances          | `FormSidebarLayout`, `lg`, `fillHeight`, med `SplitFormLayout` | Manuell input/output-rendering, mode og selects       | `SplitFormLayout` + `FormActions`                      | Kun feature-wrapper og wrapping av secondary actions               |
+| Cylinder Weight     | `SingleFormLayout`, `md`                                       | Manuell input/result-filtering i `FormSection`        | `FormLayout` + `FormActions`                           | Page-CSS styrer ikke page-layout-bredde; modal/table-regler finnes |
+| Finishing plan      | `SingleFormLayout`, default `sm`                               | Manuell mode + config-map i `FormSection`             | `FormLayout` + `FormActions`                           | Ingen feature-CSS mot page/form-layout-internals                   |
+| Finishing execution | `StackedLayout`                                                | Execution-komponenter, ikke vanlig form               | Footer-slot                                            | Egen execution-layout                                              |
 
 ### Triangle
 

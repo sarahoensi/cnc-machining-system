@@ -4,24 +4,23 @@
 /* Tool */
 
 export function buildToolPath({
-    toolCenterX,
-    toolBottomY,
-    toolRadius,
-    toolHeight
+  toolCenterX,
+  toolBottomY,
+  toolRadius,
+  toolHeight,
 }: {
-    toolCenterX: number;
-    toolBottomY: number;
-    toolRadius: number;
-    toolHeight: number;
+  toolCenterX: number;
+  toolBottomY: number;
+  toolRadius: number;
+  toolHeight: number;
 }) {
-    
-    const left = toolCenterX - toolRadius;
-    const right = toolCenterX + toolRadius;
+  const left = toolCenterX - toolRadius;
+  const right = toolCenterX + toolRadius;
 
-    const topY = toolBottomY - toolHeight;
-    const bottomY = toolBottomY;
+  const topY = toolBottomY - toolHeight;
+  const bottomY = toolBottomY;
 
-    return `
+  return `
         M ${left} ${topY}
         L ${right} ${topY}
         L ${right} ${bottomY}

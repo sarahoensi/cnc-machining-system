@@ -5,10 +5,7 @@ import { useEffect } from "react";
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { useSavedResults } from "@shared/savedResults";
 import { getTauriCommandError } from "@shared/api/tauriError";
-import {
-  handleCalculateAsync,
-  handleModeChange,
-} from "@shared/form/engine/formEngine";
+import { handleCalculateAsync, handleModeChange } from "@shared/form/engine/formEngine";
 
 import { listIso286ToleranceOptionsApi } from "../api/client";
 import { solveTolerance } from "../api/solveTolerance";
@@ -36,10 +33,7 @@ import {
 import { getToleranceSelectState } from "./toleranceSelectState";
 
 export function useTolerancePageController() {
-  const [form, setForm] = useFeatureForm(
-    "tolerances",
-    createInitialToleranceForm,
-  );
+  const [form, setForm] = useFeatureForm("tolerances", createInitialToleranceForm);
 
   const savedResults = useSavedResults<ToleranceFormState>({
     storageKey: "tolerances-history",
@@ -112,32 +106,17 @@ export function useTolerancePageController() {
   }
 
   function onFieldChange(key: ToleranceKey, value: string) {
+    setForm((prev) => applyToleranceUserEdit(prev, key, value));
+  }
+
+  function onToleranceLetterChange(feature: ToleranceObjectType, value: string) {
     setForm((prev) =>
-      applyToleranceUserEdit(prev, key, value),
+      applyToleranceLetterChange(prev, prev.extras.options, feature, value),
     );
   }
 
-  function onToleranceLetterChange(
-    feature: ToleranceObjectType,
-    value: string,
-  ) {
-    setForm((prev) =>
-      applyToleranceLetterChange(
-        prev,
-        prev.extras.options,
-        feature,
-        value,
-      ),
-    );
-  }
-
-  function onToleranceGradeChange(
-    feature: ToleranceObjectType,
-    value: string,
-  ) {
-    setForm((prev) =>
-      applyToleranceGradeChange(prev, feature, value),
-    );
+  function onToleranceGradeChange(feature: ToleranceObjectType, value: string) {
+    setForm((prev) => applyToleranceGradeChange(prev, feature, value));
   }
 
   async function calculate() {

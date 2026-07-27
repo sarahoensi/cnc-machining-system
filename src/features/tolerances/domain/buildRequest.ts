@@ -15,9 +15,7 @@ function parseNominal(input: ToleranceFormInput) {
   return Number(input.nominal.replace(",", "."));
 }
 
-export function buildLookupIso286ToleranceRequest(
-  input: ToleranceFormInput,
-) {
+export function buildLookupIso286ToleranceRequest(input: ToleranceFormInput) {
   const feature = input.mode;
   const letter = feature === "hole" ? input.holeLetter : input.shaftLetter;
   const grade = feature === "hole" ? input.holeGrade : input.shaftGrade;

@@ -10,7 +10,6 @@ import { CylinderWeightPage } from "@features/cylinder_weight/ui/CylinderWeightP
 import { TolerancesPage } from "@features/tolerances/ui/TolerancesPage";
 import { ThreadsPage } from "@features/threads/ui/ThreadsPage";
 
-
 export function AppRoutes() {
   return (
     <Routes>
@@ -32,7 +31,6 @@ export function AppRoutes() {
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/triangle" replace />} />
-
     </Routes>
   );
 }

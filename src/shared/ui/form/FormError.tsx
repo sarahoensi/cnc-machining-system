@@ -4,11 +4,7 @@
 
 import "./FormError.css";
 
-export function FormError({
-  error,
-}: {
-  error?: string | string[];
-}) {
+export function FormError({ error }: { error?: string | string[] }) {
   if (!error) return null;
 
   if (Array.isArray(error)) {

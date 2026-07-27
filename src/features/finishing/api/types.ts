@@ -36,15 +36,15 @@ export type RegisterFinishingMeasurementRequest = {
 ============================================================ */
 
 export type FinishingStep = {
-  index: number
-  startMm: number
-  plannedDeltaMm: number
-  plannedEndMm: number
-  measurementMm: number | null
-}
+  index: number;
+  startMm: number;
+  plannedDeltaMm: number;
+  plannedEndMm: number;
+  measurementMm: number | null;
+};
 
 export type FinishingExecutionResponse = {
-  activeStep: number | null
-  finished: boolean
-  steps: FinishingStep[]
-}
+  activeStep: number | null;
+  finished: boolean;
+  steps: FinishingStep[];
+};

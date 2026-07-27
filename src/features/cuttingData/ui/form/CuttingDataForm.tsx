@@ -14,34 +14,24 @@ type Props = {
 };
 
 export function CuttingDataForm({ controller }: Props) {
-  const {
-    form,
-    navigation,
-    save,
-  } = controller;
+  const { form, navigation, save } = controller;
 
-  const error = form.formError ? (
-    <FormError error={form.formError} />
-  ) : null;
+  const error = form.formError ? <FormError error={form.formError} /> : null;
 
   return (
     <div ref={navigation.containerRef} className="cutting-data-form-root">
       <FormLayout
         error={error}
-        actions={(
+        actions={
           <FormActions
             onCalculate={controller.calculate}
             onReset={controller.resetForm}
           >
-            <Button
-              variant="secondary"
-              size="medium"
-              onClick={save}
-            >
+            <Button variant="secondary" size="medium" onClick={save}>
               Save result
             </Button>
           </FormActions>
-        )}
+        }
         actionsPlacement="bottom"
       >
         <FormGrid areas={[["fields"]]}>

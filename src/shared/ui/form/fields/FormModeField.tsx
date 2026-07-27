@@ -21,12 +21,8 @@ export function FormModeField<T extends string>({
   options,
   disabled,
 }: Props<T>) {
-
   return (
-    <Field
-      label={label}
-      tooltip={tooltip}
-    >
+    <Field label={label} tooltip={tooltip}>
       <RadioGroup
         name="mode"
         value={value}

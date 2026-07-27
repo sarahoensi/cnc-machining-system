@@ -5,9 +5,8 @@ import { TriangleKey } from "./triangleForm";
 import { FieldState } from "@shared/form/types";
 
 export function parseTriangle(
-  fields: Record<TriangleKey, FieldState>
+  fields: Record<TriangleKey, FieldState>,
 ): Partial<Record<TriangleKey, number>> | null {
-
   const parsed: Partial<Record<TriangleKey, number>> = {};
 
   for (const key in fields) {

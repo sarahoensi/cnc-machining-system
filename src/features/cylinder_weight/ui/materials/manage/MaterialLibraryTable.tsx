@@ -110,7 +110,11 @@ function ReadonlyMaterialRow({
             Edit
           </Button>
 
-          <Button variant="danger" size="small" onClick={() => edit.remove(material.id)}>
+          <Button
+            variant="danger"
+            size="small"
+            onClick={() => edit.remove(material.id)}
+          >
             Delete
           </Button>
         </DialogActions>
@@ -118,6 +122,3 @@ function ReadonlyMaterialRow({
     </Table.BodyRow>
   );
 }
-
-
-

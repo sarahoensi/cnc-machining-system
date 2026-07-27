@@ -35,10 +35,7 @@ type ToleranceNavigationKey = Extract<
   (typeof toleranceNavigationKeys)[number]
 >;
 
-type ToleranceClassNavigationKey = Exclude<
-  ToleranceNavigationKey,
-  "nominal"
->;
+type ToleranceClassNavigationKey = Exclude<ToleranceNavigationKey, "nominal">;
 
 type ToleranceController = ReturnType<typeof useTolerancePageController>;
 
@@ -78,9 +75,8 @@ export function TolerancesForm({ controller }: Props) {
     const next = await controller.calculate();
     if (!next.formError) return;
 
-    navigation.focusFirstInOrderAfterRender(
-      toleranceNavigationKeys,
-      (key) => shouldFocusMissingToleranceField(next, key),
+    navigation.focusFirstInOrderAfterRender(toleranceNavigationKeys, (key) =>
+      shouldFocusMissingToleranceField(next, key),
     );
   }
 
@@ -104,11 +100,7 @@ export function TolerancesForm({ controller }: Props) {
         disabled={fieldState.locked}
         readonly={fieldConfig.readOnly}
         onChange={(value) => controller.onFieldChange(fieldConfig.key, value)}
-        ref={
-          fieldConfig.key === "nominal"
-            ? navigation.register("nominal")
-            : undefined
-        }
+        ref={fieldConfig.key === "nominal" ? navigation.register("nominal") : undefined}
         onKeyDown={
           fieldConfig.key === "nominal"
             ? navigation.handleKeyDown("nominal")
@@ -134,23 +126,20 @@ export function TolerancesForm({ controller }: Props) {
   const error = form.formError ? <FormError error={form.formError} /> : null;
 
   return (
-    <div
-      className="tolerances-form-container"
-      ref={navigation.containerRef}
-    >
+    <div className="tolerances-form-container" ref={navigation.containerRef}>
       <FormGrid
         areas={[["mode"], ["input"], ["deviation"], ["limits"], ["error"], ["actions"]]}
         className="tolerances-form-content"
       >
         <FormGrid.Area name="mode">
           <Row columns={1} className="tolerances-mode-row">
-          <FormModeField
-            label={toleranceModeConfig.label}
-            tooltip={toleranceModeConfig.tooltip}
-            value={mode}
-            options={modeOptions}
-            onChange={controller.onModeChange}
-          />
+            <FormModeField
+              label={toleranceModeConfig.label}
+              tooltip={toleranceModeConfig.tooltip}
+              value={mode}
+              options={modeOptions}
+              onChange={controller.onModeChange}
+            />
           </Row>
         </FormGrid.Area>
 
@@ -218,9 +207,7 @@ export function TolerancesForm({ controller }: Props) {
           </Row>
         </FormGrid.Area>
 
-        <FormGrid.Area name="error">
-          {error}
-        </FormGrid.Area>
+        <FormGrid.Area name="error">{error}</FormGrid.Area>
 
         <FormGrid.Area name="actions">
           <div className="tolerances-actions">
@@ -237,8 +224,8 @@ export function TolerancesForm({ controller }: Props) {
               Clear form
             </Button>
           </div>
-          </FormGrid.Area>
-        </FormGrid>
+        </FormGrid.Area>
+      </FormGrid>
     </div>
   );
 }

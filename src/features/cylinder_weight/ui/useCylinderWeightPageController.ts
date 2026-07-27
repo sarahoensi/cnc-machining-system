@@ -43,7 +43,7 @@ const focusOrder: Exclude<CylinderWeightKey, "mass_kg">[] = [
 export function useCylinderWeightPageController() {
   const [form, setForm] = useFeatureForm(
     "cylinder_weight",
-    createInitialCylinderWeightForm
+    createInitialCylinderWeightForm,
   );
 
   const [materials, setMaterials] = useState<CylinderMaterial[]>([]);
@@ -106,7 +106,7 @@ export function useCylinderWeightPageController() {
 
   function onFieldChange(key: CylinderWeightKey, value: string) {
     setForm((prev) =>
-      handleUserEdit(prev, key, value, validInputSets, mutuallyExclusivePairs)
+      handleUserEdit(prev, key, value, validInputSets, mutuallyExclusivePairs),
     );
   }
 
@@ -129,8 +129,10 @@ export function useCylinderWeightPageController() {
   async function onCreateMaterial() {
     setCreateMaterialError(undefined);
     const density = safeParseDecimal(newMaterialDensity);
-    if (!newMaterialName.trim()) return setCreateMaterialError("Material name is required");
-    if (density == null) return setCreateMaterialError("Density must be a valid number");
+    if (!newMaterialName.trim())
+      return setCreateMaterialError("Material name is required");
+    if (density == null)
+      return setCreateMaterialError("Density must be a valid number");
 
     try {
       const saved = await createCylinderMaterialApi({
@@ -168,7 +170,8 @@ export function useCylinderWeightPageController() {
     setEditMaterialError(undefined);
     const density = safeParseDecimal(editMaterialDensity);
     if (!editMaterialId) return setEditMaterialError("Material id is missing");
-    if (!editMaterialName.trim()) return setEditMaterialError("Material name is required");
+    if (!editMaterialName.trim())
+      return setEditMaterialError("Material name is required");
     if (density == null) return setEditMaterialError("Density must be a valid number");
     try {
       const updated = await updateCylinderMaterialApi({
@@ -177,7 +180,7 @@ export function useCylinderWeightPageController() {
         density_kg_m3: density,
       });
       setMaterials((prev) =>
-        sortCylinderMaterials(prev.map((m) => (m.id === updated.id ? updated : m)))
+        sortCylinderMaterials(prev.map((m) => (m.id === updated.id ? updated : m))),
       );
       if (form.extras.materialId === updated.id) onMaterialChange(updated.id);
       cancelEditMaterial();
@@ -232,7 +235,7 @@ export function useCylinderWeightPageController() {
 
   function toggleExportMaterial(id: string) {
     setSelectedExportIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
   }
 
@@ -290,7 +293,7 @@ export function useCylinderWeightPageController() {
       form,
       parseCylinderWeight,
       solveCylinderWeight,
-      validateCylinderWeightForm
+      validateCylinderWeightForm,
     );
     if (next.status === "solved") {
       const massField = next.fields.mass_kg;
@@ -309,7 +312,7 @@ export function useCylinderWeightPageController() {
               {
                 ...massField,
                 source: "machine",
-              }
+              },
             ),
           },
         });
@@ -342,14 +345,10 @@ export function useCylinderWeightPageController() {
   function focusAfterCalculate(
     next: ReturnType<typeof createInitialCylinderWeightForm>,
   ) {
-    const hasInlineError = focusOrder.some((key) =>
-      Boolean(next.fields[key].error),
-    );
+    const hasInlineError = focusOrder.some((key) => Boolean(next.fields[key].error));
 
     if (hasInlineError) {
-      navigation.focusFirstInvalidAfterRender((key) =>
-        Boolean(next.fields[key].error),
-      );
+      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
       return;
     }
 
@@ -363,7 +362,7 @@ export function useCylinderWeightPageController() {
 
   const selectedMaterial = useMemo(
     () => materials.find((m) => m.id === form.extras.materialId),
-    [materials, form.extras.materialId]
+    [materials, form.extras.materialId],
   );
 
   return {
@@ -426,4 +425,3 @@ export function useCylinderWeightPageController() {
     },
   };
 }
-

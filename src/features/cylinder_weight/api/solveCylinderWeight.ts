@@ -1,15 +1,12 @@
 // src/features/cylinder_weight/api/solveCylinderWeight.ts
 
 import { buildSolveCylinderWeightRequest } from "../domain/buildRequest";
-import {
-  CylinderWeightExtras,
-  CylinderWeightKey,
-} from "../domain/cylinderWeightForm";
+import { CylinderWeightExtras, CylinderWeightKey } from "../domain/cylinderWeightForm";
 import { solveCylinderWeightApi } from "./client";
 
 export async function solveCylinderWeight(
   input: Partial<Record<CylinderWeightKey, number>>,
-  extras: CylinderWeightExtras
+  extras: CylinderWeightExtras,
 ): Promise<Partial<Record<CylinderWeightKey, number>>> {
   const request = buildSolveCylinderWeightRequest(input, extras);
   const result = await solveCylinderWeightApi(request);
@@ -21,4 +18,3 @@ export async function solveCylinderWeight(
     mass_kg: result.mass_kg,
   };
 }
-

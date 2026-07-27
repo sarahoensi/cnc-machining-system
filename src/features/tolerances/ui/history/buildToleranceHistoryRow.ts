@@ -39,16 +39,12 @@ export function buildToleranceHistoryRow(
       : "tolerance-history-row--shaft",
     symbol: isHole ? "\u25cb" : "\u25cf",
     toleranceClass:
-      `${form.fields[letterKey].value}${form.fields[gradeKey].value}`.trim() ||
-      "-",
+      `${form.fields[letterKey].value}${form.fields[gradeKey].value}`.trim() || "-",
     nominal: `\u00d8${formatFieldValue(form.fields.nominal, decimals)} mm`,
     deviations: `${lowerLabel} ${formatSignedFieldValue(
       form.fields.lower_um,
       decimals,
-    )} / ${upperLabel} ${formatSignedFieldValue(
-      form.fields.upper_um,
-      decimals,
-    )}`,
+    )} / ${upperLabel} ${formatSignedFieldValue(form.fields.upper_um, decimals)}`,
   };
 }
 

@@ -9,14 +9,14 @@ export default defineConfig(async () => ({
   plugins: [react()],
   resolve: {
     alias: {
-      '@ui': path.resolve(__dirname, 'src/ui'),
-      '@app': path.resolve(__dirname, 'src/app'),
-      '@shared': path.resolve(__dirname, 'src/shared'),
-      '@styles': path.resolve(__dirname, 'src/styles'),
-      '@layout': path.resolve(__dirname, 'src/layout'),
-      '@features': path.resolve(__dirname, 'src/features'),
-      '@assets': path.resolve(__dirname, 'src/assets')
-    }
+      "@ui": path.resolve(__dirname, "src/ui"),
+      "@app": path.resolve(__dirname, "src/app"),
+      "@shared": path.resolve(__dirname, "src/shared"),
+      "@styles": path.resolve(__dirname, "src/styles"),
+      "@layout": path.resolve(__dirname, "src/layout"),
+      "@features": path.resolve(__dirname, "src/features"),
+      "@assets": path.resolve(__dirname, "src/assets"),
+    },
   },
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`

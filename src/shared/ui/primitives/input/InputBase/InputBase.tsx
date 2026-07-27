@@ -12,14 +12,10 @@ type Props = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> & {
 
 export const InputBase = forwardRef<HTMLInputElement, Props>(function InputBase(
   { wrapperClassName, inputClassName, leftSlot, rightSlot, className, ...inputProps },
-  ref
+  ref,
 ) {
   const input = (
-    <input
-      ref={ref}
-      className={clsx(inputClassName, className)}
-      {...inputProps}
-    />
+    <input ref={ref} className={clsx(inputClassName, className)} {...inputProps} />
   );
 
   if (!wrapperClassName && !leftSlot && !rightSlot) {
@@ -34,4 +30,3 @@ export const InputBase = forwardRef<HTMLInputElement, Props>(function InputBase(
     </div>
   );
 });
-

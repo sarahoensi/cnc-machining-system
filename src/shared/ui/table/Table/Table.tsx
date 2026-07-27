@@ -10,11 +10,7 @@ type TableProps = {
 };
 
 function Root({ children, className }: TableProps) {
-  return (
-    <table className={clsx("ui-table", className)}>
-      {children}
-    </table>
-  );
+  return <table className={clsx("ui-table", className)}>{children}</table>;
 }
 
 function Head({ children }: { children: ReactNode }) {
@@ -44,19 +40,14 @@ type RowProps = {
   className?: string;
 };
 
-function Row({
-  children,
-  isActive,
-  isSelected,
-  className,
-}: RowProps) {
+function Row({ children, isActive, isSelected, className }: RowProps) {
   return (
     <tr
       className={clsx(
         "ui-table-row",
         isActive && "is-active",
         isSelected && "is-selected",
-        className
+        className,
       )}
     >
       {children}
@@ -71,21 +62,9 @@ type CellProps = {
   className?: string;
 };
 
-function Cell({
-  children,
-  align = "left",
-  className,
-}: CellProps) {
+function Cell({ children, align = "left", className }: CellProps) {
   return (
-    <td
-      className={clsx(
-        "ui-table-cell",
-        `align-${align}`,
-        className
-      )}
-    >
-      {children}
-    </td>
+    <td className={clsx("ui-table-cell", `align-${align}`, className)}>{children}</td>
   );
 }
 
@@ -95,22 +74,10 @@ type HeaderCellProps = {
   className?: string;
 };
 
-function HeaderCell({
-  children,
-  align = "left",
-  className,
-}: HeaderCellProps) {
+function HeaderCell({ children, align = "left", className }: HeaderCellProps) {
   return (
-    <th
-      className={clsx(
-        "ui-table-header-cell",
-        `align-${align}`,
-        className
-      )}
-    >
-      <div className="ui-table-header-content">
-        {children}
-      </div>
+    <th className={clsx("ui-table-header-cell", `align-${align}`, className)}>
+      <div className="ui-table-header-content">{children}</div>
     </th>
   );
 }

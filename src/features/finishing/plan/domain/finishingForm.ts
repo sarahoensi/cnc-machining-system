@@ -8,10 +8,7 @@ import { emptyField } from "@shared/form/types/fields";
 ============================================================ */
 
 export type FinishingKey =
-  | "start_diameter_mm"
-  | "target_diameter_mm"
-  | "cuts"
-  | "radial_engagement_mm";
+  "start_diameter_mm" | "target_diameter_mm" | "cuts" | "radial_engagement_mm";
 
 /* ============================================================
    Extras
@@ -43,4 +40,3 @@ export function createInitialFinishingForm(): FinishingFormState {
     },
   };
 }
-

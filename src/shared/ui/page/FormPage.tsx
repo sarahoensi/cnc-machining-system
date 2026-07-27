@@ -11,19 +11,16 @@ type Props = {
   formClassName?: string;
 };
 
-export function FormPage({
-  form,
-  panelWidth,
-  className,
-  formClassName,
-}: Props) {
+export function FormPage({ form, panelWidth, className, formClassName }: Props) {
   const panelStyle = {
     "--form-page-panel-width": panelWidth,
   } as CSSProperties;
 
   return (
     <PageShell className={clsx("form-page", className)}>
-      <div className={clsx("form-page-panel", formClassName)} style={panelStyle}>{form}</div>
+      <div className={clsx("form-page-panel", formClassName)} style={panelStyle}>
+        {form}
+      </div>
     </PageShell>
   );
 }

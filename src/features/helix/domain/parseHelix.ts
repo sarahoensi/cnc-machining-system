@@ -5,9 +5,8 @@ import { FieldState } from "@shared/form/types";
 import { HelixKey } from "./helixForm";
 
 export function parseHelix(
-  fields: Record<HelixKey, FieldState>
+  fields: Record<HelixKey, FieldState>,
 ): Partial<Record<HelixKey, number>> | null {
-
   const parsed: Partial<Record<HelixKey, number>> = {};
 
   for (const key in fields) {

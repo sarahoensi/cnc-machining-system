@@ -5,7 +5,7 @@ import { CylinderWeightExtras, CylinderWeightKey } from "./cylinderWeightForm";
 
 export function buildSolveCylinderWeightRequest(
   input: Partial<Record<CylinderWeightKey, number>>,
-  extras: CylinderWeightExtras
+  extras: CylinderWeightExtras,
 ): SolveCylinderWeightRequest {
   return {
     material_id: extras.materialId || undefined,
@@ -14,4 +14,3 @@ export function buildSolveCylinderWeightRequest(
     length_mm: input.length_mm,
   };
 }
-

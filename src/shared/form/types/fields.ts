@@ -2,11 +2,8 @@
 
 export type FieldKind = "input" | "result";
 
-export type FieldSource =
-  | "empty"
-  | "user"
-  | "machine";
-  
+export type FieldSource = "empty" | "user" | "machine";
+
 export type FieldState = {
   value: string;
   source: FieldSource;
@@ -15,16 +12,14 @@ export type FieldState = {
   invalid: boolean;
 
   machineValue?: number;
-  error?:string;
+  error?: string;
 };
 
 /* ---------------------------------- */
 /* Base factories                     */
 /* ---------------------------------- */
 
-export const emptyField = (
-  overrides?: Partial<FieldState>
-): FieldState => ({
+export const emptyField = (overrides?: Partial<FieldState>): FieldState => ({
   value: "",
   source: "empty",
   kind: "input",
@@ -37,7 +32,7 @@ export const emptyField = (
 
 export const userField = (
   value: string,
-  overrides?: Partial<FieldState>
+  overrides?: Partial<FieldState>,
 ): FieldState => ({
   value,
   source: value === "" ? "empty" : "user",
@@ -50,7 +45,7 @@ export const userField = (
 
 export const machineField = (
   value: string,
-  overrides?: Partial<FieldState>
+  overrides?: Partial<FieldState>,
 ): FieldState => ({
   value,
   source: "machine",
@@ -60,9 +55,7 @@ export const machineField = (
   ...overrides,
 });
 
-export const resultField = (
-  overrides?: Partial<FieldState>,
-): FieldState => ({
+export const resultField = (overrides?: Partial<FieldState>): FieldState => ({
   value: "",
   source: "empty",
   kind: "result",

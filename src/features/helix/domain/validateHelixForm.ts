@@ -4,9 +4,8 @@ import { FieldState } from "@shared/form";
 import { HelixKey } from "./helixForm";
 
 export function validateHelixForm(
-  fields: Record<HelixKey, FieldState>
+  fields: Record<HelixKey, FieldState>,
 ): string[] | null {
-
   const errors: string[] = [];
 
   if (!fields.diameter.value) {

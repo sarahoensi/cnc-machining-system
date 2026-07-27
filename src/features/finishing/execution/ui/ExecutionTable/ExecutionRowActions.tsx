@@ -31,10 +31,9 @@ export function ExecutionRowActions({
   onStartEdit,
   onCancelEdit,
 }: Props) {
-
   if (finished) {
-  return null
-}
+    return null;
+  }
 
   if (isEditing) {
     return (
@@ -67,9 +66,7 @@ export function ExecutionRowActions({
       <Button
         variant="secondary"
         size="small"
-        onClick={() =>
-          onStartEdit(stepIndex, measurementValue ?? "")
-        }
+        onClick={() => onStartEdit(stepIndex, measurementValue ?? "")}
       >
         Edit
       </Button>

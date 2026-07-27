@@ -7,11 +7,7 @@ import { emptyField } from "@shared/form/types/fields";
    Keys
 ============================================================ */
 
-export type HelixKey =
-  | "diameter"
-  | "tool_diameter"
-  | "pitch"
-  | "angle";
+export type HelixKey = "diameter" | "tool_diameter" | "pitch" | "angle";
 
 /* ============================================================
    Extras
@@ -25,10 +21,7 @@ export type HelixExtras = {
    Factory
 ============================================================ */
 
-export function createInitialHelixForm(): FormState<
-  HelixKey,
-  HelixExtras
-> {
+export function createInitialHelixForm(): FormState<HelixKey, HelixExtras> {
   return {
     status: "editing",
     fields: {

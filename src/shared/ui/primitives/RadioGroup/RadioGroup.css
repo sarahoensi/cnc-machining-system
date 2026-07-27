@@ -1,6 +1,5 @@
 /* shared/ui/primitives/RadioGroup/RadioGroup.css */
 
-
 /* =====================================================
    RADIO GROUP
 ===================================================== */
@@ -9,13 +8,11 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
-
 }
 
 .radio-group--form {
   padding-inline-start: calc(var(--input-padding-x-form) * 0.5);
 }
-
 
 /* =====================================================
    DISABLED STATE
@@ -25,9 +22,6 @@
   opacity: var(--state-disabled-opacity);
   pointer-events: none;
 }
-
-
-
 
 /* =====================================================
    OPTION
@@ -49,7 +43,6 @@
   opacity: var(--opacity-muted);
 }
 
-
 /* =====================================================
    RADIO INPUT
 ===================================================== */
@@ -60,11 +53,9 @@
   flex: 0 0 auto;
 }
 
-
 /* =====================================================
    UNCHECKED STYLE
 ===================================================== */
-
 
 .radio-option:has(.radio-input:checked) {
   opacity: 1;

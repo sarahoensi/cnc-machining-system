@@ -43,4 +43,3 @@ export type MaterialEditState = {
   save: () => void;
   remove: (id: string) => void;
 };
-

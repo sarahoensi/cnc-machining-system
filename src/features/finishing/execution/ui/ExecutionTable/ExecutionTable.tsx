@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 
-import {useExecutionFocus} from "./useExecutionFocus";
+import { useExecutionFocus } from "./useExecutionFocus";
 
 import { Table } from "@shared/ui/table/Table/Table";
 
@@ -34,10 +34,7 @@ type FinishingStepData = {
 type Props = {
   execution: ExecutionState<FinishingStepData>;
 
-  onRegisterMeasurement(
-    step: number,
-    measurement: number
-  ): Promise<void>;
+  onRegisterMeasurement(step: number, measurement: number): Promise<void>;
 };
 
 /* ============================================================
@@ -51,23 +48,13 @@ type HeaderProps = {
   onCutModeChange(mode: CutMode): void;
 };
 
-function ExecutionHeader({
-  cutMode,
-  onCutModeChange,
-}: HeaderProps) {
-
+function ExecutionHeader({ cutMode, onCutModeChange }: HeaderProps) {
   return (
     <Table.Head>
-
       <Table.Row>
+        <Table.HeaderCell align="left">Step</Table.HeaderCell>
 
-        <Table.HeaderCell align="left">
-          Step
-        </Table.HeaderCell>
-
-        <Table.HeaderCell align="left">
-          Start Ø
-        </Table.HeaderCell>
+        <Table.HeaderCell align="left">Start Ø</Table.HeaderCell>
 
         <TableHeaderSelect
           value={cutMode}
@@ -79,33 +66,23 @@ function ExecutionHeader({
           align="left"
         />
 
-        <Table.HeaderCell align="left">
-          Measurement
-        </Table.HeaderCell>
+        <Table.HeaderCell align="left">Measurement</Table.HeaderCell>
 
         <Table.HeaderCell align="center" />
-
       </Table.Row>
-
     </Table.Head>
   );
 }
-
 
 /* ============================================================
    Main Component
 ============================================================ */
 
-export function FinishingExecutionTable({
-  execution,
-  onRegisterMeasurement
-}: Props) {
-
+export function FinishingExecutionTable({ execution, onRegisterMeasurement }: Props) {
   const { decimals } = useDisplaySettings();
   const finished = execution.finished;
 
-  const [cutMode, setCutMode] =
-    useState<"deltaD" | "ae">("deltaD");
+  const [cutMode, setCutMode] = useState<"deltaD" | "ae">("deltaD");
 
   const {
     editingStep,
@@ -117,17 +94,13 @@ export function FinishingExecutionTable({
     confirmEdit,
   } = useExecutionEditing(onRegisterMeasurement);
 
-  
-
   /* ============================================================
      Input refs (for autofocus)
   ============================================================ */
 
-  const inputRefs =
-    useRef<Record<number, HTMLInputElement | null>>({});
+  const inputRefs = useRef<Record<number, HTMLInputElement | null>>({});
 
-  const activeStep =
-    execution.steps.find(s => s.status === "active");
+  const activeStep = execution.steps.find((s) => s.status === "active");
 
   useExecutionFocus({
     inputRefs,
@@ -135,23 +108,14 @@ export function FinishingExecutionTable({
     editingIndex: editingStep,
   });
 
-   /* ============================================================
+  /* ============================================================
      Derived render parts
   ============================================================ */
 
-  const header = (
-    <ExecutionHeader
-      cutMode={cutMode}
-      onCutModeChange={setCutMode}
-    />
-  );
+  const header = <ExecutionHeader cutMode={cutMode} onCutModeChange={setCutMode} />;
 
-  const rows = execution.steps.map(step => {
-
-    const draft =
-      drafts[step.index] ??
-      step.measurement.value ??
-      "";
+  const rows = execution.steps.map((step) => {
+    const draft = drafts[step.index] ?? step.measurement.value ?? "";
 
     return (
       <ExecutionTableRow
@@ -172,27 +136,17 @@ export function FinishingExecutionTable({
     );
   });
 
-
   /* ============================================================
      Render
   ============================================================ */
 
   return (
     <Table.Root
-  className={clsx(
-    "execution-table",
-    execution.finished && "is-finished"
-  )}
->
-
+      className={clsx("execution-table", execution.finished && "is-finished")}
+    >
       {header}
 
-      <Table.Body>
-        {rows}
-      </Table.Body>
-
+      <Table.Body>{rows}</Table.Body>
     </Table.Root>
   );
 }
-
-

@@ -50,11 +50,7 @@ export function FormNumberFields<K extends string>({
             onChange={(value) => onChange(config.key, value)}
             ref={register?.(config.key)}
             onKeyDown={onKeyDown?.(config.key)}
-            onFocus={
-              onFocusField
-                ? () => onFocusField(config.key)
-                : undefined
-            }
+            onFocus={onFocusField ? () => onFocusField(config.key) : undefined}
             onBlur={onBlurFields}
           />
         );

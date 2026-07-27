@@ -1,16 +1,10 @@
 import { userField } from "@shared/form/types/fields";
 
-import type {
-  ToleranceMode,
-  ToleranceOption,
-} from "../api/types";
+import type { ToleranceMode, ToleranceOption } from "../api/types";
 
 import type { ToleranceFormState } from "./toleranceForm";
 
-export function gradesForZone(
-  options: ToleranceOption[],
-  zone: string,
-) {
+export function gradesForZone(options: ToleranceOption[], zone: string) {
   return options.find((option) => option.zone === zone)?.grades.map(String) ?? [];
 }
 
@@ -133,9 +127,6 @@ function getValidSelection({
 
   return {
     zone: fallback?.zone ?? currentZone,
-    grade:
-      fallback?.grades[0] != null
-        ? String(fallback.grades[0])
-        : currentGrade,
+    grade: fallback?.grades[0] != null ? String(fallback.grades[0]) : currentGrade,
   };
 }

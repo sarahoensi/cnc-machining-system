@@ -4,9 +4,8 @@ import type { FinishingKey } from "./finishingForm";
 import type { FieldState } from "@shared/form/types/fields";
 
 export function validateFinishingForm(
-  fields: Record<FinishingKey, FieldState>
+  fields: Record<FinishingKey, FieldState>,
 ): string[] | null {
-
   const errors: string[] = [];
 
   const start = fields.start_diameter_mm.value;

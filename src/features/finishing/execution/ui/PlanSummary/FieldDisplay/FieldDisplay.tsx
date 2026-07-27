@@ -18,25 +18,19 @@ export function FieldDisplay({
   align = "right",
 }: Props) {
   return (
-   <div
+    <div
       className={clsx(
         "field-display",
         highlight && "highlight",
-        align === "left" && "align-left"
+        align === "left" && "align-left",
       )}
     >
-      <span className="field-display-label">
-        {label}
-      </span>
+      <span className="field-display-label">{label}</span>
 
       <span className="field-display-value">
         {value}
 
-        {unit && (
-          <span className="field-display-unit">
-            {unit}
-          </span>
-        )}
+        {unit && <span className="field-display-unit">{unit}</span>}
       </span>
     </div>
   );

@@ -7,11 +7,9 @@ import {
 } from "../../api/types";
 
 export async function registerFinishingMeasurement(
-  request: RegisterFinishingMeasurementRequest
+  request: RegisterFinishingMeasurementRequest,
 ): Promise<FinishingExecutionResponse> {
-
-  const result =
-    await registerFinishingMeasurementApi(request);
+  const result = await registerFinishingMeasurementApi(request);
 
   return result;
 }

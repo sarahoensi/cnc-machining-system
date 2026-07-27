@@ -26,7 +26,6 @@
   position: relative;
 }
 
-
 /* ======================================================
    MENU COLUMN
 ====================================================== */
@@ -51,14 +50,14 @@
   font-size: var(--text-body-size);
   font-weight: var(--text-body-weight);
 
-  transition: background var(--duration-fast) var(--easing-standard),
-              color var(--duration-fast) var(--easing-standard);
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    color var(--duration-fast) var(--easing-standard);
 }
 
 .menu-item:hover {
   background: var(--surface-hover);
 }
-
 
 /* ======================================================
    SUBMENU FLYOUT
@@ -78,7 +77,6 @@
 
   box-shadow: var(--shadow-md);
 }
-
 
 /* ======================================================
    SETTINGS PANELS
@@ -106,7 +104,6 @@
   flex-direction: column;
 }
 
-
 /* ======================================================
    SETTINGS BUTTON
 ====================================================== */
@@ -125,8 +122,9 @@
   color: var(--interactive-neutral-text);
   cursor: pointer;
 
-  transition: background var(--duration-fast) var(--easing-standard),
-              color var(--duration-fast) var(--easing-standard);
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    color var(--duration-fast) var(--easing-standard);
 }
 
 .settings-button:hover {

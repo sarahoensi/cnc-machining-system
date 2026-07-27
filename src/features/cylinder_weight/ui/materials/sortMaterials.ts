@@ -85,4 +85,3 @@ export function sortCylinderMaterials(rows: CylinderMaterial[]): CylinderMateria
     })
     .map((entry) => entry.row);
 }
-

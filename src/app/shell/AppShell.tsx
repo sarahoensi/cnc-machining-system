@@ -21,14 +21,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div
-      className={clsx(
-        "app-shell",
-        !sidebarOpen && "sidebar-collapsed"
-      )}
-    >
+    <div className={clsx("app-shell", !sidebarOpen && "sidebar-collapsed")}>
       <div className="shell-topbar">
-        <Topbar toggleSidebar={() => setSidebarOpen(v => !v)} />
+        <Topbar toggleSidebar={() => setSidebarOpen((v) => !v)} />
       </div>
 
       <aside className="shell-sidebar">
@@ -36,9 +31,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <main className="shell-main">
-        <div className="shell-content">
-          {children}
-        </div>
+        <div className="shell-content">{children}</div>
 
         <footer className="shell-footer" />
       </main>

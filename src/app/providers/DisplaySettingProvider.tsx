@@ -1,11 +1,6 @@
 // src/app/providers/DisplaySettingProvider.tsx
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 /* ============================================================
    Types
@@ -22,10 +17,9 @@ type DisplaySettingContextValue = {
    Context
 ============================================================ */
 
-const DisplaySettingContext =
-  createContext<DisplaySettingContextValue | undefined>(
-    undefined
-  );
+const DisplaySettingContext = createContext<DisplaySettingContextValue | undefined>(
+  undefined,
+);
 
 const STORAGE_KEY = "app-decimals";
 const DEFAULT_DECIMALS: Decimals = 3;
@@ -41,11 +35,7 @@ function getInitialDecimals(): Decimals {
 
   const parsed = Number(stored);
 
-  if (
-    Number.isInteger(parsed) &&
-    parsed >= 0 &&
-    parsed <= 6
-  ) {
+  if (Number.isInteger(parsed) && parsed >= 0 && parsed <= 6) {
     return parsed as Decimals;
   }
 
@@ -56,19 +46,11 @@ function getInitialDecimals(): Decimals {
    Provider
 ============================================================ */
 
-export function DisplaySettingProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [decimals, setDecimalsState] =
-    useState<Decimals>(getInitialDecimals);
+export function DisplaySettingProvider({ children }: { children: React.ReactNode }) {
+  const [decimals, setDecimalsState] = useState<Decimals>(getInitialDecimals);
 
   useEffect(() => {
-    localStorage.setItem(
-      STORAGE_KEY,
-      String(decimals)
-    );
+    localStorage.setItem(STORAGE_KEY, String(decimals));
   }, [decimals]);
 
   function setDecimals(value: Decimals) {
@@ -95,11 +77,8 @@ export function useDisplaySettings() {
   const ctx = useContext(DisplaySettingContext);
 
   if (!ctx) {
-    throw new Error(
-      "useDisplaySettings must be used inside DisplaySettingProvider"
-    );
+    throw new Error("useDisplaySettings must be used inside DisplaySettingProvider");
   }
 
   return ctx;
 }
-

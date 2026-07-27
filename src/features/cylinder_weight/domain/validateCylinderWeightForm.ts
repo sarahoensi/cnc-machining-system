@@ -5,7 +5,7 @@ import { CylinderWeightExtras, CylinderWeightKey } from "./cylinderWeightForm";
 
 export function validateCylinderWeightForm(
   fields: Record<CylinderWeightKey, FieldState>,
-  extras: CylinderWeightExtras
+  extras: CylinderWeightExtras,
 ): string[] | null {
   const errors: string[] = [];
 
@@ -21,4 +21,3 @@ export function validateCylinderWeightForm(
 
   return errors.length > 0 ? errors : null;
 }
-

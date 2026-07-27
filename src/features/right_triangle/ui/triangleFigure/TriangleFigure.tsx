@@ -58,24 +58,8 @@ export function TriangleFigure({ activeField }: Props) {
   );
 }
 
-function Edge({
-  A,
-  B,
-  active,
-}: {
-  A: Point;
-  B: Point;
-  active: boolean;
-}) {
-  return (
-    <line
-      x1={A.x}
-      y1={A.y}
-      x2={B.x}
-      y2={B.y}
-      className={cls("edge", active)}
-    />
-  );
+function Edge({ A, B, active }: { A: Point; B: Point; active: boolean }) {
+  return <line x1={A.x} y1={A.y} x2={B.x} y2={B.y} className={cls("edge", active)} />;
 }
 
 function Label({
@@ -129,11 +113,7 @@ function AngleArc({
     <>
       <path d={d} className={cls("angle", active)} />
       {label && (
-        <text
-          x={labelPos.x}
-          y={labelPos.y}
-          className={cls("label", active)}
-        >
+        <text x={labelPos.x} y={labelPos.y} className={cls("label", active)}>
           {label}
         </text>
       )}
@@ -141,15 +121,7 @@ function AngleArc({
   );
 }
 
-function RightAngle({
-  vertex,
-  p1,
-  p2,
-}: {
-  vertex: Point;
-  p1: Point;
-  p2: Point;
-}) {
+function RightAngle({ vertex, p1, p2 }: { vertex: Point; p1: Point; p2: Point }) {
   const size = 10;
 
   const dir1 = unit(vertex, p1);
@@ -196,13 +168,7 @@ function shortestMidAngle(start: number, end: number) {
   return start + diff / 2;
 }
 
-function describeArc(
-  cx: number,
-  cy: number,
-  r: number,
-  start: number,
-  end: number
-) {
+function describeArc(cx: number, cy: number, r: number, start: number, end: number) {
   const x1 = cx + r * Math.cos(start);
   const y1 = cy - r * Math.sin(start);
 

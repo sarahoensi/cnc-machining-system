@@ -13,9 +13,7 @@ import { PageShell } from "./PageShell";
 describe("form page layouts", () => {
   it("renders fields and actions in the standard form layout", () => {
     const markup = renderToStaticMarkup(
-      <FormLayout
-        actions={<button type="button">Calculate</button>}
-      >
+      <FormLayout actions={<button type="button">Calculate</button>}>
         <div>Form fields</div>
       </FormLayout>,
     );

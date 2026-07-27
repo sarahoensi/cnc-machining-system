@@ -18,10 +18,7 @@ describe("getCalculatorFocusIntent", () => {
     fields.second = emptyField({ error: "Invalid value" });
 
     expect(
-      getCalculatorFocusIntent(
-        { fields, formError: "Form error" },
-        fieldOrder,
-      ),
+      getCalculatorFocusIntent({ fields, formError: "Form error" }, fieldOrder),
     ).toBe("inline-error");
   });
 
@@ -35,11 +32,8 @@ describe("getCalculatorFocusIntent", () => {
   });
 
   it("does not request focus work after a successful calculation", () => {
-    expect(
-      getCalculatorFocusIntent(
-        { fields: createFields() },
-        fieldOrder,
-      ),
-    ).toBe("none");
+    expect(getCalculatorFocusIntent({ fields: createFields() }, fieldOrder)).toBe(
+      "none",
+    );
   });
 });

@@ -5,13 +5,11 @@ import type { FieldState } from "@shared/form/types/fields";
 import type { FinishingKey } from "./finishingForm";
 
 export function parseFinishingPlan(
-  fields: Record<FinishingKey, FieldState>
+  fields: Record<FinishingKey, FieldState>,
 ): Partial<Record<FinishingKey, number>> | null {
-
   const parsed: Partial<Record<FinishingKey, number>> = {};
 
   for (const key in fields) {
-
     const k = key as FinishingKey;
     const value = fields[k].value;
 

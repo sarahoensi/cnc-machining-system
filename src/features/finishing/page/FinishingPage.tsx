@@ -10,7 +10,6 @@ import { ExecutionView } from "../execution/ui/ExecutionView/ExecutionView";
 import { useFinishingPageController } from "../page/useFinishingPageController";
 
 export function FinishingPage() {
-
   usePageTitle("Finishing");
 
   const finishing = useFinishingPageController();
@@ -26,25 +25,16 @@ export function FinishingPage() {
     />
   );
 
-  const formSummary = (
-    {
-        mode: finishing.form.extras.mode,
-        startDiameter:
-          finishing.form.fields.start_diameter_mm.value,
-        targetDiameter:
-          finishing.form.fields.target_diameter_mm.value,
-        cuts: finishing.form.fields.cuts.value,
-        radialEngagement:
-          finishing.form.fields.radial_engagement_mm.value,
-      }
-  );
+  const formSummary = {
+    mode: finishing.form.extras.mode,
+    startDiameter: finishing.form.fields.start_diameter_mm.value,
+    targetDiameter: finishing.form.fields.target_diameter_mm.value,
+    cuts: finishing.form.fields.cuts.value,
+    radialEngagement: finishing.form.fields.radial_engagement_mm.value,
+  };
 
   if (!finishing.execution) {
-    return (
-      <FormPage
-        form={formContent}
-      />
-    );
+    return <FormPage form={formContent} />;
   }
 
   return (
@@ -57,4 +47,3 @@ export function FinishingPage() {
     />
   );
 }
-

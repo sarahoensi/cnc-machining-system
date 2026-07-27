@@ -2,10 +2,7 @@
 
 import type { FieldState } from "@shared/form";
 
-import type {
-  ToleranceExtras,
-  ToleranceKey,
-} from "./toleranceForm";
+import type { ToleranceExtras, ToleranceKey } from "./toleranceForm";
 
 export function validateToleranceForm(
   fields: Record<ToleranceKey, FieldState>,

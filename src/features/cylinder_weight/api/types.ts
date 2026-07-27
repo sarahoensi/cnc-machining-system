@@ -67,4 +67,3 @@ export type ExportCylinderMaterialsResponse = {
   schema_version: number;
   materials: ExportCylinderMaterialResponse[];
 };
-

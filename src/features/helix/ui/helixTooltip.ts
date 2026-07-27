@@ -9,5 +9,4 @@ export const helixTooltips = {
   angle: "Helixvinkel i forhold til planet.",
 
   mode: "Velger om beregningen gjelder innvendig eller utvendig helix.",
-
 };

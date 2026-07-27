@@ -35,19 +35,12 @@ export function RadioGroup<T extends string>({
 
   return (
     <div
-      className={clsx(
-        "radio-group",
-        className,
-        disabled && "is-disabled",
-      )}
+      className={clsx("radio-group", className, disabled && "is-disabled")}
       role="radiogroup"
       aria-disabled={disabled}
     >
       {options.map((option) => (
-        <label
-          key={option.value}
-          className="radio-option"
-        >
+        <label key={option.value} className="radio-option">
           <input
             className="radio-input"
             type="radio"
@@ -58,10 +51,7 @@ export function RadioGroup<T extends string>({
             disabled={disabled}
           />
 
-          <TextWithTooltip
-            text={option.label}
-            tooltip={option.tooltip}
-          />
+          <TextWithTooltip text={option.label} tooltip={option.tooltip} />
         </label>
       ))}
     </div>

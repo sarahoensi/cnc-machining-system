@@ -15,19 +15,16 @@ import { emptyField } from "@shared/form/types/fields";
 export function evaluateConstraints<K extends string>(
   fields: Record<K, FieldState>,
   validSets: readonly (readonly K[])[],
-  editedKey: K | null
+  editedKey: K | null,
 ): {
   fields: Record<K, FieldState>;
   activeSet: readonly K[] | null;
 } {
-
   const keys = Object.keys(fields) as K[];
   const next: Record<K, FieldState> = { ...fields };
 
   // Identify user-driven keys.
-  const userKeys = keys.filter(
-    k => next[k].source === "user"
-  );
+  const userKeys = keys.filter((k) => next[k].source === "user");
 
   /* ============================================================
      1. No user input: everything unlocked.
@@ -52,8 +49,8 @@ export function evaluateConstraints<K extends string>(
      2. Find compatible sets.
   ============================================================ */
 
-  const possibleSets = validSets.filter(set =>
-    userKeys.every(k => set.includes(k))
+  const possibleSets = validSets.filter((set) =>
+    userKeys.every((k) => set.includes(k)),
   );
 
   /* ============================================================
@@ -61,7 +58,6 @@ export function evaluateConstraints<K extends string>(
   ============================================================ */
 
   if (possibleSets.length === 0 && editedKey) {
-
     for (const k of userKeys) {
       if (k !== editedKey) {
         next[k] = emptyField();
@@ -90,7 +86,6 @@ export function evaluateConstraints<K extends string>(
   ============================================================ */
 
   for (const k of keys) {
-
     if (!allowed.has(k)) {
       // Locked means empty.
       next[k] = emptyField({ locked: true });
@@ -108,10 +103,7 @@ export function evaluateConstraints<K extends string>(
      6. Determine active set.
   ============================================================ */
 
-  const activeSet =
-    possibleSets.length === 1
-      ? possibleSets[0]
-      : null;
+  const activeSet = possibleSets.length === 1 ? possibleSets[0] : null;
 
   return {
     fields: next,

@@ -45,20 +45,23 @@ type Props<T extends string> = {
   onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
 };
 
-function FormSelectMenuFieldInner<T extends string>({
-  label,
-  tooltip,
-  valueLabel,
-  options,
-  onSelect,
-  utilityItems = [],
-  className,
-  appearance = "form",
-  source = "default",
-  size = "medium",
-  disabled = false,
-  onKeyDown,
-}: Props<T>, ref: ForwardedRef<HTMLButtonElement>) {
+function FormSelectMenuFieldInner<T extends string>(
+  {
+    label,
+    tooltip,
+    valueLabel,
+    options,
+    onSelect,
+    utilityItems = [],
+    className,
+    appearance = "form",
+    source = "default",
+    size = "medium",
+    disabled = false,
+    onKeyDown,
+  }: Props<T>,
+  ref: ForwardedRef<HTMLButtonElement>,
+) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -108,6 +111,5 @@ function FormSelectMenuFieldInner<T extends string>({
 export const FormSelectMenuField = forwardRef(FormSelectMenuFieldInner) as <
   T extends string,
 >(
-  props: Props<T> & RefAttributes<HTMLButtonElement>
+  props: Props<T> & RefAttributes<HTMLButtonElement>,
 ) => ReactElement;
-

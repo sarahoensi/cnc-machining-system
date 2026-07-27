@@ -20,13 +20,9 @@ export function parseTolerance(
   if (nominalMm == null) return null;
 
   const letter =
-    extras.mode === "hole"
-      ? fields.hole_letter.value
-      : fields.shaft_letter.value;
+    extras.mode === "hole" ? fields.hole_letter.value : fields.shaft_letter.value;
   const grade =
-    extras.mode === "hole"
-      ? fields.hole_grade.value
-      : fields.shaft_grade.value;
+    extras.mode === "hole" ? fields.hole_grade.value : fields.shaft_grade.value;
 
   return {
     feature: extras.mode,

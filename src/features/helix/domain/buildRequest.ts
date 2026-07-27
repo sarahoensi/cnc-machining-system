@@ -5,15 +5,9 @@ import type { SolveHelixRequest } from "../api/types";
 
 export function buildHelixRequest(
   input: Partial<Record<HelixKey, number>>,
-  mode: "Inner" | "Outer"
+  mode: "Inner" | "Outer",
 ): SolveHelixRequest {
-
-  const {
-    diameter,
-    tool_diameter,
-    pitch,
-    angle,
-  } = input;
+  const { diameter, tool_diameter, pitch, angle } = input;
 
   if (pitch !== undefined) {
     return {

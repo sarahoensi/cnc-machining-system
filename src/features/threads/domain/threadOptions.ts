@@ -71,9 +71,7 @@ export function reconcileThreadSelection(
   };
 }
 
-export function getDefaultThreadPitch(
-  size: ThreadSizeOption | undefined,
-) {
+export function getDefaultThreadPitch(size: ThreadSizeOption | undefined) {
   return size?.pitches.find((option) => option.isDefaultPitch) ?? size?.pitches[0];
 }
 
@@ -118,9 +116,7 @@ function getUnifiedThreadSizes(options: ThreadOptionsResponse) {
         existing.majorDiameterMm,
         size.majorDiameterMm,
       );
-      existing.pitches = [...existing.pitches, ...pitches].sort(
-        compareUnifiedPitches,
-      );
+      existing.pitches = [...existing.pitches, ...pitches].sort(compareUnifiedPitches);
     }
   }
 

@@ -43,7 +43,7 @@ export function Sidebar() {
                 window.dispatchEvent(
                   new CustomEvent("app:active-nav-click", {
                     detail: { path: item.to },
-                  })
+                  }),
                 );
               }}
             >

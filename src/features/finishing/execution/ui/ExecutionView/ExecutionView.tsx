@@ -22,10 +22,7 @@ type Props = {
     targetDiameter: string;
   };
 
-  onRegisterMeasurement(
-    step: number,
-    measurement: number
-  ): Promise<void>;
+  onRegisterMeasurement(step: number, measurement: number): Promise<void>;
 
   onEditPlan(): void;
   onReset(): void;
@@ -38,36 +35,28 @@ export function ExecutionView({
   onEditPlan,
   onReset,
 }: Props) {
-
-  const finished =
-    execution.activeIndex === execution.steps.length;
+  const finished = execution.activeIndex === execution.steps.length;
 
   return (
     <PageShell className="execution-view">
       <Stack className="execution-view-stack">
         <div className="execution-view-header">
-          <ExecutionPlanSummary
-            {...summary}
-            onEdit={onEditPlan}
-          />
+          <ExecutionPlanSummary {...summary} onEdit={onEditPlan} />
         </div>
 
         <div className="execution-view-content">
-        <FinishingExecutionTable
-          execution={execution}
-          onRegisterMeasurement={onRegisterMeasurement}
-        />
+          <FinishingExecutionTable
+            execution={execution}
+            onRegisterMeasurement={onRegisterMeasurement}
+          />
         </div>
 
         {finished ? (
           <div className="execution-view-footer">
-            <ExecutionFinishedNotice
-              onCreateNewPlan={onReset}
-            />
+            <ExecutionFinishedNotice onCreateNewPlan={onReset} />
           </div>
         ) : null}
       </Stack>
     </PageShell>
   );
 }
-

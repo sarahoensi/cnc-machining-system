@@ -10,7 +10,6 @@
   height: auto;
 }
 
-
 /* =========================
    EDGES
 ========================= */
@@ -18,7 +17,7 @@
 .edge {
   stroke: var(--diagram-part-stroke-muted);
   stroke-width: var(--diagram-stroke-width);
-  
+
   transition:
     stroke var(--duration-fast) var(--easing-standard),
     stroke-width var(--duration-fast) var(--easing-standard);
@@ -29,7 +28,6 @@
   stroke-width: var(--diagram-stroke-width-active);
 }
 
-
 /* =========================
    ANGLES
 ========================= */
@@ -38,14 +36,13 @@
   fill: none;
   stroke: var(--diagram-part-stroke-muted);
   stroke-width: var(--diagram-stroke-width-active);
-  
+
   transition: stroke var(--duration-fast) var(--easing-standard);
 }
 
 .angle.is-active {
   stroke: var(--diagram-active-stroke, var(--state-active-border));
 }
-
 
 /* =========================
    LABELS
@@ -61,9 +58,7 @@
 
 .label.is-active {
   fill: var(--diagram-active-stroke, var(--state-active-border));
-
 }
-
 
 /* =========================
    RIGHT ANGLE MARK

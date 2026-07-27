@@ -11,19 +11,13 @@ import {
   mutuallyExclusiveHelixPairs,
   validHelixInputSets,
 } from "../domain/helixConstraints";
-import {
-  createInitialHelixForm,
-  type HelixKey,
-} from "../domain/helixForm";
+import { createInitialHelixForm, type HelixKey } from "../domain/helixForm";
 import { parseHelix } from "../domain/parseHelix";
 import { validateHelixForm } from "../domain/validateHelixForm";
 import { helixFieldConfig } from "./helixFieldConfig";
 
 export function useHelixPageController() {
-  const [form, setForm] = useFeatureForm(
-    "helix",
-    createInitialHelixForm,
-  );
+  const [form, setForm] = useFeatureForm("helix", createInitialHelixForm);
 
   const fieldOrder = helixFieldConfig.map((fieldConfig) => fieldConfig.key);
   const navigation = useCalculatorFormNavigation({

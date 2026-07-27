@@ -1,8 +1,6 @@
 /* styles/tokens/index.css */
 
-
 @import "./primitive.css";
 /* 4. Semantic */
 
 @import "./semantic.v2.css";
-

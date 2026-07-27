@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  cloneSavedResultForm,
-  createSavedResultEntry,
-} from "./useSavedResults";
+import { cloneSavedResultForm, createSavedResultEntry } from "./useSavedResults";
 
 type TestForm = {
   status: "editing" | "solved";

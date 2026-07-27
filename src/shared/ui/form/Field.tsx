@@ -5,7 +5,7 @@
  * - label
  * - control
  * - error
- * 
+ *
  * Vet hvordan label vises, hvor input plasseres, hvor error vises
  */
 
@@ -23,38 +23,16 @@ type Props = {
   className?: string;
 };
 
-export function Field({
-  label,
-  tooltip,
-  error,
-  htmlFor,
-  children,
-  className,
-}: Props) {
+export function Field({ label, tooltip, error, htmlFor, children, className }: Props) {
   return (
-    <div
-      className={clsx(
-        "field",
-        className,
-        error && "has-error"
-      )}
-    >
+    <div className={clsx("field", className, error && "has-error")}>
       <label className="field-label" htmlFor={htmlFor}>
-        <TextWithTooltip
-          text={label}
-          tooltip={tooltip}
-        />
+        <TextWithTooltip text={label} tooltip={tooltip} />
       </label>
 
-      <div className="field-control">
-        {children}
-      </div>
+      <div className="field-control">{children}</div>
 
-      {error && (
-        <div className="field-error">
-          {error}
-        </div>
-      )}
+      {error && <div className="field-error">{error}</div>}
     </div>
   );
 }

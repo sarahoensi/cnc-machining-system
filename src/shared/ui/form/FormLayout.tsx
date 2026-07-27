@@ -27,11 +27,7 @@ export function FormLayout({
     >
       <div className="form-fields">{children}</div>
 
-      {error && (
-        <div className="form-error-block">
-          {error}
-        </div>
-      )}
+      {error && <div className="form-error-block">{error}</div>}
 
       {actions && <div className="form-layout-actions-slot">{actions}</div>}
     </div>

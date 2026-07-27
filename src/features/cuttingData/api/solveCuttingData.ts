@@ -8,7 +8,6 @@ import type { SolveCuttingDataResponse } from "./types";
 export async function solveCuttingData(
   input: Partial<Record<CuttingDataKey, number>>,
 ): Promise<Partial<Record<CuttingDataKey, number>>> {
-
   const request = buildCuttingDataRequest(input);
   const result = await solveCuttingDataApi(request);
 

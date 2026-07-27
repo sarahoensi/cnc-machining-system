@@ -8,14 +8,12 @@ import { SolveRightTriangleRequest } from "../api/types";
 import { TriangleKey } from "./triangleForm";
 
 export function buildRequest(
-  input: Partial<Record<TriangleKey, number>>
+  input: Partial<Record<TriangleKey, number>>,
 ): SolveRightTriangleRequest {
-
   const { a, b, c, alpha, beta } = input;
 
   // SIDE + SIDE
-  if (a !== undefined && b !== undefined)
-    return { type: "Legs", a_mm: a, b_mm: b };
+  if (a !== undefined && b !== undefined) return { type: "Legs", a_mm: a, b_mm: b };
 
   if (a !== undefined && c !== undefined)
     return { type: "LegAAndHypotenuse", a_mm: a, c_mm: c };

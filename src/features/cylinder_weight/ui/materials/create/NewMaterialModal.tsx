@@ -85,6 +85,3 @@ export function NewMaterialModal({
     </Modal>
   );
 }
-
-
-

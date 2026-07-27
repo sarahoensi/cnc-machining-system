@@ -1,43 +1,25 @@
-import {
-  clearMachineFields,
-  handleUserEdit,
-} from "@shared/form/engine/formEngine";
+import { clearMachineFields, handleUserEdit } from "@shared/form/engine/formEngine";
 
 import { userField } from "@shared/form/types/fields";
 
-import type {
-  ToleranceObjectType,
-  ToleranceOptionsResponse,
-} from "../api/types";
+import type { ToleranceObjectType, ToleranceOptionsResponse } from "../api/types";
 
 import { gradesForZone } from "./toleranceOptions";
 
-import type {
-  ToleranceFormState,
-  ToleranceKey,
-} from "./toleranceForm";
+import type { ToleranceFormState, ToleranceKey } from "./toleranceForm";
 
 const validInputSets: readonly (readonly ToleranceKey[])[] = [
   ["nominal", "hole_letter", "hole_grade", "shaft_letter", "shaft_grade"],
 ];
 
-const mutuallyExclusivePairs: readonly (readonly [
-  ToleranceKey,
-  ToleranceKey,
-])[] = [];
+const mutuallyExclusivePairs: readonly (readonly [ToleranceKey, ToleranceKey])[] = [];
 
 export function applyToleranceUserEdit(
   form: ToleranceFormState,
   key: ToleranceKey,
   value: string,
 ) {
-  return handleUserEdit(
-    form,
-    key,
-    value,
-    validInputSets,
-    mutuallyExclusivePairs,
-  );
+  return handleUserEdit(form, key, value, validInputSets, mutuallyExclusivePairs);
 }
 
 export function applyToleranceLetterChange(
@@ -100,10 +82,7 @@ export function patchSelectionFields(
   };
 }
 
-function pickGradeForClassChange(
-  availableGrades: string[],
-  currentGrade: string,
-) {
+function pickGradeForClassChange(availableGrades: string[], currentGrade: string) {
   if (availableGrades.includes(currentGrade)) return currentGrade;
   if (availableGrades.includes("7")) return "7";
 

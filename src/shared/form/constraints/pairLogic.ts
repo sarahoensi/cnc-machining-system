@@ -18,9 +18,8 @@ export function applyPairLogic<K extends string>(
   fields: Record<K, FieldState>,
   pairs: readonly (readonly [K, K])[],
   editedKey: K | null,
-  mode: "editing" | "solved"
+  mode: "editing" | "solved",
 ): Record<K, FieldState> {
-
   // No locking in solved mode.
   if (mode === "solved") {
     return fields;
@@ -29,7 +28,6 @@ export function applyPairLogic<K extends string>(
   const next: Record<K, FieldState> = { ...fields };
 
   for (const [a, b] of pairs) {
-
     const aIsUser = next[a].source === "user";
     const bIsUser = next[b].source === "user";
 
@@ -39,7 +37,6 @@ export function applyPairLogic<K extends string>(
     ============================================================ */
 
     if (aIsUser && bIsUser && editedKey) {
-
       const loser = editedKey === a ? b : a;
 
       next[loser] = emptyField({ locked: true });

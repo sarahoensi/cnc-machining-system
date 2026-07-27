@@ -40,8 +40,7 @@ export function buildFieldHistoryItems<K extends string>(
       };
     }
 
-    const numberValue =
-      typeof rawValue === "number" ? rawValue : Number(rawValue);
+    const numberValue = typeof rawValue === "number" ? rawValue : Number(rawValue);
 
     if (Number.isNaN(numberValue)) {
       return {

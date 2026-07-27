@@ -6,8 +6,7 @@ Describe UI meaning. Never hardcode values.
 */
 
 :root {
-
-/* =====================================================
+  /* =====================================================
    FOUNDATION: SURFACES
 ===================================================== */
 
@@ -17,8 +16,7 @@ Describe UI meaning. Never hardcode values.
   --surface-muted: var(--color-surface-muted);
   --surface-hover: var(--color-surface-hover);
 
-
-/* =====================================================
+  /* =====================================================
    FOUNDATION: TEXT
 ===================================================== */
 
@@ -31,8 +29,7 @@ Describe UI meaning. Never hardcode values.
 
   --text-interactive-hover: var(--color-primary);
 
-
-/* =====================================================
+  /* =====================================================
    FOUNDATION: BORDERS
 ===================================================== */
 
@@ -41,8 +38,7 @@ Describe UI meaning. Never hardcode values.
   --border-muted: var(--color-border-muted);
   --border-focus: var(--color-focus);
 
-
-/* =====================================================
+  /* =====================================================
    FOUNDATION: BRAND
 ===================================================== */
 
@@ -51,8 +47,7 @@ Describe UI meaning. Never hardcode values.
   --brand-primary-soft: var(--color-primary-soft);
   --brand-on-primary: var(--color-on-primary);
 
-
-/* =====================================================
+  /* =====================================================
    FOUNDATION: FEEDBACK / STATE
 ===================================================== */
 
@@ -69,15 +64,13 @@ Describe UI meaning. Never hardcode values.
   --border-success: var(--feedback-success);
   --border-warning: var(--feedback-warning);
 
-
-/* =====================================================
+  /* =====================================================
    FOUNDATION: FOCUS
 ===================================================== */
 
   --focus-ring-color: var(--color-focus);
 
-
-/* =====================================================
+  /* =====================================================
    TYPOGRAPHY (ROLES)
 ===================================================== */
 
@@ -95,8 +88,7 @@ Describe UI meaning. Never hardcode values.
   --heading-weight: var(--font-weight-semibold);
   --heading-line-height: var(--line-height-tight);
 
-
-/* =====================================================
+  /* =====================================================
    LAYOUT (GLOBAL)
 ===================================================== */
 
@@ -106,8 +98,7 @@ Describe UI meaning. Never hardcode values.
   --topbar-height: var(--size-topbar-height);
   --sidebar-width: var(--size-sidebar-width);
 
-
-/* =====================================================
+  /* =====================================================
    CONTROLS (BASE COMPONENT)
 ===================================================== */
 
@@ -136,8 +127,7 @@ Describe UI meaning. Never hardcode values.
   --control-text: var(--text-primary);
   --control-text-disabled: var(--text-muted);
 
-
-/* =====================================================
+  /* =====================================================
    INPUTS
 ===================================================== */
 
@@ -170,8 +160,7 @@ Describe UI meaning. Never hardcode values.
   --input-padding-x-form: var(--space-3);
   --input-padding-y-form: 0.35em;
 
-
-/* =====================================================
+  /* =====================================================
    BUTTONS
 ===================================================== */
 
@@ -196,16 +185,14 @@ Describe UI meaning. Never hardcode values.
   --button-link-text-hover: var(--brand-primary-hover);
   --button-link-text-disabled: var(--text-muted);
 
-
-/* =====================================================
+  /* =====================================================
    OVERLAY / MODAL
 ===================================================== */
 
   --overlay-backdrop: var(--color-backdrop);
   --overlay-surface: var(--surface-elevated);
 
-
-/* =====================================================
+  /* =====================================================
    FORM SIZES
 ===================================================== */
 
@@ -220,8 +207,7 @@ Describe UI meaning. Never hardcode values.
   --form-lg-text-size: var(--font-size-lg);
   --form-lg-label-size: var(--font-size-md);
 
-
-/* =====================================================
+  /* =====================================================
    FEATURE: SIDEBAR
 ===================================================== */
 
@@ -235,8 +221,7 @@ Describe UI meaning. Never hardcode values.
   --sidebar-item-text: var(--text-primary);
   --sidebar-item-text-active: var(--state-active-text);
 
-
-/* =====================================================
+  /* =====================================================
    FEATURE: TOPBAR
 ===================================================== */
 
@@ -244,8 +229,7 @@ Describe UI meaning. Never hardcode values.
   --topbar-border: var(--border-default);
   --topbar-text: var(--text-primary);
 
-
-/* =====================================================
+  /* =====================================================
    FEATURE: TABLE
 ===================================================== */
 
@@ -259,8 +243,7 @@ Describe UI meaning. Never hardcode values.
   --table-header-size: var(--font-size-lg);
   --table-caption-size: var(--font-size-xs);
 
-
-/* =====================================================
+  /* =====================================================
    FEATURE: DIAGRAM
 ===================================================== */
 
@@ -286,8 +269,7 @@ Describe UI meaning. Never hardcode values.
 
   --tooltip-icon-size: var(--size-icon-sm);
 
-
-/* =====================================================
+  /* =====================================================
    LAYOUT PATTERNS
 ===================================================== */
 
@@ -305,8 +287,7 @@ Describe UI meaning. Never hardcode values.
   --panel-border-color: var(--border-default);
   --panel-border-width: var(--border-width-sm);
 
-
-/* =====================================================
+  /* =====================================================
    FORM LAYOUT
 ===================================================== */
 
@@ -317,8 +298,7 @@ Describe UI meaning. Never hardcode values.
   --form-section-gap: var(--space-4);
   --form-section-spacing: var(--space-4);
 
-
-/* =====================================================
+  /* =====================================================
    EXECUTION
 ===================================================== */
 
@@ -338,8 +318,7 @@ Describe UI meaning. Never hardcode values.
   --field-display-gap: var(--space-2);
   --field-display-value-weight: var(--font-weight-medium);
 
-
-/* =====================================================
+  /* =====================================================
    HISTORY CARD
 ===================================================== */
 
@@ -352,5 +331,4 @@ Describe UI meaning. Never hardcode values.
   --history-item-value-weight: var(--font-weight-medium);
 
   --history-item-unit-color: var(--text-muted);
-
 }

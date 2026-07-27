@@ -1,14 +1,10 @@
 // shared/execution/executionState.ts
 
-
 export type ExecutionValue = {
   value: string;
 };
 
-export type ExecutionStepStatus =
-  | "pending"
-  | "active"
-  | "completed";
+export type ExecutionStepStatus = "pending" | "active" | "completed";
 
 export type ExecutionStep<T> = {
   index: number;
@@ -28,61 +24,46 @@ export type ExecutionState<T> = {
    Build execution state
 ============================================================ */
 
-export function createExecutionState<T>(steps: {
-  index: number;
-  data: T;
-  measurement?: number | null;
-}[],
-finished: boolean): ExecutionState<T> {
+export function createExecutionState<T>(
+  steps: {
+    index: number;
+    data: T;
+    measurement?: number | null;
+  }[],
+  finished: boolean,
+): ExecutionState<T> {
+  const firstIncomplete = steps.findIndex((s) => s.measurement == null);
 
-  const firstIncomplete =
-    steps.findIndex(s => s.measurement == null);
+  const activeIndex = firstIncomplete === -1 ? steps.length : firstIncomplete;
 
-  const activeIndex =
-    firstIncomplete === -1
-      ? steps.length
-      : firstIncomplete;
+  const lastMeasuredIndex = steps
+    .map((s, i) => (s.measurement != null ? i : -1))
+    .filter((i) => i !== -1)
+    .pop();
 
-  const lastMeasuredIndex =
-    steps
-      .map((s, i) => s.measurement != null ? i : -1)
-      .filter(i => i !== -1)
-      .pop();
+  const mappedSteps: ExecutionStep<T>[] = steps.map((step, i) => {
+    const status: ExecutionStepStatus =
+      step.measurement != null ? "completed" : i === activeIndex ? "active" : "pending";
 
-  const mappedSteps: ExecutionStep<T>[] =
-    steps.map((step, i) => {
+    const editable = status === "active" || i === lastMeasuredIndex;
 
-      const status: ExecutionStepStatus =
-        step.measurement != null
-          ? "completed"
-          : i === activeIndex
-          ? "active"
-          : "pending";
+    const measurement: ExecutionValue = {
+      value: step.measurement == null ? "" : step.measurement.toString(),
+    };
 
-      const editable =
-        status === "active" ||
-        i === lastMeasuredIndex;
-
-      const measurement: ExecutionValue = {
-        value:
-          step.measurement == null
-            ? ""
-            : step.measurement.toString(),
-      };
-
-      return {
-        index: step.index,
-        data: step.data,
-        measurement,
-        status,
-        editable,
-      };
-    });
+    return {
+      index: step.index,
+      data: step.data,
+      measurement,
+      status,
+      editable,
+    };
+  });
 
   return {
     steps: mappedSteps,
     activeIndex,
-    finished
+    finished,
   };
 }
 
@@ -106,32 +87,20 @@ export function isStepPending<T>(step: ExecutionStep<T>) {
    Derived helpers (UI-safe, but domain-driven)
 ============================================================ */
 
-export function isStepEditableCompleted<T>(
-  step: ExecutionStep<T>,
-  finished: boolean
-) {
-  return (
-    !finished &&
-    step.status === "completed" &&
-    step.editable
-  );
+export function isStepEditableCompleted<T>(step: ExecutionStep<T>, finished: boolean) {
+  return !finished && step.status === "completed" && step.editable;
 }
 
 export function isStepInputEditable<T>(
   step: ExecutionStep<T>,
   finished: boolean,
-  isEditing: boolean
+  isEditing: boolean,
 ) {
   if (isEditing) return true;
 
-  return (
-    !finished &&
-    step.status === "active"
-  );
+  return !finished && step.status === "active";
 }
 
-export function getStepMeasurementValue<T>(
-  step: ExecutionStep<T>
-) {
+export function getStepMeasurementValue<T>(step: ExecutionStep<T>) {
   return step.measurement.value ?? "";
 }

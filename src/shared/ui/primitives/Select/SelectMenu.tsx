@@ -179,13 +179,7 @@ export function SelectMenu<T extends string>({
   function handleTriggerKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     if (disabled) return;
 
-    if (
-      !open &&
-      (
-        event.key === "ArrowDown" ||
-        event.key === "ArrowUp"
-      )
-    ) {
+    if (!open && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
       onKeyDown?.(event);
       if (event.defaultPrevented) return;
     }
@@ -248,12 +242,7 @@ export function SelectMenu<T extends string>({
       return;
     }
 
-    if (
-      event.key.length === 1 &&
-      !event.altKey &&
-      !event.ctrlKey &&
-      !event.metaKey
-    ) {
+    if (event.key.length === 1 && !event.altKey && !event.ctrlKey && !event.metaKey) {
       event.preventDefault();
       handleTypeahead(event.key.toLocaleLowerCase());
     }
@@ -270,7 +259,7 @@ export function SelectMenu<T extends string>({
           `input-control--${appearance}`,
           `input-control--${size}`,
           source !== "default" && `input-control--${source}`,
-          disabled && "input-control--disabled"
+          disabled && "input-control--disabled",
         )}
         onClick={() => {
           if (!disabled) {
@@ -300,7 +289,7 @@ export function SelectMenu<T extends string>({
               }}
               className={clsx(
                 "app-select-option",
-                index === activeIndex && "is-active"
+                index === activeIndex && "is-active",
               )}
               role="option"
               aria-selected={index === activeIndex}
@@ -354,4 +343,3 @@ function getOptionSearchText<T extends string>(option: SelectOption<T>) {
 function normalizeSearchText(value: string) {
   return value.trim().toLocaleLowerCase();
 }
-

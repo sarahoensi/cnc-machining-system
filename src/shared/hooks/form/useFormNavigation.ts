@@ -25,7 +25,7 @@ export function useFormNavigation<K extends string>(options: {
       if (el) refs.current[key] = el;
       else delete refs.current[key];
     },
-    []
+    [],
   );
 
   const focus = useCallback((key?: K) => {
@@ -57,7 +57,7 @@ export function useFormNavigation<K extends string>(options: {
         focus(key);
       });
     },
-    [focus]
+    [focus],
   );
 
   const focusFirst = useCallback(() => {
@@ -84,7 +84,7 @@ export function useFormNavigation<K extends string>(options: {
       }
       return undefined;
     },
-    [focus, keys]
+    [focus, keys],
   );
 
   const focusFirstMatchingAfterRender = useCallback(
@@ -93,7 +93,7 @@ export function useFormNavigation<K extends string>(options: {
         focusFirstMatching(match);
       });
     },
-    [focusFirstMatching]
+    [focusFirstMatching],
   );
 
   const focusFirstInOrder = useCallback(
@@ -109,7 +109,7 @@ export function useFormNavigation<K extends string>(options: {
       }
       return undefined;
     },
-    [focus]
+    [focus],
   );
 
   const focusFirstInOrderAfterRender = useCallback(
@@ -118,7 +118,7 @@ export function useFormNavigation<K extends string>(options: {
         focusFirstInOrder(order, match);
       });
     },
-    [focusFirstInOrder]
+    [focusFirstInOrder],
   );
 
   const focusFirstAfterRender = useCallback(() => {
@@ -139,7 +139,7 @@ export function useFormNavigation<K extends string>(options: {
       }
       return undefined;
     },
-    [focus, keys]
+    [focus, keys],
   );
 
   const focusFirstInvalidAfterRender = useCallback(
@@ -148,7 +148,7 @@ export function useFormNavigation<K extends string>(options: {
         focusFirstInvalid(hasError);
       });
     },
-    [focusFirstInvalid]
+    [focusFirstInvalid],
   );
 
   const hasFocusWithin = useCallback(() => {
@@ -175,7 +175,7 @@ export function useFormNavigation<K extends string>(options: {
 
       return undefined;
     },
-    [keys]
+    [keys],
   );
 
   const isLastFocusable = useCallback(
@@ -183,7 +183,7 @@ export function useFormNavigation<K extends string>(options: {
       const next = findNext(key, 1);
       return !next;
     },
-    [findNext]
+    [findNext],
   );
 
   const handleKeyDown = useCallback(
@@ -224,7 +224,7 @@ export function useFormNavigation<K extends string>(options: {
         focus(prev);
       }
     },
-    [findNext, focus, focusSubmitAction, isLastFocusable, onSubmit]
+    [findNext, focus, focusSubmitAction, isLastFocusable, onSubmit],
   );
 
   const handleSubmitActionKeyDown = useCallback(
@@ -238,7 +238,7 @@ export function useFormNavigation<K extends string>(options: {
       });
       focus(lastKey);
     },
-    [focus, keys]
+    [focus, keys],
   );
 
   useEffect(() => {

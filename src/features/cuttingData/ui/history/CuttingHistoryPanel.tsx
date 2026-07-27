@@ -9,17 +9,14 @@ import type { createInitialCuttingDataForm } from "../../domain/cuttingDataForm"
 
 type Props = {
   history: SavedResultEntry<ReturnType<typeof createInitialCuttingDataForm>>[];
-  onLoad(entry: SavedResultEntry<ReturnType<typeof createInitialCuttingDataForm>>): void;
+  onLoad(
+    entry: SavedResultEntry<ReturnType<typeof createInitialCuttingDataForm>>,
+  ): void;
   onDelete(id: string): void;
   onClear(): void;
 };
 
-export function CuttingHistoryPanel({
-  history,
-  onLoad,
-  onDelete,
-  onClear,
-}: Props) {
+export function CuttingHistoryPanel({ history, onLoad, onDelete, onClear }: Props) {
   const { decimals } = useDisplaySettings();
 
   return (
@@ -34,4 +31,3 @@ export function CuttingHistoryPanel({
     />
   );
 }
-

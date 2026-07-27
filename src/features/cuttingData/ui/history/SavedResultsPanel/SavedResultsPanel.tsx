@@ -62,4 +62,3 @@ export function SavedResultsPanel<TEntry extends { id: string }>({
     </section>
   );
 }
-

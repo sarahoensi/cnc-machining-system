@@ -9,14 +9,8 @@ type Props = {
   className?: string;
 };
 
-export function Row({
-  children,
-  columns = 1,
-  className,
-}: Props) {
+export function Row({ children, columns = 1, className }: Props) {
   return (
-    <div className={clsx("row", `row--columns-${columns}`, className)}>
-      {children}
-    </div>
+    <div className={clsx("row", `row--columns-${columns}`, className)}>{children}</div>
   );
 }

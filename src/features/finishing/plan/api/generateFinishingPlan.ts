@@ -8,9 +8,8 @@ import { FinishingExtras, FinishingKey } from "../domain/finishingForm";
 
 export async function generateFinishingPlan(
   input: Partial<Record<FinishingKey, number>>,
-  extras: FinishingExtras
+  extras: FinishingExtras,
 ): Promise<FinishingExecutionResponse> {
-
   const request = buildFinishingRequest(input, extras);
 
   const result = await generateFinishingPlanApi(request);

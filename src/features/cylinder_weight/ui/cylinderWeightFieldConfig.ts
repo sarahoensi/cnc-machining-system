@@ -39,4 +39,3 @@ export const cylinderWeightFieldConfig: CylinderWeightFieldConfig[] = [
     readOnly: true,
   },
 ];
-

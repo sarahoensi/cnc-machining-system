@@ -81,12 +81,7 @@ describe("tolerance frontend mapping", () => {
       shafts: [],
     };
 
-    const next = applyToleranceLetterChange(
-      form,
-      form.extras.options,
-      "hole",
-      "JS",
-    );
+    const next = applyToleranceLetterChange(form, form.extras.options, "hole", "JS");
 
     expect(next.fields.hole_letter.value).toBe("JS");
     expect(next.fields.hole_grade.value).toBe("6");
@@ -103,12 +98,7 @@ describe("tolerance frontend mapping", () => {
       ],
     };
 
-    const next = applyToleranceLetterChange(
-      form,
-      form.extras.options,
-      "shaft",
-      "g",
-    );
+    const next = applyToleranceLetterChange(form, form.extras.options, "shaft", "g");
 
     expect(next.fields.shaft_letter.value).toBe("g");
     expect(next.fields.shaft_grade.value).toBe("7");

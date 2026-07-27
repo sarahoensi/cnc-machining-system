@@ -1,10 +1,6 @@
 // app/shell/TitleContextProvider.tsx
 
-import {
-  createContext,
-  useContext,
-  useState,
-} from "react";
+import { createContext, useContext, useState } from "react";
 
 /* ============================================================
    Types
@@ -19,20 +15,13 @@ type TitleContextValue = {
    Context
 ============================================================ */
 
-const TitleContext =
-  createContext<TitleContextValue | undefined>(
-    undefined
-  );
+const TitleContext = createContext<TitleContextValue | undefined>(undefined);
 
 /* ============================================================
    Provider
 ============================================================ */
 
-export function TitleContextProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function TitleContextProvider({ children }: { children: React.ReactNode }) {
   const [title, setTitle] = useState("");
 
   return (
@@ -55,9 +44,7 @@ export function useTitle() {
   const ctx = useContext(TitleContext);
 
   if (!ctx) {
-    throw new Error(
-      "useTitle must be used inside TitleContextProvider"
-    );
+    throw new Error("useTitle must be used inside TitleContextProvider");
   }
 
   return ctx;

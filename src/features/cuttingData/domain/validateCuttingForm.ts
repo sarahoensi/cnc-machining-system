@@ -6,9 +6,8 @@ import type { CuttingDataKey } from "./cuttingDataForm";
 import type { FieldState } from "@shared/form/types/fields";
 
 export function validateCuttingDataForm(
-  fields: Record<CuttingDataKey, FieldState>
+  fields: Record<CuttingDataKey, FieldState>,
 ): string[] | null {
-
   const errors: string[] = [];
 
   const diameter = fields.diameter.value;
@@ -29,9 +28,7 @@ export function validateCuttingDataForm(
   const hasFeed = teeth && (chip || feed);
 
   if (!hasRotation && !hasFeed) {
-    errors.push(
-      "Provide cutting speed or rpm, or feed inputs"
-    );
+    errors.push("Provide cutting speed or rpm, or feed inputs");
   }
 
   return errors.length > 0 ? errors : null;
