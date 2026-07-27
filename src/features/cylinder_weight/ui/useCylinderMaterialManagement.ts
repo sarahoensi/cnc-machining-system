@@ -153,19 +153,11 @@ export function useCylinderMaterialManagement({
   }
 
   function toggleExportMaterial(id: string) {
-    setSelectedExportIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
+    setSelectedExportIds((prev) => toggleExportMaterialId(prev, id));
   }
 
   function setExportAll(checked: boolean, visibleIds: string[]) {
-    setSelectedExportIds((prev) => {
-      if (checked) {
-        return Array.from(new Set([...prev, ...visibleIds]));
-      }
-
-      return prev.filter((id) => !visibleIds.includes(id));
-    });
+    setSelectedExportIds((prev) => setVisibleExportSelection(prev, checked, visibleIds));
   }
 
   function cancelExportDialog() {
@@ -178,13 +170,7 @@ export function useCylinderMaterialManagement({
     const selectedRows = materials.filter((m) => selectedExportIds.includes(m.id));
     if (selectedRows.length === 0) return;
 
-    const payload = {
-      schema_version: 1,
-      materials: selectedRows.map((m) => ({
-        name: m.name,
-        density_kg_m3: m.density_kg_m3,
-      })),
-    };
+    const payload = buildCylinderMaterialsExportPayload(selectedRows);
     const json = JSON.stringify(payload, null, 2);
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -198,13 +184,7 @@ export function useCylinderMaterialManagement({
 
     setIsExportOpen(false);
     setSelectedExportIds([]);
-    setExportSummary({
-      exported: selectedRows.length,
-      materials: selectedRows.map((row) => ({
-        name: row.name,
-        density_kg_m3: row.density_kg_m3,
-      })),
-    });
+    setExportSummary(buildCylinderMaterialsExportSummary(selectedRows));
   }
 
   return {
@@ -250,5 +230,45 @@ export function useCylinderMaterialManagement({
       cancelExportDialog,
       confirmExportSelected,
     },
+  };
+}
+
+export function toggleExportMaterialId(selectedIds: string[], id: string) {
+  return selectedIds.includes(id)
+    ? selectedIds.filter((selectedId) => selectedId !== id)
+    : [...selectedIds, id];
+}
+
+export function setVisibleExportSelection(
+  selectedIds: string[],
+  checked: boolean,
+  visibleIds: string[],
+) {
+  if (checked) {
+    return Array.from(new Set([...selectedIds, ...visibleIds]));
+  }
+
+  return selectedIds.filter((id) => !visibleIds.includes(id));
+}
+
+export function buildCylinderMaterialsExportPayload(materials: CylinderMaterial[]) {
+  return {
+    schema_version: 1,
+    materials: materials.map((material) => ({
+      name: material.name,
+      density_kg_m3: material.density_kg_m3,
+    })),
+  };
+}
+
+export function buildCylinderMaterialsExportSummary(
+  materials: CylinderMaterial[],
+): ExportSummary {
+  return {
+    exported: materials.length,
+    materials: materials.map((material) => ({
+      name: material.name,
+      density_kg_m3: material.density_kg_m3,
+    })),
   };
 }

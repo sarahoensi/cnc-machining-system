@@ -81,18 +81,7 @@ export function useCylinderWeightCalculation() {
   }
 
   function resetForm() {
-    setForm((prev) => {
-      const initial = createInitialCylinderWeightForm();
-      return {
-        ...initial,
-        extras: {
-          ...initial.extras,
-          materialId: prev.extras.materialId,
-          materialName: prev.extras.materialName,
-          densityKgM3: prev.extras.densityKgM3,
-        },
-      };
-    });
+    setForm(resetCylinderWeightFormKeepingMaterial);
     navigation.focusFirstAfterRender();
   }
 
@@ -121,5 +110,20 @@ export function useCylinderWeightCalculation() {
     onFieldChange,
     calculate,
     resetForm,
+  };
+}
+
+export function resetCylinderWeightFormKeepingMaterial(
+  previous: ReturnType<typeof createInitialCylinderWeightForm>,
+) {
+  const initial = createInitialCylinderWeightForm();
+  return {
+    ...initial,
+    extras: {
+      ...initial.extras,
+      materialId: previous.extras.materialId,
+      materialName: previous.extras.materialName,
+      densityKgM3: previous.extras.densityKgM3,
+    },
   };
 }

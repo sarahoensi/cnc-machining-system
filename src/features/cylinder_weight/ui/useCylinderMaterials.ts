@@ -32,16 +32,7 @@ export function useCylinderMaterials(
       setMaterials(sortedRows);
 
       if (sortedRows.length > 0) {
-        const first = sortedRows[0];
-        setForm((prev) => ({
-          ...prev,
-          extras: {
-            ...prev.extras,
-            materialId: prev.extras.materialId || first.id,
-            materialName: prev.extras.materialName || first.name,
-            densityKgM3: prev.extras.densityKgM3 ?? first.density_kg_m3,
-          },
-        }));
+        setForm((prev) => applyDefaultMaterialSelection(prev, sortedRows));
       }
     } catch (error) {
       if (error instanceof Error) setMaterialLoadError(error.message);
@@ -56,19 +47,9 @@ export function useCylinderMaterials(
   }, [loadMaterials]);
 
   function selectMaterial(materialId: string, knownMaterial?: CylinderMaterial) {
-    const selected = knownMaterial ?? materials.find((m) => m.id === materialId);
-    setForm((prev) => ({
-      ...prev,
-      status: "editing",
-      fields: clearMachineFields(prev.fields),
-      extras: {
-        ...prev.extras,
-        materialId,
-        materialName: selected?.name,
-        densityKgM3: selected?.density_kg_m3,
-      },
-      formError: undefined,
-    }));
+    setForm((prev) =>
+      applyMaterialSelection(prev, materialId, materials, knownMaterial),
+    );
   }
 
   function onMaterialChange(materialId: string) {
@@ -104,5 +85,45 @@ export function useCylinderMaterials(
     upsertMaterial,
     removeMaterial,
     selectedMaterial,
+  };
+}
+
+export function applyDefaultMaterialSelection(
+  form: CylinderWeightFormState,
+  materials: CylinderMaterial[],
+): CylinderWeightFormState {
+  const first = materials[0];
+  if (!first) return form;
+
+  return {
+    ...form,
+    extras: {
+      ...form.extras,
+      materialId: form.extras.materialId || first.id,
+      materialName: form.extras.materialName || first.name,
+      densityKgM3: form.extras.densityKgM3 ?? first.density_kg_m3,
+    },
+  };
+}
+
+export function applyMaterialSelection(
+  form: CylinderWeightFormState,
+  materialId: string,
+  materials: CylinderMaterial[],
+  knownMaterial?: CylinderMaterial,
+): CylinderWeightFormState {
+  const selected = knownMaterial ?? materials.find((m) => m.id === materialId);
+
+  return {
+    ...form,
+    status: "editing",
+    fields: clearMachineFields(form.fields),
+    extras: {
+      ...form.extras,
+      materialId,
+      materialName: selected?.name,
+      densityKgM3: selected?.density_kg_m3,
+    },
+    formError: undefined,
   };
 }
