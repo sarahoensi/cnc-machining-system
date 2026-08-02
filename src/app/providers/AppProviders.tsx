@@ -14,12 +14,9 @@ export function AppProviders({ children }: Props) {
     <ThemeProvider>
       <DisplaySettingProvider>
         <TitleContextProvider>
-          <FormStateProvider>
-            {children}
-          </FormStateProvider>
+          <FormStateProvider>{children}</FormStateProvider>
         </TitleContextProvider>
       </DisplaySettingProvider>
     </ThemeProvider>
   );
 }
-

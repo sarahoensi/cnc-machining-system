@@ -15,203 +15,172 @@ import { buildPitchPath } from "./parts/PitchPath";
 /* --------------------------------------------- */
 
 type Props = {
-    mode: "Inner" | "Outer";
-    activeField?: HelixKey | null;
+  mode: "Inner" | "Outer";
+  activeField?: HelixKey | null;
 };
 
-type VisualKey =
-    | "helix"
-    | "pitch"
-    | "tool"
-    | "holeDiameter";
-
+type VisualKey = "helix" | "pitch" | "tool" | "holeDiameter";
 
 /* --------------------------------------------- */
 /* MAP TO FIELDS
 /* --------------------------------------------- */
 
-
 const FIELD_TO_VISUAL: Partial<Record<HelixKey, VisualKey[]>> = {
-    tool_diameter: ["tool"],
-    pitch: ["pitch", "helix"],
-    diameter: ["holeDiameter"],
+  tool_diameter: ["tool"],
+  pitch: ["pitch", "helix"],
+  diameter: ["holeDiameter"],
 };
 
-
-function mapFieldToVisualKeys(
-    field?: HelixKey | null
-): VisualKey[] {
-    if (!field) return [];
-    return FIELD_TO_VISUAL[field] ?? [];
+function mapFieldToVisualKeys(field?: HelixKey | null): VisualKey[] {
+  if (!field) return [];
+  return FIELD_TO_VISUAL[field] ?? [];
 }
-
 
 /* --------------------------------------------- */
 /* CONFIG */
 /* --------------------------------------------- */
 
 const FIGURE = {
-    viewBox: `0 0 240 220`,
+  viewBox: `0 0 240 220`,
 
-    centerBottom: {
-        x: 240 / 2,
-        y: 210,
-    },
+  centerBottom: {
+    x: 240 / 2,
+    y: 210,
+  },
 
-    centerSection: {
-        radius: 50,
-        height: 140,
-    },
+  centerSection: {
+    radius: 50,
+    height: 140,
+  },
 
-    materialBase: {
-        baseWidth: 200,
-        baseHeight: 25,
-    },
+  materialBase: {
+    baseWidth: 200,
+    baseHeight: 25,
+  },
 
-    helix: {
-        turns: 3,
-        ry: 14,
-    },
+  helix: {
+    turns: 3,
+    ry: 14,
+  },
 
-    tool: {
-        toolRadius: 8,
-        toolHeight: 160,
-        offsetX: 10,
-        offsetY: 6,
-    },
-
-
+  tool: {
+    toolRadius: 8,
+    toolHeight: 160,
+    offsetX: 10,
+    offsetY: 6,
+  },
 };
 /* --------------------------------------------- */
 /* COMPONENT */
 /* --------------------------------------------- */
 
-export function HelixFigure({
-    mode,
-    activeField,
-}: Props) {
-    const activeKeys = mapFieldToVisualKeys(activeField);
+export function HelixFigure({ mode, activeField }: Props) {
+  const activeKeys = mapFieldToVisualKeys(activeField);
 
-    const isActive = (key: VisualKey) =>
-        activeKeys.includes(key);
+  const isActive = (key: VisualKey) => activeKeys.includes(key);
 
-    const part = (key: VisualKey) =>
-        clsx(
-            "spiral-part",
-            isActive(key) && "is-active"
-        );
+  const part = (key: VisualKey) => clsx("spiral-part", isActive(key) && "is-active");
 
-    /* ----------------------------------------- */
-    /* DERIVED VALUES */
-    /* ----------------------------------------- */
+  /* ----------------------------------------- */
+  /* DERIVED VALUES */
+  /* ----------------------------------------- */
 
-    const {
-        centerBottom,
-        helix,
-        centerSection,
-        tool,
-        materialBase,
-    } = FIGURE;
+  const { centerBottom, helix, centerSection, tool, materialBase } = FIGURE;
 
-    const toolCenterX =
-        mode === "Inner"
-            ? centerBottom.x + centerSection.radius - tool.offsetX - tool.toolRadius
-            : centerBottom.x + centerSection.radius + tool.offsetX + tool.toolRadius;
+  const toolCenterX =
+    mode === "Inner"
+      ? centerBottom.x + centerSection.radius - tool.offsetX - tool.toolRadius
+      : centerBottom.x + centerSection.radius + tool.offsetX + tool.toolRadius;
 
-    const toolBottomY = centerBottom.y - materialBase.baseHeight - tool.offsetY;
+  const toolBottomY = centerBottom.y - materialBase.baseHeight - tool.offsetY;
 
-    const rx = toolCenterX - centerBottom.x;
+  const rx = toolCenterX - centerBottom.x;
 
-    const turnHeight = centerSection.height / helix.turns;
+  const turnHeight = centerSection.height / helix.turns;
 
-    const materialTopY = centerBottom.y - materialBase.baseHeight - centerSection.height;
+  const materialTopY = centerBottom.y - materialBase.baseHeight - centerSection.height;
 
-    /* ----------------------------------------- */
-    /* BUILD PATHS
+  /* ----------------------------------------- */
+  /* BUILD PATHS
     /* ----------------------------------------- */
 
-    // TOOLPATH
+  // TOOLPATH
 
-    const toolPath = buildToolPath({
-        toolCenterX,
-        toolBottomY,
-        toolRadius: tool.toolRadius,
-        toolHeight: tool.toolHeight,
-    })
+  const toolPath = buildToolPath({
+    toolCenterX,
+    toolBottomY,
+    toolRadius: tool.toolRadius,
+    toolHeight: tool.toolHeight,
+  });
 
-    // MATERIAL
+  // MATERIAL
 
-    const materialPath =
-        mode === "Inner"
-            ? buildInnerMaterialPath
-            : buildOuterMaterialPath;
+  const materialPath =
+    mode === "Inner" ? buildInnerMaterialPath : buildOuterMaterialPath;
 
-    const materialD = materialPath({
-        centerBottom,
+  const materialD = materialPath({
+    centerBottom,
 
-        baseWidth: materialBase.baseWidth,
-        baseHeight: materialBase.baseHeight,
+    baseWidth: materialBase.baseWidth,
+    baseHeight: materialBase.baseHeight,
 
-        materialTopY,
-        centerRadius: centerSection.radius,
-    });
+    materialTopY,
+    centerRadius: centerSection.radius,
+  });
 
-    // HELIX
-    const helixArgs = {
-        cx: centerBottom.x,
-        topY: materialTopY,
-        height: centerSection.height,
-        rx,
-        ry: helix.ry,
-        turns: helix.turns,
-    };
+  // HELIX
+  const helixArgs = {
+    cx: centerBottom.x,
+    topY: materialTopY,
+    height: centerSection.height,
+    rx,
+    ry: helix.ry,
+    turns: helix.turns,
+  };
 
-    const helixBack = buildHelixPath({ ...helixArgs, side: "back" });
-    const helixFront = buildHelixPath({ ...helixArgs, side: "front" });
+  const helixBack = buildHelixPath({ ...helixArgs, side: "back" });
+  const helixFront = buildHelixPath({ ...helixArgs, side: "front" });
 
-    // DIAMETER
+  // DIAMETER
 
-    const diameterPath = buildDiameterPath({
-        radius: centerSection.radius,
-        axisY: materialTopY,
-        centerX: centerBottom.x,
-        offsetY: 35,
-    });
+  const diameterPath = buildDiameterPath({
+    radius: centerSection.radius,
+    axisY: materialTopY,
+    centerX: centerBottom.x,
+    offsetY: 35,
+  });
 
+  // PITCH
+  const pitchX = centerBottom.x - rx - 10;
+  const turnIndex = 0.5;
+  const y1 = materialTopY + turnIndex * turnHeight;
+  const y2 = y1 + turnHeight;
 
-    // PITCH
-    const pitchX = centerBottom.x - rx - 10;
-    const turnIndex = 0.5;
-    const y1 = materialTopY + turnIndex * turnHeight;
-    const y2 = y1 + turnHeight;
+  const pitchPath = buildPitchPath({
+    x: pitchX,
+    y1,
+    y2,
+  });
 
-    const pitchPath = buildPitchPath({
-        x: pitchX,
-        y1,
-        y2,
-    });
+  return (
+    <svg viewBox={FIGURE.viewBox} className="spiral-figure" aria-hidden>
+      {/* MATERIAL */}
+      <path d={materialD} className="material" />
 
+      {/* DIAMETER */}
+      <path d={diameterPath} className={part("holeDiameter")} />
 
+      {/* HELIX BACK */}
+      <path d={helixBack} className="helix-back" />
 
-    return (
-        <svg viewBox={FIGURE.viewBox} className="spiral-figure" aria-hidden>
-            {/* MATERIAL */}
-            <path d={materialD} className="material" />
+      {/* TOOL */}
+      <path d={toolPath} className={clsx("tool", isActive("tool") && "is-active")} />
 
-            {/* DIAMETER */}
-            <path d={diameterPath} className={part("holeDiameter")} />
+      {/* HELIX FRONT */}
+      <path d={helixFront} className={"helix-front"} />
 
-            {/* HELIX BACK */}
-            <path d={helixBack} className="helix-back" />
-
-            {/* TOOL */}
-            <path d={toolPath} className={clsx("tool", isActive("tool") && "is-active")} />
-
-            {/* HELIX FRONT */}
-            <path d={helixFront} className={"helix-front"} />
-            
-            {/* PITCH */}
-            <path d={pitchPath} className={part("pitch")} />
-        </svg>
-    );
+      {/* PITCH */}
+      <path d={pitchPath} className={part("pitch")} />
+    </svg>
+  );
 }

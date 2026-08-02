@@ -25,8 +25,9 @@
   font-size: var(--sidebar-text-size);
   font-weight: var(--text-body-weight);
 
-  transition: background var(--duration-fast) var(--easing-standard),
-              color var(--duration-fast) var(--easing-standard);
+  transition:
+    background var(--duration-fast) var(--easing-standard),
+    color var(--duration-fast) var(--easing-standard);
 }
 
 .sidebar-link:hover {

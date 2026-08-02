@@ -9,9 +9,7 @@ type Props = {
   onCreateNewPlan(): void;
 };
 
-export function ExecutionFinishedNotice({
-  onCreateNewPlan,
-}: Props) {
+export function ExecutionFinishedNotice({ onCreateNewPlan }: Props) {
   return (
     <Panel
       title="Finishing complete"
@@ -21,10 +19,7 @@ export function ExecutionFinishedNotice({
         </Button>
       }
     >
-      <p className="execution-finished-text">
-        All measurements are registered.
-      </p>
+      <p className="execution-finished-text">All measurements are registered.</p>
     </Panel>
   );
 }
-

@@ -4,10 +4,7 @@ import type { FormState } from "@shared/form/types/forms";
 import { emptyField, resultField } from "@shared/form/types/fields";
 
 export type CylinderWeightKey =
-  | "outer_diameter_mm"
-  | "inner_diameter_mm"
-  | "length_mm"
-  | "mass_kg";
+  "outer_diameter_mm" | "inner_diameter_mm" | "length_mm" | "mass_kg";
 
 export type CylinderWeightExtras = {
   materialId: string;
@@ -34,4 +31,3 @@ export function createInitialCylinderWeightForm(): FormState<
     },
   };
 }
-

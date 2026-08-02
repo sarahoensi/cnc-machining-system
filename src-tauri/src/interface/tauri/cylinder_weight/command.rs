@@ -1,3 +1,5 @@
+use std::sync::{Mutex, MutexGuard};
+
 use tauri::{command, State};
 
 use crate::{
@@ -9,7 +11,7 @@ use crate::{
         UpdateCylinderMaterialUseCase,
     },
     interface::tauri::error::{map_application_error, TauriError, TauriFieldError},
-    AppState,
+    AppState, JsonCylinderMaterialRepository,
 };
 
 use super::{
@@ -23,7 +25,7 @@ use super::{
 pub fn list_cylinder_materials(
     state: State<AppState>,
 ) -> Result<Vec<CylinderMaterialResponse>, TauriError> {
-    let repo = state.cylinder_material_repository.lock().unwrap();
+    let repo = lock_material_repository(&state.cylinder_material_repository)?;
     let rows = ListCylinderMaterialsUseCase::execute(&*repo);
     Ok(rows.into_iter().map(Into::into).collect())
 }
@@ -34,7 +36,7 @@ pub fn create_cylinder_material(
     request: CreateCylinderMaterialRequest,
 ) -> Result<CylinderMaterialResponse, TauriError> {
     let input: CreateCylinderMaterialInput = request.into();
-    let mut repo = state.cylinder_material_repository.lock().unwrap();
+    let mut repo = lock_material_repository(&state.cylinder_material_repository)?;
 
     match CreateCylinderMaterialUseCase::execute(&mut *repo, input) {
         Ok(out) => Ok(out.into()),
@@ -60,7 +62,7 @@ pub fn solve_cylinder_weight(
     request: SolveCylinderWeightRequest,
 ) -> Result<SolveCylinderWeightResponse, TauriError> {
     let input: SolveCylinderWeightInput = request.into();
-    let repo = state.cylinder_material_repository.lock().unwrap();
+    let repo = lock_material_repository(&state.cylinder_material_repository)?;
 
     let out = SolveCylinderWeightUseCase::execute(&*repo, input).map_err(map_application_error)?;
     Ok(out.into())
@@ -72,7 +74,7 @@ pub fn update_cylinder_material(
     request: UpdateCylinderMaterialRequest,
 ) -> Result<CylinderMaterialResponse, TauriError> {
     let input: UpdateCylinderMaterialInput = request.into();
-    let mut repo = state.cylinder_material_repository.lock().unwrap();
+    let mut repo = lock_material_repository(&state.cylinder_material_repository)?;
 
     match UpdateCylinderMaterialUseCase::execute(&mut *repo, input) {
         Ok(out) => Ok(out.into()),
@@ -110,7 +112,7 @@ pub fn delete_cylinder_material(
     request: DeleteCylinderMaterialRequest,
 ) -> Result<(), TauriError> {
     let input: DeleteCylinderMaterialInput = request.into();
-    let mut repo = state.cylinder_material_repository.lock().unwrap();
+    let mut repo = lock_material_repository(&state.cylinder_material_repository)?;
 
     match DeleteCylinderMaterialUseCase::execute(&mut *repo, input) {
         Ok(()) => Ok(()),
@@ -136,7 +138,7 @@ pub fn import_cylinder_materials(
     request: ImportCylinderMaterialsRequest,
 ) -> Result<ImportCylinderMaterialsResponse, TauriError> {
     let input: ImportCylinderMaterialsInput = request.into();
-    let mut repo = state.cylinder_material_repository.lock().unwrap();
+    let mut repo = lock_material_repository(&state.cylinder_material_repository)?;
 
     let out = ImportCylinderMaterialsUseCase::execute(&mut *repo, input)
         .map_err(map_application_error)?;
@@ -147,7 +149,15 @@ pub fn import_cylinder_materials(
 pub fn export_cylinder_materials(
     state: State<AppState>,
 ) -> Result<ExportCylinderMaterialsResponse, TauriError> {
-    let repo = state.cylinder_material_repository.lock().unwrap();
+    let repo = lock_material_repository(&state.cylinder_material_repository)?;
     let out = ExportCylinderMaterialsUseCase::execute(&*repo);
     Ok(out.into())
+}
+
+fn lock_material_repository(
+    repository: &Mutex<JsonCylinderMaterialRepository>,
+) -> Result<MutexGuard<'_, JsonCylinderMaterialRepository>, TauriError> {
+    repository
+        .lock()
+        .map_err(|_| TauriError::message("Material repository is unavailable"))
 }

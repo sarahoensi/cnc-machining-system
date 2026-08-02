@@ -1,10 +1,7 @@
 // features/cuttingData/ui/useCuttingPageController.ts
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
-import {
-  handleCalculateAsync,
-  handleUserEdit,
-} from "@shared/form/engine/formEngine";
+import { handleCalculateAsync, handleUserEdit } from "@shared/form/engine/formEngine";
 import { useFormNavigation } from "@shared/hooks";
 import { useSavedResults } from "@shared/savedResults";
 
@@ -31,16 +28,13 @@ const focusOrder: CuttingDataKey[] = [
 ];
 
 export function useCuttingPageController() {
-  const [form, setForm] = useFeatureForm(
-    "cutting",
-    createInitialCuttingDataForm,
-  );
+  const [form, setForm] = useFeatureForm("cutting", createInitialCuttingDataForm);
 
-  const savedResults = useSavedResults<
-    ReturnType<typeof createInitialCuttingDataForm>
-  >({
-    storageKey: "cutting-history",
-  });
+  const savedResults = useSavedResults<ReturnType<typeof createInitialCuttingDataForm>>(
+    {
+      storageKey: "cutting-history",
+    },
+  );
 
   const navigation = useFormNavigation({
     keys: cuttingDataFieldConfig.map((fieldConfig) => fieldConfig.key),
@@ -70,14 +64,10 @@ export function useCuttingPageController() {
     );
 
     setForm(next);
-    const hasInlineError = focusOrder.some((key) =>
-      Boolean(next.fields[key].error),
-    );
+    const hasInlineError = focusOrder.some((key) => Boolean(next.fields[key].error));
 
     if (hasInlineError) {
-      navigation.focusFirstInvalidAfterRender((key) =>
-        Boolean(next.fields[key].error),
-      );
+      navigation.focusFirstInvalidAfterRender((key) => Boolean(next.fields[key].error));
       return;
     }
 
@@ -96,7 +86,6 @@ export function useCuttingPageController() {
   function load(entry: (typeof savedResults.history)[number]) {
     setForm(savedResults.load(entry));
   }
-
 
   function resetForm() {
     setForm(createInitialCuttingDataForm());

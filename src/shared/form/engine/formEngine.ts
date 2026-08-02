@@ -7,20 +7,16 @@ import { applyDriverEngine } from "../constraints";
 
 import { getTauriCommandError } from "@shared/api/tauriError";
 
-import {
-  parseDecimalInput
-} from "@shared/parsing/decimalParser";
+import { parseDecimalInput } from "@shared/parsing/decimalParser";
 import { FormValidateFn } from "../types/validate";
-
 
 /* ============================================================
    Unlock all fields
 ============================================================ */
 
 export function unlockAll<K extends string>(
-  fields: Record<K, FieldState>
+  fields: Record<K, FieldState>,
 ): Record<K, FieldState> {
-
   const next = {} as Record<K, FieldState>;
 
   for (const key in fields) {
@@ -39,20 +35,13 @@ export function unlockAll<K extends string>(
    Reset all fields
 ============================================================ */
 
-export function resetForm<K extends string, E>(
-  form: FormState<K, E>
-): FormState<K, E> {
-
+export function resetForm<K extends string, E>(form: FormState<K, E>): FormState<K, E> {
   const next = {} as Record<K, FieldState>;
 
   for (const key in form.fields) {
-
     const field = form.fields[key];
 
-    next[key] =
-      field.kind === "result"
-        ? resultField()
-        : emptyField();
+    next[key] = field.kind === "result" ? resultField() : emptyField();
   }
 
   return {
@@ -67,13 +56,11 @@ export function resetForm<K extends string, E>(
 ============================================================ */
 
 export function clearMachineFields<K extends string>(
-  fields: Record<K, FieldState>
+  fields: Record<K, FieldState>,
 ): Record<K, FieldState> {
-
   const next = {} as Record<K, FieldState>;
 
   for (const key in fields) {
-
     const field = fields[key];
 
     if (field.source !== "machine") {
@@ -84,11 +71,11 @@ export function clearMachineFields<K extends string>(
     next[key] =
       field.kind === "result"
         ? resultField({
-          locked: field.locked,
-        })
+            locked: field.locked,
+          })
         : emptyField({
-          locked: field.locked,
-        });
+            locked: field.locked,
+          });
   }
 
   return next;
@@ -98,17 +85,13 @@ export function clearMachineFields<K extends string>(
    USER EDIT
 ============================================================ */
 
-export function handleUserEdit<
-  K extends string,
-  E
->(
+export function handleUserEdit<K extends string, E>(
   form: FormState<K, E>,
   key: K,
   rawValue: string,
   validSets: readonly (readonly K[])[],
-  pairs: readonly (readonly [K, K])[]
+  pairs: readonly (readonly [K, K])[],
 ): FormState<K, E> {
-
   const prev = form.fields[key];
 
   if (prev.kind === "result") {
@@ -151,11 +134,7 @@ export function handleUserEdit<
   };
 }
 
-function didUserEdit(
-  prev: FieldState,
-  nextValue: string
-): boolean {
-
+function didUserEdit(prev: FieldState, nextValue: string): boolean {
   if (prev.source !== "user") {
     return true;
   }
@@ -169,16 +148,11 @@ function didUserEdit(
    HandleModeChange
 ============================================================ */
 
-export function handleModeChange<
-  K extends string,
-  E extends { mode: unknown }
->(
+export function handleModeChange<K extends string, E extends { mode: unknown }>(
   form: FormState<K, E>,
-  newExtras: E
+  newExtras: E,
 ): FormState<K, E> {
-
-  const modeChanged =
-    form.extras.mode !== newExtras.mode;
+  const modeChanged = form.extras.mode !== newExtras.mode;
 
   if (!modeChanged) {
     return form;
@@ -197,9 +171,8 @@ export function handleModeChange<
 
 function applyFieldErrors<K extends string>(
   fields: Record<K, FieldState>,
-  error: unknown
+  error: unknown,
 ): Record<K, FieldState> {
-
   const te = getTauriCommandError(error);
 
   if (!te?.fieldErrors) {
@@ -209,7 +182,6 @@ function applyFieldErrors<K extends string>(
   const next = { ...fields };
 
   for (const err of te.fieldErrors) {
-
     const k = err.field as K;
 
     if (!next[k]) continue;
@@ -228,11 +200,9 @@ function applyFieldErrors<K extends string>(
    Clean field errors
 ============================================================ */
 
-
 function clearFieldErrors<K extends string>(
-  fields: Record<K, FieldState>
+  fields: Record<K, FieldState>,
 ): Record<K, FieldState> {
-
   const next = {} as Record<K, FieldState>;
 
   for (const key in fields) {
@@ -253,9 +223,8 @@ function clearFieldErrors<K extends string>(
 export function applyFieldNormalization<K extends string, E>(
   form: FormState<K, E>,
   key: K,
-  value: string
+  value: string,
 ): FormState<K, E> {
-
   const prev = form.fields[key];
 
   if (prev.value === value) {
@@ -284,14 +253,8 @@ export async function handleCalculateAsync<
   I = Partial<Record<K, number>>,
 >(
   form: FormState<K, E>,
-  parse: (
-    fields: Record<K, FieldState>,
-    extras: E
-  ) => I | null,
-  solve: (
-    input: I,
-    extras: E
-  ) => Promise<Partial<Record<K, number>>>,
+  parse: (fields: Record<K, FieldState>, extras: E) => I | null,
+  solve: (input: I, extras: E) => Promise<Partial<Record<K, number>>>,
   validate?: FormValidateFn<K, E>,
 ): Promise<FormState<K, E>> {
   // 0. Frontend validation
@@ -412,22 +375,11 @@ export async function handleCalculateAsync<
 /* ============================================================
    ASYNC GENERATE
 ============================================================ */
-export async function handleGenerateAsync<
-  K extends string,
-  E,
-  I,
-  X
->(
+export async function handleGenerateAsync<K extends string, E, I, X>(
   form: FormState<K, E>,
-  parse: (
-    fields: Record<K, FieldState>,
-    extras: E
-  ) => I | null,
-  execute: (
-    input: I,
-    extras: E
-  ) => Promise<X>,
-  validate?: FormValidateFn<K, E>
+  parse: (fields: Record<K, FieldState>, extras: E) => I | null,
+  execute: (input: I, extras: E) => Promise<X>,
+  validate?: FormValidateFn<K, E>,
 ): Promise<{
   form: FormState<K, E>;
   execution?: X;
@@ -456,7 +408,6 @@ export async function handleGenerateAsync<
   const cleanedFields = clearFieldErrors(form.fields);
 
   try {
-
     const execution = await execute(parsed, form.extras);
 
     return {
@@ -467,24 +418,20 @@ export async function handleGenerateAsync<
       execution,
     };
   } catch (error) {
-
     console.error(error);
 
     const te = getTauriCommandError(error);
 
     // Backend field errors.
     if (te?.fieldErrors) {
-      const nextFields = applyFieldErrors(
-        form.fields,
-        error
-      );
+      const nextFields = applyFieldErrors(form.fields, error);
 
       return {
         form: {
           ...form,
           fields: nextFields,
           formError: undefined,
-        }
+        },
       };
     }
 
@@ -495,7 +442,7 @@ export async function handleGenerateAsync<
           ...form,
           fields: cleanedFields,
           formError: error.message,
-        }
+        },
       };
     }
 
@@ -505,17 +452,14 @@ export async function handleGenerateAsync<
         ...form,
         fields: cleanedFields,
         formError: "Something went wrong",
-      }
+      },
     };
   }
 }
 
-
 // formSnapshot
 
-export function extractFormSnapshot<K extends string>(
-  fields: Record<K, FieldState>
-) {
+export function extractFormSnapshot<K extends string>(fields: Record<K, FieldState>) {
   const input: Partial<Record<K, string>> = {};
   const result: Partial<Record<K, string>> = {};
 

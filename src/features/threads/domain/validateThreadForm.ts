@@ -13,7 +13,9 @@ export function validateThreadForm(
     errors.push("Thread size is required");
   }
 
-  if (!getThreadPitch(extras.options, extras.type, fields.size.value, fields.pitch.value)) {
+  if (
+    !getThreadPitch(extras.options, extras.type, fields.size.value, fields.pitch.value)
+  ) {
     errors.push("Pitch is required");
   }
 

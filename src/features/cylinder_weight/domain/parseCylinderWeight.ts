@@ -6,7 +6,7 @@ import { CylinderWeightExtras, CylinderWeightKey } from "./cylinderWeightForm";
 
 export function parseCylinderWeight(
   fields: Record<CylinderWeightKey, FieldState>,
-  _extras: CylinderWeightExtras
+  _extras: CylinderWeightExtras,
 ): Partial<Record<CylinderWeightKey, number>> | null {
   const parsed: Partial<Record<CylinderWeightKey, number>> = {};
   const keys: CylinderWeightKey[] = [
@@ -28,4 +28,3 @@ export function parseCylinderWeight(
 
   return parsed;
 }
-

@@ -4,12 +4,7 @@
  * Generic lifecycle state for async operations.
  */
 
-export type AsyncStatus =
-  | "idle"
-  | "running"
-  | "success"
-  | "error";
-
+export type AsyncStatus = "idle" | "running" | "success" | "error";
 
 /**
  * Generic async state container.
@@ -20,7 +15,6 @@ export type AsyncState<T> =
   | { status: "running" }
   | { status: "success"; data: T }
   | { status: "error"; error: string };
-
 
 /* ============================================================
    Helpers

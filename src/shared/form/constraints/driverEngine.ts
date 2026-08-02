@@ -23,12 +23,11 @@ export function applyDriverEngine<K extends string>(
     pairs?: readonly (readonly [K, K])[];
     editedKey: K | null;
     mode: "editing" | "solved";
-  }
+  },
 ): {
   fields: Record<K, FieldState>;
   activeSet: readonly K[] | null;
 } {
-
   const { validSets, pairs = [], editedKey, mode } = options;
 
   // In solved mode, driver logic does not change fields.
@@ -40,19 +39,10 @@ export function applyDriverEngine<K extends string>(
   }
 
   // 1. Structural constraints.
-  const structural = evaluateConstraints(
-    fields,
-    validSets,
-    editedKey
-  );
+  const structural = evaluateConstraints(fields, validSets, editedKey);
 
   // 2. Pair constraints.
-  const paired = applyPairLogic(
-    structural.fields,
-    pairs,
-    editedKey,
-    "editing"
-  );
+  const paired = applyPairLogic(structural.fields, pairs, editedKey, "editing");
 
   return {
     fields: paired,

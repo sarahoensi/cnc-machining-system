@@ -20,15 +20,10 @@ function createInitial() {
 }
 
 describe("constraintLogic", () => {
-
   it("does not lock fields when there is no user input", () => {
     const fields = createInitial();
 
-    const result = evaluateConstraints(
-      fields,
-      validSets,
-      null
-    );
+    const result = evaluateConstraints(fields, validSets, null);
 
     expect(result.fields.a.locked).toBe(false);
     expect(result.fields.b.locked).toBe(false);
@@ -39,11 +34,7 @@ describe("constraintLogic", () => {
     const fields = createInitial();
     fields.a = userField("10");
 
-    const result = evaluateConstraints(
-      fields,
-      validSets,
-      "a"
-    );
+    const result = evaluateConstraints(fields, validSets, "a");
 
     expect(result.fields.a.locked).toBe(false);
     expect(result.fields.b.locked).toBe(false);
@@ -57,11 +48,7 @@ describe("constraintLogic", () => {
     fields.a = userField("10");
     fields.c = userField("20"); // not compatible
 
-    const result = evaluateConstraints(
-      fields,
-      validSets,
-      "c"
-    );
+    const result = evaluateConstraints(fields, validSets, "c");
 
     expect(result.fields.c.source).toBe("user");
     expect(result.fields.a.source).toBe("empty");
@@ -71,15 +58,10 @@ describe("constraintLogic", () => {
     const fields = createInitial();
     fields.a = userField("10");
 
-    const result = evaluateConstraints(
-      fields,
-      validSets,
-      "a"
-    );
+    const result = evaluateConstraints(fields, validSets, "a");
 
     expect(result.fields.c.locked).toBe(true);
     expect(result.fields.c.value).toBe("");
     expect(result.fields.c.source).toBe("empty");
   });
-
 });

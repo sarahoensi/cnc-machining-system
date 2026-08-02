@@ -5,10 +5,8 @@ import { solveRightTriangle } from "./client";
 import { buildRequest } from "../domain/buildRequest";
 
 export async function solveTriangle(
-  input: Partial<Record<TriangleKey, number>>
-
+  input: Partial<Record<TriangleKey, number>>,
 ): Promise<Partial<Record<TriangleKey, number>>> {
-
   const request = buildRequest(input);
 
   const result = await solveRightTriangle(request);
@@ -21,4 +19,3 @@ export async function solveTriangle(
     beta: result.beta_deg,
   };
 }
-

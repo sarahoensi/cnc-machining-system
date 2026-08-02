@@ -11,20 +11,10 @@ type Props = {
   children?: ReactNode;
 };
 
-export function TableHeader({
-  label,
-  tooltip,
-  align,
-  children,
-}: Props) {
+export function TableHeader({ label, tooltip, align, children }: Props) {
   return (
     <Table.HeaderCell align={align}>
-      {label && (
-        <TextWithTooltip
-          text={label}
-          tooltip={tooltip}
-        />
-      )}
+      {label && <TextWithTooltip text={label} tooltip={tooltip} />}
       {children}
     </Table.HeaderCell>
   );

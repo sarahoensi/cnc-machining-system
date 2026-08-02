@@ -32,7 +32,7 @@ export function Modal({
           "app-modal",
           `app-modal-${size}`,
           `app-modal-height-${height}`,
-          className
+          className,
         )}
         role="dialog"
         aria-modal="true"
@@ -68,4 +68,3 @@ type ModalScrollAreaProps = {
 export function ModalScrollArea({ children, className }: ModalScrollAreaProps) {
   return <div className={clsx("app-modal-scroll-area", className)}>{children}</div>;
 }
-

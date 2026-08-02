@@ -10,21 +10,13 @@ type Props = {
   className?: string;
 };
 
-export function TextWithTooltip({
-  text,
-  tooltip,
-  className,
-}: Props) {
+export function TextWithTooltip({ text, tooltip, className }: Props) {
   return (
     <span className={clsx("text-with-tooltip", className)}>
       <span className="twt-text">{text}</span>
 
       {tooltip && (
-        <span
-          className="tooltip-icon"
-          aria-hidden="true"
-          title={tooltip}
-        >
+        <span className="tooltip-icon" aria-hidden="true" title={tooltip}>
           <img src={TooltipIcon} alt="" />
         </span>
       )}

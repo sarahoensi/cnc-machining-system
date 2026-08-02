@@ -27,64 +27,58 @@ type Props = {
 };
 
 export const FormNumberField = forwardRef<HTMLInputElement, Props>(
-function FormNumberField(
-{
-  label,
-  tooltip,
-  field,  
-  unit,
-  disabled,
-  readonly,
-  autoFocus,
+  function FormNumberField(
+    {
+      label,
+      tooltip,
+      field,
+      unit,
+      disabled,
+      readonly,
+      autoFocus,
 
-  onChange,
-  onKeyDown,
-  onFocus,
-  onBlur,
-},
-ref
-) {
+      onChange,
+      onKeyDown,
+      onFocus,
+      onBlur,
+    },
+    ref,
+  ) {
+    const id = useId();
+    const { decimals } = useDisplaySettings();
 
-  const id = useId();
-  const { decimals } = useDisplaySettings();
+    const isResultField = field.kind === "result";
 
-  const isResultField = field.kind === "result";
+    const isDisabled = disabled || field.locked;
+    const isReadonly = (readonly || isResultField) && !isDisabled;
+    const inputSource = field.source === "empty" ? "default" : field.source;
 
-  const isDisabled = disabled || field.locked;
-  const isReadonly = (readonly || isResultField) && !isDisabled;
-  const inputSource = field.source === "empty" ? "default" : field.source;
-
-  const displayValue =
-  field.source === "machine" &&
-  typeof field.machineValue === "number"
-    ? field.machineValue.toFixed(decimals)
-    : field.value ?? "";
+    const displayValue =
+      field.source === "machine" && typeof field.machineValue === "number"
+        ? field.machineValue.toFixed(decimals)
+        : (field.value ?? "");
 
     const tabIndex = field.locked || isResultField ? -1 : undefined;
 
-  return (
-    <Field
-      label={label}
-      tooltip={tooltip}
-      error={field.error}
-      htmlFor={id}
-    >
-      <NumberInput
-        id={id}
-        ref={ref}
-        value={displayValue}
-        onChange={onChange}
-        unit={unit}
-        disabled={isDisabled}
-        readonly={isReadonly}
-        autoFocus={autoFocus}
-        onKeyDown={onKeyDown}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        tabIndex={tabIndex}
-        appearance="form"
-        source={inputSource}
-      />
-    </Field>
-  );
-});
+    return (
+      <Field label={label} tooltip={tooltip} error={field.error} htmlFor={id}>
+        <NumberInput
+          id={id}
+          ref={ref}
+          value={displayValue}
+          onChange={onChange}
+          unit={unit}
+          disabled={isDisabled}
+          readonly={isReadonly}
+          autoFocus={autoFocus}
+          onKeyDown={onKeyDown}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          tabIndex={tabIndex}
+          appearance="form"
+          source={inputSource}
+        />
+      </Field>
+    );
+  },
+);

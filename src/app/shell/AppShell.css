@@ -1,6 +1,8 @@
 /* src/app/layout/AppShell.css */
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
 }
@@ -86,7 +88,6 @@ body {
   padding: var(--space-3);
   background: var(--surface-page);
   flex: 1;
-
 }
 
 /* =========================
@@ -96,5 +97,3 @@ body {
 .sidebar-collapsed {
   --sidebar-width: 0;
 }
-
-

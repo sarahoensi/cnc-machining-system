@@ -11,15 +11,10 @@ type Props = {
   className?: string;
 };
 
-export function ExecutionDisplay({
-  children,
-  className,
-}: Props) {
+export function ExecutionDisplay({ children, className }: Props) {
   return (
     <div className={clsx("exec-field", className)}>
-      <div className="exec-display">
-        {children}
-      </div>
+      <div className="exec-display">{children}</div>
     </div>
   );
 }

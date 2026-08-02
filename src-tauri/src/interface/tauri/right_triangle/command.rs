@@ -13,15 +13,6 @@ use crate::application::SolveRightTriangleUseCase;
 
 use super::{SolveRightTriangleRequest, SolveRightTriangleResponse};
 
-/// Frontend-safe error payload returned by right-triangle commands.
-///
-/// Frontend representation:
-/// - Serialized object with a user-facing `message` field.
-///
-/// Message safety:
-/// - Message content is produced from application errors intended for UI
-///   handling and display/logging.
-
 // ---------------------------------------------------------
 // Command
 // ---------------------------------------------------------

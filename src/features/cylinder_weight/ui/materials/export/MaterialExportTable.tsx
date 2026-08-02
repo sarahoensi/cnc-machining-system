@@ -9,11 +9,7 @@ type Props = {
   onToggle: (id: string) => void;
 };
 
-export function MaterialExportTable({
-  materials,
-  selectedIds,
-  onToggle,
-}: Props) {
+export function MaterialExportTable({ materials, selectedIds, onToggle }: Props) {
   if (materials.length === 0) {
     return <p className="cylinder-weight-material-empty">No materials found</p>;
   }
@@ -24,7 +20,10 @@ export function MaterialExportTable({
         <Table.HeadRow>
           <Table.HeaderCell className="cylinder-weight-export-materials-check-col" />
           <Table.HeaderCell>Material</Table.HeaderCell>
-          <Table.HeaderCell align="right" className="cylinder-weight-export-materials-density-col">
+          <Table.HeaderCell
+            align="right"
+            className="cylinder-weight-export-materials-density-col"
+          >
             Density
           </Table.HeaderCell>
         </Table.HeadRow>
@@ -40,7 +39,10 @@ export function MaterialExportTable({
               />
             </Table.Cell>
             <Table.Cell>{material.name}</Table.Cell>
-            <Table.Cell align="right" className="cylinder-weight-export-materials-density-col">
+            <Table.Cell
+              align="right"
+              className="cylinder-weight-export-materials-density-col"
+            >
               {material.density_kg_m3} kg/m3
             </Table.Cell>
           </Table.BodyRow>
@@ -49,5 +51,3 @@ export function MaterialExportTable({
     </Table.Root>
   );
 }
-
-

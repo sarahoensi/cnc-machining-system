@@ -18,12 +18,7 @@ type Props = {
   onClear(): void;
 };
 
-export function ToleranceHistoryPanel({
-  history,
-  onLoad,
-  onDelete,
-  onClear,
-}: Props) {
+export function ToleranceHistoryPanel({ history, onLoad, onDelete, onClear }: Props) {
   const { decimals } = useDisplaySettings();
 
   function handleRowKeyDown(
@@ -36,10 +31,7 @@ export function ToleranceHistoryPanel({
     onLoad(entry);
   }
 
-  function handleDelete(
-    event: MouseEvent<HTMLButtonElement>,
-    id: string,
-  ) {
+  function handleDelete(event: MouseEvent<HTMLButtonElement>, id: string) {
     event.stopPropagation();
     onDelete(id);
   }
@@ -50,17 +42,12 @@ export function ToleranceHistoryPanel({
 
       <ScrollArea className="tolerance-history-scroll">
         {history.length === 0 && (
-          <div className="tolerance-history-empty">
-            No saved results yet
-          </div>
+          <div className="tolerance-history-empty">No saved results yet</div>
         )}
 
         {history.length > 0 && (
           <div className="tolerance-history-table" role="table">
-            <div
-              className="tolerance-history-header tolerance-history-grid"
-              role="row"
-            >
+            <div className="tolerance-history-header tolerance-history-grid" role="row">
               <span role="columnheader">Type</span>
               <span role="columnheader">Class</span>
               <span className="tolerance-history-nominal" role="columnheader">
@@ -128,4 +115,3 @@ export function ToleranceHistoryPanel({
     </section>
   );
 }
-

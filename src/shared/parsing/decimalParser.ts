@@ -28,7 +28,6 @@ export function normalizeDecimalInput(value: string): string {
   return value.trim().replace(",", ".");
 }
 
-
 export function parseDecimalInput(value: string): {
   normalized: string;
   number: number | null;

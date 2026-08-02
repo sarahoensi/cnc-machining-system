@@ -57,7 +57,9 @@ export function ManageMaterialsModal({
               appearance="form"
               size="small"
               className="cylinder-weight-material-search-input"
-              leftSlot={<img src={SearchIcon} alt="" className="cylinder-weight-search-icon" />}
+              leftSlot={
+                <img src={SearchIcon} alt="" className="cylinder-weight-search-icon" />
+              }
             />
           </div>
         </div>
@@ -101,5 +103,3 @@ export function ManageMaterialsModal({
     </Modal>
   );
 }
-
-

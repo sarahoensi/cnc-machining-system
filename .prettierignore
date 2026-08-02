@@ -1,0 +1,7 @@
+dist
+node_modules
+src-tauri/target
+src-tauri/gen
+src-tauri/data/**/*.sqlite
+src-tauri/data/threads/csv
+scripts/__pycache__

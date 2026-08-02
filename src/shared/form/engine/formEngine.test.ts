@@ -2,11 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import type { FormState } from "@shared/form/types/forms";
 import { emptyField, resultField, userField } from "@shared/form/types/fields";
-import {
-  clearMachineFields,
-  handleCalculateAsync,
-  handleUserEdit,
-} from "./formEngine";
+import { clearMachineFields, handleCalculateAsync, handleUserEdit } from "./formEngine";
 
 type Key = "input" | "result" | "other";
 type Extras = Record<string, never>;

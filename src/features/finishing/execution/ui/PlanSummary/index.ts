@@ -2,4 +2,4 @@
 
 // index.ts
 
-export {ExecutionPlanSummary} from "./ExecutionPlanSummary";
+export { ExecutionPlanSummary } from "./ExecutionPlanSummary";

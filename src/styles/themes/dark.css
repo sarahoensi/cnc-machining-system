@@ -1,5 +1,4 @@
 [data-theme="dark"] {
-
   /* =====================================================
      BASE SCALE (DARK BLUE / SLATE)
   ===================================================== */
@@ -16,7 +15,6 @@
   --color-night-900: #93c5fd;
   --color-night-950: #e5e7eb;
 
-
   /* =====================================================
      SURFACES
   ===================================================== */
@@ -26,7 +24,6 @@
   --color-surface-elevated: var(--color-night-200);
   --color-surface-hover: var(--color-night-300);
   --color-surface-muted: var(--color-night-100);
-
 
   /* =====================================================
      TEXT
@@ -38,7 +35,6 @@
   --color-text-placeholder: #93a4bf;
   --color-text-inverse: var(--color-night-50);
 
-
   /* =====================================================
      BORDERS
   ===================================================== */
@@ -46,7 +42,6 @@
   --color-border: var(--color-night-500);
   --color-border-strong: var(--color-night-600);
   --color-border-muted: var(--color-night-300);
-
 
   /* =====================================================
      BRAND / PRIMARY
@@ -57,23 +52,20 @@
   --color-primary-soft: rgba(96, 165, 250, 0.18);
   --color-on-primary: #0b1220;
 
-
   /* =====================================================
      BRAND / SECONDARY
   ===================================================== */
 
   --color-secondary: var(--color-night-300);
   --color-secondary-hover: var(--color-night-400);
-  --color-secondary-soft: rgba(96, 165, 250, 0.10);
+  --color-secondary-soft: rgba(96, 165, 250, 0.1);
   --color-on-secondary: var(--color-night-950);
-
 
   /* =====================================================
      FOCUS
   ===================================================== */
 
   --color-focus: rgba(96, 165, 250, 0.35);
-
 
   /* =====================================================
      STATUS
@@ -86,7 +78,6 @@
   --color-warning: #fbbf24;
   --color-info: #38bdf8;
 
-
   /* =====================================================
      STATE / INPUTS
   ===================================================== */
@@ -95,7 +86,6 @@
   --color-machine: rgba(255, 255, 255, 0.06);
   --color-disabled: rgba(255, 255, 255, 0.12);
   --color-locked: rgba(251, 191, 36, 0.14);
-
 
   /* =====================================================
      OVERLAY

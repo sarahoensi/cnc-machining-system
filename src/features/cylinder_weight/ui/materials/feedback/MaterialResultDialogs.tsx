@@ -33,8 +33,10 @@ export function MaterialResultDialogs({
     }
   }, [exportSummary]);
 
-  const duplicateRows = importSummary?.skipped.filter((row) => row.reason === "duplicate") ?? [];
-  const invalidRows = importSummary?.skipped.filter((row) => row.reason === "invalid") ?? [];
+  const duplicateRows =
+    importSummary?.skipped.filter((row) => row.reason === "duplicate") ?? [];
+  const invalidRows =
+    importSummary?.skipped.filter((row) => row.reason === "invalid") ?? [];
 
   return (
     <>
@@ -56,7 +58,9 @@ export function MaterialResultDialogs({
               <>
                 {importSummary.added.length > 0 ? (
                   <>
-                    <p><strong>Added</strong></p>
+                    <p>
+                      <strong>Added</strong>
+                    </p>
                     <ul>
                       {importSummary.added.map((row, index) => (
                         <li key={`${row.name}-${row.density_kg_m3}-${index}`}>
@@ -70,12 +74,16 @@ export function MaterialResultDialogs({
 
                 {duplicateRows.length > 0 ? (
                   <>
-                    <p><strong>Skipped duplicates</strong></p>
+                    <p>
+                      <strong>Skipped duplicates</strong>
+                    </p>
                     <ul>
                       {duplicateRows.map((row, index) => (
                         <li key={`dup-${row.name ?? "unknown"}-${index}`}>
-                          {(row.name ?? "Unknown material")}{" "}
-                          {row.density_kg_m3 != null ? `- ${row.density_kg_m3} kg/m3` : ""}
+                          {row.name ?? "Unknown material"}{" "}
+                          {row.density_kg_m3 != null
+                            ? `- ${row.density_kg_m3} kg/m3`
+                            : ""}
                           {`: ${row.message}`}
                         </li>
                       ))}
@@ -85,12 +93,16 @@ export function MaterialResultDialogs({
 
                 {invalidRows.length > 0 ? (
                   <>
-                    <p><strong>Skipped invalid</strong></p>
+                    <p>
+                      <strong>Skipped invalid</strong>
+                    </p>
                     <ul>
                       {invalidRows.map((row, index) => (
                         <li key={`inv-${row.name ?? "unknown"}-${index}`}>
-                          {(row.name ?? "Unknown material")}{" "}
-                          {row.density_kg_m3 != null ? `- ${row.density_kg_m3} kg/m3` : ""}
+                          {row.name ?? "Unknown material"}{" "}
+                          {row.density_kg_m3 != null
+                            ? `- ${row.density_kg_m3} kg/m3`
+                            : ""}
                           {`: ${row.message}`}
                         </li>
                       ))}
@@ -117,7 +129,9 @@ export function MaterialResultDialogs({
 
             {showExportDetails ? (
               <>
-                <p><strong>Exported materials</strong></p>
+                <p>
+                  <strong>Exported materials</strong>
+                </p>
                 <ul>
                   {exportSummary.materials.map((row, index) => (
                     <li key={`${row.name}-${row.density_kg_m3}-${index}`}>
@@ -133,5 +147,3 @@ export function MaterialResultDialogs({
     </>
   );
 }
-
-

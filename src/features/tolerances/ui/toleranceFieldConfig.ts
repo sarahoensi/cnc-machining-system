@@ -34,7 +34,7 @@ export const toleranceFieldConfig: ToleranceFieldConfig[] = [
     tooltip: toleranceTooltips.lower_um,
     readOnly: true,
   },
-{
+  {
     key: "max_mm",
     label: "Maximum",
     unit: "mm",
@@ -49,7 +49,6 @@ export const toleranceFieldConfig: ToleranceFieldConfig[] = [
     tooltip: toleranceTooltips.min_mm,
     readOnly: true,
   },
-  
 ];
 
 export const toleranceModeConfig = {

@@ -7,7 +7,6 @@ import "./Topbar.css";
 import { useRef, useState } from "react";
 import { useTitle } from "../providers/TitleContextProvider";
 
-
 interface Props {
   toggleSidebar: () => void;
 }
@@ -18,7 +17,6 @@ export function Topbar({ toggleSidebar }: Props) {
 
   const { title } = useTitle();
 
-
   return (
     <div className="topbar">
       <div className="topbar-left">
@@ -27,28 +25,23 @@ export function Topbar({ toggleSidebar }: Props) {
         </button>
       </div>
 
-        <h1 className="topbar-title">
-        {title || "Wingardium Tooliosa"}
-      </h1>
+      <h1 className="topbar-title">{title || "Wingardium Tooliosa"}</h1>
 
       <div className="topbar-right">
         <Button
           ref={buttonRef}
           variant="icon"
           size="icon"
-          onClick={() => setIsSettingsOpen(prev => !prev)}
+          onClick={() => setIsSettingsOpen((prev) => !prev)}
         >
-          <img
-            src={SettingsIcon}
-            alt="settings"
-            className="icon-img"
-          />
+          <img src={SettingsIcon} alt="settings" className="icon-img" />
         </Button>
 
-
         {isSettingsOpen && (
-          <SettingsMenu onClose={() => setIsSettingsOpen(false)}
-            triggerRef={buttonRef} />
+          <SettingsMenu
+            onClose={() => setIsSettingsOpen(false)}
+            triggerRef={buttonRef}
+          />
         )}
       </div>
     </div>

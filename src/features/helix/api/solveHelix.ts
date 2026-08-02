@@ -6,16 +6,14 @@ import type { HelixKey } from "../domain/helixForm";
 
 export async function solveHelix(
   input: Partial<Record<HelixKey, number>>,
-  mode: "Inner" | "Outer"
+  mode: "Inner" | "Outer",
 ) {
   const request = buildHelixRequest(input, mode);
 
   const result = await solveHelixApi(request);
 
   return {
-    
     pitch: result.pitch,
     angle: result.angle,
-    
   };
 }

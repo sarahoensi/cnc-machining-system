@@ -1,18 +1,14 @@
-// features/tolerances/domain/validateToleranceForm.ts
-
 import type { FieldState } from "@shared/form";
+import { parseDecimalInput } from "@shared/parsing/decimalParser";
 
-import type {
-  ToleranceExtras,
-  ToleranceKey,
-} from "./toleranceForm";
+import type { ToleranceExtras, ToleranceKey } from "./toleranceForm";
 
 export function validateToleranceForm(
   fields: Record<ToleranceKey, FieldState>,
   extras: ToleranceExtras,
 ) {
   const errors: string[] = [];
-  const nominal = Number(fields.nominal.value.replace(",", "."));
+  const nominal = parseDecimalInput(fields.nominal.value).number;
   const needsHole = extras.mode === "hole";
   const needsShaft = extras.mode === "shaft";
 
@@ -34,7 +30,7 @@ export function validateToleranceForm(
 
   if (!fields.nominal.value.trim()) {
     errors.push("Nominal size is required");
-  } else if (!Number.isFinite(nominal) || nominal <= 0) {
+  } else if (nominal == null || nominal <= 0) {
     errors.push("Nominal size must be greater than zero");
   }
 

@@ -1,4 +1,5 @@
 import "./HistoryCard.css";
+import type { CSSProperties } from "react";
 
 type Item = {
   label: string;
@@ -13,20 +14,18 @@ type Props = {
   onDelete?: () => void;
 };
 
-export function HistoryCard({
-  items,
-  columns = 2,
-  onClick,
-  onDelete,
-}: Props) {
+type HistoryCardStyle = CSSProperties & {
+  "--history-card-columns": number;
+};
+
+export function HistoryCard({ items, columns = 2, onClick, onDelete }: Props) {
+  const contentStyle: HistoryCardStyle = {
+    "--history-card-columns": columns,
+  };
+
   return (
     <div className="history-card" onClick={onClick}>
-      <div
-        className="history-card-content"
-        style={{
-          ["--history-card-columns" as any]: columns,
-        }}
-      >
+      <div className="history-card-content" style={contentStyle}>
         {items.map((item, i) => (
           <div key={i} className="history-card-item">
             <span className="hc-label">{item.label}</span>

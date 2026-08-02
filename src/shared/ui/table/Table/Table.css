@@ -59,13 +59,17 @@
   padding: var(--space-1) var(--space-3);
 }
 
-
-
 /* Alignment helpers */
 
-.align-left { text-align: left; }
-.align-center { text-align: center; }
-.align-right { text-align: right; }
+.align-left {
+  text-align: left;
+}
+.align-center {
+  text-align: center;
+}
+.align-right {
+  text-align: right;
+}
 
 /* =====================================================
    HEADER CELL
@@ -79,7 +83,6 @@
 
   background: var(--table-header-bg);
   border-bottom: var(--border-width-sm) solid var(--table-border);
-  
 }
 
 /* Header content layout */
@@ -96,15 +99,13 @@
 
 .ui-table-foot td {
   padding: var(--space-2) var(--space-3);
-border-top: var(--border-width-sm) solid var(--table-border);
+  border-top: var(--border-width-sm) solid var(--table-border);
   background: var(--table-header-bg);
 }
-
 
 /* =====================================================
    ROW STATES
 ===================================================== */
-
 
 .ui-table-row.is-active td {
   border-top: var(--border-width-md) solid var(--state-active-border);

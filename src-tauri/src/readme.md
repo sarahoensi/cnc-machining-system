@@ -6,11 +6,11 @@ This document describes the architectural design of the CNC Calculation Engine b
 
 The primary goal of this architecture is to:
 
-* Maintain strong separation of concerns
-* Support long-term scalability
-* Enable high testability
-* Model the engineering domain accurately
-* Minimize refactoring when adding new features
+- Maintain strong separation of concerns
+- Support long-term scalability
+- Enable high testability
+- Model the engineering domain accurately
+- Minimize refactoring when adding new features
 
 ---
 
@@ -20,16 +20,16 @@ This application is an **engineering calculation system**.
 
 It is responsible for:
 
-* Calculating machining parameters
-* Solving geometric machining problems
-* Generating machining pass strategies
-* Providing deterministic calculation results
+- Calculating machining parameters
+- Solving geometric machining problems
+- Generating machining pass strategies
+- Providing deterministic calculation results
 
 The application does NOT:
 
-* Generate G-code
-* Control CNC machines
-* Perform scheduling or real-time machine execution
+- Generate G-code
+- Control CNC machines
+- Perform scheduling or real-time machine execution
 
 ---
 
@@ -37,9 +37,9 @@ The application does NOT:
 
 The system follows principles from:
 
-* Domain Driven Design (DDD)
-* Clean Architecture
-* Hexagonal Architecture (Ports & Adapters)
+- Domain Driven Design (DDD)
+- Clean Architecture
+- Hexagonal Architecture (Ports & Adapters)
 
 The architecture separates the system into independent layers with strict dependency direction.
 
@@ -82,20 +82,20 @@ The domain layer contains all core engineering logic. This is the most important
 
 The domain layer:
 
-* Models machining knowledge
-* Enforces engineering rules
-* Contains mathematical algorithms
-* Is deterministic
-* Has no external dependencies
+- Models machining knowledge
+- Enforces engineering rules
+- Contains mathematical algorithms
+- Is deterministic
+- Has no external dependencies
 
 The domain layer MUST NOT depend on:
 
-* UI
-* Tauri
-* Serialization frameworks
-* Databases
-* File systems
-* Async runtime
+- UI
+- Tauri
+- Serialization frameworks
+- Databases
+- File systems
+- Async runtime
 
 ---
 
@@ -119,19 +119,19 @@ Provides strongly typed engineering measurement types.
 
 ### Examples
 
-* Length
-* Diameter
-* Angle
-* RPM
-* FeedRate
-* CuttingSpeed
+- Length
+- Diameter
+- Angle
+- RPM
+- FeedRate
+- CuttingSpeed
 
 ### Why Units Exist
 
-* Prevents mixing incompatible measurements
-* Improves domain readability
-* Enables compile-time safety
-* Reduces calculation bugs
+- Prevents mixing incompatible measurements
+- Improves domain readability
+- Enables compile-time safety
+- Reduces calculation bugs
 
 ---
 
@@ -143,16 +143,16 @@ Provides pure mathematical modeling.
 
 ### Responsibilities
 
-* Triangle solving
-* Circle geometry
-* Helix mathematics
-* Vector calculations
+- Triangle solving
+- Circle geometry
+- Helix mathematics
+- Vector calculations
 
 ### Design Rules
 
-* Contains NO machining knowledge
-* Fully reusable mathematical engine
-* Only depends on units
+- Contains NO machining knowledge
+- Fully reusable mathematical engine
+- Only depends on units
 
 ---
 
@@ -164,18 +164,18 @@ Models machining physics and engineering formulas.
 
 ### Responsibilities
 
-* Chip load calculations
-* Cutting speed calculations
-* Feed rate calculations
-* Spindle speed formulas
-* Tool engagement calculations
-* Helix calculations
+- Chip load calculations
+- Cutting speed calculations
+- Feed rate calculations
+- Spindle speed formulas
+- Tool engagement calculations
+- Helix calculations
 
 ### Design Rules
 
-* Stateless calculation logic
-* Uses units and geometry
-* Represents physical machining relationships
+- Stateless calculation logic
+- Uses units and geometry
+- Represents physical machining relationships
 
 ---
 
@@ -187,17 +187,16 @@ Contains algorithms for machining strategy calculations.
 
 ### Responsibilities
 
-* Finishing pass generation
-* Step distribution strategies
-
+- Finishing pass generation
+- Step distribution strategies
 
 ### Typical Aggregates
 
 Example:
 
-* FinishingPlan
-* Pass
-* StepStrategy
+- FinishingPlan
+- Pass
+- StepStrategy
 
 ---
 
@@ -209,14 +208,14 @@ Represent measurement or conceptual values.
 
 Examples:
 
-* Diameter
-* FeedRate
-* Angle
+- Diameter
+- FeedRate
+- Angle
 
 Value objects must:
 
-* Be immutable
-* Validate invariants during construction
+- Be immutable
+- Validate invariants during construction
 
 ---
 
@@ -226,8 +225,8 @@ Represent domain structures that maintain internal consistency.
 
 Examples:
 
-* FinishingPlan
-* MachiningCondition
+- FinishingPlan
+- MachiningCondition
 
 Aggregates enforce domain rules and invariants.
 
@@ -239,9 +238,9 @@ Contain stateless algorithms operating on domain objects.
 
 Examples:
 
-* ChipLoadCalculator
-* HelixCalculator
-* PassDistributionStrategy
+- ChipLoadCalculator
+- HelixCalculator
+- PassDistributionStrategy
 
 ---
 
@@ -253,15 +252,15 @@ The application layer coordinates workflows and use cases.
 
 It:
 
-* Receives validated domain input
-* Calls domain logic
-* Returns calculation results
+- Receives validated domain input
+- Calls domain logic
+- Returns calculation results
 
 It does NOT:
 
-* Contain engineering formulas
-* Know about UI frameworks
-* Handle serialization or transport protocols
+- Contain engineering formulas
+- Know about UI frameworks
+- Handle serialization or transport protocols
 
 ---
 
@@ -299,10 +298,10 @@ Acts as the translation boundary between the frontend and the application layer.
 
 This layer:
 
-* Receives UI input
-* Converts DTOs to domain types
-* Calls application use cases
-* Converts domain results back to UI DTOs
+- Receives UI input
+- Converts DTOs to domain types
+- Calls application use cases
+- Converts domain results back to UI DTOs
 
 ---
 
@@ -322,9 +321,9 @@ DTOs represent UI-friendly data formats.
 
 DTOs:
 
-* Contain primitive types
-* Represent serialized transport data
-* Are allowed to use serialization frameworks
+- Contain primitive types
+- Represent serialized transport data
+- Are allowed to use serialization frameworks
 
 DTOs MUST NOT leak into domain or application layers.
 
@@ -352,9 +351,9 @@ Validation occurs at multiple levels:
 
 Purpose:
 
-* Improve user experience
-* Prevent incomplete forms
-* Handle formatting errors
+- Improve user experience
+- Prevent incomplete forms
+- Handle formatting errors
 
 ---
 
@@ -362,14 +361,14 @@ Purpose:
 
 Purpose:
 
-* Enforce engineering correctness
-* Guarantee invariant safety
+- Enforce engineering correctness
+- Guarantee invariant safety
 
 Examples:
 
-* Diameter must be positive
-* Target dimension must exceed start dimension
-* Feed rate cannot be zero
+- Diameter must be positive
+- Target dimension must exceed start dimension
+- Feed rate cannot be zero
 
 Domain validation MUST exist even if UI validates.
 
@@ -406,10 +405,10 @@ Highest priority.
 
 Test:
 
-* Mathematical correctness
-* Edge cases
-* Engineering invariants
-* Numerical stability
+- Mathematical correctness
+- Edge cases
+- Engineering invariants
+- Numerical stability
 
 Domain tests must NOT require runtime frameworks.
 
@@ -419,8 +418,8 @@ Domain tests must NOT require runtime frameworks.
 
 Test:
 
-* Workflow correctness
-* Use case orchestration
+- Workflow correctness
+- Use case orchestration
 
 ---
 
@@ -447,10 +446,10 @@ The domain model should reflect real engineering terminology.
 
 Avoid generic names like:
 
-* Data
-* Helper
-* Utils
-* Service (without clear domain meaning)
+- Data
+- Helper
+- Utils
+- Service (without clear domain meaning)
 
 ---
 
@@ -477,12 +476,12 @@ When adding new features:
 
 This architecture is designed to:
 
-* Reduce long-term refactoring cost
-* Improve testability
-* Protect core engineering logic
-* Allow UI flexibility
-* Encourage explicit domain modeling
-* Provide compile-time correctness through strong typing
+- Reduce long-term refactoring cost
+- Improve testability
+- Protect core engineering logic
+- Allow UI flexibility
+- Encourage explicit domain modeling
+- Provide compile-time correctness through strong typing
 
 ---
 
@@ -490,9 +489,9 @@ This architecture is designed to:
 
 Think of the system as:
 
-* Domain = Engineering brain
-* Application = Workflow coordinator
-* Interface = Translator between UI and domain
+- Domain = Engineering brain
+- Application = Workflow coordinator
+- Interface = Translator between UI and domain
 
 ---
 

@@ -32,12 +32,8 @@ export function FormActions({
 }: Props) {
   return (
     <div
-      className={clsx(
-        "form-actions",
-        variant === "inline" && "form-actions--inline",
-      )}
+      className={clsx("form-actions", variant === "inline" && "form-actions--inline")}
     >
-
       <div className="form-actions-primary">
         <Button
           ref={calculateRef}
@@ -52,13 +48,11 @@ export function FormActions({
       </div>
 
       <div className="form-actions-secondary">
-        
         {children}
         <Button variant="danger" size="medium" onClick={onReset}>
           Clear form
         </Button>
       </div>
-
     </div>
   );
 }

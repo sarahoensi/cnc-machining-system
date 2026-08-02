@@ -8,10 +8,7 @@ import { Button } from "@shared/ui/primitives/Button/Button";
 import { SelectMenuLabel } from "@shared/ui/primitives/Select";
 
 import type { useThreadsPageController } from "../useThreadsPageController";
-import {
-  threadResultFieldConfig,
-  threadSelectConfig,
-} from "../threadFieldConfig";
+import { threadResultFieldConfig, threadSelectConfig } from "../threadFieldConfig";
 import "../ThreadsPage.css";
 
 type Props = {
@@ -21,9 +18,7 @@ type Props = {
 export function ThreadsForm({ controller }: Props) {
   const { form, navigation } = controller;
 
-  const error = form.formError ? (
-    <FormError error={form.formError} />
-  ) : null;
+  const error = form.formError ? <FormError error={form.formError} /> : null;
   const selectedPitchOption = controller.pitchOptions.find(
     (option) => option.value === form.fields.pitch.value,
   );
@@ -35,7 +30,7 @@ export function ThreadsForm({ controller }: Props) {
     <div ref={navigation.containerRef} className="threads-form-root">
       <FormLayout
         error={error}
-        actions={(
+        actions={
           <FormActions
             onCalculate={controller.calculate}
             onReset={controller.resetForm}
@@ -51,7 +46,7 @@ export function ThreadsForm({ controller }: Props) {
               Save result
             </Button>
           </FormActions>
-        )}
+        }
         actionsPlacement="bottom"
       >
         <FormGrid areas={[["selection"], ["result"]]}>
@@ -73,7 +68,9 @@ export function ThreadsForm({ controller }: Props) {
               <FormSelectMenuField
                 label={threadSelectConfig.size.label}
                 tooltip={threadSelectConfig.size.tooltip}
-                valueLabel={selectedSizeOption?.label ?? (form.fields.size.value || "-")}
+                valueLabel={
+                  selectedSizeOption?.label ?? (form.fields.size.value || "-")
+                }
                 options={controller.sizeOptions}
                 onSelect={controller.onSizeChange}
                 disabled={controller.loadingOptions}

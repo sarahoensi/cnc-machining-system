@@ -2,18 +2,10 @@
 
 //
 
-export function buildPitchPath({
-    x,
-    y1,
-    y2,
-}: {
-    x: number;
-    y1: number;
-    y2: number;
-}) {
-    const tick = 4;
+export function buildPitchPath({ x, y1, y2 }: { x: number; y1: number; y2: number }) {
+  const tick = 4;
 
-    return `
+  return `
         M ${x} ${y1}
         L ${x} ${y2}
 

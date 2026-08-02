@@ -1,5 +1,4 @@
-// features/tolerances/domain/buildRequest.ts
-
+import { parseDecimalInput } from "@shared/parsing/decimalParser";
 import type { ToleranceMode } from "../api/types";
 
 export type ToleranceFormInput = {
@@ -12,19 +11,20 @@ export type ToleranceFormInput = {
 };
 
 function parseNominal(input: ToleranceFormInput) {
-  return Number(input.nominal.replace(",", "."));
+  return parseDecimalInput(input.nominal).number;
 }
 
-export function buildLookupIso286ToleranceRequest(
-  input: ToleranceFormInput,
-) {
+export function buildLookupIso286ToleranceRequest(input: ToleranceFormInput) {
+  const nominalMm = parseNominal(input);
+  if (nominalMm == null) return null;
+
   const feature = input.mode;
   const letter = feature === "hole" ? input.holeLetter : input.shaftLetter;
   const grade = feature === "hole" ? input.holeGrade : input.shaftGrade;
 
   return {
     feature,
-    nominalMm: parseNominal(input),
+    nominalMm,
     code: `${letter}${grade}`.trim(),
   };
 }

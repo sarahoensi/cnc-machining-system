@@ -14,20 +14,18 @@ type Props = {
 export function TriangleForm({ controller }: Props) {
   const { form, navigation } = controller;
 
-  const error = form.formError ? (
-    <FormError error={form.formError} />
-  ) : null;
+  const error = form.formError ? <FormError error={form.formError} /> : null;
 
   return (
     <div ref={navigation.containerRef}>
       <FormLayout
         error={error}
-        actions={(
+        actions={
           <FormActions
             onCalculate={controller.calculate}
             onReset={controller.resetForm}
           />
-        )}
+        }
       >
         <FormGrid areas={[["fields"]]}>
           <FormGrid.Area name="fields">

@@ -24,28 +24,21 @@ export function TableHeaderSelect<T extends string>({
   options,
   align = "center",
 }: Props<T>) {
-
   const [open, setOpen] = useState(false);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const selected = options.find(o => o.value === value);
+  const selected = options.find((o) => o.value === value);
 
   /* =========================================
      Close on click outside
   ========================================= */
 
   useEffect(() => {
-
     function handleClickOutside(event: MouseEvent) {
-
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(event.target as Node)
-      ) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         setOpen(false);
       }
-
     }
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -53,28 +46,19 @@ export function TableHeaderSelect<T extends string>({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-
   }, []);
 
   return (
     <Table.HeaderCell align={align}>
-
-      <div
-        className="ths-wrapper"
-        ref={wrapperRef}
-      >
-
-        <button
-          className="ths-button"
-          onClick={() => setOpen(o => !o)}
-        >
+      <div className="ths-wrapper" ref={wrapperRef}>
+        <button className="ths-button" onClick={() => setOpen((o) => !o)}>
           {selected?.label}
           <span className="ths-caret" />
         </button>
 
         {open && (
           <div className="ths-menu">
-            {options.map(opt => (
+            {options.map((opt) => (
               <button
                 key={opt.value}
                 className="ths-option"
@@ -88,9 +72,7 @@ export function TableHeaderSelect<T extends string>({
             ))}
           </div>
         )}
-
       </div>
-
     </Table.HeaderCell>
   );
 }

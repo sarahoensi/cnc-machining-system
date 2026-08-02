@@ -5,9 +5,7 @@
 .spiral-figure {
   width: 100%;
   max-width: var(--figure-max-width);
-  
 }
-
 
 /* =========================================
    MATERIAL
@@ -18,7 +16,6 @@
   stroke: var(--diagram-part-stroke);
   stroke-width: var(--diagram-stroke-width);
 }
-
 
 /* =========================================
    HELIX
@@ -49,7 +46,6 @@
   stroke-width: var(--diagram-stroke-width-active);
 }
 
-
 /* =========================================
    TOOL
 ========================================= */
@@ -68,7 +64,6 @@
   stroke: var(--diagram-active-stroke, var(--state-active-border));
   stroke-width: var(--diagram-stroke-width-active);
 }
-
 
 /* =========================================
    DIMENSIONS (pitch + diameter)
@@ -89,16 +84,12 @@
   stroke-width: var(--diagram-stroke-width-active);
 }
 
-
 /* spesifikke dimensjoner */
 
 .holeDiameter {
   stroke: var(--diagram-part-stroke);
 }
 
-
-
 .pitch {
   stroke: var(--diagram-part-stroke);
 }
-

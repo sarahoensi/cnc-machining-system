@@ -37,7 +37,7 @@ export const FormTextField = forwardRef<HTMLInputElement, Props>(function FormTe
     onFocus,
     onBlur,
   },
-  ref
+  ref,
 ) {
   const id = useId();
 
@@ -61,4 +61,3 @@ export const FormTextField = forwardRef<HTMLInputElement, Props>(function FormTe
     </Field>
   );
 });
-

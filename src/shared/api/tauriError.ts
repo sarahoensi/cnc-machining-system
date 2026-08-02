@@ -43,9 +43,7 @@ export function getTauriCommandError(e: unknown): TauriCommandError | null {
         const parsedObj = parsed as Record<string, unknown>;
         return {
           message:
-            typeof parsedObj.message === "string"
-              ? parsedObj.message
-              : "Unknown error",
+            typeof parsedObj.message === "string" ? parsedObj.message : "Unknown error",
           fieldErrors: Array.isArray(parsedObj.fieldErrors)
             ? (parsedObj.fieldErrors as TauriFieldError[])
             : undefined,
@@ -59,8 +57,7 @@ export function getTauriCommandError(e: unknown): TauriCommandError | null {
   // Case 2: structured object from Tauri
   if (isTauriCommandError(obj)) {
     return {
-      message:
-        typeof obj.message === "string" ? obj.message : "Unknown error",
+      message: typeof obj.message === "string" ? obj.message : "Unknown error",
       fieldErrors: Array.isArray(obj.fieldErrors)
         ? (obj.fieldErrors as TauriFieldError[])
         : undefined,

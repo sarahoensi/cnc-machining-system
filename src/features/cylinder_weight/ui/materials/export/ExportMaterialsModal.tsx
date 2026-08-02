@@ -33,15 +33,20 @@ export function ExportMaterialsModal({
   const [search, setSearch] = useState("");
   const filteredMaterials = useMemo(
     () => filterMaterialsBySearch(materials, search),
-    [materials, search]
+    [materials, search],
   );
-  const visibleIds = useMemo(() => filteredMaterials.map((material) => material.id), [filteredMaterials]);
+  const visibleIds = useMemo(
+    () => filteredMaterials.map((material) => material.id),
+    [filteredMaterials],
+  );
   const selectedVisibleCount = useMemo(
     () => visibleIds.filter((id) => selectedIds.includes(id)).length,
-    [selectedIds, visibleIds]
+    [selectedIds, visibleIds],
   );
-  const allVisibleSelected = visibleIds.length > 0 && selectedVisibleCount === visibleIds.length;
-  const someVisibleSelected = selectedVisibleCount > 0 && selectedVisibleCount < visibleIds.length;
+  const allVisibleSelected =
+    visibleIds.length > 0 && selectedVisibleCount === visibleIds.length;
+  const someVisibleSelected =
+    selectedVisibleCount > 0 && selectedVisibleCount < visibleIds.length;
 
   useEffect(() => {
     if (selectAllRef.current) {
@@ -61,9 +66,9 @@ export function ExportMaterialsModal({
     >
       <div className="cylinder-weight-export-content">
         <p className="cylinder-weight-export-help">
-          Choose which materials to include in the export file. This will create a JSON file
-          containing only selected materials and download it to your computer. You can use the
-          file as a backup or to move materials to another machine.
+          Choose which materials to include in the export file. This will create a JSON
+          file containing only selected materials and download it to your computer. You
+          can use the file as a backup or to move materials to another machine.
         </p>
 
         <ModalScrollArea className="cylinder-weight-export-scroll-area">
@@ -75,7 +80,9 @@ export function ExportMaterialsModal({
               appearance="form"
               size="small"
               className="cylinder-weight-material-search-input"
-              leftSlot={<img src={SearchIcon} alt="" className="cylinder-weight-search-icon" />}
+              leftSlot={
+                <img src={SearchIcon} alt="" className="cylinder-weight-search-icon" />
+              }
             />
           </div>
 
@@ -115,5 +122,3 @@ export function ExportMaterialsModal({
     </Modal>
   );
 }
-
-

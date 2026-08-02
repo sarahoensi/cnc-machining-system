@@ -1,6 +1,5 @@
-//features/tolerances/ui/history/buildToleranceHistoryRows.ts
-
 import { formatNumber } from "@shared/lib/format/formatNumber";
+import { parseDecimalInput } from "@shared/parsing/decimalParser";
 
 import type { SavedResultEntry } from "@shared/savedResults";
 import type { ToleranceFormState } from "../../domain/toleranceForm";
@@ -39,16 +38,12 @@ export function buildToleranceHistoryRow(
       : "tolerance-history-row--shaft",
     symbol: isHole ? "\u25cb" : "\u25cf",
     toleranceClass:
-      `${form.fields[letterKey].value}${form.fields[gradeKey].value}`.trim() ||
-      "-",
+      `${form.fields[letterKey].value}${form.fields[gradeKey].value}`.trim() || "-",
     nominal: `\u00d8${formatFieldValue(form.fields.nominal, decimals)} mm`,
     deviations: `${lowerLabel} ${formatSignedFieldValue(
       form.fields.lower_um,
       decimals,
-    )} / ${upperLabel} ${formatSignedFieldValue(
-      form.fields.upper_um,
-      decimals,
-    )}`,
+    )} / ${upperLabel} ${formatSignedFieldValue(form.fields.upper_um, decimals)}`,
   };
 }
 
@@ -78,7 +73,7 @@ function getNumericFieldValue(
   if (rawValue == null || rawValue === "") return null;
 
   const numericValue =
-    typeof rawValue === "number" ? rawValue : Number(rawValue.replace(",", "."));
+    typeof rawValue === "number" ? rawValue : parseDecimalInput(rawValue).number;
 
-  return Number.isNaN(numericValue) ? null : numericValue;
+  return numericValue;
 }

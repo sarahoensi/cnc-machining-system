@@ -63,7 +63,11 @@ export function MaterialField({
         ]}
       />
 
-      <Button variant="link" className="cylinder-weight-manage-link" onClick={onOpenManage}>
+      <Button
+        variant="link"
+        className="cylinder-weight-manage-link"
+        onClick={onOpenManage}
+      >
         Manage Materials
       </Button>
 
@@ -71,5 +75,3 @@ export function MaterialField({
     </div>
   );
 }
-
-

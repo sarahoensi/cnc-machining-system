@@ -44,9 +44,7 @@ export function useCalculatorFormNavigation<K extends string>({
     const intent = getCalculatorFocusIntent(form, fieldOrder);
 
     if (intent === "inline-error") {
-      navigation.focusFirstInvalidAfterRender((key) =>
-        Boolean(form.fields[key].error),
-      );
+      navigation.focusFirstInvalidAfterRender((key) => Boolean(form.fields[key].error));
       return;
     }
 

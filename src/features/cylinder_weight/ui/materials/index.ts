@@ -13,4 +13,3 @@ export { NewMaterialModal } from "./create/NewMaterialModal";
 export { ExportMaterialsModal } from "./export/ExportMaterialsModal";
 export { MaterialResultDialogs } from "./feedback/MaterialResultDialogs";
 export { sortCylinderMaterials } from "./sortMaterials";
-

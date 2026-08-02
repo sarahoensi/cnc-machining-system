@@ -5,8 +5,6 @@
 
 // application/cutting_data/dto.rs
 
-/// Input where user provides a valid combination
-
 /// Input DTO for cutting-data completion.
 ///
 /// This type carries optional known machining values. The use case attempts to

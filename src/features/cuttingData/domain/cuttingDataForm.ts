@@ -8,23 +8,18 @@ import { emptyField } from "@shared/form/types/fields";
 ============================================================ */
 
 export type CuttingDataKey =
-  | "diameter"         // D
-  | "cutting_speed"    // Vc
-  | "rpm"              // n
-  | "teeth"            // z
-  | "feed_rate"        // F
-  | "chip_load";       // fz
-  
-  
-  
+  | "diameter" // D
+  | "cutting_speed" // Vc
+  | "rpm" // n
+  | "teeth" // z
+  | "feed_rate" // F
+  | "chip_load"; // fz
 
 /* ============================================================
    Extras
 ============================================================ */
 
-export type CuttingDataExtras = {
-  
-};
+export type CuttingDataExtras = {};
 
 /* ============================================================
    Factory
@@ -42,9 +37,8 @@ export function createInitialCuttingDataForm(): FormState<
       cutting_speed: emptyField(),
       rpm: emptyField(),
       feed_rate: emptyField(),
-      chip_load: emptyField()
+      chip_load: emptyField(),
     },
-    extras: { },
+    extras: {},
   };
 }
-

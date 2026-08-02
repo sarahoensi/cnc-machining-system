@@ -13,12 +13,7 @@ type Props = {
   onClear(): void;
 };
 
-export function ThreadHistoryPanel({
-  history,
-  onLoad,
-  onDelete,
-  onClear,
-}: Props) {
+export function ThreadHistoryPanel({ history, onLoad, onDelete, onClear }: Props) {
   const { decimals } = useDisplaySettings();
 
   return (

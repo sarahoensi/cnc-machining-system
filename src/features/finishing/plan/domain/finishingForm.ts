@@ -8,10 +8,7 @@ import { emptyField } from "@shared/form/types/fields";
 ============================================================ */
 
 export type FinishingKey =
-  | "start_diameter_mm"
-  | "target_diameter_mm"
-  | "cuts"
-  | "radial_engagement_mm";
+  "start_diameter_mm" | "target_diameter_mm" | "cuts" | "radial_engagement_mm";
 
 /* ============================================================
    Extras
@@ -22,14 +19,13 @@ export type FinishingExtras = {
   planning: "ByCuts" | "ByRadialEngagement";
 };
 
+export type FinishingFormState = FormState<FinishingKey, FinishingExtras>;
+
 /* ============================================================
    Factory
 ============================================================ */
 
-export function createInitialFinishingForm(): FormState<
-  FinishingKey,
-  FinishingExtras
-> {
+export function createInitialFinishingForm(): FinishingFormState {
   return {
     status: "editing",
     fields: {
@@ -44,4 +40,3 @@ export function createInitialFinishingForm(): FormState<
     },
   };
 }
-

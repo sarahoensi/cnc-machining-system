@@ -5,9 +5,8 @@ import { FieldState } from "@shared/form/types";
 import { CuttingDataKey } from "./cuttingDataForm";
 
 export function parseCuttingData(
-  fields: Record<CuttingDataKey, FieldState>
+  fields: Record<CuttingDataKey, FieldState>,
 ): Partial<Record<CuttingDataKey, number>> | null {
-
   const parsed: Partial<Record<CuttingDataKey, number>> = {};
 
   for (const key in fields) {

@@ -23,15 +23,8 @@ export function InfoDialog({
   if (!open) return null;
 
   return (
-    <Modal
-      title={title}
-      size="sm"
-      onClose={onClose}
-      showCloseButton={false}
-    >
-      <div className="info-dialog-content">
-        {children}
-      </div>
+    <Modal title={title} size="sm" onClose={onClose} showCloseButton={false}>
+      <div className="info-dialog-content">{children}</div>
 
       <div className="info-dialog-actions">
         <Button variant="primary" size="small" onClick={onClose}>

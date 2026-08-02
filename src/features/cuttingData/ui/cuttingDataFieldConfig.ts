@@ -43,9 +43,7 @@ export const cuttingDataFieldConfig: CuttingDataFieldConfig[] = [
     tooltip: cuttingDataTooltips.cutting_speed,
     unit: "m/min",
   },
-  
-  
-  
+
   {
     key: "feed_rate",
     label: "Feed rate F",
@@ -60,6 +58,4 @@ export const cuttingDataFieldConfig: CuttingDataFieldConfig[] = [
     tooltip: cuttingDataTooltips.chip_load,
     unit: "mm/tooth",
   },
-
-  
 ];

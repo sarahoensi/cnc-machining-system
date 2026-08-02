@@ -8,18 +8,10 @@ type Props = {
   unit?: string;
 };
 
-export function ExecutionValue({
-  value,
-  unit,
-}: Props) {
+export function ExecutionValue({ value, unit }: Props) {
   return (
     <div className="exec-field">
-      <NumberInput
-        value={value ?? ""}
-        unit={unit}
-        appearance="execution"
-        displayOnly
-      />
+      <NumberInput value={value ?? ""} unit={unit} appearance="execution" displayOnly />
     </div>
   );
 }

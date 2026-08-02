@@ -32,16 +32,13 @@ export function ExecutionPlanSummary({
       }
     >
       <div className="execution-summary">
-
         <FieldDisplay label="Mode:" value={mode} align="left" />
 
         <div className="execution-summary-row">
           <FieldDisplay label="Start Ø:" value={startDiameter} />
           <FieldDisplay label="Target Ø:" value={targetDiameter} />
         </div>
-
       </div>
     </Panel>
   );
 }
-

@@ -36,13 +36,13 @@ export function CylinderWeightForm({ controller }: Props) {
     <div ref={navigation.containerRef}>
       <FormLayout
         error={error}
-        actions={(
+        actions={
           <FormActions
             onCalculate={controller.calculate}
             onReset={controller.resetForm}
             disabled={controller.loadingMaterials}
           />
-        )}
+        }
       >
         <FormGrid areas={[["material"], ["inputs"], ["result"]]}>
           <FormGrid.Area name="material" className="stack--form-section">

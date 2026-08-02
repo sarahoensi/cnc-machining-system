@@ -3,32 +3,32 @@
 //
 
 export function buildOuterMaterialPath({
-    centerBottom,
+  centerBottom,
 
-    baseWidth,
-    baseHeight,
+  baseWidth,
+  baseHeight,
 
-    materialTopY,
-    centerRadius,    
+  materialTopY,
+  centerRadius,
 }: {
-    centerBottom: {x: number, y: number};
-    baseWidth: number;
-    baseHeight: number;
+  centerBottom: { x: number; y: number };
+  baseWidth: number;
+  baseHeight: number;
 
-    materialTopY: number;
-    centerRadius: number;
+  materialTopY: number;
+  centerRadius: number;
 }) {
-    const baseLeft = centerBottom.x - baseWidth / 2;
-    const baseRight = centerBottom.x + baseWidth / 2;
+  const baseLeft = centerBottom.x - baseWidth / 2;
+  const baseRight = centerBottom.x + baseWidth / 2;
 
-    const topLeftX = centerBottom.x - centerRadius;
-    const topRightX = centerBottom.x + centerRadius;
+  const topLeftX = centerBottom.x - centerRadius;
+  const topRightX = centerBottom.x + centerRadius;
 
-    const topY = materialTopY;
-    const baseTop = centerBottom.y - baseHeight;
-    const baseBottom = centerBottom.y;
+  const topY = materialTopY;
+  const baseTop = centerBottom.y - baseHeight;
+  const baseBottom = centerBottom.y;
 
-    return `
+  return `
         M ${baseLeft} ${baseTop}
         L ${baseLeft} ${baseBottom}
         L ${baseRight} ${baseBottom}

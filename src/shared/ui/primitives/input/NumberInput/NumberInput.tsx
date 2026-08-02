@@ -11,8 +11,6 @@ import type {
 import "@shared/ui/primitives/input/InputControl/InputControl.css";
 import "./NumberInput.base.css";
 
-
-
 type Props = {
   id?: string;
 
@@ -41,32 +39,28 @@ type Props = {
 
 const INPUT_REGEX = /^-?\d*([.,]\d*)?$/;
 
-export const NumberInput = forwardRef<HTMLInputElement, Props>(
-function NumberInput(
-{
-  
-  id,
-  value,
-  onChange,
-  unit,
-  disabled = false,
-  readonly = false,
-  displayOnly = false,
-  autoFocus,
-  tabIndex,
-  onKeyDown,
-  onFocus,
-  onBlur,
-  placeholder,
-  appearance = "form",
-  source = "default",
-  size = "medium",
-  className,
-},
-ref
+export const NumberInput = forwardRef<HTMLInputElement, Props>(function NumberInput(
+  {
+    id,
+    value,
+    onChange,
+    unit,
+    disabled = false,
+    readonly = false,
+    displayOnly = false,
+    autoFocus,
+    tabIndex,
+    onKeyDown,
+    onFocus,
+    onBlur,
+    placeholder,
+    appearance = "form",
+    source = "default",
+    size = "medium",
+    className,
+  },
+  ref,
 ) {
-
-
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const unitWidth = unit ? `${Math.max(unit.length, 1)}ch` : undefined;
@@ -79,28 +73,27 @@ ref
   const isReadOnly = readonly && !isDisabled;
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-  let raw = e.target.value;
+    let raw = e.target.value;
 
-  if (raw === "") {
-    onChange?.("");
-    return;
+    if (raw === "") {
+      onChange?.("");
+      return;
+    }
+
+    if (!INPUT_REGEX.test(raw)) {
+      return;
+    }
+
+    if (raw.startsWith(".")) {
+      raw = "0" + raw;
+    }
+
+    if (raw.startsWith("-.")) {
+      raw = "-0" + raw.slice(1);
+    }
+
+    onChange?.(raw);
   }
-
-  if (!INPUT_REGEX.test(raw)) {
-    return;
-  }
-
-  if (raw.startsWith(".")) {
-    raw = "0" + raw;
-  }
-
-  if (raw.startsWith("-.")) {
-    raw = "-0" + raw.slice(1);
-  }
-
-  onChange?.(raw);
-}
-
 
   return (
     <div
@@ -111,48 +104,41 @@ ref
         isReadOnly && "readonly",
         isDisplayOnly && "is-display-only",
         `number-input--${appearance}`,
-        className
+        className,
       )}
       style={style}
     >
       <InputBase
         wrapperClassName="ni-input-wrapper"
-        rightSlot={
-          unit ? (
-            <span className="ni-unit">
-              {unit}
-            </span>
-          ) : null
-        }
-          id={inputId}
-          ref={ref}
-          type="text"
-          inputMode="decimal"
-          pattern="-?[0-9]*[.,]?[0-9]*"
+        rightSlot={unit ? <span className="ni-unit">{unit}</span> : null}
+        id={inputId}
+        ref={ref}
+        type="text"
+        inputMode="decimal"
+        pattern="-?[0-9]*[.,]?[0-9]*"
 
-          autoComplete="off"
-          name={`ni-${inputId}`}
+        autoComplete="off"
+        name={`ni-${inputId}`}
 
-          autoFocus={autoFocus}
-          value={value}
-          disabled={isDisabled}
-          readOnly={isReadOnly}
-          tabIndex={tabIndex}
-          placeholder={placeholder}
-          onChange={handleChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onKeyDown={onKeyDown}
-          className={clsx(
-            "ni-input",
-            "input-control",
-            `input-control--${appearance}`,
-            `input-control--${size}`,
-            source !== "default" && `input-control--${source}`,
-            isDisabled && "input-control--disabled"
-          )}
+        autoFocus={autoFocus}
+        value={value}
+        disabled={isDisabled}
+        readOnly={isReadOnly}
+        tabIndex={tabIndex}
+        placeholder={placeholder}
+        onChange={handleChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onKeyDown={onKeyDown}
+        className={clsx(
+          "ni-input",
+          "input-control",
+          `input-control--${appearance}`,
+          `input-control--${size}`,
+          source !== "default" && `input-control--${source}`,
+          isDisabled && "input-control--disabled",
+        )}
       />
     </div>
   );
 });
-

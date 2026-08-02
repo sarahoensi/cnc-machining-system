@@ -17,14 +17,14 @@ export function ThreadsPage() {
       secondaryWidth="minmax(20rem, 1fr)"
       secondaryMinHeightOnCollapse="20rem"
       form={<ThreadsForm controller={controller} />}
-      sidePanel={(
+      sidePanel={
         <ThreadHistoryPanel
           history={controller.history}
           onLoad={controller.load}
           onDelete={controller.remove}
           onClear={controller.clear}
         />
-      )}
+      }
     />
   );
 }

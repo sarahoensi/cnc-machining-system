@@ -11,15 +11,19 @@ Includes a multi-layered test suite covering domain, application, and interface 
 ## Screenshots
 
 ### Triangle Solver
+
 ![Triangle](./src/assets/demo/Triangle.png)
 
 ### Helix Solver
+
 ![Helix](./src/assets/demo/Helix.png)
 
 ### Cutting Data
+
 ![Cutting Data](./src/assets/demo/CuttingDataPartial.png)
 
 ### Finishing Execution
+
 ![Finishing](./src/assets/demo/FinishingExecution.png)
 
 ---
@@ -54,12 +58,12 @@ The system enforces:
 The project follows a strict layered design:
 
 Frontend (Tauri commands)  
-        ↓  
+↓  
 Application layer (use cases)  
-        ↓  
+↓  
 Domain layer (rules, invariants, physics)  
-        ↓  
-Units (type-safe primitives)  
+↓  
+Units (type-safe primitives)
 
 ### Principles
 
@@ -90,7 +94,7 @@ A stateful execution model for machining finishing passes.
 - Tracks operator measurements per step
 - Locks completed steps
 - Recalculates remaining steps dynamically  
-➡️ Models *real operator workflow*, not just math
+  ➡️ Models _real operator workflow_, not just math
 
 ---
 
@@ -140,20 +144,21 @@ pub fn rpm_from_cutting_speed(
     diameter: Diameter,
 ) -> Result<Rpm, CuttingError>
 ```
+
 ---
 
 ## Error Handling
 
 Layered error system:
 
-- **Domain errors** → physical or logical violations  
-- **Application errors** → validation aggregation  
-- **Tauri errors** → UI-safe responses  
+- **Domain errors** → physical or logical violations
+- **Application errors** → validation aggregation
+- **Tauri errors** → UI-safe responses
 
 Includes:
 
-- Field-level validation errors  
-- Domain-specific error messages  
+- Field-level validation errors
+- Domain-specific error messages
 
 ---
 
@@ -161,9 +166,9 @@ Includes:
 
 Centralized through an `InputParser`:
 
-- Collects multiple validation errors  
-- Separates parsing from domain logic  
-- Supports partial input workflows  
+- Collects multiple validation errors
+- Separates parsing from domain logic
+- Supports partial input workflows
 
 ---
 
@@ -172,17 +177,20 @@ Centralized through an `InputParser`:
 The project includes a comprehensive, multi-layered test suite covering:
 
 ### Domain Layer
+
 - Mathematical correctness (geometry, machining physics)
 - Invariants and edge cases
 - Numerical stability
 
 ### Application Layer
+
 - Partial input solving (constraint propagation)
 - Cross-path consistency (same result from different inputs)
 - Validation and error handling
 - Stateful workflows (finishing execution lifecycle)
 
 ### Interface Layer (Tauri)
+
 - Request/response mapping
 - Serialization and deserialization
 - End-to-end command validation
@@ -190,9 +198,9 @@ The project includes a comprehensive, multi-layered test suite covering:
 
 ### Test Types
 
-- Unit tests for deterministic logic  
-- Property-based tests (proptest) for invariants and identities  
-- Scenario tests simulating real operator workflows  
+- Unit tests for deterministic logic
+- Property-based tests (proptest) for invariants and identities
+- Scenario tests simulating real operator workflows
 
 ---
 
@@ -220,43 +228,44 @@ To run the full backend test suite:
 cd src-tauri
 cargo test
 ```
+
 ---
 
-##  Why This Project Is Different
+## Why This Project Is Different
 
 This is not just a calculator.
 
 It is:
 
-- A **domain-driven engineering tool**  
-- A system that **models machining reality**  
-- A tool designed to **reduce operator error in production**  
+- A **domain-driven engineering tool**
+- A system that **models machining reality**
+- A tool designed to **reduce operator error in production**
 
 ---
 
 ## Tech Stack
 
-- Rust  
-- Tauri  
-- Serde  
-- ThisError  
-- Proptest  
+- Rust
+- Tauri
+- Serde
+- ThisError
+- Proptest
 
 ---
 
 ## Status
 
-- Actively used by a CNC operator  
-- Developed in close collaboration with end user  
-- Iteratively refined based on real-world usage  
+- Actively used by a CNC operator
+- Developed in close collaboration with end user
+- Iteratively refined based on real-world usage
 
 ---
 
 ## Future Directions
 
-- Improved explainability of calculations  
-- Enhanced edge-case handling (real-world tolerances)  
-- Expanded machining models  
+- Improved explainability of calculations
+- Enhanced edge-case handling (real-world tolerances)
+- Expanded machining models
 
 ---
 
@@ -264,6 +273,6 @@ It is:
 
 Developed independently with focus on:
 
-- Domain modeling  
-- Correctness  
-- Real-world usability  
+- Domain modeling
+- Correctness
+- Real-world usability

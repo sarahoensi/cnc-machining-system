@@ -17,7 +17,28 @@ fn unified_thread_converts_tpi_to_pitch_mm() {
     let result = ThreadSolver::solve(&spec);
 
     assert_close(spec.pitch_mm, 1.27);
+    assert_close(spec.major_diameter_mm, 6.35);
     assert_close(result.drill_diameter_mm, 5.08);
+}
+
+#[test]
+fn unf_thread_uses_fine_tpi_reference_values() {
+    let spec = resolve_thread_spec(ThreadType::Unf, "1/4", "28").unwrap();
+    let result = ThreadSolver::solve(&spec);
+
+    assert_close(spec.major_diameter_mm, 6.35);
+    assert_close(spec.pitch_mm, 0.9071428571428571);
+    assert_close(result.drill_diameter_mm, 5.442857142857143);
+}
+
+#[test]
+fn bsp_thread_uses_major_diameter_and_tpi_reference_values() {
+    let spec = resolve_thread_spec(ThreadType::Bsp, "G1/4", "19").unwrap();
+    let result = ThreadSolver::solve(&spec);
+
+    assert_close(spec.major_diameter_mm, 13.157);
+    assert_close(spec.pitch_mm, 1.336842105263158);
+    assert_close(result.drill_diameter_mm, 11.820157894736843);
 }
 
 fn assert_close(actual: f64, expected: f64) {

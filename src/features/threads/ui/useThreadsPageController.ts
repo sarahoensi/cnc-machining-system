@@ -95,7 +95,9 @@ export function useThreadsPageController() {
   }, [setForm]);
 
   const typeOptions = threadTypeOptions.map(toSelectOption);
-  const sizeOptions = getThreadSizes(form.extras.options, form.extras.type).map(toSelectOption);
+  const sizeOptions = getThreadSizes(form.extras.options, form.extras.type).map(
+    toSelectOption,
+  );
   const selectedSize = getThreadSize(
     form.extras.options,
     form.extras.type,
