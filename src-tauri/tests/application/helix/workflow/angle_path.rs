@@ -15,4 +15,13 @@ fn angle_input_generates_consistent_pitch() {
         .unwrap();
 
     assert!(result.pitch > 0.0);
+    assert_close(result.pitch, 12.5779083550566);
+    assert_close(result.angle, 20.0);
+}
+
+fn assert_close(actual: f64, expected: f64) {
+    assert!(
+        (actual - expected).abs() < 1e-9,
+        "expected {actual} to be close to {expected}"
+    );
 }

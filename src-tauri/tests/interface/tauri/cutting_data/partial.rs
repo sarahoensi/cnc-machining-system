@@ -20,6 +20,7 @@ fn solves_only_rpm_when_vc_and_diameter_given() {
     assert!(result.rpm.is_some());
     assert!(result.feed_rate_mm_per_min.is_none());
     assert!(result.chip_load_mm_per_tooth.is_none());
+    assert_close(result.rpm.unwrap(), 6366.197723675814);
 }
 
 #[test]
@@ -30,4 +31,11 @@ fn returns_empty_solution_when_no_data_given() {
 
     assert!(result.rpm.is_none());
     assert!(result.feed_rate_mm_per_min.is_none());
+}
+
+fn assert_close(actual: f64, expected: f64) {
+    assert!(
+        (actual - expected).abs() < 1e-9,
+        "expected {actual} to be close to {expected}"
+    );
 }

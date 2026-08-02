@@ -12,4 +12,12 @@ fn solves_rpm_from_cutting_speed_and_diameter() {
     .unwrap();
 
     assert!(output.rpm.is_some());
+    assert_close(output.rpm.unwrap(), 6366.197723675814);
+}
+
+fn assert_close(actual: f64, expected: f64) {
+    assert!(
+        (actual - expected).abs() < 1e-9,
+        "expected {actual} to be close to {expected}"
+    );
 }

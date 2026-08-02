@@ -53,6 +53,22 @@ fn radial_engagement_computes_cuts() {
     let plan = FinishingPlanner::generate_plan(req).unwrap();
 
     assert_eq!(plan.cuts(), 2);
+    assert!((plan.expected_step().mm_value() - 1.0).abs() < EPS);
+}
+
+#[test]
+fn radial_engagement_rounds_up_and_redistributes_evenly_to_target() {
+    let req = FinishingRequest {
+        mode: FinishingMode::Outer,
+        start_diameter: d(10.0),
+        target_diameter: d(8.8),
+        planning: FinishingPlanning::ByRadialEngagement(l(0.25)),
+    };
+
+    let plan = FinishingPlanner::generate_plan(req).unwrap();
+
+    assert_eq!(plan.cuts(), 3);
+    assert!((plan.expected_step().mm_value() - 0.4).abs() < EPS);
 }
 
 //

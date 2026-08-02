@@ -43,6 +43,44 @@ fn from_speed_and_chip_load_produces_consistent_set() {
 }
 
 #[test]
+fn core_formulas_match_reference_values() {
+    let tool = tool(10.0, 4);
+    let vc = CuttingSpeed::meters_per_min(200.0).unwrap();
+    let rpm = Rpm::new(5000.0).unwrap();
+    let chip = ChipLoad::mm_per_tooth(0.05).unwrap();
+    let feed = FeedRate::mm_per_min(800.0).unwrap();
+
+    assert!(approx_eq(
+        CuttingSolver::rpm_from_cutting_speed(vc, tool.diameter())
+            .unwrap()
+            .value(),
+        6366.197723675814,
+        1e-9
+    ));
+    assert!(approx_eq(
+        CuttingSolver::cutting_speed_from_rpm(rpm, tool.diameter())
+            .unwrap()
+            .meters_per_min_value(),
+        157.07963267948966,
+        1e-9
+    ));
+    assert!(approx_eq(
+        CuttingSolver::feed_from_chip_load(chip, rpm, tool.teeth())
+            .unwrap()
+            .mm_per_min_value(),
+        1000.0,
+        1e-9
+    ));
+    assert!(approx_eq(
+        CuttingSolver::chip_from_feed(feed, rpm, tool.teeth())
+            .unwrap()
+            .mm_per_tooth_value(),
+        0.04,
+        1e-12
+    ));
+}
+
+#[test]
 fn from_rpm_and_feed_produces_consistent_set() {
     let tool = tool(12.0, 3);
 

@@ -13,4 +13,12 @@ fn solves_chip_load_from_feed_rpm_and_teeth() {
     .unwrap();
 
     assert!(output.chip_load_mm_per_tooth.is_some());
+    assert_close(output.chip_load_mm_per_tooth.unwrap(), 0.04);
+}
+
+fn assert_close(actual: f64, expected: f64) {
+    assert!(
+        (actual - expected).abs() < 1e-12,
+        "expected {actual} to be close to {expected}"
+    );
 }

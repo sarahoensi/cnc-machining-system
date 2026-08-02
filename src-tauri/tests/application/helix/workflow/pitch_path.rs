@@ -15,4 +15,12 @@ fn pitch_input_preserves_pitch() {
     let result = uc.execute(input).unwrap();
 
     assert!((result.pitch - 4.0).abs() < 1e-9);
+    assert_close(result.angle, 6.60254999433);
+}
+
+fn assert_close(actual: f64, expected: f64) {
+    assert!(
+        (actual - expected).abs() < 1e-9,
+        "expected {actual} to be close to {expected}"
+    );
 }

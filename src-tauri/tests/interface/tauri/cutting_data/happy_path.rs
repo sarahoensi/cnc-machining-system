@@ -19,4 +19,13 @@ fn solves_full_pipeline_via_tauri() {
 
     assert!(result.rpm.unwrap() > 0.0);
     assert!(result.feed_rate_mm_per_min.unwrap() > 0.0);
+    assert_close(result.rpm.unwrap(), 6366.197723675814);
+    assert_close(result.feed_rate_mm_per_min.unwrap(), 1273.2395447351628);
+}
+
+fn assert_close(actual: f64, expected: f64) {
+    assert!(
+        (actual - expected).abs() < 1e-9,
+        "expected {actual} to be close to {expected}"
+    );
 }
