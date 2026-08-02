@@ -110,12 +110,13 @@ describe("cylinder weight hook helpers", () => {
     expect(toggleExportMaterialId(["steel", "aluminum"], "steel")).toEqual([
       "aluminum",
     ]);
-    expect(setVisibleExportSelection(["steel"], true, ["steel", "aluminum"])).toEqual(
-      ["steel", "aluminum"],
-    );
-    expect(
-      setVisibleExportSelection(["steel", "aluminum"], false, ["steel"]),
-    ).toEqual(["aluminum"]);
+    expect(setVisibleExportSelection(["steel"], true, ["steel", "aluminum"])).toEqual([
+      "steel",
+      "aluminum",
+    ]);
+    expect(setVisibleExportSelection(["steel", "aluminum"], false, ["steel"])).toEqual([
+      "aluminum",
+    ]);
   });
 
   it("builds export payload and summary from selected materials", () => {

@@ -157,7 +157,9 @@ export function useCylinderMaterialManagement({
   }
 
   function setExportAll(checked: boolean, visibleIds: string[]) {
-    setSelectedExportIds((prev) => setVisibleExportSelection(prev, checked, visibleIds));
+    setSelectedExportIds((prev) =>
+      setVisibleExportSelection(prev, checked, visibleIds),
+    );
   }
 
   function cancelExportDialog() {

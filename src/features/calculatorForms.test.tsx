@@ -531,11 +531,7 @@ describe("calculator forms", () => {
     const onSave = vi.fn();
 
     render(
-      <TestThreadsForm
-        onCalculate={onCalculate}
-        onReset={onReset}
-        onSave={onSave}
-      />,
+      <TestThreadsForm onCalculate={onCalculate} onReset={onReset} onSave={onSave} />,
     );
 
     await user.click(screen.getByRole("button", { name: "M10" }));

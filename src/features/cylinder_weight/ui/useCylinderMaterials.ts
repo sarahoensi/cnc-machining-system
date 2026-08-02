@@ -66,7 +66,9 @@ export function useCylinderMaterials(
   }
 
   function removeMaterial(materialId: string) {
-    setMaterials((prev) => sortCylinderMaterials(prev.filter((m) => m.id !== materialId)));
+    setMaterials((prev) =>
+      sortCylinderMaterials(prev.filter((m) => m.id !== materialId)),
+    );
   }
 
   const selectedMaterial = useMemo(
