@@ -2,3 +2,4 @@
 
 export * from "./useFormNavigation";
 export * from "./useCalculatorFormNavigation";
+export * from "./useAutoCalculate";

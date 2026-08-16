@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
 import { getTauriCommandError } from "@shared/api/tauriError";
@@ -7,7 +7,7 @@ import {
   handleCalculateAsync,
 } from "@shared/form/engine/formEngine";
 import { userField } from "@shared/form/types/fields";
-import { useFormNavigation } from "@shared/hooks";
+import { useAutoCalculate, useFormNavigation } from "@shared/hooks";
 import { useSavedResults } from "@shared/savedResults";
 
 import { listThreadOptionsApi } from "../api/client";
@@ -29,6 +29,7 @@ import { parseThread } from "../domain/parseThread";
 import { validateThreadForm } from "../domain/validateThreadForm";
 
 const navigationKeys = ["size", "pitch"] as const;
+const threadsAutoCalculateEnabled = true;
 
 export function useThreadsPageController() {
   const [form, setForm] = useFeatureForm("threads", createInitialThreadForm);
@@ -42,6 +43,24 @@ export function useThreadsPageController() {
     autoFocusOnMount: true,
     activePath: "/threads",
     onSubmit: calculate,
+  });
+
+  const calculateThreadForm = useCallback((threadForm: ThreadFormState) => {
+    return handleCalculateAsync(
+      threadForm,
+      parseThread,
+      solveThread,
+      validateThreadForm,
+    );
+  }, []);
+
+  useAutoCalculate({
+    enabled: threadsAutoCalculateEnabled,
+    ready: !form.extras.loadingOptions && form.status === "editing",
+    signature: buildThreadCalculationSignature(form),
+    form,
+    calculate: calculateThreadForm,
+    onResult: setForm,
   });
 
   useEffect(() => {
@@ -168,12 +187,7 @@ export function useThreadsPageController() {
   }
 
   async function calculate() {
-    const next = await handleCalculateAsync(
-      form,
-      parseThread,
-      solveThread,
-      validateThreadForm,
-    );
+    const next = await calculateThreadForm(form);
 
     setForm(next);
 
@@ -237,6 +251,17 @@ function toSelectOption<T extends string>(option: { value: T; label: string }) {
     value: option.value,
     label: option.label,
   };
+}
+
+function buildThreadCalculationSignature(form: ThreadFormState) {
+  const parsed = parseThread(form.fields, form.extras);
+  if (!parsed) return "";
+
+  return [
+    parsed.type,
+    parsed.size,
+    parsed.pitch,
+  ].join("|");
 }
 
 function buildPitchLabel(label: string, type: ThreadType) {

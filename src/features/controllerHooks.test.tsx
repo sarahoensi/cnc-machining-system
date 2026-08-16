@@ -139,6 +139,7 @@ const toleranceOptions: ToleranceOptionsResponse = {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.useRealTimers();
   globalThis.requestAnimationFrame ??= (callback: FrameRequestCallback) => {
     callback(0);
     return 0;
@@ -234,10 +235,7 @@ describe("calculator page controllers", () => {
       label: "1.5",
       meta: "Coarse",
     });
-
-    await act(async () => {
-      await result.current.calculate();
-    });
+    await waitFor(() => expect(threadSolveMock).toHaveBeenCalled());
 
     expect(threadSolveMock).toHaveBeenCalledWith(
       {
@@ -249,6 +247,23 @@ describe("calculator page controllers", () => {
     );
     expect(result.current.form.fields.drill_diameter.machineValue).toBe(8.5);
     expect(result.current.form.fields.thread_depth.machineValue).toBe(0.92);
+  });
+
+  it("keeps thread defaults when clearing repeatedly with auto calculation enabled", async () => {
+    listThreadOptionsMock.mockResolvedValue(threadOptions);
+    threadSolveMock.mockResolvedValue({ drill_diameter: 8.5, thread_depth: 0.92 });
+
+    const { result } = renderHook(() => useThreadsPageController(), { wrapper });
+
+    await waitFor(() => expect(result.current.loadingOptions).toBe(false));
+
+    await act(async () => {
+      result.current.resetForm();
+      result.current.resetForm();
+    });
+
+    expect(result.current.form.fields.size.value).toBe("M10");
+    expect(result.current.form.fields.pitch.value).toBe("1.5");
   });
 
   it("loads tolerance options and calculates the active tolerance mode", async () => {
