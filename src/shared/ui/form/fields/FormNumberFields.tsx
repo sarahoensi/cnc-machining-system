@@ -44,7 +44,7 @@ export function FormNumberFields<K extends string>({
             tooltip={config.tooltip}
             unit={config.unit}
             field={field}
-            disabled={field.locked || config.readOnly}
+            disabled={field.locked}
             readonly={config.readOnly}
             autoFocus={config.autoFocus}
             onChange={(value) => onChange(config.key, value)}
