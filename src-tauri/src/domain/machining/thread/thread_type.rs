@@ -8,6 +8,7 @@ pub enum ThreadType {
     Unc,
     Unf,
     Bsp,
+    Npt,
 }
 
 impl ThreadType {
@@ -17,6 +18,7 @@ impl ThreadType {
             ThreadType::Unc => "unc",
             ThreadType::Unf => "unf",
             ThreadType::Bsp => "bsp",
+            ThreadType::Npt => "npt",
         }
     }
 
@@ -26,12 +28,14 @@ impl ThreadType {
             ThreadType::Unc => "UNC",
             ThreadType::Unf => "UNF",
             ThreadType::Bsp => "G/BSP",
+            ThreadType::Npt => "NPT",
         }
     }
 
     pub fn depth_factor(self) -> f64 {
         match self {
             ThreadType::Bsp => 0.640327,
+            ThreadType::Npt => 0.800,
             ThreadType::Metric | ThreadType::Unc | ThreadType::Unf => 0.541266,
         }
     }
@@ -46,6 +50,7 @@ impl FromStr for ThreadType {
             "unc" => Ok(ThreadType::Unc),
             "unf" => Ok(ThreadType::Unf),
             "bsp" => Ok(ThreadType::Bsp),
+            "npt" => Ok(ThreadType::Npt),
             other => Err(ThreadError::InvalidThreadType(other.to_string())),
         }
     }

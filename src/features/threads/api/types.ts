@@ -1,5 +1,5 @@
-export type ThreadApiType = "metric" | "unc" | "unf" | "bsp";
-export type ThreadType = "metric" | "unified" | "bsp";
+export type ThreadApiType = "metric" | "unc" | "unf" | "bsp" | "npt";
+export type ThreadType = "metric" | "unified" | "bsp" | "npt";
 
 export type ThreadSizeOption = {
   value: string;
@@ -14,6 +14,7 @@ export type ThreadPitchOption = {
   pitchMm: number;
   series: string;
   isDefaultPitch: boolean;
+  tapDrillBasis?: string;
   sourceType?: ThreadApiType;
 };
 
@@ -28,6 +29,7 @@ export type ThreadOptionsResponse = {
   unc: ThreadSizeOption[];
   unf: ThreadSizeOption[];
   bsp: ThreadSizeOption[];
+  npt: ThreadSizeOption[];
 };
 
 export type ThreadCalculationInput = {

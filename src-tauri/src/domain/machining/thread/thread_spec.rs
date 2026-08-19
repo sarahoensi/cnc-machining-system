@@ -28,6 +28,7 @@ pub struct ThreadOptions {
     pub unc: Vec<ThreadSizeOption>,
     pub unf: Vec<ThreadSizeOption>,
     pub bsp: Vec<ThreadSizeOption>,
+    pub npt: Vec<ThreadSizeOption>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -48,6 +49,7 @@ pub fn list_thread_options() -> ThreadOptions {
             ThreadType::Unc,
             ThreadType::Unf,
             ThreadType::Bsp,
+            ThreadType::Npt,
         ]
         .into_iter()
         .map(|thread_type| ThreadTypeOption {
@@ -59,6 +61,7 @@ pub fn list_thread_options() -> ThreadOptions {
         unc: unc_options(),
         unf: unf_options(),
         bsp: bsp_options(),
+        npt: npt_options(),
     }
 }
 
@@ -102,6 +105,7 @@ fn options_for_type(thread_type: ThreadType) -> Vec<ThreadSizeOption> {
         ThreadType::Unc => unc_options(),
         ThreadType::Unf => unf_options(),
         ThreadType::Bsp => bsp_options(),
+        ThreadType::Npt => npt_options(),
     }
 }
 
@@ -156,6 +160,20 @@ fn bsp_options() -> Vec<ThreadSizeOption> {
     ]
 }
 
+fn npt_options() -> Vec<ThreadSizeOption> {
+    vec![
+        pipe_thread("1/8", 8.433, 27.0),
+        pipe_thread("1/4", 11.112, 18.0),
+        pipe_thread("3/8", 14.287, 18.0),
+        pipe_thread("1/2", 17.859, 14.0),
+        pipe_thread("3/4", 23.019, 14.0),
+        pipe_thread("1", 28.972, 11.5),
+        pipe_thread("1 1/4", 37.703, 11.5),
+        pipe_thread("1 1/2", 43.656, 11.5),
+        pipe_thread("2", 55.562, 11.5),
+    ]
+}
+
 fn metric(label: &str, major_diameter_mm: f64, pitches_mm: &[f64]) -> ThreadSizeOption {
     ThreadSizeOption {
         value: label.to_string(),
@@ -198,6 +216,30 @@ fn bsp(label: &str, major_diameter_mm: f64, tpi: i32) -> ThreadSizeOption {
             label: format!("{tpi} TPI"),
             pitch_mm: 25.4 / f64::from(tpi),
         }],
+    }
+}
+
+fn pipe_thread(label: &str, tap_drill_mm: f64, tpi: f64) -> ThreadSizeOption {
+    let pitch_mm = 25.4 / tpi;
+
+    ThreadSizeOption {
+        value: label.to_string(),
+        label: label.to_string(),
+        major_diameter_mm: tap_drill_mm + pitch_mm,
+        pitches: vec![ThreadPitchOption {
+            value: format_float(tpi),
+            label: format!("{} TPI", format_float(tpi)),
+            pitch_mm,
+        }],
+    }
+}
+
+fn format_float(value: f64) -> String {
+    if value.fract() == 0.0 {
+        format!("{value:.0}")
+    } else {
+        let text = format!("{value:.4}");
+        text.trim_end_matches('0').trim_end_matches('.').to_string()
     }
 }
 

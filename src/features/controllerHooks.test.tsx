@@ -81,6 +81,7 @@ const threadOptions: ThreadOptionsResponse = {
     { value: "unc", label: "UNC" },
     { value: "unf", label: "UNF" },
     { value: "bsp", label: "G/BSP" },
+    { value: "npt", label: "NPT" },
   ],
   metric: [
     {
@@ -124,6 +125,7 @@ const threadOptions: ThreadOptionsResponse = {
   ],
   unf: [],
   bsp: [],
+  npt: [],
 };
 
 const toleranceOptions: ToleranceOptionsResponse = {

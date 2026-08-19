@@ -8,7 +8,10 @@ import { Button } from "@shared/ui/primitives/Button/Button";
 import { SelectMenuLabel } from "@shared/ui/primitives/Select";
 
 import type { useThreadsPageController } from "../useThreadsPageController";
-import { threadResultFieldConfig, threadSelectConfig } from "../threadFieldConfig";
+import {
+  buildThreadResultFieldConfig,
+  threadSelectConfig,
+} from "../threadFieldConfig";
 import "../ThreadsPage.css";
 
 type Props = {
@@ -24,6 +27,14 @@ export function ThreadsForm({ controller }: Props) {
   );
   const selectedSizeOption = controller.sizeOptions.find(
     (option) => option.value === form.fields.size.value,
+  );
+  const resultFieldConfig = buildThreadResultFieldConfig(
+    shouldShowNptMinorDiameterLabel(
+      controller.type,
+      selectedPitchOption?.tapDrillBasis,
+    )
+      ? "Minor diameter (K₀)"
+      : "Tap drill",
   );
 
   return (
@@ -107,7 +118,7 @@ export function ThreadsForm({ controller }: Props) {
 
           <FormGrid.Area name="result" className="threads-result-grid">
             <FormNumberFields
-              configs={threadResultFieldConfig}
+              configs={resultFieldConfig}
               fields={form.fields}
               onChange={controller.onFieldChange}
             />
@@ -120,4 +131,11 @@ export function ThreadsForm({ controller }: Props) {
 
 function formatMillimeters(value: number) {
   return value.toFixed(3);
+}
+
+function shouldShowNptMinorDiameterLabel(type: string, tapDrillBasis?: string) {
+  return (
+    type === "npt" &&
+    Boolean(tapDrillBasis?.toLowerCase().includes("not populated"))
+  );
 }

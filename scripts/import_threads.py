@@ -12,7 +12,7 @@ PRAGMA foreign_keys = ON;
 
 CREATE TABLE thread_specs(
   id TEXT PRIMARY KEY,
-  thread_type TEXT NOT NULL CHECK(thread_type IN ('metric', 'unc', 'unf', 'bsp')),
+  thread_type TEXT NOT NULL CHECK(thread_type IN ('metric', 'unc', 'unf', 'bsp', 'npt')),
   family TEXT NOT NULL,
   series TEXT NOT NULL,
   designation TEXT NOT NULL,
@@ -60,12 +60,9 @@ REQUIRED_COLUMNS = {
     "display_name",
     "pitch_mm",
     "profile_angle_deg",
-    "tap_drill_mm",
     "radial_thread_depth_mm",
     "tap_drill_basis",
-    "depth_basis",
     "standard_reference",
-    "source_url",
     "data_version",
     "verification_status",
 }
@@ -75,6 +72,7 @@ THREAD_TYPE_BY_FILE = {
     "threads_unc.csv": "unc",
     "threads_unf.csv": "unf",
     "threads_bsp_g.csv": "bsp",
+    "threads_npt_1-8_to_24.csv": "npt",
 }
 
 
@@ -201,9 +199,14 @@ def validate_header(file_name: str, headers: list[str]) -> None:
     if missing:
         raise ImportError(f"{file_name}: missing required columns: {', '.join(missing)}")
 
-    if "major_diameter_mm" not in headers and "nominal_diameter_mm" not in headers:
+    if (
+        "major_diameter_mm" not in headers
+        and "nominal_diameter_mm" not in headers
+        and "pipe_outside_diameter_mm" not in headers
+        and "nominal_pipe_size" not in headers
+    ):
         raise ImportError(
-            f"{file_name}: expected major_diameter_mm or nominal_diameter_mm"
+            f"{file_name}: expected major_diameter_mm, nominal_diameter_mm, pipe_outside_diameter_mm or nominal_pipe_size"
         )
 
 
@@ -215,10 +218,21 @@ def normalize_row(
 ) -> dict[str, object]:
     major_diameter_mm = parse_optional_float(row.get("major_diameter_mm"))
     nominal_diameter_mm = parse_optional_float(row.get("nominal_diameter_mm"))
+    pipe_outside_diameter_mm = parse_optional_float(row.get("pipe_outside_diameter_mm"))
     if major_diameter_mm is None:
         major_diameter_mm = nominal_diameter_mm
     if major_diameter_mm is None:
+        major_diameter_mm = pipe_outside_diameter_mm
+    if major_diameter_mm is None:
+        major_diameter_mm = parse_nominal_pipe_size_mm(row.get("nominal_pipe_size"))
+    if major_diameter_mm is None:
         raise ImportError(f"{file_name}:{line_number}: major diameter is required")
+
+    tap_drill_mm = parse_optional_float(row.get("tap_drill_mm"))
+    if tap_drill_mm is None:
+        tap_drill_mm = parse_optional_float(row.get("K0_minor_diameter_pipe_end_mm"))
+    if tap_drill_mm is None:
+        raise ImportError(f"{file_name}:{line_number}: tap_drill_mm is required")
 
     result = {
         "id": required_text(file_name, line_number, row, "id"),
@@ -236,7 +250,7 @@ def normalize_row(
         "profile_angle_deg": required_float(file_name, line_number, row, "profile_angle_deg"),
         "pitch_diameter_mm": parse_optional_float(row.get("pitch_diameter_mm")),
         "minor_diameter_male_mm": parse_optional_float(row.get("minor_diameter_male_mm")),
-        "tap_drill_mm": required_float(file_name, line_number, row, "tap_drill_mm"),
+        "tap_drill_mm": tap_drill_mm,
         "radial_thread_depth_mm": required_float(
             file_name,
             line_number,
@@ -245,9 +259,9 @@ def normalize_row(
         ),
         "is_default_pitch": parse_optional_bool(row.get("is_default_pitch"), default=1),
         "tap_drill_basis": required_text(file_name, line_number, row, "tap_drill_basis"),
-        "depth_basis": required_text(file_name, line_number, row, "depth_basis"),
+        "depth_basis": required_depth_basis(file_name, line_number, row),
         "standard_reference": required_text(file_name, line_number, row, "standard_reference"),
-        "source_url": required_text(file_name, line_number, row, "source_url"),
+        "source_url": required_source_url(file_name, line_number, row),
         "profile_source_url": optional_text(row.get("profile_source_url")),
         "data_version": required_text(file_name, line_number, row, "data_version"),
         "verification_status": required_text(file_name, line_number, row, "verification_status"),
@@ -300,6 +314,58 @@ def parse_optional_float(value: Optional[str]) -> Optional[float]:
     if not stripped:
         return None
     return float(stripped)
+
+
+def parse_nominal_pipe_size_mm(value: Optional[str]) -> Optional[float]:
+    text = optional_text(value)
+    if text is None:
+        return None
+
+    total = 0.0
+    for part in text.split():
+        if "/" in part:
+            numerator, denominator = part.split("/", 1)
+            total += float(numerator) / float(denominator)
+        else:
+            total += float(part)
+
+    return total * 25.4 if total > 0 else None
+
+
+def required_source_url(
+    file_name: str,
+    line_number: int,
+    row: dict[str, str],
+) -> str:
+    source_url = optional_text(row.get("source_url"))
+    if source_url is not None:
+        return source_url
+
+    standard_source_url = optional_text(row.get("standard_source_url"))
+    if standard_source_url is not None:
+        return standard_source_url
+
+    standard_reference = optional_text(row.get("standard_reference"))
+    if standard_reference is not None:
+        return standard_reference
+
+    raise ImportError(f"{file_name}:{line_number}: source_url is required")
+
+
+def required_depth_basis(
+    file_name: str,
+    line_number: int,
+    row: dict[str, str],
+) -> str:
+    depth_basis = optional_text(row.get("depth_basis"))
+    if depth_basis is not None:
+        return depth_basis
+
+    geometry_basis = optional_text(row.get("geometry_basis"))
+    if geometry_basis is not None:
+        return geometry_basis
+
+    raise ImportError(f"{file_name}:{line_number}: depth_basis is required")
 
 
 def parse_optional_bool(value: Optional[str], default: int) -> int:

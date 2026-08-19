@@ -23,6 +23,12 @@
       "rows": 25,
       "family": "bsp",
       "series": "G"
+    },
+    {
+      "file": "threads_npt_1-8_to_24.csv",
+      "rows": 23,
+      "family": "npt",
+      "series": "NPT"
     }
   ],
   "important": [

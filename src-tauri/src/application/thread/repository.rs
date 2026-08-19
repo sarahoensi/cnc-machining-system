@@ -41,11 +41,16 @@ pub fn list_thread_options(db_path: &Path) -> Result<ThreadOptionsOutput, String
                 value: "bsp".to_string(),
                 label: "G/BSP".to_string(),
             },
+            ThreadTypeOptionOutput {
+                value: "npt".to_string(),
+                label: "NPT".to_string(),
+            },
         ],
         metric: list_sizes_for_type(&conn, "metric")?,
         unc: list_sizes_for_type(&conn, "unc")?,
         unf: list_sizes_for_type(&conn, "unf")?,
         bsp: list_sizes_for_type(&conn, "bsp")?,
+        npt: list_sizes_for_type(&conn, "npt")?,
     })
 }
 
@@ -107,7 +112,7 @@ fn list_pitches_for_size(
 ) -> Result<Vec<ThreadPitchOptionOutput>, String> {
     let mut statement = conn
         .prepare(
-            "SELECT pitch_mm, tpi, display_name, series, is_default_pitch
+            "SELECT pitch_mm, tpi, display_name, series, is_default_pitch, tap_drill_basis
              FROM thread_specs
              WHERE thread_type = ?1
                AND designation = ?2
@@ -122,6 +127,7 @@ fn list_pitches_for_size(
             let display_name = row.get::<_, String>(2)?;
             let series = row.get::<_, String>(3)?;
             let is_default_pitch = row.get::<_, i32>(4)? == 1;
+            let tap_drill_basis = row.get::<_, String>(5)?;
 
             Ok(ThreadPitchOptionOutput {
                 value: pitch_value(thread_type, pitch_mm, tpi),
@@ -129,6 +135,7 @@ fn list_pitches_for_size(
                 pitch_mm,
                 series,
                 is_default_pitch,
+                tap_drill_basis,
             })
         })
         .map_err(|err| err.to_string())?

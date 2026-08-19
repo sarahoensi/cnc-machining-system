@@ -8,6 +8,7 @@ pub struct ThreadPitchOptionResponse {
     pub pitch_mm: f64,
     pub series: String,
     pub is_default_pitch: bool,
+    pub tap_drill_basis: String,
 }
 
 #[derive(Serialize)]
@@ -34,6 +35,7 @@ pub struct ThreadOptionsResponse {
     pub unc: Vec<ThreadSizeOptionResponse>,
     pub unf: Vec<ThreadSizeOptionResponse>,
     pub bsp: Vec<ThreadSizeOptionResponse>,
+    pub npt: Vec<ThreadSizeOptionResponse>,
 }
 
 #[derive(Serialize)]

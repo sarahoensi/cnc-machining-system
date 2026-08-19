@@ -5,6 +5,7 @@ pub struct ThreadPitchOptionOutput {
     pub pitch_mm: f64,
     pub series: String,
     pub is_default_pitch: bool,
+    pub tap_drill_basis: String,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -28,6 +29,7 @@ pub struct ThreadOptionsOutput {
     pub unc: Vec<ThreadSizeOptionOutput>,
     pub unf: Vec<ThreadSizeOptionOutput>,
     pub bsp: Vec<ThreadSizeOptionOutput>,
+    pub npt: Vec<ThreadSizeOptionOutput>,
 }
 
 #[derive(Debug, Clone, PartialEq)]

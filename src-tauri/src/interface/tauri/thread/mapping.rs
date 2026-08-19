@@ -35,6 +35,7 @@ impl From<ThreadOptionsOutput> for ThreadOptionsResponse {
             unc: options.unc.into_iter().map(Into::into).collect(),
             unf: options.unf.into_iter().map(Into::into).collect(),
             bsp: options.bsp.into_iter().map(Into::into).collect(),
+            npt: options.npt.into_iter().map(Into::into).collect(),
         }
     }
 }
@@ -67,6 +68,7 @@ impl From<ThreadPitchOptionOutput> for ThreadPitchOptionResponse {
             pitch_mm: option.pitch_mm,
             series: option.series,
             is_default_pitch: option.is_default_pitch,
+            tap_drill_basis: option.tap_drill_basis,
         }
     }
 }

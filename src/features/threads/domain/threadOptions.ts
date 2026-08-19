@@ -12,6 +12,7 @@ export const threadTypeOptions = [
   { value: "metric", label: "Metric" },
   { value: "unified", label: "UNF/UNC" },
   { value: "bsp", label: "G/BSP" },
+  { value: "npt", label: "NPT" },
 ] as const;
 
 export const emptyThreadOptions: ThreadOptionsResponse = {
@@ -20,6 +21,7 @@ export const emptyThreadOptions: ThreadOptionsResponse = {
   unc: [],
   unf: [],
   bsp: [],
+  npt: [],
 };
 
 export function getThreadSizes(options: ThreadOptionsResponse, type: ThreadType) {

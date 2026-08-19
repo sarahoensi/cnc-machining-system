@@ -29,6 +29,14 @@ export const threadResultFieldConfig: ThreadFieldConfig[] = [
   },
 ];
 
+export function buildThreadResultFieldConfig(drillDiameterLabel = "Tap drill") {
+  return threadResultFieldConfig.map((config) =>
+    config.key === "drill_diameter"
+      ? { ...config, label: drillDiameterLabel, shortLabel: drillDiameterLabel }
+      : config,
+  );
+}
+
 export const threadHistoryFieldConfig: ThreadFieldConfig[] = [
   {
     key: "drill_diameter",

@@ -348,6 +348,7 @@ function TestThreadsForm({
           unc: [],
           unf: [],
           bsp: [],
+          npt: [],
         },
       },
     };
@@ -357,6 +358,7 @@ function TestThreadsForm({
     { value: "metric" as const, label: "Metric" },
     { value: "unified" as const, label: "UNF/UNC" },
     { value: "bsp" as const, label: "G/BSP" },
+    { value: "npt" as const, label: "NPT" },
   ];
   const sizeOptions = form.extras.options.metric.map((option) => ({
     value: option.value,

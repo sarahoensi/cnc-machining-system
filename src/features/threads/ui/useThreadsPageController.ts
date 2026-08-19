@@ -128,6 +128,7 @@ export function useThreadsPageController() {
       label: buildPitchLabel(option.label, form.extras.type),
       meta: buildPitchMeta(option, form.extras.type),
       pitchMm: option.pitchMm,
+      tapDrillBasis: option.tapDrillBasis,
     })) ?? [];
 
   function onTypeChange(value: ThreadType) {
