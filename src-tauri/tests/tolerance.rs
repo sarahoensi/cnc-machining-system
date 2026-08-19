@@ -51,8 +51,10 @@ fn calculates_h7_g6_at_42_mm() {
     assert_eq!(result.hole.grade, 7);
     assert_close(result.hole.upper_um, 25.0);
     assert_close(result.hole.lower_um, 0.0);
+    assert_close(result.hole.mid_um, 12.5);
     assert_close(result.hole.min_mm, 42.0);
     assert_close(result.hole.max_mm, 42.025);
+    assert_close(result.hole.mid_mm, 42.0125);
     assert_eq!(result.hole.source_table.as_deref(), Some("Table 6"));
     assert_eq!(result.hole.source_file.as_deref(), Some("holes_h.csv"));
 
@@ -60,8 +62,10 @@ fn calculates_h7_g6_at_42_mm() {
     assert_eq!(result.shaft.grade, 6);
     assert_close(result.shaft.upper_um, -9.0);
     assert_close(result.shaft.lower_um, -25.0);
+    assert_close(result.shaft.mid_um, -17.0);
     assert_close(result.shaft.min_mm, 41.975);
     assert_close(result.shaft.max_mm, 41.991);
+    assert_close(result.shaft.mid_mm, 41.983);
     assert_eq!(result.shaft.source_table.as_deref(), Some("Table 21"));
     assert_eq!(result.shaft.source_file.as_deref(), Some("shafts_g.csv"));
 
@@ -105,12 +109,16 @@ fn looks_up_single_hole_and_shaft_tolerances() {
     assert_eq!(hole.grade, 7);
     assert_close(hole.upper_um, 12.5);
     assert_close(hole.lower_um, -12.5);
+    assert_close(hole.mid_um, 0.0);
+    assert_close(hole.mid_mm, 42.0);
 
     let shaft = lookup_tolerance_with_connection(&conn, 42.0, "shaft", "p6").unwrap();
     assert_eq!(shaft.zone, "p");
     assert_eq!(shaft.grade, 6);
     assert_close(shaft.upper_um, 42.0);
     assert_close(shaft.lower_um, 26.0);
+    assert_close(shaft.mid_um, 34.0);
+    assert_close(shaft.mid_mm, 42.034);
 }
 
 #[test]

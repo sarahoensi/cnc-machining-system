@@ -86,14 +86,21 @@ pub fn lookup_tolerance_with_connection(
         })?;
 
     let (upper_um, lower_um, source_table, source_file) = row;
+    let mid_um = (upper_um + lower_um) / 2.0;
+    let min_mm = nominal_mm + lower_um / 1000.0;
+    let max_mm = nominal_mm + upper_um / 1000.0;
+    let mid_mm = (max_mm + min_mm) / 2.0;
+
     Ok(ToleranceResult {
         code: code.trim().to_string(),
         zone,
         grade,
         upper_um,
         lower_um,
-        min_mm: nominal_mm + lower_um / 1000.0,
-        max_mm: nominal_mm + upper_um / 1000.0,
+        mid_um,
+        min_mm,
+        max_mm,
+        mid_mm,
         source_table,
         source_file,
     })

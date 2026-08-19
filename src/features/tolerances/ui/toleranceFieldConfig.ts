@@ -35,6 +35,13 @@ export const toleranceFieldConfig: ToleranceFieldConfig[] = [
     readOnly: true,
   },
   {
+    key: "mid_um",
+    label: "Middle deviation",
+    unit: "mm",
+    tooltip: toleranceTooltips.mid_um,
+    readOnly: true,
+  },
+  {
     key: "max_mm",
     label: "Maximum",
     unit: "mm",
@@ -47,6 +54,13 @@ export const toleranceFieldConfig: ToleranceFieldConfig[] = [
     label: "Minimum",
     unit: "mm",
     tooltip: toleranceTooltips.min_mm,
+    readOnly: true,
+  },
+  {
+    key: "mid_mm",
+    label: "Middle",
+    unit: "mm",
+    tooltip: toleranceTooltips.mid_mm,
     readOnly: true,
   },
 ];

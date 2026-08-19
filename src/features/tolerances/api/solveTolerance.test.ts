@@ -14,8 +14,10 @@ describe("tolerance frontend mapping", () => {
     expect(form.fields.nominal.value).toBe("");
     expect(form.fields.upper_um.locked).toBe(true);
     expect(form.fields.lower_um.locked).toBe(true);
+    expect(form.fields.mid_um.locked).toBe(true);
     expect(form.fields.min_mm.locked).toBe(true);
     expect(form.fields.max_mm.locked).toBe(true);
+    expect(form.fields.mid_mm.locked).toBe(true);
     expect(form.fields.hole_letter.value).toBe("H");
     expect(form.fields.hole_grade.value).toBe("7");
     expect(form.fields.shaft_letter.value).toBe("h");
