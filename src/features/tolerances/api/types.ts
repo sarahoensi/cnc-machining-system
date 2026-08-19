@@ -26,8 +26,10 @@ export type Iso286MemberResult = {
   grade: number;
   upper_um: number;
   lower_um: number;
+  mid_um: number;
   max_mm: number;
   min_mm: number;
+  mid_mm: number;
   source_table: string | null;
   source_file: string | null;
 };

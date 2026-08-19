@@ -557,16 +557,20 @@ fn application_lookup_uses_packed_database_values() {
     assert_eq!(hole.grade, 7);
     assert_close(hole.upper_um, 25.0);
     assert_close(hole.lower_um, 0.0);
+    assert_close(hole.mid_um, 12.5);
     assert_close(hole.min_mm, 42.0);
     assert_close(hole.max_mm, 42.025);
+    assert_close(hole.mid_mm, 42.0125);
 
     let shaft = lookup_tolerance(&db_path, 42.0, "shaft", "g6").unwrap();
     assert_eq!(shaft.zone, "g");
     assert_eq!(shaft.grade, 6);
     assert_close(shaft.upper_um, -9.0);
     assert_close(shaft.lower_um, -25.0);
+    assert_close(shaft.mid_um, -17.0);
     assert_close(shaft.min_mm, 41.975);
     assert_close(shaft.max_mm, 41.991);
+    assert_close(shaft.mid_mm, 41.983);
 }
 
 #[test]
@@ -582,6 +586,14 @@ fn fit_calculations_use_nominal_plus_deviations_and_clearance_formulas() {
         assert_close(result.hole.lower_um, case.hole_lower_um);
         assert_close(result.shaft.upper_um, case.shaft_upper_um);
         assert_close(result.shaft.lower_um, case.shaft_lower_um);
+        assert_close(
+            result.hole.mid_um,
+            (case.hole_upper_um + case.hole_lower_um) / 2.0,
+        );
+        assert_close(
+            result.shaft.mid_um,
+            (case.shaft_upper_um + case.shaft_lower_um) / 2.0,
+        );
 
         assert_close(
             result.hole.min_mm,
@@ -598,6 +610,14 @@ fn fit_calculations_use_nominal_plus_deviations_and_clearance_formulas() {
         assert_close(
             result.shaft.max_mm,
             case.nominal_mm + case.shaft_upper_um / 1000.0,
+        );
+        assert_close(
+            result.hole.mid_mm,
+            (result.hole.max_mm + result.hole.min_mm) / 2.0,
+        );
+        assert_close(
+            result.shaft.mid_mm,
+            (result.shaft.max_mm + result.shaft.min_mm) / 2.0,
         );
         assert_close(result.fit.min_clearance_mm, case.min_clearance_mm);
         assert_close(result.fit.max_clearance_mm, case.max_clearance_mm);

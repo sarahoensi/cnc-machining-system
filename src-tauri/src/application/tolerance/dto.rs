@@ -5,8 +5,10 @@ pub struct ToleranceResult {
     pub grade: i32,
     pub upper_um: f64,
     pub lower_um: f64,
+    pub mid_um: f64,
     pub min_mm: f64,
     pub max_mm: f64,
+    pub mid_mm: f64,
     pub source_table: Option<String>,
     pub source_file: Option<String>,
 }

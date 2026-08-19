@@ -271,8 +271,10 @@ describe("calculator page controllers", () => {
     toleranceSolveMock.mockResolvedValue({
       upper_um: 0.012,
       lower_um: 0,
+      mid_um: 0.006,
       min_mm: 42,
       max_mm: 42.012,
+      mid_mm: 42.006,
     });
 
     const { result } = renderHook(() => useTolerancePageController(), { wrapper });
@@ -299,6 +301,8 @@ describe("calculator page controllers", () => {
       expect.objectContaining({ mode: "shaft" }),
     );
     expect(result.current.form.fields.max_mm.machineValue).toBe(42.012);
+    expect(result.current.form.fields.mid_um.machineValue).toBe(0.006);
+    expect(result.current.form.fields.mid_mm.machineValue).toBe(42.006);
   });
 
   it("keeps generated finishing execution in controller state", async () => {

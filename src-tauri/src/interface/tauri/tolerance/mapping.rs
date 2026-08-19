@@ -15,8 +15,10 @@ impl From<ToleranceResult> for ToleranceResponse {
             grade: result.grade,
             upper_um: result.upper_um,
             lower_um: result.lower_um,
+            mid_um: result.mid_um,
             min_mm: result.min_mm,
             max_mm: result.max_mm,
+            mid_mm: result.mid_mm,
             source_table: result.source_table,
             source_file: result.source_file,
         }

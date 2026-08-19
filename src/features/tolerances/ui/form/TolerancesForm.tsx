@@ -194,16 +194,18 @@ export function TolerancesForm({ controller }: Props) {
         </FormGrid.Area>
 
         <FormGrid.Area name="deviation">
-          <Row columns={2} className="tolerances-deviation-row">
+          <Row columns={3} className="tolerances-deviation-row">
             {renderNumberField("upper_um")}
             {renderNumberField("lower_um")}
+            {renderNumberField("mid_um")}
           </Row>
         </FormGrid.Area>
 
         <FormGrid.Area name="limits">
-          <Row columns={2} className="tolerances-limit-row">
+          <Row columns={3} className="tolerances-limit-row">
             {renderNumberField("max_mm")}
             {renderNumberField("min_mm")}
+            {renderNumberField("mid_mm")}
           </Row>
         </FormGrid.Area>
 

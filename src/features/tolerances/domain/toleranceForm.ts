@@ -13,8 +13,10 @@ export type ToleranceKey =
   | "shaft_grade"
   | "upper_um"
   | "lower_um"
+  | "mid_um"
   | "min_mm"
-  | "max_mm";
+  | "max_mm"
+  | "mid_mm";
 
 export type ToleranceExtras = {
   mode: ToleranceMode;
@@ -36,8 +38,10 @@ export function createInitialToleranceForm(): ToleranceFormState {
       shaft_grade: userField("7"),
       upper_um: resultField(),
       lower_um: resultField(),
+      mid_um: resultField(),
       min_mm: resultField(),
       max_mm: resultField(),
+      mid_mm: resultField(),
     },
     extras: {
       mode: "hole",

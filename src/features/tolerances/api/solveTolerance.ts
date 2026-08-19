@@ -16,7 +16,9 @@ export async function solveTolerance(
   return {
     upper_um: result.upper_um / 1000,
     lower_um: result.lower_um / 1000,
+    mid_um: result.mid_um / 1000,
     min_mm: result.min_mm,
     max_mm: result.max_mm,
+    mid_mm: result.mid_mm,
   };
 }
