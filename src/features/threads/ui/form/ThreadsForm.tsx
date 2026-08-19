@@ -63,6 +63,7 @@ export function ThreadsForm({ controller }: Props) {
                 options={controller.typeOptions}
                 onSelect={controller.onTypeChange}
                 disabled={controller.loadingOptions}
+                staticWhenSingleOption
               />
 
               <FormSelectMenuField
@@ -74,6 +75,7 @@ export function ThreadsForm({ controller }: Props) {
                 options={controller.sizeOptions}
                 onSelect={controller.onSizeChange}
                 disabled={controller.loadingOptions}
+                staticWhenSingleOption
                 ref={navigation.register("size")}
                 onKeyDown={navigation.handleKeyDown("size")}
               />
@@ -94,6 +96,7 @@ export function ThreadsForm({ controller }: Props) {
                 options={controller.pitchOptions}
                 onSelect={controller.onPitchChange}
                 disabled={controller.loadingOptions}
+                staticWhenSingleOption
                 ref={navigation.register("pitch")}
                 onKeyDown={navigation.handleKeyDown("pitch")}
               />

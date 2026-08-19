@@ -52,6 +52,7 @@ type SelectMenuProps<T extends string> = {
   source?: InputSource;
   size?: InputSize;
   disabled?: boolean;
+  staticWhenSingleOption?: boolean;
   triggerRef?: Ref<HTMLButtonElement>;
   onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
 };
@@ -68,6 +69,7 @@ export function SelectMenu<T extends string>({
   source = "default",
   size = "medium",
   disabled = false,
+  staticWhenSingleOption = false,
   triggerRef,
   onKeyDown,
 }: SelectMenuProps<T>) {
@@ -79,8 +81,11 @@ export function SelectMenu<T extends string>({
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   const optionCount = options.length;
+  const isStaticSingleOption =
+    staticWhenSingleOption && optionCount === 1 && utilityItems.length === 0;
+  const isOpen = open && !disabled && !isStaticSingleOption;
   const activeOptionId =
-    open && optionCount > 0 ? getOptionId(dropdownId, activeIndex) : undefined;
+    isOpen && optionCount > 0 ? getOptionId(dropdownId, activeIndex) : undefined;
 
   useEffect(() => {
     if (optionCount === 0) {
@@ -92,22 +97,22 @@ export function SelectMenu<T extends string>({
   }, [optionCount]);
 
   useEffect(() => {
-    if (!open) {
+    if (!isOpen) {
       typeaheadBuffer.current = "";
       lastTypeaheadAt.current = 0;
     }
-  }, [open]);
+  }, [isOpen]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!isOpen) return;
 
     optionRefs.current[activeIndex]?.scrollIntoView({
       block: "nearest",
     });
-  }, [activeIndex, open]);
+  }, [activeIndex, isOpen]);
 
   function openMenu() {
-    if (!open) {
+    if (!open && !isStaticSingleOption) {
       onToggle();
     }
   }
@@ -179,14 +184,19 @@ export function SelectMenu<T extends string>({
   function handleTriggerKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     if (disabled) return;
 
-    if (!open && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+    if (isStaticSingleOption) {
+      onKeyDown?.(event);
+      return;
+    }
+
+    if (!isOpen && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
       onKeyDown?.(event);
       if (event.defaultPrevented) return;
     }
 
     if (event.key === "Enter") {
       event.preventDefault();
-      if (open) {
+      if (isOpen) {
         selectActiveOption();
       } else {
         openMenu();
@@ -196,7 +206,7 @@ export function SelectMenu<T extends string>({
 
     if (event.key === " ") {
       event.preventDefault();
-      if (open) {
+      if (isOpen) {
         selectActiveOption();
       } else {
         openMenu();
@@ -206,7 +216,7 @@ export function SelectMenu<T extends string>({
 
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      if (!open) {
+      if (!isOpen) {
         openMenu();
         return;
       }
@@ -216,7 +226,7 @@ export function SelectMenu<T extends string>({
 
     if (event.key === "ArrowUp") {
       event.preventDefault();
-      if (!open) {
+      if (!isOpen) {
         openMenu();
         return;
       }
@@ -224,19 +234,19 @@ export function SelectMenu<T extends string>({
       return;
     }
 
-    if (event.key === "Home" && open) {
+    if (event.key === "Home" && isOpen) {
       event.preventDefault();
       setActiveIndex(0);
       return;
     }
 
-    if (event.key === "End" && open) {
+    if (event.key === "End" && isOpen) {
       event.preventDefault();
       setActiveIndex(Math.max(0, optionCount - 1));
       return;
     }
 
-    if (event.key === "Escape" && open) {
+    if (event.key === "Escape" && isOpen) {
       event.preventDefault();
       closeMenu();
       return;
@@ -249,7 +259,7 @@ export function SelectMenu<T extends string>({
   }
 
   return (
-    <div className={clsx("app-select-menu", open && !disabled && "is-open", className)}>
+    <div className={clsx("app-select-menu", isOpen && "is-open", className)}>
       <button
         type="button"
         ref={triggerRef}
@@ -260,24 +270,25 @@ export function SelectMenu<T extends string>({
           `input-control--${size}`,
           source !== "default" && `input-control--${source}`,
           disabled && "input-control--disabled",
+          isStaticSingleOption && "app-select-trigger--static",
         )}
         onClick={() => {
-          if (!disabled) {
+          if (!disabled && !isStaticSingleOption) {
             onToggle();
           }
         }}
         onKeyDown={handleTriggerKeyDown}
         disabled={disabled}
-        aria-haspopup="listbox"
-        aria-expanded={open && !disabled}
-        aria-controls={dropdownId}
+        aria-haspopup={isStaticSingleOption ? undefined : "listbox"}
+        aria-expanded={isStaticSingleOption ? undefined : isOpen}
+        aria-controls={isStaticSingleOption ? undefined : dropdownId}
         aria-activedescendant={activeOptionId}
       >
         <span className="app-select-trigger-content">{valueLabel}</span>
-        <span className="app-select-trigger-caret" />
+        {isStaticSingleOption ? null : <span className="app-select-trigger-caret" />}
       </button>
 
-      {open && !disabled ? (
+      {isOpen ? (
         <div id={dropdownId} className="app-select-dropdown" role="listbox">
           {options.map((option, index) => (
             <button

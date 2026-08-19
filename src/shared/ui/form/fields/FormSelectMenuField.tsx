@@ -42,6 +42,7 @@ type Props<T extends string> = {
   source?: InputSource;
   size?: InputSize;
   disabled?: boolean;
+  staticWhenSingleOption?: boolean;
   onKeyDown?: KeyboardEventHandler<HTMLButtonElement>;
 };
 
@@ -58,6 +59,7 @@ function FormSelectMenuFieldInner<T extends string>(
     source = "default",
     size = "medium",
     disabled = false,
+    staticWhenSingleOption = false,
     onKeyDown,
   }: Props<T>,
   ref: ForwardedRef<HTMLButtonElement>,
@@ -85,6 +87,7 @@ function FormSelectMenuFieldInner<T extends string>(
           source={source}
           size={size}
           disabled={disabled}
+          staticWhenSingleOption={staticWhenSingleOption}
           valueLabel={valueLabel}
           open={open}
           onToggle={() => setOpen((current) => !current)}

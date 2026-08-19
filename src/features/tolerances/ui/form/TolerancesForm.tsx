@@ -171,6 +171,7 @@ export function TolerancesForm({ controller }: Props) {
                           : controller.onToleranceGradeChange(field.feature, value)
                       }
                       disabled={field.disabled}
+                      staticWhenSingleOption
                       ref={navigation.register(field.key)}
                       onKeyDown={navigation.handleKeyDown(field.key)}
                     />

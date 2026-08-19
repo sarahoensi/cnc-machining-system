@@ -542,9 +542,10 @@ describe("calculator forms", () => {
     await user.click(screen.getByRole("option", { name: "M12" }));
 
     expect(screen.getByRole("button", { name: "M12" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /1\.75/ })).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /1\.75/ }));
-    await user.click(screen.getByRole("option", { name: /1\.75/ }));
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Calculate" }));
     await user.click(screen.getByRole("button", { name: "Save result" }));
