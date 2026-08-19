@@ -98,6 +98,16 @@ function TestCuttingDataForm({
       onCalculate();
     },
     resetForm: onReset,
+    apprentice: {
+      enabled: false,
+      tasks: [],
+      answers: {},
+      updateAnswer: vi.fn(),
+      checkAnswer: vi.fn(),
+      checkAll: vi.fn(),
+      toggleWork: vi.fn(),
+      toggleAnswer: vi.fn(),
+    },
     history: [],
     save: onSave,
     load: vi.fn(),

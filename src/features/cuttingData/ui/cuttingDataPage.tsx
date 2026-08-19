@@ -16,7 +16,10 @@ export function CuttingDataPage() {
     <FormWithSidePanel
       fillHeight
       align="stretch"
-      secondaryWidth="minmax(20rem, 1fr)"
+      primaryWidth={controller.apprentice.enabled ? "minmax(26rem, 1.1fr)" : undefined}
+      secondaryWidth={
+        controller.apprentice.enabled ? "minmax(20rem, 0.9fr)" : "minmax(20rem, 1fr)"
+      }
       secondaryMinHeightOnCollapse="20rem"
       form={<CuttingDataForm controller={controller} />}
       sidePanel={

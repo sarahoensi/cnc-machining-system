@@ -1,6 +1,7 @@
 // features/cuttingData/ui/useCuttingPageController.ts
 
 import { useFeatureForm } from "@app/providers/FormStateProvider";
+import { emptyField } from "@shared/form/types/fields";
 import { handleCalculateAsync, handleUserEdit } from "@shared/form/engine/formEngine";
 import { useFormNavigation } from "@shared/hooks";
 import { useSavedResults } from "@shared/savedResults";
@@ -16,6 +17,11 @@ import {
 } from "../domain/cuttingDataForm";
 import { parseCuttingData } from "../domain/parseCuttingData";
 import { validateCuttingDataForm } from "../domain/validateCuttingForm";
+import {
+  getRequiredInputKeys,
+  type CuttingApprenticeTarget,
+  useCuttingApprenticeController,
+} from "./apprentice/useCuttingApprenticeController";
 import { cuttingDataFieldConfig } from "./cuttingDataFieldConfig";
 
 const focusOrder: CuttingDataKey[] = [
@@ -35,6 +41,10 @@ export function useCuttingPageController() {
       storageKey: "cutting-history",
     },
   );
+  const apprentice = useCuttingApprenticeController({
+    form,
+    onTargetChange: resetFormForApprenticeTarget,
+  });
 
   const navigation = useFormNavigation({
     keys: cuttingDataFieldConfig.map((fieldConfig) => fieldConfig.key),
@@ -92,12 +102,34 @@ export function useCuttingPageController() {
     navigation.focusFirstAfterRender();
   }
 
+  function resetFormForApprenticeTarget(target: CuttingApprenticeTarget) {
+    setForm((prev) => {
+      const requiredKeys = new Set(getRequiredInputKeys(target));
+      const nextFields = { ...prev.fields };
+
+      for (const key of Object.keys(nextFields) as CuttingDataKey[]) {
+        const field = nextFields[key];
+        const shouldKeepUserInput = requiredKeys.has(key) && field.source === "user";
+
+        nextFields[key] = shouldKeepUserInput ? field : emptyField();
+      }
+
+      return {
+        status: "editing",
+        fields: nextFields,
+        extras: prev.extras,
+        formError: undefined,
+      };
+    });
+  }
+
   return {
     form,
     navigation,
     onFieldChange,
     calculate,
     resetForm,
+    apprentice,
 
     history: savedResults.history,
 
