@@ -381,6 +381,10 @@ function TestThreadsForm({
     typeOptions,
     sizeOptions,
     pitchOptions,
+    apprentice: {
+      enabled: false,
+      guide: null,
+    },
     onTypeChange: vi.fn(),
     onSizeChange: (value: string) => {
       const size = form.extras.options.metric.find((option) => option.value === value);

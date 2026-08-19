@@ -27,6 +27,7 @@ import {
 } from "../domain/threadOptions";
 import { parseThread } from "../domain/parseThread";
 import { validateThreadForm } from "../domain/validateThreadForm";
+import { useThreadApprenticeController } from "./apprentice/useThreadApprenticeController";
 
 const navigationKeys = ["size", "pitch"] as const;
 const threadsAutoCalculateEnabled = true;
@@ -129,6 +130,14 @@ export function useThreadsPageController() {
       meta: buildPitchMeta(option, form.extras.type),
       pitchMm: option.pitchMm,
     })) ?? [];
+  const selectedPitch = selectedSize?.pitches.find(
+    (option) => option.value === form.fields.pitch.value,
+  );
+  const apprentice = useThreadApprenticeController({
+    form,
+    selectedSize,
+    selectedPitch,
+  });
 
   function onTypeChange(value: ThreadType) {
     setForm((prev) => {
@@ -232,6 +241,7 @@ export function useThreadsPageController() {
     typeOptions,
     sizeOptions,
     pitchOptions,
+    apprentice,
     onTypeChange,
     onSizeChange,
     onPitchChange,

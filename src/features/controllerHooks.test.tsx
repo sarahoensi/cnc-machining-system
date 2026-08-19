@@ -3,6 +3,7 @@
  */
 
 import { FormStateProvider } from "@app/providers/FormStateProvider";
+import { DisplaySettingProvider } from "@app/providers/DisplaySettingProvider";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -72,7 +73,11 @@ const generateFinishingPlanMock = vi.mocked(generateFinishingPlan);
 const registerFinishingMeasurementMock = vi.mocked(registerFinishingMeasurement);
 
 function wrapper({ children }: { children: ReactNode }) {
-  return <FormStateProvider>{children}</FormStateProvider>;
+  return (
+    <DisplaySettingProvider>
+      <FormStateProvider>{children}</FormStateProvider>
+    </DisplaySettingProvider>
+  );
 }
 
 const threadOptions: ThreadOptionsResponse = {

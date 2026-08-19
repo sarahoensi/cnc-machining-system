@@ -23,3 +23,109 @@
   font-size: var(--font-size-sm);
   line-height: 1.4;
 }
+
+.threads-apprentice-workflow {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.threads-apprentice-intro {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.threads-apprentice-intro h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+
+.threads-apprentice-intro p,
+.threads-apprentice-empty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.45;
+}
+
+.threads-apprentice-step {
+  display: grid;
+  gap: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  background: var(--color-surface-muted);
+}
+
+.threads-apprentice-step.is-correct {
+  border-color: var(--color-success);
+}
+
+.threads-apprentice-step.is-close {
+  border-color: var(--color-warning);
+}
+
+.threads-apprentice-step.is-incorrect {
+  border-color: var(--color-danger);
+}
+
+.threads-apprentice-step-header,
+.threads-apprentice-work-header,
+.threads-apprentice-step-actions,
+.threads-apprentice-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.threads-apprentice-step-header,
+.threads-apprentice-work-header {
+  justify-content: space-between;
+}
+
+.threads-apprentice-step-header h4 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.threads-apprentice-step code {
+  border-radius: var(--radius-sm);
+  padding: 0.125rem 0.375rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--font-size-xs);
+}
+
+.threads-apprentice-work {
+  display: grid;
+  gap: var(--space-2);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  background: var(--color-surface);
+}
+
+.threads-apprentice-work-header span {
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.threads-apprentice-calculation,
+.threads-apprentice-feedback {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.45;
+}
+
+.threads-apprentice-step-actions,
+.threads-apprentice-actions {
+  flex-wrap: wrap;
+}
+
+.threads-apprentice-actions {
+  justify-content: space-between;
+}

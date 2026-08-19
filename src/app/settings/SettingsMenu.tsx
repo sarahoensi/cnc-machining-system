@@ -5,6 +5,7 @@ import "./settings.css";
 
 import { ThemeSettings } from "./panels/ThemeSettings";
 import { DecimalSettings } from "./panels/DecimalSettings";
+import { ApprenticeSettings } from "./panels/ApprenticeSettings";
 
 type SettingsItem = {
   key: string;
@@ -15,6 +16,7 @@ type SettingsItem = {
 const SETTINGS_MENU: readonly SettingsItem[] = [
   { key: "theme", label: "Tema", component: ThemeSettings },
   { key: "decimals", label: "Desimaler", component: DecimalSettings },
+  { key: "apprentice", label: "Lærling", component: ApprenticeSettings },
 ] as const;
 
 type Props = {

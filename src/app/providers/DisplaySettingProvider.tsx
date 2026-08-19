@@ -11,6 +11,8 @@ export type Decimals = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 type DisplaySettingContextValue = {
   decimals: Decimals;
   setDecimals: (value: Decimals) => void;
+  apprenticeMode: boolean;
+  setApprenticeMode: (value: boolean) => void;
 };
 
 /* ============================================================
@@ -21,7 +23,8 @@ const DisplaySettingContext = createContext<DisplaySettingContextValue | undefin
   undefined,
 );
 
-const STORAGE_KEY = "app-decimals";
+const DECIMALS_STORAGE_KEY = "app-decimals";
+const APPRENTICE_MODE_STORAGE_KEY = "app-apprentice-mode";
 const DEFAULT_DECIMALS: Decimals = 3;
 
 /* ============================================================
@@ -29,7 +32,7 @@ const DEFAULT_DECIMALS: Decimals = 3;
 ============================================================ */
 
 function getInitialDecimals(): Decimals {
-  const stored = localStorage.getItem(STORAGE_KEY);
+  const stored = localStorage.getItem(DECIMALS_STORAGE_KEY);
 
   if (!stored) return DEFAULT_DECIMALS;
 
@@ -42,19 +45,34 @@ function getInitialDecimals(): Decimals {
   return DEFAULT_DECIMALS;
 }
 
+function getInitialApprenticeMode() {
+  return localStorage.getItem(APPRENTICE_MODE_STORAGE_KEY) === "true";
+}
+
 /* ============================================================
    Provider
 ============================================================ */
 
 export function DisplaySettingProvider({ children }: { children: React.ReactNode }) {
   const [decimals, setDecimalsState] = useState<Decimals>(getInitialDecimals);
+  const [apprenticeMode, setApprenticeModeState] = useState(
+    getInitialApprenticeMode,
+  );
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, String(decimals));
+    localStorage.setItem(DECIMALS_STORAGE_KEY, String(decimals));
   }, [decimals]);
+
+  useEffect(() => {
+    localStorage.setItem(APPRENTICE_MODE_STORAGE_KEY, String(apprenticeMode));
+  }, [apprenticeMode]);
 
   function setDecimals(value: Decimals) {
     setDecimalsState(value);
+  }
+
+  function setApprenticeMode(value: boolean) {
+    setApprenticeModeState(value);
   }
 
   return (
@@ -62,6 +80,8 @@ export function DisplaySettingProvider({ children }: { children: React.ReactNode
       value={{
         decimals,
         setDecimals,
+        apprenticeMode,
+        setApprenticeMode,
       }}
     >
       {children}
